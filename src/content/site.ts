@@ -4,9 +4,11 @@
  * Any field left `undefined` is hidden on the website and omitted from
  * structured data, so nothing unconfirmed is ever shown.
  *
- * Location: treatments take place by appointment from a home-based setting.
- * The address is shared personally after an appointment is confirmed and is
- * deliberately NOT published.
+ * Location policy: treatments are by appointment only. No address, city,
+ * district, service area or map is published anywhere (pages, metadata,
+ * structured data, emails). Practical location details are shared
+ * personally after an appointment is confirmed. Keep `address` and `region`
+ * undefined unless the owner explicitly decides otherwise.
  */
 export type SiteConfig = {
   name: string;

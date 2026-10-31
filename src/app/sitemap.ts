@@ -1,19 +1,25 @@
 import type { MetadataRoute } from "next";
-import { localeLabels, locales, routeKeys, routes } from "@/i18n/config";
+import { allPages, localeLabels, locales, pagePath } from "@/i18n/config";
 import { absoluteUrl } from "@/lib/seo";
 
+/** Every public page in both languages, with hreflang alternates. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return routeKeys.flatMap((key) =>
+  return allPages().flatMap((page) =>
     locales.map((locale) => ({
-      url: absoluteUrl(routes[key][locale]),
+      url: absoluteUrl(pagePath(locale, page)),
       lastModified,
       changeFrequency: "monthly" as const,
-      priority: key === "home" ? 1 : key === "booking" ? 0.6 : 0.8,
+      priority:
+        page.type === "static" && page.key === "home"
+          ? 1
+          : page.type === "static" && page.key === "privacy"
+            ? 0.3
+            : page.type === "treatment"
+              ? 0.7
+              : 0.8,
       alternates: {
-        languages: Object.fromEntries(
-          locales.map((l) => [localeLabels[l].hrefLang, absoluteUrl(routes[key][l])]),
-        ),
+        languages: Object.fromEntries(locales.map((l) => [localeLabels[l].hrefLang, absoluteUrl(pagePath(l, page))])),
       },
     })),
   );

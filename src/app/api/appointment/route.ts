@@ -26,6 +26,7 @@ export function POST(req: NextRequest) {
   return handleForm(req, {
     kind: "appointment",
     validate: (raw) => validateAppointment(raw, ids),
+    signature: (d) => [[...d.treatments].sort().join(","), d.preferredDate, d.timeRange, d.notes ?? ""].join("|"),
     ownerMail: (d) => appointmentOwnerMail(d, names(d, "nl")),
     customerMail: (d) => appointmentCustomerMail(d, names(d)),
   });

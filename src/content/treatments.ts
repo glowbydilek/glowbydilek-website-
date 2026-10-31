@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/config";
 import type { PhotoId } from "./media";
 import type { ServiceCategoryId } from "./services";
+import type { CategoryId, TreatmentId } from "./slugs";
 
 /**
  * Treatment catalogue (currently: waxing).
@@ -18,7 +19,9 @@ export const pricesPublished: boolean = false;
 type Localised = Record<Locale, string>;
 
 export type Treatment = {
-  id: string;
+  id: TreatmentId;
+  /** Image used on the treatment's own page. */
+  photo: PhotoId;
   name: Localised;
   description: Localised;
   /** Confirmed duration in minutes. */
@@ -28,7 +31,7 @@ export type Treatment = {
 };
 
 export type TreatmentGroup = {
-  id: "face" | "body" | "intimate";
+  id: CategoryId;
   category: ServiceCategoryId;
   photo: PhotoId;
   name: Localised;
@@ -60,6 +63,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "eyebrows",
+        photo: "zone-face",
         name: { nl: "Wenkbrauwen", en: "Eyebrows" },
         description: {
           nl: "Wenkbrauwen in een natuurlijke vorm die past bij jouw gezicht en gelaatstrekken.",
@@ -68,6 +72,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "upper-lip",
+        photo: "portrait-soft",
         name: { nl: "Bovenlip", en: "Upper lip" },
         description: {
           nl: "Snel en nauwkeurig verwijderen van haartjes op de bovenlip, voor een gladde, verzorgde huid.",
@@ -76,6 +81,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "chin",
+        photo: "editorial-portrait",
         name: { nl: "Kin", en: "Chin" },
         description: {
           nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",
@@ -84,6 +90,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-face",
+        photo: "hero",
         name: { nl: "Volledig gezicht", en: "Full face" },
         description: {
           nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",
@@ -112,6 +119,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "underarms",
+        photo: "aftercare",
         name: { nl: "Oksels", en: "Underarms" },
         description: {
           nl: "Een frisse, gladde huid onder de armen, zonder de stoppels die scheren achterlaat.",
@@ -120,6 +128,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-arms",
+        photo: "materials",
         name: { nl: "Onderarmen", en: "Half arms" },
         description: {
           nl: "Van pols tot elleboog, voor zachte en verzorgde armen.",
@@ -128,6 +137,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-arms",
+        photo: "botanical",
         name: { nl: "Hele armen", en: "Full arms" },
         description: {
           nl: "De volledige armen, van pols tot schouder.",
@@ -136,6 +146,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-legs",
+        photo: "zone-body",
         name: { nl: "Onderbenen", en: "Half legs" },
         description: {
           nl: "Van enkel tot knie, voor zijdezachte benen.",
@@ -144,6 +155,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-legs",
+        photo: "treatments-hero",
         name: { nl: "Hele benen", en: "Full legs" },
         description: {
           nl: "De volledige benen, van enkel tot bovenbeen.",
@@ -152,6 +164,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "back",
+        photo: "vase",
         name: { nl: "Rug", en: "Back" },
         description: {
           nl: "Een gladde rug met een grondige en comfortabele behandeling.",
@@ -180,6 +193,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "bikini-line",
+        photo: "zone-intimate",
         name: { nl: "Bikinilijn", en: "Bikini line" },
         description: {
           nl: "Een nette lijn langs de randen van je bikini of ondergoed.",
@@ -188,6 +202,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "brazilian",
+        photo: "linen",
         name: { nl: "Brazilian", en: "Brazilian" },
         description: {
           nl: "Bijna alles verwijderd, met een smal strookje of klein driehoekje naar wens.",
@@ -196,6 +211,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "hollywood",
+        photo: "contact",
         name: { nl: "Hollywood", en: "Hollywood" },
         description: {
           nl: "Volledig glad, voor een frisse en verzorgde look.",
@@ -216,4 +232,16 @@ export function formatPrice(amount: number, locale: Locale): string {
 
 export function allTreatments(): Treatment[] {
   return treatmentGroups.flatMap((g) => g.treatments);
+}
+
+export function findGroup(id: CategoryId): TreatmentGroup {
+  return treatmentGroups.find((g) => g.id === id)!;
+}
+
+export function findTreatmentById(id: TreatmentId): { treatment: Treatment; group: TreatmentGroup } {
+  for (const group of treatmentGroups) {
+    const treatment = group.treatments.find((t) => t.id === id);
+    if (treatment) return { treatment, group };
+  }
+  throw new Error(`Unknown treatment ${id}`);
 }

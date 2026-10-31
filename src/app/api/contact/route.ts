@@ -10,6 +10,7 @@ export function POST(req: NextRequest) {
   return handleForm(req, {
     kind: "contact",
     validate: validateContact,
+    signature: (d) => `${d.topic}|${d.message.toLowerCase().replace(/\s+/g, " ")}`,
     ownerMail: contactOwnerMail,
     customerMail: contactCustomerMail,
   });

@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { amsterdamToday, TIME_RANGES, validateAppointment, type ErrorCode, type TimeRange } from "@/lib/forms/validation";
 import { Icon } from "../ui/Icon";
 import { Consent } from "./ContactForm";
 import { Honeypot, omit, TextArea, TextField } from "./Fields";
 import { FormError, FormSuccess } from "./FormStatus";
+import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
 
 type Group = { id: string; name: string; treatments: { id: string; name: string }[] };
@@ -23,6 +24,7 @@ export function AppointmentForm({
   privacyHref,
   email,
   notConfirmed,
+  turnstileSiteKey,
 }: {
   locale: "nl" | "en";
   t: Dictionary["forms"];
@@ -30,7 +32,9 @@ export function AppointmentForm({
   privacyHref: string;
   email: string;
   notConfirmed: string;
+  turnstileSiteKey: string;
 }) {
+  const challenge = useTurnstileToken();
   const { state, submit, reset } = useFormSubmit("/api/appointment");
   const formRef = useRef<HTMLFormElement>(null);
   const ids = useMemo(() => groups.flatMap((g) => g.treatments.map((x) => x.id)), [groups]);
@@ -49,6 +53,16 @@ export function AppointmentForm({
     setValues((v) => ({ ...v, [k]: e.target.value }));
     clear(k);
   };
+  // Preselect a treatment from the URL (?behandeling=… or ?treatment=…),
+  // e.g. when arriving from a treatment page. Read after hydration so the
+  // page itself can stay static.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const wanted = params.get("behandeling") ?? params.get("treatment");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
+    if (wanted && ids.includes(wanted)) setTreatments((s) => (s.includes(wanted) ? s : [...s, wanted]));
+  }, [ids]);
+
   const toggle = (id: string) => {
     setTreatments((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
     clear("treatments");
@@ -63,7 +77,12 @@ export function AppointmentForm({
       requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus());
       return;
     }
-    const ok = await submit(payload, honeypot);
+    if (!challenge.token) {
+      challenge.setMissing(true);
+      return;
+    }
+    const ok = await submit({ ...payload, turnstileToken: challenge.token }, honeypot);
+    challenge.renew();
     if (ok) {
       setValues(empty);
       setTreatments([]);
@@ -193,6 +212,22 @@ export function AppointmentForm({
         <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0 text-gold-deep" />
         {notConfirmed}
       </p>
+
+      <div>
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          action="appointment"
+          locale={locale}
+          resetKey={challenge.resetKey}
+          onToken={challenge.setToken}
+          labels={{ title: t.challengeLabel, loading: t.challengeLoading, blocked: t.challengeBlocked, email }}
+        />
+        {challenge.missing && (
+          <p id="appt-challenge-error" role="alert" className="mt-2 text-sm text-[#9b3b2f]">
+            {t.errors.challenge}
+          </p>
+        )}
+      </div>
 
       <FormError state={state} t={t} email={email} />
 

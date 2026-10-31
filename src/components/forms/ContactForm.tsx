@@ -7,6 +7,7 @@ import { CONTACT_TOPICS, validateContact, type ErrorCode } from "@/lib/forms/val
 import { Icon } from "../ui/Icon";
 import { Honeypot, omit, SelectField, TextArea, TextField } from "./Fields";
 import { FormError, FormSuccess } from "./FormStatus";
+import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
 
 type Props = {
@@ -14,10 +15,12 @@ type Props = {
   t: Dictionary["forms"];
   privacyHref: string;
   email: string;
+  turnstileSiteKey: string;
   defaultTopic?: (typeof CONTACT_TOPICS)[number];
 };
 
-export function ContactForm({ locale, t, privacyHref, email, defaultTopic }: Props) {
+export function ContactForm({ locale, t, privacyHref, email, turnstileSiteKey, defaultTopic }: Props) {
+  const challenge = useTurnstileToken();
   const { state, submit, reset } = useFormSubmit("/api/contact");
   const formRef = useRef<HTMLFormElement>(null);
   const [values, setValues] = useState({ name: "", email: "", phone: "", topic: defaultTopic ?? "", message: "" });
@@ -40,7 +43,12 @@ export function ContactForm({ locale, t, privacyHref, email, defaultTopic }: Pro
       requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus());
       return;
     }
-    const ok = await submit(payload, honeypot);
+    if (!challenge.token) {
+      challenge.setMissing(true);
+      return;
+    }
+    const ok = await submit({ ...payload, turnstileToken: challenge.token }, honeypot);
+    challenge.renew();
     if (ok) {
       setValues({ name: "", email: "", phone: "", topic: defaultTopic ?? "", message: "" });
       setPrivacy(false);
@@ -83,6 +91,22 @@ export function ContactForm({ locale, t, privacyHref, email, defaultTopic }: Pro
       <TextArea id="contact-message" label={t.message} required placeholder={t.messagePlaceholder} value={values.message} onChange={set("message")} error={fieldErr("message")} maxLength={3000} />
 
       <Consent id="contact-privacy" checked={privacy} onChange={(v) => { setPrivacy(v); setErrors((e) => omit(e, "privacy")); }} t={t} privacyHref={privacyHref} error={fieldErr("privacy")} />
+
+      <div>
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          action="contact"
+          locale={locale}
+          resetKey={challenge.resetKey}
+          onToken={challenge.setToken}
+          labels={{ title: t.challengeLabel, loading: t.challengeLoading, blocked: t.challengeBlocked, email }}
+        />
+        {challenge.missing && (
+          <p id="contact-challenge-error" role="alert" className="mt-2 text-sm text-[#9b3b2f]">
+            {t.errors.challenge}
+          </p>
+        )}
+      </div>
 
       <FormError state={state} t={t} email={email} />
 

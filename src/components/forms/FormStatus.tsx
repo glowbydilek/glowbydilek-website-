@@ -43,9 +43,11 @@ export function FormError({ state, t, email }: { state: SubmitState; t: Dictiona
     unavailable: t.status.unavailable,
     sendFailed: t.status.sendFailed,
     rateLimited: t.status.rateLimited,
+    challenge: t.status.challenge,
+    duplicate: t.status.duplicate,
   };
   const message = map[state.error] ?? t.status.generic;
-  const showEmail = state.error !== "validation" && state.error !== "rateLimited";
+  const showEmail = !["validation", "rateLimited", "challenge", "duplicate"].includes(state.error);
   return (
     <div role="alert" className="flex gap-3 rounded-2xl border border-[#9b3b2f]/30 bg-[#9b3b2f]/5 p-5 text-sm leading-relaxed text-[#7d2f25]">
       <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0" />
