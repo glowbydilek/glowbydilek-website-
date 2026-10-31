@@ -19,7 +19,7 @@ from fontTools.pens.boundsPen import BoundsPen
 
 ROOT = os.getcwd()
 FS = os.path.join(ROOT, "node_modules/@fontsource-variable")
-ESPRESSO, GOLD, IVORY, GOLD_DEEP = "#302725", "#C7A477", "#FAF7F2", "#A9865A"
+ESPRESSO, GOLD, IVORY, GOLD_DEEP = "#20382F", "#B99C6B", "#F4F0E8", "#7A6034"
 
 def load(path, wght):
     f = TTFont(path)
@@ -176,10 +176,10 @@ def icon(fg, accent, bg=None, pad=10, rounded=False):
     return svg(s, s, rect + lumen_group(pad, pad, 1, fg, accent))
 
 # Final (Concept A) system --------------------------------------------------
-write("logo-horizontal.svg", horizontal(ESPRESSO, GOLD, "#7A6A64"))
-write("logo-horizontal-light.svg", horizontal(IVORY, GOLD, "#D9CBBF"))
-write("logo-stacked.svg", stacked(ESPRESSO, GOLD, "#7A6A64"))
-write("logo-stacked-light.svg", stacked(IVORY, GOLD, "#D9CBBF"))
+write("logo-horizontal.svg", horizontal(ESPRESSO, GOLD, "#5F6661"))
+write("logo-horizontal-light.svg", horizontal(IVORY, GOLD, "#C9CFC4"))
+write("logo-stacked.svg", stacked(ESPRESSO, GOLD, "#5F6661"))
+write("logo-stacked-light.svg", stacked(IVORY, GOLD, "#C9CFC4"))
 write("logo-icon.svg", icon(ESPRESSO, GOLD))
 write("logo-icon-light.svg", icon(IVORY, GOLD))
 write("logo-icon-gold.svg", icon(GOLD_DEEP, GOLD_DEEP))
@@ -189,7 +189,7 @@ write("favicon.svg", icon(GOLD, IVORY, bg=ESPRESSO, pad=14, rounded=True))
 open(os.path.join(ROOT, "src/app/icon.svg"), "w").write(icon(GOLD, IVORY, bg=ESPRESSO, pad=14, rounded=True))
 
 # Concept presentation artwork ----------------------------------------------
-write("concepts/concept-a-lumen.svg", horizontal(ESPRESSO, GOLD, "#7A6A64"))
+write("concepts/concept-a-lumen.svg", horizontal(ESPRESSO, GOLD, "#5F6661"))
 write("concepts/concept-a-lumen-icon.svg", icon(ESPRESSO, GOLD))
 
 B = atelier_mark()
@@ -202,7 +202,7 @@ def atelier(fg, accent, sub, bg=None):
     tg, tw = tagline(TAG, 8.5, mark + 21, pad + 64)
     W = mark + 20 + max(ww, tw) + 6
     return svg(W, mark + 2*pad, inner_mark + f'<path d="{wm}" fill="{fg}"/><path d="{tg}" fill="{sub}"/>', bg)
-write("concepts/concept-b-atelier.svg", atelier(ESPRESSO, GOLD, "#7A6A64"))
+write("concepts/concept-b-atelier.svg", atelier(ESPRESSO, GOLD, "#5F6661"))
 write("concepts/concept-b-atelier-icon.svg", svg(120, 120,
       f'<g transform="translate(10 10)"><path d="{B["frame"]}" fill="{GOLD}" fill-rule="evenodd"/>'
       f'<path d="{B["d"]}" fill="{ESPRESSO}"/><path d="{B["g"]}" fill="{GOLD}"/></g>'))
@@ -224,7 +224,7 @@ def halo(fg, accent, sub, bg=None):
              f'<path d="{w_}" fill="{fg}"/>'
              f'<path d="{by}" fill="{accent}" transform="translate({f2((total-bw)/2)} 90)"/>')
     return svg(total + 4, 100, inner, bg)
-write("concepts/concept-c-halo.svg", halo(ESPRESSO, GOLD, "#7A6A64"))
+write("concepts/concept-c-halo.svg", halo(ESPRESSO, GOLD, "#5F6661"))
 write("concepts/concept-c-halo-icon.svg", svg(120, 120, halo_icon_group(10, 10, 1, ESPRESSO, GOLD)))
 
 # Path data for React components ---------------------------------------------

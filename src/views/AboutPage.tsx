@@ -1,69 +1,68 @@
+import { AppointmentCta } from "@/components/AppointmentCta";
 import { Container } from "@/components/Container";
-import { FinalCta } from "@/components/FinalCta";
 import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { photos } from "@/content/media";
 import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
+/**
+ * About page. Only mood/interior imagery is used here: stock or AI images of
+ * people are never presented as Dilek. Add her real portrait as a new photo
+ * slot when available.
+ */
 export function AboutPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.about;
-  const hasPortrait = Boolean(photos["dilek-portrait"].file);
 
   return (
     <>
-      <PageHero locale={locale} photo="atmosphere" {...t.hero} />
+      <PageHero locale={locale} photo="interior" {...t.hero} />
 
-      <section className="py-20 sm:py-28">
-        <Container className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20">
-          {/* Only a REAL photo of Dilek may be used here (never AI-generated). */}
-          <Photo
-            id="dilek-portrait"
-            locale={locale}
-            className="mx-auto w-full max-w-md shadow-soft"
-            rounded="rounded-t-[999px] rounded-b-[2rem]"
-            caption={hasPortrait ? undefined : t.story.portraitCaption}
-            sizes="(min-width: 1024px) 40vw, 90vw"
-          />
+      <section className="py-16 sm:py-24">
+        <Container className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <figure>
+            <div className="overflow-hidden rounded-[2rem] lg:rounded-t-[999px]" data-reveal="mask">
+              <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 1024px) 40vw, 90vw" />
+            </div>
+            <figcaption className="mt-4 text-xs uppercase tracking-[0.2em] text-muted">{t.story.imageNote}</figcaption>
+          </figure>
           <div>
             <SectionHeading eyebrow={t.story.eyebrow} title={t.story.title} />
             {t.story.paragraphs.map((p) => (
-              <p key={p} className="mt-6 text-lg leading-relaxed text-espresso-soft">
+              <p key={p} className="lead mt-6" data-reveal>
                 {p}
               </p>
             ))}
-            <blockquote className="mt-10 border-l-2 border-champagne pl-6">
-              <p className="font-serif text-3xl italic leading-snug sm:text-4xl">“{t.quote}”</p>
-              <footer className="mt-4 text-sm uppercase tracking-[0.2em] text-champagne-deep">— Dilek</footer>
+            <blockquote className="mt-10 border-l-2 border-gold pl-6" data-reveal>
+              <p className="font-serif text-3xl italic leading-snug text-forest sm:text-4xl">“{t.quote}”</p>
+              <footer className="mt-4 text-xs uppercase tracking-[0.24em] text-gold-deep">— Dilek</footer>
             </blockquote>
           </div>
         </Container>
       </section>
 
-      <section className="bg-ivory-100 py-20 sm:py-28">
+      <section className="on-dark bg-forest py-16 text-ivory sm:py-24">
         <Container>
-          <SectionHeading eyebrow={t.values.eyebrow} title={t.values.title} align="center" />
-          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeading eyebrow={t.values.eyebrow} title={t.values.title} />
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-[2rem] bg-ivory/12 sm:grid-cols-2 lg:grid-cols-4">
             {t.values.items.map((v, i) => (
-              <li key={v.title} className="rounded-[1.75rem] bg-ivory p-8 shadow-card">
-                <span className="font-serif text-5xl italic text-champagne">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-5 text-3xl">{v.title}</h3>
-                <p className="mt-3 leading-relaxed text-espresso-soft">{v.body}</p>
+              <li key={v.title} className="bg-forest p-8 sm:p-10" data-reveal style={{ ["--reveal-delay" as string]: `${i * 100}ms` }}>
+                <span className="font-serif text-4xl italic text-gold">0{i + 1}</span>
+                <h3 className="mt-5 font-serif text-3xl text-ivory">{v.title}</h3>
+                <p className="mt-3 leading-relaxed text-ivory/72">{v.body}</p>
               </li>
             ))}
           </ul>
         </Container>
       </section>
 
-      <section className="py-20 sm:py-28">
-        <Container className="grid gap-12 lg:grid-cols-2 lg:items-center">
-          <Photo id="hero-detail" locale={locale} className="w-full max-w-md shadow-soft" sizes="(min-width: 1024px) 40vw, 90vw" />
+      <section className="py-16 sm:py-24">
+        <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div>
             <SectionHeading eyebrow={t.vision.eyebrow} title={t.vision.title} intro={t.vision.body} />
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row" data-reveal>
               <ButtonLink href={href(locale, "treatments")} arrow>
                 {dict.cta.viewTreatments}
               </ButtonLink>
@@ -72,10 +71,13 @@ export function AboutPage({ locale }: { locale: Locale }) {
               </ButtonLink>
             </div>
           </div>
+          <div className="overflow-hidden rounded-[2rem]" data-reveal="mask">
+            <Photo id="contact" locale={locale} sizes="(min-width: 1024px) 38vw, 90vw" />
+          </div>
         </Container>
       </section>
 
-      <FinalCta locale={locale} dict={dict} />
+      <AppointmentCta locale={locale} dict={dict} />
     </>
   );
 }

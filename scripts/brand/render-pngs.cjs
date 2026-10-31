@@ -20,16 +20,16 @@ const og = (lang) => {
   const t = lang === "nl"
     ? { a: "Zacht, zuiver", b: "en stralend.", c: "Professioneel waxen op afspraak" }
     : { a: "Soft, pure", b: "and glowing.", c: "Professional waxing by appointment" };
-  return `<body style="--w:1200px;--h:630px;display:flex;background:#faf7f2">
+  return `<body style="--w:1200px;--h:630px;display:flex;background:#f4f0e8">
   <div style="flex:1.1;padding:70px 64px;display:flex;flex-direction:column;justify-content:space-between">
     <div style="height:58px">${svg("logo-horizontal.svg").replace(/width="[^"]*" height="[^"]*"/, 'height="58"')}</div>
     <div>
-      <div style="font-family:Corm;font-weight:500;font-size:88px;line-height:1;color:#302725;letter-spacing:-2px">${t.a}<br><span style="font-family:CormI;font-weight:400;font-style:italic;color:#84623a">${t.b}</span></div>
-      <div style="margin-top:30px;font-family:Jost;font-size:20px;letter-spacing:6px;text-transform:uppercase;color:#74665f">${t.c}</div>
+      <div style="font-family:Corm;font-weight:500;font-size:88px;line-height:1;color:#20382f;letter-spacing:-2px">${t.a}<br><span style="font-family:CormI;font-weight:400;font-style:italic;color:#56634f">${t.b}</span></div>
+      <div style="margin-top:30px;font-family:Jost;font-size:20px;letter-spacing:6px;text-transform:uppercase;color:#5f6661">${t.c}</div>
     </div>
-    <div style="font-family:Jost;font-size:20px;color:#302725;letter-spacing:1px">glowbydilek.nl</div>
+    <div style="font-family:Jost;font-size:20px;color:#20382f;letter-spacing:1px">glowbydilek.nl</div>
   </div>
-  <div style="flex:0.9;position:relative;background:radial-gradient(70% 55% at 55% 35%,#fff7ee,rgba(255,247,238,0) 60%),linear-gradient(160deg,#efdcc9,#e2c3b2 45%,#c99f8c);display:flex;align-items:center;justify-content:center">
+  <div style="flex:0.9;position:relative;background:radial-gradient(70% 55% at 55% 35%,rgba(185,156,107,.35),rgba(185,156,107,0) 60%),linear-gradient(160deg,#2d4a3e,#20382f 55%,#162a22);display:flex;align-items:center;justify-content:center">
     <div style="position:absolute;inset:28px;border:1px solid rgba(250,247,242,.55);border-radius:999px 999px 28px 28px"></div>
     <div style="width:270px;height:270px">${svg("logo-icon-light.svg").replace(/width="[^"]*" height="[^"]*"/, 'width="270" height="270"')}</div>
   </div></body>`;

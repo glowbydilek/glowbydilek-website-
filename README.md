@@ -6,14 +6,14 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 
 ## Features
 
-- Dutch is the default language (no URL prefix). English lives under `/en`. Each page has a translated slug, `hreflang` alternates and a language switcher that keeps you on the same page.
-- Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, plus an internal brand review page at `/merkidentiteit` (not indexed).
-- Brand identity: a custom logo system (concept "Lumen"), an ivory, champagne, blush, nude and espresso palette, and Cormorant Garamond with Jost. See [`docs/BRAND.md`](docs/BRAND.md).
-- Expandable service architecture: future categories (laser, skin care, beauty) are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-- Appointment requests run through a pre-filled email (`hello@glowbydilek.nl`). No data is stored on the website.
-- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (BeautySalon, Service catalogue, FAQPage, BreadcrumbList). No invented address or prices.
-- Performance: static pages, self-hosted fonts and no third-party scripts. Photos are pre-optimised to responsive WebP (`npm run photos`), so no runtime image processing is needed.
-- Accessibility: semantic landmarks, a skip link, a keyboard-friendly menu and FAQ (`<details>`), visible focus styles, AA-contrast gold for text, and `prefers-reduced-motion` support.
+- Dutch is the default language (no URL prefix). English lives under `/en`. Pages have translated slugs, `hreflang` alternates and a language switcher that keeps you on the same page.
+- Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, Privacy, plus an internal brand page at `/merkidentiteit` (not indexed).
+- Premium design system: forest, ivory, stone, sage, champagne gold and charcoal; Cormorant Garamond with Jost; editorial layouts. Motion includes scroll reveals, image unmasking, parallax, a glass header and a gallery carousel, all respecting reduced motion. See [`docs/RESEARCH.md`](docs/RESEARCH.md) and [`docs/BRAND.md`](docs/BRAND.md).
+- **Contact form** and **appointment-request form**, sent server-side to `hello@glowbydilek.nl` (Reply-To set to the customer) with a customer acknowledgement in Dutch or English. Includes a honeypot, timing check, rate limit and validation. See [`docs/EMAIL.md`](docs/EMAIL.md).
+- **WhatsApp** button: hidden until `NEXT_PUBLIC_WHATSAPP_NUMBER` is set.
+- Expandable service architecture: laser, skin care, beauty and retail are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (BeautySalon, Service catalogue, FAQPage, BreadcrumbList), using only confirmed business information.
+- Performance: static pages (except the two form endpoints), self-hosted fonts, no third-party scripts, and pre-optimised responsive WebP photos (`npm run photos`).
 
 | Page | Dutch (default) | English |
 | --- | --- | --- |
@@ -23,16 +23,18 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 | About Dilek | `/over-dilek` | `/en/about-dilek` |
 | Contact | `/contact` | `/en/contact` |
 | Request appointment | `/afspraak-maken` | `/en/book-appointment` |
+| Privacy | `/privacy` | `/en/privacy` |
 
-## Still needed from the owner
+## Owner checklist
 
 | What | Where |
 | --- | --- |
-| **Photography** (9 slots; brand panels are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
-| **A real portrait of Dilek** (never AI-generated) | `dilek-portrait` slot |
+| **SMTP environment variables** (required for the forms) | Hostinger → Environment variables; see [`docs/EMAIL.md`](docs/EMAIL.md) |
+| **Photography** (11 slots; botanical artwork panels are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| WhatsApp number (optional) | `NEXT_PUBLIC_WHATSAPP_NUMBER` |
 | Confirmed prices and durations | `src/content/treatments.ts`, then set `pricesPublished = true` |
-| Optional: phone, WhatsApp, Instagram, city/region for local SEO | `src/content/site.ts` |
-| Personal story and edits to the About text | `src/i18n/dictionaries/nl.ts` and `en.ts` |
+| Real portrait of Dilek, personal story, city/region | `src/content/media.ts`, dictionaries, `src/content/site.ts` |
+| Review of the privacy statement | `src/i18n/dictionaries/*.ts` → `privacy` |
 
 ## Development
 
@@ -47,7 +49,7 @@ npm run dev
 Checks:
 
 ```bash
-npm run lint && npm run typecheck && npm run build
+npm run lint && npm run typecheck && npm test && npm run build
 ```
 
 ## Deploying to Hostinger (Node.js Web Apps)
@@ -55,7 +57,7 @@ npm run lint && npm run typecheck && npm run build
 1. Connect this GitHub repository (branch `main`) in hPanel → Websites → Node.js Web App.
 2. Framework: **Next.js**. Node.js version: **20 or 22**.
 3. Build command: `npm run build`. Start command: `npm start`. Output directory: `.next` (Hostinger's default for Next.js).
-4. Environment variable: `NEXT_PUBLIC_SITE_URL=https://your-domain.nl`.
+4. Environment variables: `NEXT_PUBLIC_SITE_URL=https://glowbydilek.nl`, plus the SMTP variables from [`docs/EMAIL.md`](docs/EMAIL.md).
 
 `next start` listens on the `PORT` that Hostinger provides.
 
