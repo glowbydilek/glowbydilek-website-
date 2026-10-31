@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CareTabs } from "@/components/CareTabs";
 import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
@@ -10,14 +11,15 @@ import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { treatmentGroups } from "@/content/treatments";
-import { href, type Locale } from "@/i18n/config";
+import { categoryCopy } from "@/content/copy";
+import { bookingHref, categoryHref, href, treatmentHref, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { serviceJsonLd } from "@/lib/seo";
 
 export function TreatmentsPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.treatments;
-  const faqs = [...dict.faq.treatments, dict.faq.general[0], dict.faq.general[1], dict.faq.general[2], dict.faq.general[3]];
+  const faqs = [dict.faq.treatments[0], dict.faq.treatments[3], dict.faq.general[1], dict.faq.general[2]];
 
   return (
     <>
@@ -32,22 +34,37 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
         </div>
       </PageHero>
 
-      {/* Zone navigation */}
-      <nav aria-label={t.zonesLabel} className="sticky top-[var(--header-safe)] z-30">
-        <Container className="flex justify-center py-2">
-          <div className="glass flex max-w-full gap-1 overflow-x-auto rounded-full p-1.5">
+      {/* Choose an area */}
+      <section aria-labelledby="zones-title" className="section-tight border-t border-stone/70 bg-ivory-50">
+        <Container>
+          <h2 id="zones-title" className="eyebrow">
+            {dict.hub.title}
+          </h2>
+          <ul className="mt-6 grid gap-4 md:grid-cols-3">
             {treatmentGroups.map((g) => (
-              <a
-                key={g.id}
-                href={`#${g.id}`}
-                className="shrink-0 rounded-full px-5 py-2.5 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-charcoal transition-colors hover:bg-charcoal hover:text-ivory"
-              >
-                {g.name[locale]}
-              </a>
+              <li key={g.id}>
+                <Link
+                  href={categoryHref(locale, g.id)}
+                  className="group grid h-full grid-cols-[5.5rem_1fr] items-center gap-4 rounded-[var(--radius-card)] border border-stone bg-ivory p-3 pr-4 transition-shadow duration-500 hover:shadow-card md:grid-cols-1 md:p-4"
+                >
+                  {hasPhoto(g.photo) && (
+                    <div className="zoom-frame overflow-hidden rounded-2xl">
+                      <Photo id={g.photo} locale={locale} ratio={4 / 3} sizes="(min-width: 768px) 28vw, 96px" />
+                    </div>
+                  )}
+                  <span className="md:px-1 md:pb-1">
+                    <span className="flex items-center justify-between gap-3 font-serif text-[1.6rem] leading-tight text-charcoal">
+                      {categoryCopy(locale, g.id).label}
+                      <Icon name="arrow" className="h-4 w-4 shrink-0 text-gold-deep transition-transform duration-500 group-hover:translate-x-1" />
+                    </span>
+                    <span className="mt-1 block text-sm leading-relaxed text-charcoal-soft">{categoryCopy(locale, g.id).teaser}</span>
+                  </span>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </Container>
-      </nav>
+      </section>
 
       {/* Why waxing */}
       <section className="section-tight">
@@ -64,7 +81,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
             {t.about.facts.map((f, i) => (
               <div key={f.label} className={`flex flex-col items-center px-2 py-8 text-center ${i > 0 ? "border-l border-stone" : ""}`}>
                 <dt className="order-2 mt-2 text-[0.66rem] uppercase tracking-[0.14em] text-muted">{f.label}</dt>
-                <dd className="order-1 font-serif text-[1.7rem] text-charcoal sm:text-[2.6rem]">{f.value}</dd>
+                <dd className="order-1 whitespace-nowrap font-serif text-[1.4rem] text-charcoal min-[400px]:text-[1.7rem] sm:text-[2.6rem]">{f.value}</dd>
               </div>
             ))}
           </dl>
@@ -76,16 +93,16 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
         const photo = hasPhoto(g.photo);
         const tint = idx % 2 === 0 ? "bg-ivory-50" : "";
         return (
-          <section key={g.id} id={g.id} aria-labelledby={`${g.id}-title`} className={`section scroll-mt-[calc(var(--header-safe)+4rem)] ${tint}`}>
+          <section key={g.id} id={g.id} aria-labelledby={`${g.id}-title`} className={`section scroll-mt-[var(--header-safe)] ${tint}`}>
             <Container className={`grid items-start gap-10 lg:gap-16 ${photo ? "md:grid-cols-[0.85fr_1.15fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`}>
               <div className={photo && idx % 2 === 1 ? "md:order-2" : ""}>
                 {photo && (
-                  <div className="mb-8 overflow-hidden rounded-[var(--radius-media)] md:sticky md:top-[calc(var(--header-safe)+5rem)] md:mb-0" data-reveal="mask">
+                  <div className="mb-8 overflow-hidden rounded-[var(--radius-media)] md:sticky md:top-[calc(var(--header-safe)+2rem)] md:mb-0" data-reveal="mask">
                     <Photo id={g.photo} locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
                   </div>
                 )}
                 {!photo && (
-                  <div className="lg:sticky lg:top-[calc(var(--header-safe)+5rem)]">
+                  <div className="lg:sticky lg:top-[calc(var(--header-safe)+2rem)]">
                     <p className="eyebrow" data-reveal>
                       0{idx + 1} · {dict.nav.treatments}
                     </p>
@@ -122,18 +139,23 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                 )}
                 <ul className={`${photo ? "mt-7" : ""} divide-y divide-stone border-y border-stone`}>
                   {g.treatments.map((tr) => (
-                    <li key={tr.id} className="group grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
+                    <li key={tr.id} className="group relative grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
                       <div>
-                        <h3 className="font-serif text-[1.65rem] leading-tight text-charcoal">{tr.name[locale]}</h3>
+                        <h3 className="font-serif text-[1.65rem] leading-tight text-charcoal">
+                          <Link href={treatmentHref(locale, tr.id)} className="underline-offset-4 hover:text-gold-deep hover:underline">
+                            {tr.name[locale]}
+                          </Link>
+                        </h3>
                         <p className="mt-1.5 leading-relaxed text-charcoal-soft">{tr.description[locale]}</p>
                       </div>
-                      <a
-                        href={href(locale, "booking")}
+                      <Link
+                        href={bookingHref(locale, tr.id)}
                         className="inline-flex min-h-11 items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep transition-colors hover:text-charcoal"
                       >
                         {dict.cta.request}
+                        <span className="sr-only">: {tr.name[locale]}</span>
                         <Icon name="arrow" className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -144,6 +166,11 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     {g.note[locale]}
                   </span>
                 </p>
+                <div className="mt-6" data-reveal>
+                  <ButtonLink href={categoryHref(locale, g.id)} variant="outline" arrow>
+                    {dict.service.categoryPage}
+                  </ButtonLink>
+                </div>
               </div>
             </Container>
           </section>
@@ -194,7 +221,14 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       {/* FAQ */}
       <section id="faq" className="section scroll-mt-[var(--header-safe)] bg-ivory-50">
         <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <SectionHeading eyebrow={dict.home.faq.eyebrow} title={t.faqTitle} intro={dict.home.faq.intro} />
+          <div>
+            <SectionHeading eyebrow={dict.home.faq.eyebrow} title={t.faqTitle} intro={dict.home.faq.intro} />
+            <div className="mt-6" data-reveal>
+              <ButtonLink href={href(locale, "faq")} variant="link" arrow>
+                {dict.cta.allFaqs}
+              </ButtonLink>
+            </div>
+          </div>
           <div data-reveal>
             <Faq items={faqs} />
           </div>

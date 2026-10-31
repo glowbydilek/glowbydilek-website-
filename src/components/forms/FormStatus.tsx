@@ -19,7 +19,7 @@ export function FormSuccess({
 }) {
   return (
     <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-charcoal p-8 text-ivory sm:p-12">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal-deep">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal">
         <Icon name="check" className="h-6 w-6" />
       </span>
       <h3 className="mt-6 font-serif text-4xl">{title}</h3>
@@ -43,9 +43,11 @@ export function FormError({ state, t, email }: { state: SubmitState; t: Dictiona
     unavailable: t.status.unavailable,
     sendFailed: t.status.sendFailed,
     rateLimited: t.status.rateLimited,
+    challenge: t.status.challenge,
+    duplicate: t.status.duplicate,
   };
   const message = map[state.error] ?? t.status.generic;
-  const showEmail = state.error !== "validation" && state.error !== "rateLimited";
+  const showEmail = !["validation", "rateLimited", "challenge", "duplicate"].includes(state.error);
   return (
     <div role="alert" className="flex gap-3 rounded-2xl border border-[#9b3b2f]/30 bg-[#9b3b2f]/5 p-5 text-sm leading-relaxed text-[#7d2f25]">
       <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0" />

@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "photos": "node scripts/optimize-photos.mjs",
     "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs",
-    "test": "node --experimental-strip-types --no-warnings --test tests/*.test.ts"
+    "check:site": "node scripts/check-site.mjs",
+    "test": "node --experimental-strip-types --no-warnings --import ./tests/register.mjs --test tests/*.test.ts"
   },
   "repository": {
     "type": "git",

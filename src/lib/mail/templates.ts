@@ -120,7 +120,7 @@ export function appointmentOwnerMail(d: AppointmentInput, treatmentNames: string
       ["Opmerking", d.notes ?? "—"],
       ["Taal", d.locale === "nl" ? "Nederlands" : "Engels"],
     ],
-    "Er is een nieuwe afspraakaanvraag binnengekomen via glowbydilek.nl. Deze afspraak is nog NIET bevestigd. Beantwoord deze e-mail om de afspraak te bevestigen, een ander moment voor te stellen of de aanvraag af te wijzen — je antwoord gaat direct naar de klant.",
+    "Er is een nieuwe afspraakaanvraag binnengekomen via glowbydilek.nl. Deze afspraak is nog NIET bevestigd. Beantwoord deze e-mail om de afspraak te bevestigen, een ander moment voor te stellen of de aanvraag af te wijzen — je antwoord gaat direct naar de klant. Deel praktische locatiegegevens pas in je persoonlijke bevestiging.",
   );
 }
 
@@ -136,7 +136,7 @@ export function appointmentCustomerMail(d: AppointmentInput, treatmentNames: str
         ["Alternative", d.alternative ?? "—"],
       ],
       "Thank you — your appointment request has arrived. Please note: this is a request, not yet a confirmed appointment. Dilek will review it and contact you personally to confirm the date and time, or to suggest another moment if yours isn't available.",
-      "Your appointment is only final once Dilek has confirmed it. Want to change or add something? Simply reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
+      "Your appointment is only final once Dilek has confirmed it. Treatments are available by appointment only; practical location details are shared personally after confirmation. Want to change or add something? Simply reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
     );
   }
   return mail(
@@ -149,6 +149,6 @@ export function appointmentCustomerMail(d: AppointmentInput, treatmentNames: str
       ["Alternatief", d.alternative ?? "—"],
     ],
     "Dank je wel — je afspraakaanvraag is binnen. Let op: dit is een aanvraag, nog geen bevestigde afspraak. Dilek bekijkt je aanvraag en neemt persoonlijk contact met je op om datum en tijd te bevestigen, of om een ander moment voor te stellen als het jouwe niet uitkomt.",
-    "Je afspraak staat pas vast als Dilek hem heeft bevestigd. Wil je iets wijzigen of aanvullen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nDilek — Glow by Dilek",
+    "Je afspraak staat pas vast als Dilek hem heeft bevestigd. Behandelingen zijn uitsluitend op afspraak; praktische locatiegegevens worden na bevestiging persoonlijk gedeeld. Wil je iets wijzigen of aanvullen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nDilek — Glow by Dilek",
   );
 }

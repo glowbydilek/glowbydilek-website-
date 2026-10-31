@@ -9,7 +9,7 @@ const base =
 
 const styles: Record<Variant, string> = {
   primary: "bg-charcoal px-8 py-4 text-ivory shadow-soft hover:bg-charcoal-soft hover:shadow-[0_20px_40px_-20px_rgb(22_42_34/0.6)]",
-  gold: "bg-gold px-8 py-4 text-charcoal-deep hover:bg-gold-light",
+  gold: "bg-gold px-8 py-4 text-charcoal hover:bg-gold-light",
   outline: "border border-charcoal/30 px-8 py-4 text-charcoal hover:border-charcoal hover:bg-charcoal-soft hover:text-ivory",
   light: "bg-ivory px-8 py-4 text-charcoal hover:bg-gold-light",
   "outline-light": "border border-ivory/35 px-8 py-4 text-ivory hover:border-ivory hover:bg-ivory hover:text-charcoal",

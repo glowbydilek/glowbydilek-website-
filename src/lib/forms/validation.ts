@@ -172,6 +172,9 @@ export function validateAppointment(
  */
 export function isLikelySpam(raw: Record<string, unknown>): boolean {
   if (typeof raw.company === "string" && raw.company.trim() !== "") return true;
+  // Link spam: real questions rarely contain more than a couple of URLs.
+  const free = [raw.message, raw.notes, raw.name].filter((v): v is string => typeof v === "string").join(" ");
+  if ((free.match(/https?:\/\/|www\./gi) ?? []).length > 3) return true;
   const elapsed = typeof raw.elapsedMs === "number" ? raw.elapsedMs : NaN;
   if (!Number.isFinite(elapsed)) return true;
   return elapsed < 3000 || elapsed > 12 * 60 * 60 * 1000;

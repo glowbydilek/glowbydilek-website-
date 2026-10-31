@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { PageHero } from "@/components/PageHero";
@@ -5,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { mailto } from "@/content/site";
 import { formatPrice, pricesPublished, treatmentGroups } from "@/content/treatments";
-import { href, type Locale } from "@/i18n/config";
+import { categoryHref, treatmentHref, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 export function PricesPage({ locale }: { locale: Locale }) {
@@ -27,12 +28,13 @@ export function PricesPage({ locale }: { locale: Locale }) {
               <div key={g.id} data-reveal>
                 <div className="flex items-baseline justify-between gap-4 border-b border-charcoal pb-4">
                   <h2 className="display text-[2.2rem] sm:text-5xl">{g.name[locale]}</h2>
-                  <a
-                    href={`${href(locale, "treatments")}#${g.id}`}
+                  <Link
+                    href={categoryHref(locale, g.id)}
                     className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep"
                   >
-                    {dict.cta.viewTreatments}
-                  </a>
+                    {dict.service.viewTreatment}
+                    <span className="sr-only">: {g.name[locale]}</span>
+                  </Link>
                 </div>
                 <table className="w-full text-left">
                   <caption className="sr-only">{g.name[locale]}</caption>
@@ -47,7 +49,9 @@ export function PricesPage({ locale }: { locale: Locale }) {
                     {g.treatments.map((tr) => (
                       <tr key={tr.id} className="border-b border-charcoal/10">
                         <th scope="row" className="py-5 pr-4 align-top font-normal">
-                          <span className="block font-serif text-2xl text-charcoal">{tr.name[locale]}</span>
+                          <Link href={treatmentHref(locale, tr.id)} className="block font-serif text-2xl text-charcoal underline-offset-4 hover:text-gold-deep hover:underline">
+                            {tr.name[locale]}
+                          </Link>
                           <span className="mt-1 block text-sm leading-relaxed text-muted">{tr.description[locale]}</span>
                         </th>
                         <td className="whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted">
@@ -73,7 +77,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
             ))}
           </div>
 
-          <aside className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
+          <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             {!pricesPublished && (
               <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory sm:p-9" data-reveal>
                 <Icon name="mail" className="h-6 w-6 text-gold" />
@@ -92,7 +96,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
-          </aside>
+          </div>
         </Container>
       </section>
 

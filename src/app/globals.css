@@ -15,10 +15,10 @@
   --color-stone-light: #ece5dc; /* quiet sections */
   --color-gold: #c4a16f; /* Champagne Gold — accents, rules, symbols (not body text) */
   --color-gold-light: #e2cda8;
-  --color-gold-deep: #85663a; /* gold for text on ivory — 4.9:1 */
+  --color-gold-deep: #765930; /* gold for text — ≥ 4.5:1 on ivory, nude-light, stone-light and nude */
   --color-charcoal: #292724; /* Elegant Charcoal — text, buttons, dark band */
   --color-charcoal-soft: #4a443f; /* body copy — 8.9:1 */
-  --color-muted: #6b635c; /* secondary text — 5.6:1 */
+  --color-muted: #635b54; /* secondary text — ≥ 4.6:1 on every light surface */
 
   --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost Variable", "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -56,8 +56,9 @@
 
 @layer base {
   :root {
-    /* Header: 0.75rem offset + 4rem bar (mobile) / 1rem + 4.5rem (desktop) */
-    --header-safe: 5rem;
+    /* Sticky header height (in flow): 4rem bar (mobile) / 4.75rem (desktop),
+       plus the iOS safe area. Used for scroll offsets and sticky elements. */
+    --header-safe: calc(4rem + env(safe-area-inset-top, 0px));
     /* Responsive spacing scale */
     --space-section: clamp(3.5rem, 2.25rem + 4.5vw, 6.5rem);
     --space-section-tight: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
@@ -65,7 +66,7 @@
   }
   @media (min-width: 1024px) {
     :root {
-      --header-safe: 6rem;
+      --header-safe: calc(4.75rem + env(safe-area-inset-top, 0px));
     }
   }
 
@@ -186,9 +187,9 @@
   .mt-block {
     margin-top: var(--space-block);
   }
-  /* Content starts below the fixed header */
+  /* Top spacing of a page hero (the sticky header already occupies its own space) */
   .pt-header {
-    padding-top: calc(var(--header-safe) + clamp(1.25rem, 3vw, 2.5rem));
+    padding-top: clamp(1.75rem, 1.25rem + 2.5vw, 3.5rem);
   }
 
   /*
@@ -200,7 +201,7 @@
   }
   @media (min-width: 768px) {
     .hero-photo-w {
-      width: min(100%, var(--hero-max, 30rem), calc((100svh - var(--header-safe) - 3.5rem) * 0.8));
+      width: min(100%, var(--hero-max, 30rem), calc((100svh - var(--header-safe) - 6rem) * 0.8));
     }
   }
 

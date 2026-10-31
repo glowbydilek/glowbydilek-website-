@@ -35,10 +35,10 @@ The React components `Logo` and `LogoSymbol` (`src/components/brand/Logo.tsx`) r
 | `stone` (Stone Beige) | `#DDD2C4` | Rules, dividers | — |
 | `stone-light` | `#ECE5DC` | Quiet sections | — |
 | `gold` (Champagne Gold) | `#C4A16F` | Symbol, rules, accents (not body text) | decorative |
-| `gold-deep` | `#85663A` | Small gold text and italic headline accents | 4.9:1 on ivory |
+| `gold-deep` | `#765930` | Small gold text and italic headline accents | 5.9:1 on ivory, ≥ 4.5:1 on nude, stone and nude-light |
 | `charcoal` (Elegant Charcoal) | `#292724` | Headings, buttons, the single dark band | 14.6:1 |
 | `charcoal-soft` | `#4A443F` | Body copy | 8.9:1 |
-| `muted` | `#6B635C` | Secondary text | 5.6:1 |
+| `muted` | `#635B54` | Secondary text | ≥ 4.6:1 on every light surface |
 
 The previous deep-green palette has been removed entirely.
 

@@ -26,7 +26,11 @@ export type PhotoId =
   | "experience"
   | "contact"
   | "interior"
-  | "treatments-hero";
+  | "treatments-hero"
+  | "portrait-soft"
+  | "linen"
+  | "dropper"
+  | "vase";
 
 export type Photo = {
   id: PhotoId;
@@ -191,6 +195,54 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Treatments page hero (model).",
     credit: "Adobe Stock #513816117 — Adobe Stock (free collection), Standard License",
+  },
+  "portrait-soft": {
+    id: "portrait-soft",
+    file: "portrait-soft",
+    aspect: 2356 / 1571,
+    focus: { mobile: "22% 35%", desktop: "20% 35%" },
+    alt: {
+      nl: "Vrouw met een gladde, verzorgde huid raakt zacht haar kaaklijn aan",
+      en: "Woman with smooth, well-cared-for skin gently touching her jawline",
+    },
+    brief: "Soft beauty portrait (model) for facial treatment pages. Not Dilek.",
+    credit: "Adobe Stock #469983189 — Adobe Stock (free collection), Standard License",
+  },
+  linen: {
+    id: "linen",
+    file: "linen",
+    aspect: 3041 / 1217,
+    focus: { mobile: "45% 50%", desktop: "50% 50%" },
+    alt: {
+      nl: "Linnen handdoeken en een houten ladder in zacht daglicht",
+      en: "Linen towels and a wooden ladder in soft daylight",
+    },
+    brief: "Calm linen still life for preparation and intimate pages (mood image, not the actual location).",
+    credit: "Adobe Stock #471323214 — Adobe Stock (free collection), Standard License",
+  },
+  dropper: {
+    id: "dropper",
+    file: "dropper",
+    aspect: 2356 / 1571,
+    focus: { mobile: "62% 50%", desktop: "60% 50%" },
+    alt: {
+      nl: "Amberkleurig flesje met druppelaar naast een grasaar op een lichte achtergrond",
+      en: "Amber dropper bottle next to a blade of grass on a light background",
+    },
+    brief: "Aftercare still life.",
+    credit: "Adobe Stock #350923403 — Adobe Stock (free collection), Standard License",
+  },
+  vase: {
+    id: "vase",
+    file: "vase",
+    aspect: 2336 / 1584,
+    focus: { mobile: "28% 60%", desktop: "25% 60%" },
+    alt: {
+      nl: "Keramische vaas met droogbloemen op een lichte tafel",
+      en: "Ceramic vase with dried flowers on a light table",
+    },
+    brief: "Quiet still life for FAQ and info pages.",
+    credit: "Adobe Stock #468279647 — Adobe Stock (free collection), Standard License",
   },
 };
 

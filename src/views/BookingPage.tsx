@@ -40,7 +40,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
               <AppointmentFormBlock locale={locale} dict={dict} />
             </div>
           </div>
-          <aside className="grid gap-5 sm:grid-cols-2 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)] lg:grid-cols-1 lg:self-start">
+          <div className="grid gap-5 sm:grid-cols-2 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)] lg:grid-cols-1 lg:self-start">
             {hasPhoto("materials") && (
               <div className="overflow-hidden rounded-[var(--radius-media)]" data-reveal="mask">
                 <Photo id="materials" locale={locale} ratio={4 / 5} sizes="(min-width: 1024px) 28vw, 90vw" />
@@ -51,7 +51,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
               <h3 className="mt-4 font-serif text-2xl text-charcoal">{t.future.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-charcoal-soft">{t.future.body}</p>
             </div>
-          </aside>
+          </div>
         </Container>
       </section>
 

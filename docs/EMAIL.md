@@ -30,14 +30,30 @@ In hPanel go to **Websites → glowbydilek.nl → (Node.js app) → Environment 
 | SMTP login/send fails | "Something went wrong — email hello@glowbydilek.nl" | Logs the error without credentials (502) |
 | Acknowledgement fails | Success, plus a note that the confirmation email could not be sent | Inquiry still delivered |
 | Invalid input | Inline field errors; focus moves to the first error | 422 with field codes |
+| Security check missing / failed / expired | Message to redo the check; the typed data is kept | 403 `challenge` (nothing sent) |
+| Same request sent twice | "This request has already been received" | 409 `duplicate` (nothing sent) |
+| Too many requests | "Please try again in a few minutes" | 429 with `Retry-After` |
 
 ## Spam and abuse protection
 
+Full details and Hostinger settings: `docs/SECURITY.md`.
+
+- **Cloudflare Turnstile** on both forms, verified **server-side** (Siteverify) before any email is sent. Missing, invalid, expired, reused, wrong-hostname and wrong-action tokens are rejected. On a failed or expired check the visitor keeps everything they typed and can simply retry.
 - Server-side validation (shared with the browser): length limits, email and phone formats, allowed treatments, and a date from today up to one year ahead.
-- A hidden **honeypot** field, plus a **minimum fill time** (3 seconds). Bots get a fake success and no email is sent.
+- A hidden **honeypot** field, a **minimum fill time** (3 seconds, measured in the browser) and a link-spam check. Bots get a fake success and no email is sent.
 - **Same-origin** check, JSON-only requests and a 12 KB body limit.
-- **Rate limit:** 5 submissions per 10 minutes per IP and form (in memory, per server instance).
-- Newlines are stripped from single-line fields (no header injection), and all values are HTML-escaped in emails.
+- **Rate limits** (in memory, hashed keys): 5 per 10 minutes per IP and form, 3 per hour per email address, 40 per 10 minutes for the whole site.
+- **Duplicate detection:** the same submission is accepted once per 24 hours (409 "already received"); the button is also locked while a request is in flight.
+- Newlines are stripped from single-line fields (no header injection), all values are HTML-escaped in emails, Reply-To is set as a structured address.
+- Logs contain error codes only — never names, email addresses, messages, IPs or tokens.
+
+## The request workflow (no automatic confirmation)
+
+1. The visitor sends a request. The site emails Dilek (subject *Afspraakaanvraag — name — date*, Reply-To = customer) and sends the visitor an acknowledgement that clearly says the appointment is **not yet confirmed**.
+2. Dilek reviews her calendar.
+3. Dilek replies to the notification email to **confirm**, **suggest another moment** or **decline**. The reply goes straight to the customer. Practical location details are shared in that personal confirmation only.
+
+There is no admin dashboard or calendar on the website yet, and none is pretended. See `docs/ARCHITECTURE.md` for the plan for approvals and reminders.
 
 ## Verification status
 

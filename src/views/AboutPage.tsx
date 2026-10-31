@@ -28,7 +28,8 @@ export function AboutPage({ locale }: { locale: Locale }) {
       {/* Story */}
       <section className="section">
         <Container className="grid items-start gap-10 md:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          <div className="md:sticky md:top-[calc(var(--header-safe)+1.5rem)]">
+          {/* Hidden on phones: the hero photo sits directly above, two photos in a row would break the rhythm. */}
+          <div className={`md:sticky md:top-[calc(var(--header-safe)+1.5rem)] ${hasPhoto("botanical") ? "hidden md:block" : ""}`}>
             {hasPhoto("botanical") ? (
               <div className="overflow-hidden rounded-[var(--radius-media)]" data-reveal="mask">
                 <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 92vw" />

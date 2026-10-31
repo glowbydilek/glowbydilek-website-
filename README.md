@@ -9,16 +9,24 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 - Dutch is the default language (no URL prefix). English lives under `/en`. Pages have translated slugs, `hreflang` alternates and a language switcher that keeps you on the same page.
 - Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, Privacy, plus an internal brand page at `/merkidentiteit` (not indexed).
 - Brand identity based on the approved logo (champagne-gold "Glow", script "by Dilek", lotus symbol) as pure-vector SVGs. Palette: ivory, nude, stone, champagne gold and charcoal. Type: Cormorant Garamond, Jost and Parisienne (signature only). Responsive spacing tokens and a header safe-zone; subtle reveals with no hero parallax, respecting reduced motion. See [`docs/BRAND.md`](docs/BRAND.md) and [`docs/RESEARCH.md`](docs/RESEARCH.md).
-- **Contact form** and **appointment-request form**, sent server-side to `hello@glowbydilek.nl` (Reply-To set to the customer) with a customer acknowledgement in Dutch or English. Includes a honeypot, timing check, rate limit and validation. See [`docs/EMAIL.md`](docs/EMAIL.md).
+- **Contact form** and **appointment-request form**, sent server-side to `hello@glowbydilek.nl` (Reply-To set to the customer) with a customer acknowledgement in Dutch or English. Protected by Cloudflare Turnstile (server-side Siteverify), a honeypot, timing and link-spam checks, rate limits per IP/email/site, duplicate detection and validation. See [`docs/EMAIL.md`](docs/EMAIL.md) and [`docs/SECURITY.md`](docs/SECURITY.md).
+- **Service pages:** 3 category pages and 13 treatment pages per language, generated from `src/content/` with localised slugs; treatment CTAs preselect the treatment in the request form. Plus preparation, aftercare, FAQ and appointment-process pages.
+- **Location privacy:** no address or location is published anywhere; only "Treatments are available by appointment only. Practical location details are shared personally after confirmation." (enforced by `tests/content.test.ts`).
 - **WhatsApp** button: hidden until `NEXT_PUBLIC_WHATSAPP_NUMBER` is set.
 - Expandable service architecture: laser, skin care, beauty and retail are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (BeautySalon, Service catalogue, FAQPage, BreadcrumbList), using only confirmed business information.
-- Performance: static pages (except the two form endpoints), self-hosted fonts, no third-party scripts, and pre-optimised responsive WebP photos (`npm run photos`).
+- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (Organization, Service, FAQPage, BreadcrumbList), using only confirmed business information.
+- Performance: static pages (except the two form endpoints), self-hosted fonts, no third-party scripts except Turnstile on the form pages, and pre-optimised responsive WebP photos (`npm run photos`).
 
 | Page | Dutch (default) | English |
 | --- | --- | --- |
 | Home | `/` | `/en` |
 | Waxing treatments | `/waxbehandelingen` | `/en/waxing-treatments` |
+| Categories | `/waxbehandelingen/gezicht`, `/lichaam`, `/bikini-intiem` | `/en/waxing-treatments/face`, `/body`, `/bikini-intimate` |
+| Treatments (13) | `/waxbehandelingen/{category}/{treatment}` | `/en/waxing-treatments/{category}/{treatment}` |
+| Appointment process | `/hoe-werkt-een-afspraak` | `/en/appointment-process` |
+| Preparation | `/voorbereiding` | `/en/preparation` |
+| Aftercare | `/nazorg` | `/en/aftercare` |
+| FAQ | `/veelgestelde-vragen` | `/en/faq` |
 | Prices | `/prijzen` | `/en/prices` |
 | About Dilek | `/over-dilek` | `/en/about-dilek` |
 | Contact | `/contact` | `/en/contact` |
@@ -30,7 +38,8 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 | What | Where |
 | --- | --- |
 | **SMTP environment variables** (required for the forms) | Hostinger → Environment variables; see [`docs/EMAIL.md`](docs/EMAIL.md) |
-| Photography: 11 licensed Adobe Stock photos in place; real portrait of Dilek optional | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| **Turnstile keys** (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`) — production pending | [`docs/SECURITY.md`](docs/SECURITY.md) |
+| Photography: 16 licensed Adobe Stock photos in place; real portrait of Dilek optional | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
 | Production release steps | [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md) |
 | Review of first-person copy, and the full list of open items | [`docs/OWNER-CHECKLIST.md`](docs/OWNER-CHECKLIST.md) |
 | WhatsApp number (optional) | `NEXT_PUBLIC_WHATSAPP_NUMBER` |
@@ -66,7 +75,7 @@ npm run photos
 1. Connect this GitHub repository (branch `main`) in hPanel → Websites → Node.js Web App.
 2. Framework: **Next.js**. Node.js version: **20 or 22**.
 3. Build command: `npm run build`. Start command: `npm start`. Output directory: `.next` (Hostinger's default for Next.js).
-4. Environment variables: `NEXT_PUBLIC_SITE_URL=https://glowbydilek.nl`, plus the SMTP variables from [`docs/EMAIL.md`](docs/EMAIL.md).
+4. Environment variables: `NEXT_PUBLIC_SITE_URL=https://glowbydilek.nl`, plus the SMTP variables from [`docs/EMAIL.md`](docs/EMAIL.md) and the Turnstile keys from [`docs/SECURITY.md`](docs/SECURITY.md).
 
 `next start` listens on the `PORT` that Hostinger provides.
 

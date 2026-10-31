@@ -1,12 +1,15 @@
 import type { ReactNode } from "react";
 import { hasPhoto, type PhotoId } from "@/content/media";
 import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { LogoSymbol } from "./brand/Logo";
 import { Container } from "./Container";
+import { Breadcrumbs, type BreadcrumbItem } from "./ui/Breadcrumbs";
 import { Photo } from "./ui/Photo";
 
 /**
- * Inner-page hero, always below the fixed header (`pt-header`).
+ * Inner-page hero. The header is sticky and part of the document flow, so
+ * the hero never sits underneath it.
  * - With a registered photo: text + full 4:5 photo (width derived from the
  *   viewport height, so it is never cropped and never hides under the header).
  * - Without a photo: a compact typographic hero with the brand symbol —
@@ -22,6 +25,7 @@ export function PageHero({
   children,
   photoLabel,
   ratio = 4 / 5,
+  crumbs,
 }: {
   locale: Locale;
   eyebrow: string;
@@ -34,12 +38,20 @@ export function PageHero({
   photoLabel?: string;
   /** Frame ratio for the hero photo (default 4:5; use 5:4 for landscape subjects). */
   ratio?: number;
+  /** Visible breadcrumb trail (Home is added automatically). */
+  crumbs?: BreadcrumbItem[];
 }) {
   const withPhoto = hasPhoto(photo);
+  const dict = getDictionary(locale);
   const text = (
     <div>
+      {crumbs && (
+        <div className="rise mb-6">
+          <Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: locale === "nl" ? "/" : "/en" }, ...crumbs]} />
+        </div>
+      )}
       <p className="eyebrow rise">{eyebrow}</p>
-      <h1 className="display rise mt-5 text-[2.6rem] [--rise-delay:80ms] sm:text-6xl lg:text-[4.6rem]">
+      <h1 className="display rise mt-5 text-[2.5rem] [--rise-delay:80ms] sm:text-6xl lg:text-[4.4rem]">
         {title}
         {titleEm && (
           <>
@@ -56,7 +68,7 @@ export function PageHero({
   if (!withPhoto) {
     return (
       <section className="pt-header relative overflow-hidden border-b border-stone/70 bg-ivory pb-[var(--space-section-tight)]">
-        <LogoSymbol className="pointer-events-none absolute -right-16 top-[calc(var(--header-safe)+1rem)] hidden h-auto w-[26rem] opacity-[0.12] lg:block xl:right-[4vw]" />
+        <LogoSymbol className="pointer-events-none absolute -right-16 top-8 hidden h-auto w-[26rem] opacity-[0.12] lg:block xl:right-[4vw]" />
         <Container className="relative">
           <div className="max-w-3xl">{text}</div>
         </Container>

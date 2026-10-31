@@ -12,8 +12,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { mailto, siteConfig } from "@/content/site";
 import { treatmentGroups } from "@/content/treatments";
-import { href, type Locale } from "@/i18n/config";
+import { TreatmentCard } from "@/components/TreatmentCard";
+import { categoryCopy } from "@/content/copy";
+import type { TreatmentId } from "@/content/slugs";
+import { categoryHref, href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+
+const featured: TreatmentId[] = ["eyebrows", "underarms", "full-legs", "brazilian"];
 
 export function HomePage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -96,7 +101,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             {treatmentGroups.map((g, i) => (
               <li key={g.id} className="border-b border-stone" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
                 <Link
-                  href={`${href(locale, "treatments")}#${g.id}`}
+                  href={categoryHref(locale, g.id)}
                   className="group grid gap-4 py-7 transition-colors duration-500 hover:bg-ivory-50 sm:px-4 md:grid-cols-[4rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-8"
                 >
                   {hasPhoto(g.photo) ? (
@@ -107,7 +112,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                     <span className="font-serif text-4xl italic text-gold-deep">0{i + 1}</span>
                   )}
                   <div>
-                    <h3 className="font-serif text-[2rem] leading-none text-charcoal sm:text-[2.4rem]">{g.name[locale]}</h3>
+                    <h3 className="font-serif text-[2rem] leading-none text-charcoal sm:text-[2.4rem]">{categoryCopy(locale, g.id).label}</h3>
                     <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted">
                       {g.treatments.length} {t.treatments.count}
                     </p>
@@ -117,7 +122,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                     <p className="mt-3 text-sm text-muted">{g.treatments.map((tr) => tr.name[locale]).join(" · ")}</p>
                   </div>
                   <span className="flex h-12 w-12 items-center justify-center justify-self-start rounded-full border border-charcoal/20 text-charcoal transition-all duration-500 group-hover:border-charcoal group-hover:bg-charcoal group-hover:text-ivory md:justify-self-end">
-                    <span className="sr-only">{t.treatments.more}</span>
+                    <span className="sr-only">
+                      {t.treatments.more}: {categoryCopy(locale, g.id).label}
+                    </span>
                     <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:-rotate-45" />
                   </span>
                 </Link>
@@ -127,10 +134,33 @@ export function HomePage({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
+      {/* 3b ─ Featured treatments (each links to its own page) */}
+      <section className="section-tight bg-ivory-50">
+        <Container>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <SectionHeading eyebrow={dict.hub.eyebrow} title={dict.hub.featuredTitle} intro={dict.hub.featuredIntro} size="md" />
+          </div>
+          <ul className="mt-block grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((id, i) => (
+              <li key={id} data-reveal style={{ ["--reveal-delay" as string]: `${i * 80}ms` }}>
+                <TreatmentCard locale={locale} id={id} withPhoto />
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
       {/* 4 ─ How it works */}
       <section className="section bg-stone-light">
         <Container>
-          <SectionHeading eyebrow={t.experience.eyebrow} title={t.experience.title} intro={t.experience.intro} />
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <SectionHeading eyebrow={t.experience.eyebrow} title={dict.hub.afterTitle} intro={t.experience.intro} />
+            <div data-reveal className="shrink-0">
+              <ButtonLink href={href(locale, "process")} variant="outline" arrow>
+                {dict.hub.afterLink}
+              </ButtonLink>
+            </div>
+          </div>
           <ol className="mt-block grid gap-px overflow-hidden rounded-[var(--radius-card)] bg-stone sm:grid-cols-2 lg:grid-cols-4">
             {t.experience.steps.map((s, i) => (
               <li key={s.title} className="bg-ivory-50 p-6 sm:p-7" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
@@ -199,15 +229,23 @@ export function HomePage({ locale }: { locale: Locale }) {
       {/* 7 ─ Preparation & aftercare */}
       <section className="section">
         <Container className="grid items-start gap-10 md:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-          <div className="md:sticky md:top-[calc(var(--header-safe)+1.5rem)]">
+          <div className="md:sticky md:top-[calc(var(--header-safe)+2rem)]">
             <SectionHeading eyebrow={t.care.eyebrow} title={t.care.title} intro={t.care.intro} />
-            <aside className="mt-7 rounded-[var(--radius-card)] bg-stone-light p-6" data-reveal>
+            <div className="mt-7 rounded-[var(--radius-card)] bg-stone-light p-6" data-reveal>
               <h3 className="flex items-center gap-3 font-serif text-2xl text-charcoal">
                 <Icon name="sparkle" className="h-5 w-5 text-gold-deep" />
                 {t.care.firstTime.title}
               </h3>
               <p className="mt-2 leading-relaxed text-charcoal-soft">{t.care.firstTime.body}</p>
-            </aside>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2" data-reveal>
+              <ButtonLink href={href(locale, "preparation")} variant="link" arrow>
+                {dict.nav.preparation}
+              </ButtonLink>
+              <ButtonLink href={href(locale, "aftercare")} variant="link" arrow>
+                {dict.nav.aftercare}
+              </ButtonLink>
+            </div>
           </div>
           <div data-reveal>
             <CareTabs care={dict.care} />
@@ -221,7 +259,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           <div>
             <SectionHeading eyebrow={t.faq.eyebrow} title={t.faq.title} intro={t.faq.intro} />
             <div className="mt-6" data-reveal>
-              <ButtonLink href={`${href(locale, "treatments")}#faq`} variant="link" arrow>
+              <ButtonLink href={href(locale, "faq")} variant="link" arrow>
                 {dict.cta.allFaqs}
               </ButtonLink>
             </div>

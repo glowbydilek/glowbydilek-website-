@@ -1,6 +1,8 @@
 # Photography
 
-**Status: complete. All 12 photo slots are filled** (11 planned + a dedicated treatments-page hero) with licensed photos from the **Adobe Stock free collection**. Each was licensed on 31 October 2026 through the connected Adobe account and downloaded at 2400 px.
+**Status: 16 photo slots, all filled** with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
+
+**Review for the service-page rebuild (October 2026).** The existing 12 slots and their 48 WebP files were reviewed again: none were weak enough to replace (no watermarks, no bad crops at the current focal points, all on-palette). Instead, **4 slots were added** for the new category, treatment and guide pages so the same image is not repeated on every page. They come from assets that had already been licensed in the same session but were not used yet — no new licences or paid services were needed. Unsplash could not be used (the connected account's email is unconfirmed); Firefly / Figma image generation was not used (no AI people, and paid credits would be required).
 
 ## Licence
 
@@ -26,12 +28,20 @@
 | `experience` | 475998587 | Interior of new modern beautician's office… | Closing band, Booking hero (labelled "Sfeerbeeld") | — |
 | `contact` | 423935121 | Round stylish ceramic vase with dried flower lagurus casting shadows | Contact hero, About: vision | — |
 | `interior` | 402582095 | Composition of dried flowers and herbs in a glass vase on a beige wall background | About hero, Home: meet Dilek | — |
+| `portrait-soft` | 469983189 | Beauty portrait, woman touching her jawline (model) | Upper lip page | Focal point left |
+| `linen` | 471323214 | Linen towels on a wooden ladder, bathroom still life | Preparation page (labelled "Sfeerbeeld"), Brazilian page | — |
+| `dropper` | 350923403 | Amber dropper bottle with a grass stem on white | Aftercare page | — |
+| `vase` | 468279647 | Ceramic vase with dried flowers on a table | FAQ page, Back page | — |
+
+### Where each treatment page takes its image
+
+Eyebrows `zone-face` · Upper lip `portrait-soft` · Chin `editorial-portrait` · Full face `hero` · Underarms `aftercare` · Half arms `materials` · Full arms `botanical` · Half legs `zone-body` · Full legs `treatments-hero` · Back `vase` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
 
 Alt text is written per slot in Dutch and English and describes the actual photo content (`src/content/media.ts`).
 
 ## Files
 
-- **Optimised:** `public/images/photos/<slot>-{640,1024,1600,2200}.webp`, 48 files, about 2.3 MB in total. Sizes are chosen via `srcset`. The hero image loads with high priority; the others are lazy-loaded.
+- **Optimised:** `public/images/photos/<slot>-{640,1024,1600,2200}.webp`, 64 files. Sizes are chosen via `srcset`. The hero image loads with high priority; the others are lazy-loaded.
 - **Originals:** not committed (`assets/photos/*.jpg` is in `.gitignore`). Re-download them from Adobe Stock using the IDs above when needed.
 - **Focal points:** set per slot and breakpoint in `src/content/media.ts` (`focus.mobile` / `focus.desktop`).
 
