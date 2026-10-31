@@ -23,9 +23,9 @@ export function LanguageSwitcher({
     <nav aria-label={label} className={`flex items-center gap-1 text-[0.72rem] font-medium tracking-[0.2em] ${className}`}>
       {locales.map((l, i) => (
         <span key={l} className="flex items-center gap-1">
-          {i > 0 && <span className="text-charcoal/25" aria-hidden="true">/</span>}
+          {i > 0 && <span className="text-espresso/25" aria-hidden="true">/</span>}
           {l === locale ? (
-            <span aria-current="true" className="px-1 text-charcoal">
+            <span aria-current="true" className="px-1 text-espresso">
               {localeLabels[l].short}
             </span>
           ) : (
@@ -34,7 +34,7 @@ export function LanguageSwitcher({
               hrefLang={localeLabels[l].hrefLang}
               lang={l}
               onClick={onNavigate}
-              className="px-1 text-charcoal-muted transition-colors hover:text-champagne-deep"
+              className="px-1 text-espresso-muted transition-colors hover:text-champagne-deep"
               title={localeLabels[l].long}
             >
               {localeLabels[l].short}

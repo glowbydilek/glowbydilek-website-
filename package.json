@@ -8,7 +8,9 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "photos": "node scripts/optimize-photos.mjs",
+    "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs"
   },
   "repository": {
     "type": "git",

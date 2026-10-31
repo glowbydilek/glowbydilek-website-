@@ -1,51 +1,68 @@
 # Architecture and roadmap
 
-## Current state (v0.1)
+## Current state
 
-- A marketing website rendered statically by Next.js (App Router) and served with `next start`.
-- No database, no API routes, no forms, no cookies, no analytics, and no personal data processing.
-- Online booking is switched off through `src/lib/booking/config.ts` (`onlineBookingEnabled: false`).
+- A Next.js App Router website, statically prerendered and served with `next start` on Hostinger Node.js Web Apps.
+- No database, no API routes, no cookies, no analytics, no third-party scripts and no personal data processing.
+- **Appointments run on email requests.** The "Afspraak aanvragen" page composes a pre-filled email in the visitor's own mail app (`mailto:`). Nothing is sent or stored by the website. Online booking is off via `src/lib/booking/config.ts`.
+- **Hostinger compatibility:** the build uses the WebAssembly SWC compiler with webpack (see README). Keep `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` on the same exact version.
 
-### Internationalisation
+## Content and service architecture
 
-- `src/i18n/config.ts` defines the locales and a **route map** with translated slugs per page.
-- Two route groups act as separate root layouts so each language gets the correct `<html lang>`:
-  - `src/app/(nl)` → `/`, `/waxbehandelingen`, ...
-  - `src/app/(en)/en` → `/en`, `/en/waxing-treatments`, ...
-- Each `page.tsx` is a thin wrapper around a shared view in `src/views`, so the layout is written once.
-- The English dictionary is typed against the Dutch one, so a missing translation fails the type check.
+| File | Purpose |
+| --- | --- |
+| `src/content/services.ts` | Service categories. Waxing is `published`; laser, skin care and other beauty treatments are planned and **unpublished**. |
+| `src/content/treatments.ts` | Treatment groups and treatments with stable ids. Prices and durations stay empty until confirmed (`pricesPublished`). |
+| `src/content/media.ts` | Photo slots, alt text (NL/EN) and briefs. Brand panels show until real photos are added. |
+| `src/content/site.ts` | Business details: email, and optional phone, socials and address. |
+| `src/i18n/` | Locales, localised routes and dictionaries. English is typed against Dutch. |
 
-### Content
+### Adding a new service category later (for example laser hair removal)
 
-- `src/content/treatments.ts` is the single source of truth for treatments, durations and prices. Every treatment has a stable `id` that the booking system will reference.
-- `src/content/site.ts` holds business and contact details. Fields left `undefined` are hidden everywhere, including structured data.
+Only once the owner has confirmed availability, qualifications, equipment and pricing:
+
+1. Fill in the category in `services.ts`, add its treatments, and set `published: true`.
+2. Add a route key with NL/EN slugs in `src/i18n/config.ts` (for example `/laserontharing` and `/en/laser-hair-removal`) plus page metadata in both dictionaries.
+3. Add two thin page files (nl + en) that render a category view. The waxing page (`TreatmentsPage`) is the template.
+
+The footer, structured data and sitemap use the route map and the published categories, so no redesign is needed.
 
 ## Planned: secure appointment system
 
-Planned building blocks (to be decided and reviewed before building):
+### Functional requirements
+
+1. The customer chooses one or more treatments; the total duration comes from confirmed treatment durations.
+2. The customer picks a date and time from **live availability**.
+3. The customer enters contact details: name, email, optional phone, and consent.
+4. The appointment is created as a **request** (`requested`).
+5. The owner **approves or rejects** it in the admin dashboard.
+6. **Emails** go out for request received, approved, rejected and cancelled.
+7. A **reminder** is sent **24 hours** before each approved appointment.
+8. An **admin calendar** offers day, week and list views, blocked periods, availability rules and manual appointments.
+9. **No double bookings**, enforced in the database and not only in the UI.
+10. **GDPR (AVG):** consent, minimal data, retention limits, export and deletion.
+
+### Proposed technical design
 
 | Concern | Direction |
 | --- | --- |
-| Database | Managed PostgreSQL hosted in the EU (for example Supabase EU or Neon EU) with Prisma or Drizzle |
-| API | Next.js Route Handlers or Server Actions under `/api/booking/*`, with server-side validation (zod) |
-| Availability | Opening hours plus blocked periods; slots computed server-side from treatment durations |
-| Abuse protection | Rate limiting and a privacy-friendly CAPTCHA (for example Cloudflare Turnstile) |
-| Notifications | Transactional email (EU provider) for confirmation and cancellation links |
-| Payments (optional) | Mollie (iDEAL), added only after booking is stable |
-| Privacy (AVG/GDPR) | Explicit consent, data minimisation (no medical details), retention policy, deletion on request, privacy statement and processor agreements |
+| Database | Managed PostgreSQL in the EU (for example Supabase EU or Neon EU) with Drizzle or Prisma migrations. |
+| Double-booking prevention | Postgres `EXCLUDE USING gist (tstzrange(start, end) WITH &&) WHERE status IN ('requested','approved')`, so overlapping rows are rejected even under concurrent requests. Slots are re-validated inside the same transaction. |
+| API | Next.js route handlers or server actions under `/api/booking/*`, with zod validation, CSRF-safe POSTs and rate limiting. |
+| Abuse protection | A privacy-friendly CAPTCHA (for example Cloudflare Turnstile) on the request form, plus rate limits per IP and email. |
+| Email | Transactional email from an EU provider, sent from `hello@glowbydilek.nl` with SPF, DKIM and DMARC, using the templates listed in `EmailTemplate`. **The current mailbox/DNS setup must not be changed without the owner.** |
+| Reminders | A scheduled job every 15 minutes calls `sendDueReminders()`. `reminderSentAt` makes it idempotent. |
+| Admin auth | Owner account (plus optional staff) with strong passwords and 2FA. Sessions in HTTP-only, secure, SameSite cookies. Every request is authorised on the server. |
+| Admin UI | `/admin` (already disallowed in `robots.txt`), its own layout and `noindex`. |
+| Privacy | A privacy statement page (NL/EN), consent checkbox, retention policy (for example deleting inactive customers after 24 months), and data export and deletion in the admin. No medical details in free text. |
+| Hosting | Hostinger Node.js (current) works if a cron/scheduler is available. Otherwise use a managed scheduler that calls a signed endpoint. |
 
-The domain model and the service contract are already sketched in `src/lib/booking/types.ts` (`Appointment`, `Customer`, `TimeSlot`, `BookingService`).
+The domain model and service contract are sketched in `src/lib/booking/types.ts`.
 
 ### Rollout steps
 
-1. Add a privacy statement page (NL/EN).
-2. Implement the database schema and `BookingService` behind the `onlineBookingEnabled` flag.
-3. Replace the informational content on `/afspraak-maken` and `/en/book-appointment` with the booking flow once the flag is on.
-4. Security review, then end-to-end tests, then launch.
-
-## Planned: admin dashboard
-
-- Route: `/admin` (already disallowed in `robots.txt`). It will get its own layout outside the public route groups and will be `noindex`.
-- Authentication: a single owner account (plus optional staff) with strong passwords and 2FA, using Auth.js or the database provider's auth. Sessions stored in HTTP-only, secure cookies.
-- Authorisation is checked on the server for every request (in `proxy.ts` and in each route handler), never only in the UI.
-- Features: today's agenda, an appointment list with status changes, opening hours and blocked periods, a treatment and price editor (moving `src/content/treatments.ts` into the database), and customer lookup with data-export and deletion tools.
+1. Owner confirms treatments, durations, prices, availability rules and the privacy statement.
+2. Build the database schema, `BookingService` and email templates behind `onlineBookingEnabled`.
+3. Build the admin dashboard (auth, calendar, approve/reject).
+4. Security review, end-to-end tests (including concurrent double-booking tests) and a soft launch.
+5. Switch the flag on. The request composer on `/afspraak-maken` is then replaced by the booking flow.

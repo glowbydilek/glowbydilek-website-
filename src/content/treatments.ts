@@ -1,17 +1,19 @@
 import type { Locale } from "@/i18n/config";
+import type { PhotoId } from "./media";
+import type { ServiceCategoryId } from "./services";
 
 /**
- * Treatment & price catalogue.
+ * Treatment catalogue (currently: waxing).
  *
- * This is the single source of truth for the Treatments page, the Prices page
- * and (later) the booking system. Each treatment has a stable `id` so the
- * future appointment system can reference it.
+ * Single source of truth for the treatments page, the prices page, the
+ * appointment request and (later) the booking system. Every treatment has a
+ * stable `id` that the future booking backend will reference.
  *
- * IMPORTANT: prices and durations below are INDICATIVE and must be confirmed
- * by Dilek before launch. While `pricesConfirmed` is false the website shows
- * a clear notice that the prices are indicative.
+ * PRICES & DURATIONS: intentionally left empty. Only fill in `price` and
+ * `durationMinutes` with figures confirmed by the owner, then set
+ * `pricesPublished = true`. Until then the site shows "op aanvraag".
  */
-export const pricesConfirmed = false;
+export const pricesPublished: boolean = false;
 
 type Localised = Record<Locale, string>;
 
@@ -19,89 +21,92 @@ export type Treatment = {
   id: string;
   name: Localised;
   description: Localised;
-  /** Duration in minutes (indicative). */
-  durationMinutes: number;
-  /** Price in whole euros (indicative). */
-  priceEuro: number;
-  /** Price starts "from" this amount. */
-  fromPrice?: boolean;
+  /** Confirmed duration in minutes. */
+  durationMinutes?: number;
+  /** Confirmed price in euros. */
+  price?: { amount: number; from?: boolean };
 };
 
-export type TreatmentCategory = {
+export type TreatmentGroup = {
   id: "face" | "body" | "intimate";
+  category: ServiceCategoryId;
+  photo: PhotoId;
   name: Localised;
   intro: Localised;
+  note: Localised;
   treatments: Treatment[];
 };
 
-export const treatmentCategories: TreatmentCategory[] = [
+export const treatmentGroups: TreatmentGroup[] = [
   {
     id: "face",
+    category: "waxing",
+    photo: "zone-face",
     name: { nl: "Gezicht", en: "Face" },
     intro: {
-      nl: "Verfijnde behandelingen voor een strak en verzorgd gezicht, met extra aandacht voor de gevoelige huid.",
-      en: "Refined treatments for a smooth, polished look, with extra care for delicate facial skin.",
+      nl: "De huid in het gezicht is dun en gevoelig. Daarom werkt Dilek hier extra nauwkeurig, met kleine zones en een rustige, zachte techniek.",
+      en: "Facial skin is thin and sensitive. That is why Dilek works with extra precision here, in small sections and with a calm, gentle technique.",
+    },
+    note: {
+      nl: "Gebruik je producten met retinol, AHA of BHA? Stop daar minimaal een week van tevoren mee en meld het altijd vooraf.",
+      en: "Using products with retinol, AHA or BHA? Stop at least one week beforehand and always mention it in advance.",
     },
     treatments: [
       {
         id: "eyebrows",
-        name: { nl: "Wenkbrauwen in model", en: "Eyebrow shaping" },
+        name: { nl: "Wenkbrauwen", en: "Eyebrows" },
         description: {
-          nl: "Wenkbrauwen worden in een natuurlijke vorm gebracht die past bij jouw gezicht.",
-          en: "Brows shaped into a natural form that complements your features.",
+          nl: "Wenkbrauwen in een natuurlijke vorm die past bij jouw gezicht en gelaatstrekken.",
+          en: "Brows shaped into a natural form that suits your face and features.",
         },
-        durationMinutes: 15,
-        priceEuro: 15,
       },
       {
         id: "upper-lip",
         name: { nl: "Bovenlip", en: "Upper lip" },
         description: {
-          nl: "Snel, zacht en nauwkeurig verwijderen van haartjes op de bovenlip.",
-          en: "Quick, gentle and precise removal of upper lip hair.",
+          nl: "Snel en nauwkeurig verwijderen van haartjes op de bovenlip, voor een gladde, verzorgde huid.",
+          en: "Quick, precise removal of upper lip hair for smooth, polished skin.",
         },
-        durationMinutes: 10,
-        priceEuro: 10,
       },
       {
         id: "chin",
         name: { nl: "Kin", en: "Chin" },
         description: {
-          nl: "Een gladde kinpartij met een behandeling die rekening houdt met de gevoelige huid.",
-          en: "A smooth chin area with a treatment that respects sensitive skin.",
+          nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",
+          en: "A smooth chin area, with care for the sensitive skin along the jawline.",
         },
-        durationMinutes: 10,
-        priceEuro: 10,
       },
       {
         id: "full-face",
         name: { nl: "Volledig gezicht", en: "Full face" },
         description: {
-          nl: "Wenkbrauwen, bovenlip, kin en wangen in één verzorgende behandeling.",
-          en: "Brows, upper lip, chin and cheeks in one caring treatment.",
+          nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",
+          en: "Brows, upper lip, chin and cheeks in one calm, caring treatment.",
         },
-        durationMinutes: 30,
-        priceEuro: 35,
       },
     ],
   },
   {
     id: "body",
+    category: "waxing",
+    photo: "zone-body",
     name: { nl: "Lichaam", en: "Body" },
     intro: {
-      nl: "Langdurig gladde huid op armen, benen en meer — zorgvuldig en hygiënisch uitgevoerd.",
-      en: "Long-lasting smooth skin on arms, legs and more — performed carefully and hygienically.",
+      nl: "Voor armen, benen, oksels en rug. Waxen verwijdert het haar met wortel en al, waardoor je huid weken langer glad blijft dan na scheren.",
+      en: "For arms, legs, underarms and back. Waxing removes hair from the root, so your skin stays smooth for weeks longer than after shaving.",
+    },
+    note: {
+      nl: "Scrub de huid een dag van tevoren licht, en kom bij voorkeur zonder bodylotion of olie op de te behandelen zone.",
+      en: "Lightly exfoliate the day before, and preferably come without body lotion or oil on the area to be treated.",
     },
     treatments: [
       {
         id: "underarms",
         name: { nl: "Oksels", en: "Underarms" },
         description: {
-          nl: "Een frisse, gladde huid onder de armen die weken meegaat.",
-          en: "Fresh, smooth underarms that last for weeks.",
+          nl: "Een frisse, gladde huid onder de armen, zonder de stoppels die scheren achterlaat.",
+          en: "Fresh, smooth underarms, without the stubble that shaving leaves behind.",
         },
-        durationMinutes: 15,
-        priceEuro: 15,
       },
       {
         id: "half-arms",
@@ -110,8 +115,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "Van pols tot elleboog, voor zachte en verzorgde armen.",
           en: "From wrist to elbow, for soft and polished arms.",
         },
-        durationMinutes: 20,
-        priceEuro: 20,
       },
       {
         id: "full-arms",
@@ -120,8 +123,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "De volledige armen, van pols tot schouder.",
           en: "The complete arms, from wrist to shoulder.",
         },
-        durationMinutes: 30,
-        priceEuro: 30,
       },
       {
         id: "half-legs",
@@ -130,8 +131,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "Van enkel tot knie, voor zijdezachte benen.",
           en: "From ankle to knee, for silky smooth legs.",
         },
-        durationMinutes: 30,
-        priceEuro: 30,
       },
       {
         id: "full-legs",
@@ -140,8 +139,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "De volledige benen, van enkel tot bovenbeen.",
           en: "The complete legs, from ankle to upper thigh.",
         },
-        durationMinutes: 50,
-        priceEuro: 50,
       },
       {
         id: "back",
@@ -150,29 +147,30 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "Een gladde rug met een grondige en comfortabele behandeling.",
           en: "A smooth back with a thorough and comfortable treatment.",
         },
-        durationMinutes: 30,
-        priceEuro: 35,
-        fromPrice: true,
       },
     ],
   },
   {
     id: "intimate",
+    category: "waxing",
+    photo: "zone-intimate",
     name: { nl: "Bikini & intiem", en: "Bikini & intimate" },
     intro: {
-      nl: "Discreet, respectvol en in alle rust. Jouw comfort en privacy staan altijd voorop.",
-      en: "Discreet, respectful and calm. Your comfort and privacy always come first.",
+      nl: "Discreet, respectvol en in alle rust. Je bepaalt zelf wat je wilt, Dilek legt elke stap uit en jouw privacy en comfort staan altijd voorop.",
+      en: "Discreet, respectful and unhurried. You decide what you want, Dilek explains every step and your privacy and comfort always come first.",
+    },
+    note: {
+      nl: "Twijfel je welke behandeling bij je past? Bespreek het gerust vooraf of tijdens de afspraak — er is geen vraag te gek.",
+      en: "Not sure which treatment suits you? Feel free to discuss it beforehand or during the appointment — no question is too awkward.",
     },
     treatments: [
       {
         id: "bikini-line",
         name: { nl: "Bikinilijn", en: "Bikini line" },
         description: {
-          nl: "Een nette lijn langs de randen van je bikini.",
-          en: "A neat line along the edges of your bikini.",
+          nl: "Een nette lijn langs de randen van je bikini of ondergoed.",
+          en: "A neat line along the edges of your bikini or underwear.",
         },
-        durationMinutes: 20,
-        priceEuro: 25,
       },
       {
         id: "brazilian",
@@ -181,8 +179,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "Bijna alles verwijderd, met een smal strookje of klein driehoekje naar wens.",
           en: "Almost everything removed, leaving a small strip or triangle as you prefer.",
         },
-        durationMinutes: 40,
-        priceEuro: 40,
       },
       {
         id: "hollywood",
@@ -191,8 +187,6 @@ export const treatmentCategories: TreatmentCategory[] = [
           nl: "Volledig glad, voor een frisse en verzorgde look.",
           en: "Completely smooth, for a fresh and polished feel.",
         },
-        durationMinutes: 45,
-        priceEuro: 45,
       },
     ],
   },
@@ -207,5 +201,5 @@ export function formatPrice(amount: number, locale: Locale): string {
 }
 
 export function allTreatments(): Treatment[] {
-  return treatmentCategories.flatMap((c) => c.treatments);
+  return treatmentGroups.flatMap((g) => g.treatments);
 }

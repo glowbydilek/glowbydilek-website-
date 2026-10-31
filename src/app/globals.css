@@ -1,38 +1,48 @@
 @import "tailwindcss";
 
-/* Brand palette: ivory, champagne gold, soft nude and charcoal. */
+/*
+ * Glow by Dilek design system
+ * Warm ivory · champagne gold · soft blush · warm nude · deep espresso
+ */
 @theme {
-  --color-ivory: #fbf8f3;
-  --color-ivory-100: #f6f1e9;
-  --color-ivory-200: #efe6d9;
-  --color-champagne: #c9a96e;
-  --color-champagne-light: #e5d2ab;
-  --color-champagne-deep: #8a6a33; /* accessible gold for small text */
-  --color-nude: #ead8cb;
-  --color-nude-light: #f3e6dc;
-  --color-nude-deep: #c9a493;
-  --color-charcoal: #2b2826;
-  --color-charcoal-soft: #4d4744;
-  --color-charcoal-muted: #6f6763;
+  --color-ivory: #faf7f2;
+  --color-ivory-100: #f4eee6;
+  --color-ivory-200: #ebe2d6;
+  --color-champagne: #c7a477;
+  --color-champagne-light: #e7d5bb;
+  --color-champagne-deep: #84623a; /* accessible gold for small text (≥ 4.5:1 on ivory) */
+  --color-blush: #eedcd6;
+  --color-blush-light: #f6ebe7;
+  --color-nude: #d8b8a9;
+  --color-nude-deep: #b48f7f;
+  --color-espresso: #302725;
+  --color-espresso-soft: #4d423f;
+  --color-espresso-muted: #74665f;
 
   --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost Variable", "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --tracking-luxe: 0.28em;
+  --shadow-soft: 0 30px 60px -30px rgb(48 39 37 / 0.28);
+  --shadow-card: 0 1px 2px rgb(48 39 37 / 0.04), 0 18px 40px -22px rgb(48 39 37 / 0.22);
 
-  --shadow-soft: 0 20px 50px -24px rgb(43 40 38 / 0.25);
-  --shadow-card: 0 1px 2px rgb(43 40 38 / 0.04), 0 12px 32px -16px rgb(43 40 38 / 0.18);
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-up: fade-up 1s var(--ease-luxe) both;
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(14px);
+      transform: translateY(18px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
     }
   }
 }
@@ -45,7 +55,7 @@
 
   body {
     background-color: var(--color-ivory);
-    color: var(--color-charcoal);
+    color: var(--color-espresso);
     font-family: var(--font-sans);
     font-weight: 350;
     -webkit-font-smoothing: antialiased;
@@ -59,44 +69,93 @@
   h4 {
     font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--color-charcoal);
+    letter-spacing: -0.015em;
+    color: inherit;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
     background-color: var(--color-champagne-light);
-    color: var(--color-charcoal);
+    color: var(--color-espresso);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-champagne-deep);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 4px;
+  }
+
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
 
 @layer components {
   .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    letter-spacing: var(--tracking-luxe);
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--color-champagne-deep);
   }
-
-  .gold-rule {
-    display: block;
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
     height: 1px;
-    width: 3.5rem;
-    background: linear-gradient(90deg, transparent, var(--color-champagne), transparent);
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .eyebrow-center::after {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .on-dark .eyebrow,
+  .eyebrow.on-dark {
+    color: var(--color-champagne);
   }
 
-  .bg-silk {
-    background:
-      radial-gradient(120% 80% at 85% 10%, rgb(229 210 171 / 0.45), transparent 60%),
-      radial-gradient(90% 70% at 5% 90%, rgb(234 216 203 / 0.7), transparent 60%),
-      var(--color-ivory);
+  .display {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .display em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-champagne-deep);
+  }
+  .on-dark .display em {
+    color: var(--color-champagne);
+  }
+
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
