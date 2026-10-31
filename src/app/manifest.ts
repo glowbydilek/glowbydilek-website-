@@ -4,11 +4,14 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Glow by Dilek",
     short_name: "Glow by Dilek",
-    description: "Premium waxing & beauty",
+    description: "Professioneel waxen op afspraak",
     start_url: "/",
     display: "standalone",
-    background_color: "#fbf8f3",
-    theme_color: "#fbf8f3",
-    icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
+    background_color: "#faf7f2",
+    theme_color: "#faf7f2",
+    icons: [
+      { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
+      { src: "/brand/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
   };
 }

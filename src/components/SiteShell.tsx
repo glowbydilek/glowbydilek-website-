@@ -13,7 +13,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
     <html lang={locale}>
       <body className="flex min-h-dvh flex-col">
         <Header locale={locale} dict={dict} />
-        <main id="main" className="-mt-20 flex-1">
+        <main id="main" className="flex-1">
           {children}
         </main>
         <Footer locale={locale} dict={dict} />

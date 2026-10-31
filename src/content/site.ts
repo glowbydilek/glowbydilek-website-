@@ -1,9 +1,14 @@
 /**
  * Central business details.
  *
- * Fill in the contact fields below once they are final. Any field left as
- * `undefined` is simply hidden on the website (and omitted from structured
- * data), so nothing incorrect is ever shown to visitors or search engines.
+ * Any field left `undefined` is hidden on the website and omitted from
+ * structured data, so nothing unconfirmed is ever shown to visitors or
+ * search engines.
+ *
+ * Location: treatments currently take place by appointment from a
+ * home-based setting. The address is shared personally after an appointment
+ * is confirmed and is deliberately NOT published. Add `address` only when a
+ * public studio address exists.
  */
 export type SiteConfig = {
   name: string;
@@ -11,18 +16,14 @@ export type SiteConfig = {
   url: string;
   country: string;
   contact: {
-    email?: string;
+    email: string;
     /** International format, e.g. "+31612345678" */
     phone?: string;
     /** International format without "+", e.g. "31612345678" */
     whatsapp?: string;
     instagram?: string;
-    address?: {
-      street: string;
-      postalCode: string;
-      city: string;
-    };
-    /** City or region shown when no full address is published yet. */
+    address?: { street: string; postalCode: string; city: string };
+    /** Confirmed city/region for local SEO, e.g. "Rotterdam". */
     region?: string;
   };
 };
@@ -30,10 +31,10 @@ export type SiteConfig = {
 export const siteConfig: SiteConfig = {
   name: "Glow by Dilek",
   owner: "Dilek",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://www.glowbydilek.nl").replace(/\/+$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, ""),
   country: "NL",
   contact: {
-    email: undefined,
+    email: "hello@glowbydilek.nl",
     phone: undefined,
     whatsapp: undefined,
     instagram: undefined,
@@ -42,7 +43,9 @@ export const siteConfig: SiteConfig = {
   },
 };
 
-export function hasAnyContactChannel(): boolean {
-  const c = siteConfig.contact;
-  return Boolean(c.email || c.phone || c.whatsapp || c.instagram);
+export function mailto(subject: string, body?: string): string {
+  const params = new URLSearchParams({ subject });
+  if (body) params.set("body", body);
+  // URLSearchParams encodes spaces as "+", which some mail apps show literally.
+  return `mailto:${siteConfig.contact.email}?${params.toString().replace(/\+/g, "%20")}`;
 }

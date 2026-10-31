@@ -6,13 +6,14 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 
 ## Features
 
-- Dutch is the default language (no URL prefix). English lives under `/en`.
-- Each page has a translated URL slug, plus `hreflang` alternates and a language switcher that keeps you on the same page.
-- Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Book Appointment.
-- Brand palette: ivory, champagne gold, soft nude and charcoal. Fonts: Cormorant Garamond (headings) and Jost (body text), both self-hosted through `@fontsource`, so the build needs no network access.
-- SEO: per-page metadata, canonical URLs, Open Graph and Twitter cards, `sitemap.xml` with language alternates, `robots.txt`, a web manifest, and Schema.org `BeautySalon` JSON-LD.
-- Accessibility: semantic landmarks, a skip link, a keyboard-friendly mobile menu, visible focus styles and `prefers-reduced-motion` support.
-- Security headers are set in `next.config.ts`.
+- Dutch is the default language (no URL prefix). English lives under `/en`. Each page has a translated slug, `hreflang` alternates and a language switcher that keeps you on the same page.
+- Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, plus an internal brand review page at `/merkidentiteit` (not indexed).
+- Brand identity: a custom logo system (concept "Lumen"), an ivory, champagne, blush, nude and espresso palette, and Cormorant Garamond with Jost. See [`docs/BRAND.md`](docs/BRAND.md).
+- Expandable service architecture: future categories (laser, skin care, beauty) are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+- Appointment requests run through a pre-filled email (`hello@glowbydilek.nl`). No data is stored on the website.
+- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (BeautySalon, Service catalogue, FAQPage, BreadcrumbList). No invented address or prices.
+- Performance: static pages, self-hosted fonts and no third-party scripts. Photos are pre-optimised to responsive WebP (`npm run photos`), so no runtime image processing is needed.
+- Accessibility: semantic landmarks, a skip link, a keyboard-friendly menu and FAQ (`<details>`), visible focus styles, AA-contrast gold for text, and `prefers-reduced-motion` support.
 
 | Page | Dutch (default) | English |
 | --- | --- | --- |
@@ -21,21 +22,17 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 | Prices | `/prijzen` | `/en/prices` |
 | About Dilek | `/over-dilek` | `/en/about-dilek` |
 | Contact | `/contact` | `/en/contact` |
-| Book appointment | `/afspraak-maken` | `/en/book-appointment` |
+| Request appointment | `/afspraak-maken` | `/en/book-appointment` |
 
-## Not implemented yet (on purpose)
-
-Online booking, payments and customer data storage are **not** implemented. The booking page tells visitors this and points them to direct contact. The site has no forms and collects no personal data. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the future appointment system and admin dashboard will fit in.
-
-## Content to complete before launch
+## Still needed from the owner
 
 | What | Where |
 | --- | --- |
-| Contact details (email, phone, WhatsApp, Instagram, address or region) | `src/content/site.ts` (empty fields are hidden automatically) |
-| Final prices and durations, then set `pricesConfirmed = true` | `src/content/treatments.ts` |
-| Dilek's personal story and copy edits | `src/i18n/dictionaries/nl.ts` and `en.ts` |
-| Production domain | `NEXT_PUBLIC_SITE_URL` environment variable |
-| Photos (optional) | `public/images/` (the About page has a decorative frame ready to swap) |
+| **Photography** (9 slots; brand panels are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| **A real portrait of Dilek** (never AI-generated) | `dilek-portrait` slot |
+| Confirmed prices and durations | `src/content/treatments.ts`, then set `pricesPublished = true` |
+| Optional: phone, WhatsApp, Instagram, city/region for local SEO | `src/content/site.ts` |
+| Personal story and edits to the About text | `src/i18n/dictionaries/nl.ts` and `en.ts` |
 
 ## Development
 
@@ -81,12 +78,16 @@ src/
     (nl)/            Dutch root layout and pages (default language, no prefix)
     (en)/en/         English root layout and pages
     sitemap.ts, robots.ts, manifest.ts, icon.svg, globals.css
-  components/        Header, footer, buttons and other shared UI
+  components/        Header, footer, logo, UI kit, request composer
   views/             Page content shared by both languages
-  content/           Business details and the treatment/price catalogue
+  content/           Business details, services, treatments, photo manifest
   i18n/              Locale config, localised routes, dictionaries
   lib/seo.ts         Metadata and structured-data helpers
+  views/BrandPage    Internal brand review page
   lib/booking/       Types and feature flag for the future booking system
 scripts/prepare-swc-wasm.mjs   Offline SWC WebAssembly fallback for Hostinger builds
+scripts/optimize-photos.mjs    Converts assets/photos/* to responsive WebP
+scripts/brand/                 Logo generator (SVG) and PNG renderer
+public/brand/                  Logo system (SVG/PNG)
 docs/ARCHITECTURE.md
 ```
