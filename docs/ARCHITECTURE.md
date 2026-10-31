@@ -3,8 +3,10 @@
 ## Current state
 
 - A Next.js App Router website, statically prerendered and served with `next start` on Hostinger Node.js Web Apps.
-- No database, no API routes, no cookies, no analytics, no third-party scripts and no personal data processing.
-- **Appointments run on email requests.** The "Afspraak aanvragen" page composes a pre-filled email in the visitor's own mail app (`mailto:`). Nothing is sent or stored by the website. Online booking is off via `src/lib/booking/config.ts`.
+- No database, no cookies, no analytics and no third-party scripts.
+- **Forms:** `/api/contact` and `/api/appointment` are server-side route handlers that validate input (`src/lib/forms/validation.ts`, shared with the browser and unit-tested), apply spam protection and rate limiting, and send email over SMTP with nodemailer (`src/lib/mail/`). Nothing is stored in a database. See `docs/EMAIL.md`.
+- **Appointments are requests.** They are emailed to the studio and acknowledged to the customer as *not yet confirmed*. No availability is shown and nothing is confirmed automatically. Online booking stays off via `src/lib/booking/config.ts`.
+- **WhatsApp:** one setting (`NEXT_PUBLIC_WHATSAPP_NUMBER`, or `whatsappNumberFallback` in `src/content/site.ts`). While it is empty or invalid, no WhatsApp link is rendered.
 - **Hostinger compatibility:** the build uses the WebAssembly SWC compiler with webpack (see README). Keep `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` on the same exact version.
 
 ## Content and service architecture
@@ -65,4 +67,4 @@ The domain model and service contract are sketched in `src/lib/booking/types.ts`
 2. Build the database schema, `BookingService` and email templates behind `onlineBookingEnabled`.
 3. Build the admin dashboard (auth, calendar, approve/reject).
 4. Security review, end-to-end tests (including concurrent double-booking tests) and a soft launch.
-5. Switch the flag on. The request composer on `/afspraak-maken` is then replaced by the booking flow.
+5. Switch the flag on. The appointment-request form on `/afspraak-maken` is then replaced by the booking flow. Its fields already match `BookingService.requestAppointment`, and the email templates in `src/lib/mail/templates.ts` can be reused.

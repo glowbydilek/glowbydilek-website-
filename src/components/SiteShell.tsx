@@ -5,6 +5,8 @@ import { businessJsonLd } from "@/lib/seo";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { JsonLd } from "./JsonLd";
+import { Motion } from "./Motion";
+import { WhatsAppButton } from "./WhatsAppButton";
 
 /** Shared <html>/<body> shell used by the Dutch and English root layouts. */
 export function SiteShell({ locale, children }: { locale: Locale; children: ReactNode }) {
@@ -17,6 +19,8 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           {children}
         </main>
         <Footer locale={locale} dict={dict} />
+        <WhatsAppButton dict={dict} />
+        <Motion />
         <JsonLd data={businessJsonLd(locale)} />
       </body>
     </html>

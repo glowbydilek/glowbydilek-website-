@@ -12,7 +12,10 @@ export type IconName =
   | "plus"
   | "sparkle"
   | "clock"
-  | "info";
+  | "info"
+  | "leaf"
+  | "whatsapp"
+  | "chevron";
 
 const paths: Record<IconName, string> = {
   hygiene: "M12 3c3 4 6 7.2 6 10.5A6 6 0 0 1 6 13.5C6 10.2 9 7 12 3Z M9.5 14.5a2.6 2.6 0 0 0 2.5 2.4",
@@ -28,6 +31,9 @@ const paths: Record<IconName, string> = {
   sparkle: "M12 3.5c.6 4.2 2.3 5.9 6.5 6.5-4.2.6-5.9 2.3-6.5 6.5-.6-4.2-2.3-5.9-6.5-6.5 4.2-.6 5.9-2.3 6.5-6.5Z",
   clock: "M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z M12 7.5V12l3 2",
   info: "M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z M12 11v5.5 M12 7.8v.4",
+  leaf: "M5 19c0-8 5-14 15-15-1 10-7 15-15 15Z M5 19 13 11",
+  whatsapp: "M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.4L4.5 19.5Z M9.2 8.6c.3 2.6 2.4 4.9 5.2 5.6l1.2-1.2 1.8.8-.3 1.6c-3.8.3-8.5-3.5-8.6-7.6l1.5-.4.9 1.7-1.7-.5",
+  chevron: "M9 6l6 6-6 6",
 };
 
 export function Icon({ name, className = "h-6 w-6" }: { name: IconName; className?: string }) {

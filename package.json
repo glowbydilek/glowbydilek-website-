@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "photos": "node scripts/optimize-photos.mjs",
-    "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs"
+    "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs",
+    "test": "node --experimental-strip-types --no-warnings --test tests/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -27,12 +28,15 @@
     "@fontsource-variable/jost": "^5.3.0",
     "@next/swc-wasm-nodejs": "16.4.2",
     "next": "16.4.2",
+    "nodemailer": "10.1.1",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.20.5",
+    "@types/nodemailer": "8.0.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.39.5",

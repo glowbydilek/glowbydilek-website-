@@ -5,6 +5,7 @@ export function SectionHeading({
   align = "left",
   as: Tag = "h2",
   className = "",
+  size = "lg",
 }: {
   eyebrow?: string;
   title: string;
@@ -12,13 +13,16 @@ export function SectionHeading({
   align?: "center" | "left";
   as?: "h1" | "h2";
   className?: string;
+  size?: "md" | "lg";
 }) {
   const center = align === "center";
   return (
-    <div className={`${center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"} ${className}`}>
-      {eyebrow && <p className={`eyebrow ${center ? "eyebrow-center" : ""}`}>{eyebrow}</p>}
-      <Tag className="display mt-5 text-[2.35rem] sm:text-5xl lg:text-[3.4rem]">{title}</Tag>
-      {intro && <p className="mt-6 text-base leading-relaxed text-espresso-soft sm:text-lg">{intro}</p>}
+    <div className={`${center ? "mx-auto max-w-3xl text-center" : "max-w-2xl"} ${className}`} data-reveal>
+      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+      <Tag className={`display mt-5 ${size === "lg" ? "text-[2.5rem] sm:text-6xl lg:text-[4.25rem]" : "text-4xl sm:text-5xl"}`}>
+        {title}
+      </Tag>
+      {intro && <p className="lead mt-6">{intro}</p>}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export const localeLabels: Record<Locale, { short: string; long: string; hrefLan
   en: { short: "EN", long: "English", hrefLang: "en", ogLocale: "en_GB" },
 };
 
-export const routeKeys = ["home", "treatments", "prices", "about", "contact", "booking"] as const;
+export const routeKeys = ["home", "treatments", "prices", "about", "contact", "booking", "privacy"] as const;
 export type RouteKey = (typeof routeKeys)[number];
 
 export const routes: Record<RouteKey, Record<Locale, string>> = {
@@ -24,6 +24,7 @@ export const routes: Record<RouteKey, Record<Locale, string>> = {
   about: { nl: "/over-dilek", en: "/en/about-dilek" },
   contact: { nl: "/contact", en: "/en/contact" },
   booking: { nl: "/afspraak-maken", en: "/en/book-appointment" },
+  privacy: { nl: "/privacy", en: "/en/privacy" },
 };
 
 export function href(locale: Locale, key: RouteKey): string {

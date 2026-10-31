@@ -28,12 +28,16 @@ Clear space: at least the height of the pearl around the logo. Minimum size: ico
 
 | Name | Hex | Use |
 | --- | --- | --- |
-| Warm ivory | `#FAF7F2` | Main background |
-| Champagne gold | `#C7A477` | Accents, pearl, details (not for small text) |
-| Gold (text) | `#84623A` | Small gold text (meets WCAG AA on ivory) |
-| Soft blush | `#EEDCD6` | Soft surfaces |
-| Warm nude | `#D8B8A9` | Imagery tones, panels |
-| Deep espresso | `#302725` | Text, dark sections, buttons |
+| Warm ivory | `#F4F0E8` | Main background |
+| Deep forest | `#20382F` | Brand colour: dark sections, buttons, headings |
+| Forest deep | `#162A22` | Footer, FAQ section |
+| Soft stone | `#D5CCBE` | Soft surfaces |
+| Botanical sage | `#859283` | Accents (decorative) |
+| Sage (text) | `#56634F` | Italic headline accents and small text (5.6:1 on ivory) |
+| Champagne gold | `#B99C6B` | Accents, the logo pearl, gold buttons, labels on dark (5.0:1 on forest) |
+| Gold (text) | `#7A6034` | Small gold text on ivory (5.3:1) |
+| Rich charcoal | `#232825` | Body text |
+| Muted | `#5F6661` | Secondary text (5.4:1 on ivory) |
 
 ## Typography
 
@@ -44,4 +48,4 @@ Both fonts are self-hosted under the SIL Open Font License, which permits use in
 
 ## Tone of voice
 
-Warm, calm, personal and honest. Use "je/jij" in Dutch and "you" in English. Don't make claims that can't be backed up: no invented prices, certifications, reviews or addresses.
+Warm, calm, personal and honest. Use both "waxen" and "harsen" in Dutch (see docs/RESEARCH.md). Use "je/jij" in Dutch and "you" in English. Don't make claims that can't be backed up: no invented prices, certifications, reviews or addresses.

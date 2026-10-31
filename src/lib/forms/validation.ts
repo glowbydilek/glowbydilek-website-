@@ -1,0 +1,162 @@
+/**
+ * Server-side validation for the contact and appointment-request forms.
+ *
+ * Pure functions without framework imports so they can be unit-tested
+ * (tests/validation.test.ts). Error values are stable codes; the UI maps them
+ * to localised messages.
+ */
+
+export type Locale = "nl" | "en";
+export type ErrorCode = "required" | "invalid" | "tooShort" | "tooLong" | "pastDate" | "tooFar" | "consent";
+export type FieldErrors = Record<string, ErrorCode>;
+export type Result<T> = { ok: true; data: T } | { ok: false; errors: FieldErrors };
+
+export const CONTACT_TOPICS = ["question", "treatment", "appointment", "other"] as const;
+export type ContactTopic = (typeof CONTACT_TOPICS)[number];
+
+export const TIME_RANGES = ["morning", "afternoon", "evening", "flexible"] as const;
+export type TimeRange = (typeof TIME_RANGES)[number];
+
+export type ContactInput = {
+  locale: Locale;
+  name: string;
+  email: string;
+  phone?: string;
+  topic: ContactTopic;
+  message: string;
+};
+
+export type AppointmentInput = {
+  locale: Locale;
+  treatments: string[];
+  preferredDate: string;
+  timeRange: TimeRange;
+  alternative?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  notes?: string;
+};
+
+const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/i;
+const PHONE = /^\+?[0-9][0-9 ()-]{5,19}$/;
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Trims, collapses control characters and limits length. */
+function text(v: unknown, max: number, singleLine = true): string {
+  if (typeof v !== "string") return "";
+  let s = v.replace(/\r\n?/g, "\n").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "");
+  if (singleLine) s = s.replace(/\s+/g, " ");
+  return s.trim().slice(0, max + 1);
+}
+
+function locale(v: unknown): Locale {
+  return v === "en" ? "en" : "nl";
+}
+
+function checkName(name: string, errors: FieldErrors) {
+  if (!name) errors.name = "required";
+  else if (name.length < 2) errors.name = "tooShort";
+  else if (name.length > 80) errors.name = "tooLong";
+}
+
+function checkEmail(email: string, errors: FieldErrors) {
+  if (!email) errors.email = "required";
+  else if (email.length > 160 || !EMAIL.test(email)) errors.email = "invalid";
+}
+
+function checkPhone(phone: string, errors: FieldErrors) {
+  if (phone && !PHONE.test(phone)) errors.phone = "invalid";
+}
+
+export function validateContact(raw: Record<string, unknown>): Result<ContactInput> {
+  const errors: FieldErrors = {};
+  const name = text(raw.name, 80);
+  const email = text(raw.email, 160).toLowerCase();
+  const phone = text(raw.phone, 20);
+  const topic = CONTACT_TOPICS.includes(raw.topic as ContactTopic) ? (raw.topic as ContactTopic) : null;
+  const message = text(raw.message, 3000, false);
+
+  checkName(name, errors);
+  checkEmail(email, errors);
+  checkPhone(phone, errors);
+  if (!topic) errors.topic = "required";
+  if (!message) errors.message = "required";
+  else if (message.length < 10) errors.message = "tooShort";
+  else if (message.length > 3000) errors.message = "tooLong";
+  if (raw.privacy !== true) errors.privacy = "consent";
+
+  if (Object.keys(errors).length) return { ok: false, errors };
+  return {
+    ok: true,
+    data: { locale: locale(raw.locale), name, email, phone: phone || undefined, topic: topic!, message },
+  };
+}
+
+export function validateAppointment(
+  raw: Record<string, unknown>,
+  allowedTreatments: readonly string[],
+  today: Date = new Date(),
+): Result<AppointmentInput> {
+  const errors: FieldErrors = {};
+  const treatments = Array.isArray(raw.treatments)
+    ? [...new Set(raw.treatments.filter((t): t is string => typeof t === "string" && allowedTreatments.includes(t)))]
+    : [];
+  const preferredDate = text(raw.preferredDate, 10);
+  const timeRange = TIME_RANGES.includes(raw.timeRange as TimeRange) ? (raw.timeRange as TimeRange) : null;
+  const alternative = text(raw.alternative, 200);
+  const name = text(raw.name, 80);
+  const email = text(raw.email, 160).toLowerCase();
+  const phone = text(raw.phone, 20);
+  const notes = text(raw.notes, 1500, false);
+
+  if (treatments.length === 0) errors.treatments = "required";
+  if (!preferredDate) errors.preferredDate = "required";
+  else if (!DATE.test(preferredDate) || Number.isNaN(Date.parse(`${preferredDate}T12:00:00Z`))) {
+    errors.preferredDate = "invalid";
+  } else {
+    const start = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+    const chosen = Date.parse(`${preferredDate}T00:00:00Z`);
+    if (chosen < start) errors.preferredDate = "pastDate";
+    else if (chosen > start + 366 * 864e5) errors.preferredDate = "tooFar";
+  }
+  if (!timeRange) errors.timeRange = "required";
+  if (alternative.length > 200) errors.alternative = "tooLong";
+  checkName(name, errors);
+  checkEmail(email, errors);
+  checkPhone(phone, errors);
+  if (notes.length > 1500) errors.notes = "tooLong";
+  if (raw.privacy !== true) errors.privacy = "consent";
+
+  if (Object.keys(errors).length) return { ok: false, errors };
+  return {
+    ok: true,
+    data: {
+      locale: locale(raw.locale),
+      treatments,
+      preferredDate,
+      timeRange: timeRange!,
+      alternative: alternative || undefined,
+      name,
+      email,
+      phone: phone || undefined,
+      notes: notes || undefined,
+    },
+  };
+}
+
+/**
+ * Anti-spam checks: an invisible honeypot field must stay empty, and the form
+ * must have been open for a few seconds (bots submit instantly).
+ */
+export function isLikelySpam(raw: Record<string, unknown>, now: number = Date.now()): boolean {
+  if (typeof raw.company === "string" && raw.company.trim() !== "") return true;
+  const started = typeof raw.startedAt === "number" ? raw.startedAt : NaN;
+  if (!Number.isFinite(started)) return true;
+  const elapsed = now - started;
+  return elapsed < 3000 || elapsed > 6 * 60 * 60 * 1000;
+}
+
+export function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}

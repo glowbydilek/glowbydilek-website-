@@ -1,6 +1,6 @@
 /**
  * Converts original photos in assets/photos/ into optimised, responsive WebP
- * files in public/images/photos/ (640, 960, 1440 and 1920 px wide).
+ * files in public/images/photos/ (640, 1024, 1600 and 2200 px wide).
  *
  * Usage: npm run photos
  * Run this locally (it uses `sharp`, which ships with Next.js). The generated
@@ -13,7 +13,7 @@ import sharp from "sharp";
 
 const SRC = "assets/photos";
 const OUT = "public/images/photos";
-const WIDTHS = [640, 960, 1440, 1920];
+const WIDTHS = [640, 1024, 1600, 2200];
 
 mkdirSync(OUT, { recursive: true });
 let files = [];
@@ -30,7 +30,7 @@ for (const file of files) {
     await sharp(join(SRC, file))
       .rotate()
       .resize({ width, withoutEnlargement: true })
-      .webp({ quality: 78, effort: 6 })
+      .webp({ quality: 76, effort: 6 })
       .toFile(join(OUT, `${id}-${width}.webp`));
   }
   console.log(`✓ ${id}`);
