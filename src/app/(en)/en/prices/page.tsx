@@ -1,0 +1,9 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PricesPage } from "@/views/PricesPage";
+
+export const metadata: Metadata = pageMetadata("en", "prices");
+
+export default function Page() {
+  return <PricesPage locale="en" />;
+}
