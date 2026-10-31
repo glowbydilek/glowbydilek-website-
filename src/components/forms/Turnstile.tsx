@@ -51,7 +51,7 @@ export function Turnstile({
   labels,
 }: {
   siteKey: string;
-  action: "contact" | "appointment";
+  action: string;
   locale: "nl" | "en";
   resetKey: number;
   onToken: (token: string | null) => void;
