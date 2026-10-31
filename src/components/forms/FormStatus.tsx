@@ -18,8 +18,8 @@ export function FormSuccess({
   onReset: () => void;
 }) {
   return (
-    <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-forest p-8 text-ivory sm:p-12">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-forest-deep">
+    <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-charcoal p-8 text-ivory sm:p-12">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal-deep">
         <Icon name="check" className="h-6 w-6" />
       </span>
       <h3 className="mt-6 font-serif text-4xl">{title}</h3>
@@ -28,7 +28,7 @@ export function FormSuccess({
       <button
         type="button"
         onClick={onReset}
-        className="mt-8 rounded-full border border-ivory/35 px-6 py-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-ivory hover:text-forest"
+        className="mt-8 rounded-full border border-ivory/35 px-6 py-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-ivory hover:text-charcoal"
       >
         {t.status.again}
       </button>

@@ -34,8 +34,12 @@ export type Photo = {
   alt: Record<Locale, string>;
   brief: string;
   credit?: string;
-  /** CSS object-position, e.g. "50% 30%". */
-  focus?: string;
+  /**
+   * Focal point (CSS object-position) per breakpoint, so faces and products
+   * are never cut off. `mobile` applies below 1024px, `desktop` from 1024px.
+   * Set these per photo once the real image is added.
+   */
+  focus?: { mobile?: string; desktop?: string };
 };
 
 export const photoWidths = [640, 1024, 1600, 2200] as const;
@@ -43,6 +47,7 @@ export const photoWidths = [640, 1024, 1600, 2200] as const;
 export const photos: Record<PhotoId, Photo> = {
   hero: {
     id: "hero",
+    focus: { mobile: "50% 22%", desktop: "50% 28%" },
     aspect: 4 / 5,
     alt: {
       nl: "Portret van een vrouw met een stralende, natuurlijke huid in zacht daglicht",
@@ -52,6 +57,7 @@ export const photos: Record<PhotoId, Photo> = {
   },
   "editorial-portrait": {
     id: "editorial-portrait",
+    focus: { mobile: "50% 25%", desktop: "50% 30%" },
     aspect: 4 / 5,
     alt: {
       nl: "Vrouw met een verzorgde huid en natuurlijke make-up",
@@ -61,12 +67,14 @@ export const photos: Record<PhotoId, Photo> = {
   },
   "zone-face": {
     id: "zone-face",
+    focus: { mobile: "50% 35%", desktop: "50% 35%" },
     aspect: 4 / 5,
     alt: { nl: "Close-up van verzorgde wenkbrauwen en een gladde gezichtshuid", en: "Close-up of groomed brows and smooth facial skin" },
     brief: "Face close-up with natural brows; facial waxing category.",
   },
   "zone-body": {
     id: "zone-body",
+    focus: { mobile: "50% 55%", desktop: "50% 55%" },
     aspect: 4 / 5,
     alt: { nl: "Gladde huid van benen in warm daglicht", en: "Smooth skin on legs in warm daylight" },
     brief: "Tasteful crop of smooth legs or arms; body waxing category.",

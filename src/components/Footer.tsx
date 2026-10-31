@@ -13,21 +13,21 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const wa = whatsappLink(dict.whatsapp.message);
   const linkCls = "link-underline text-ivory/75 transition-colors hover:text-ivory";
   return (
-    <footer className="on-dark relative overflow-hidden bg-forest-deep text-ivory">
+    <footer className="on-dark relative overflow-hidden bg-charcoal text-ivory">
       <div className="mx-auto max-w-[88rem] px-5 sm:px-8 lg:px-12">
-        <div className="grid gap-12 border-b border-ivory/10 py-16 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:py-20">
+        <div className="grid gap-10 border-b border-ivory/10 py-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:gap-12 lg:py-16">
           <div>
-            <Logo tone="light" className="h-12 w-auto" />
-            <p className="mt-7 max-w-sm leading-relaxed text-ivory/70">{dict.footer.tagline}</p>
-            <p className="mt-6 flex items-center gap-3 text-sm text-sage-light">
+            <Logo tone="dark" className="h-14 w-auto" />
+            <p className="mt-5 max-w-sm leading-relaxed text-ivory/70">{dict.footer.tagline}</p>
+            <p className="mt-5 flex items-center gap-3 text-sm text-ivory/60">
               <Icon name="leaf" className="h-4 w-4 text-gold" />
-              {dict.footer.newsletterless}
+              {dict.footer.note}
             </p>
           </div>
 
           <div>
             <p className="eyebrow">{dict.footer.treatments}</p>
-            <ul className="mt-6 space-y-3">
+            <ul className="mt-5 space-y-2.5">
               {treatmentGroups.map((g) => (
                 <li key={g.id}>
                   <Link href={`${href(locale, "treatments")}#${g.id}`} className={linkCls}>
@@ -45,7 +45,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 
           <div>
             <p className="eyebrow">{dict.footer.studio}</p>
-            <ul className="mt-6 space-y-3">
+            <ul className="mt-5 space-y-2.5">
               {studioNav.map((key) => (
                 <li key={key}>
                   <Link href={href(locale, key)} className={linkCls}>
@@ -58,7 +58,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 
           <div>
             <p className="eyebrow">{dict.footer.contact}</p>
-            <ul className="mt-6 space-y-4">
+            <ul className="mt-5 space-y-3">
               <li>
                 <a href={mailto(dict.forms.topics.question)} className="flex items-center gap-3 text-ivory hover:text-gold-light">
                   <Icon name="mail" className="h-4 w-4 text-gold" />
@@ -80,7 +80,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col gap-2 py-6 text-xs text-ivory/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 py-5 text-xs text-ivory/55 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {siteConfig.name}. {dict.footer.rights}
           </p>

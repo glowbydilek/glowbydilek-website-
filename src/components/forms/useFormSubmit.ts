@@ -10,6 +10,7 @@ export type SubmitState =
 /** Posts JSON to a form endpoint; adds the anti-spam timestamp + honeypot. */
 export function useFormSubmit(endpoint: string) {
   const startedAt = useRef<number>(0);
+  const inFlight = useRef(false);
   const [state, setState] = useState<SubmitState>({ status: "idle" });
 
   // Record when the form became interactive (used for the anti-bot timing check).
@@ -18,12 +19,15 @@ export function useFormSubmit(endpoint: string) {
   }, []);
 
   async function submit(values: Record<string, unknown>, honeypot: string) {
+    // Ignore double clicks / repeated Enter while a request is in flight.
+    if (inFlight.current) return false;
+    inFlight.current = true;
     setState({ status: "sending" });
     try {
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, company: honeypot, startedAt: startedAt.current }),
+        body: JSON.stringify({ ...values, company: honeypot, elapsedMs: Date.now() - startedAt.current }),
       });
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
@@ -38,6 +42,8 @@ export function useFormSubmit(endpoint: string) {
       setState({ status: "error", error: data.error ?? "generic", fields: data.fields });
     } catch {
       setState({ status: "error", error: "generic" });
+    } finally {
+      inFlight.current = false;
     }
     return false;
   }

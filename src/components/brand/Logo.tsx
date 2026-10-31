@@ -1,48 +1,65 @@
 import { logoData } from "./logoData";
 
-type Tone = "dark" | "light";
+type Tone = "light" | "dark";
 
-const tones: Record<Tone, { ink: string; accent: string; sub: string }> = {
-  dark: { ink: "var(--color-forest)", accent: "var(--color-gold)", sub: "var(--color-muted)" },
-  light: { ink: "var(--color-ivory)", accent: "var(--color-gold)", sub: "var(--color-sage-light)" },
-};
+/** Colours per background: `light` = on ivory, `dark` = on charcoal. */
+function palette(tone: Tone) {
+  const c = logoData.colors;
+  return tone === "dark"
+    ? { petal: c.goldOnDark, leaf: c.goldOnDark, glow: c.goldOnDark, ink: c.ivory, sub: "#CFC5B9" }
+    : { petal: c.goldRich, leaf: c.champagne, glow: c.goldRich, ink: c.charcoal, sub: c.charcoalSoft };
+}
 
-/** The Glow by Dilek symbol: a calligraphic G holding a pearl of light. */
-export function LogoMark({ className = "h-10 w-10", tone = "dark" }: { className?: string; tone?: Tone }) {
-  const t = tones[tone];
+function SymbolPaths({ tone }: { tone: Tone }) {
+  const p = palette(tone);
   return (
-    <svg viewBox={logoData.mark.viewBox} className={className} aria-hidden="true" focusable="false">
-      <path d={logoData.mark.body} fill={t.ink} />
-      <path d={logoData.mark.accent} fill={t.accent} />
+    <>
+      {logoData.symbol.petals.map((d, i) => (
+        <path key={i} d={d} fill={p.petal} fillRule="evenodd" />
+      ))}
+      <path d={logoData.symbol.leaf} fill={p.leaf} />
+      <path d={logoData.symbol.drop} fill={p.petal} />
+    </>
+  );
+}
+
+/** Lotus-and-leaf brand symbol (decorative). */
+export function LogoSymbol({ tone = "light", className = "h-8 w-auto" }: { tone?: Tone; className?: string }) {
+  return (
+    <svg viewBox={logoData.symbol.viewBox} className={className} aria-hidden="true" focusable="false">
+      <SymbolPaths tone={tone} />
     </svg>
   );
 }
 
-/** Horizontal logo: symbol + wordmark (+ optional tagline). */
+/** Horizontal logo: symbol + "Glow by Dilek" wordmark (+ tagline). Same geometry as public/brand/logo-horizontal.svg. */
 export function Logo({
-  tone = "dark",
+  tone = "light",
   withTagline = true,
-  className = "h-11",
+  className = "h-11 w-auto",
 }: {
   tone?: Tone;
   withTagline?: boolean;
   className?: string;
 }) {
-  const t = tones[tone];
-  const { wordmark, tagline } = logoData;
-  const gap = 22;
-  const markSize = 64;
-  const width = markSize + gap + Math.max(wordmark.width, tagline.width);
+  const p = palette(tone);
+  const symScale = 0.74;
+  const wx = 4 + 120 * symScale + 12;
+  const width = Math.max(wx + logoData.wordmarkWidth, wx + 2 + logoData.tagline.width) + 4;
+  const height = withTagline ? 86 : 70;
   return (
-    <svg viewBox={`0 0 ${width.toFixed(1)} ${markSize}`} className={className} role="img" aria-label="Glow by Dilek">
-      <g transform={`scale(${markSize / 100})`}>
-        <path d={logoData.mark.body} fill={t.ink} />
-        <path d={logoData.mark.accent} fill={t.accent} />
+    <svg viewBox={`0 0 ${width.toFixed(1)} ${height}`} className={className} role="img" aria-label="Glow by Dilek">
+      <g transform={`translate(4 2) scale(${symScale})`}>
+        <SymbolPaths tone={tone} />
       </g>
-      <path d={wordmark.d} fill={t.ink} transform={`translate(${markSize + gap} ${withTagline ? 37 : 45})`} />
-      {withTagline && (
-        <path d={tagline.d} fill={t.sub} style={{ transition: "fill .4s" }} transform={`translate(${markSize + gap + 1} 57)`} />
-      )}
+      <g transform={`translate(${wx} 50)`}>
+        <path d={logoData.glow} fill={p.glow} />
+        <path d={logoData.script} fill={p.ink} />
+      </g>
+      {withTagline && <path d={logoData.tagline.d} fill={p.sub} transform={`translate(${wx + 2} 80)`} />}
     </svg>
   );
 }
+
+/** @deprecated kept for compatibility — use LogoSymbol. */
+export const LogoMark = LogoSymbol;

@@ -19,10 +19,10 @@ export function SectionHeading({
   return (
     <div className={`${center ? "mx-auto max-w-3xl text-center" : "max-w-2xl"} ${className}`} data-reveal>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <Tag className={`display mt-5 ${size === "lg" ? "text-[2.5rem] sm:text-6xl lg:text-[4.25rem]" : "text-4xl sm:text-5xl"}`}>
+      <Tag className={`display mt-4 ${size === "lg" ? "text-[2.3rem] sm:text-5xl lg:text-[3.6rem]" : "text-[2rem] sm:text-4xl lg:text-[2.8rem]"}`}>
         {title}
       </Tag>
-      {intro && <p className="lead mt-6">{intro}</p>}
+      {intro && <p className="lead mt-4">{intro}</p>}
     </div>
   );
 }

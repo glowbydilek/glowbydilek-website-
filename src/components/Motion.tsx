@@ -46,8 +46,9 @@ export function Motion() {
         const rect = el.parentElement!.getBoundingClientRect();
         if (rect.bottom < -100 || rect.top > vh + 100) continue;
         const speed = Number(el.dataset.parallax) || 0.08;
-        const offset = (rect.top + rect.height / 2 - vh / 2) * -speed;
-        el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(1.08)`;
+        // Clamp the travel so the scaled image never reveals its edges.
+        const offset = Math.max(-28, Math.min(28, (rect.top + rect.height / 2 - vh / 2) * -speed));
+        el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(1.06)`;
       }
     };
     const onScroll = () => {

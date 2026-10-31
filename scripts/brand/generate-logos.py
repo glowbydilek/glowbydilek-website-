@@ -1,243 +1,199 @@
 """
-Generates the Glow by Dilek logo system as pure-path SVGs (no font dependency).
+Glow by Dilek — logo system generator (pure vector paths, no font dependency).
 
-Run from the repository root:  python3 scripts/brand/generate-logos.py
-Requires: pip install fonttools brotli
+Recreates the owner-approved concept (champagne-gold "Glow", script "by Dilek",
+lotus-and-leaf symbol, "PROFESSIONAL WAXING" tagline) as clean, scalable
+artwork. All lettering is converted to outlines from SIL Open Font License
+fonts (permitted for logo use):
+  - Cormorant Garamond (wordmark "Glow")       @fontsource-variable/cormorant-garamond
+  - Parisienne (script "by Dilek")            @fontsource/parisienne
+  - Jost (tagline)                            @fontsource-variable/jost
+The lotus symbol is original geometry (scripts/brand/lotus.py).
 
-Fonts (SIL Open Font License, which permits use in logos):
-  Cormorant Garamond (display), Jost (tagline) via @fontsource-variable.
-Outputs:
-  public/brand/**.svg              final + concept artwork
-  src/components/brand/logoData.ts path data used by the React <Logo> components
+Run from the repository root:  npm run brand:logos
+Requires: pip install fonttools brotli   (and Playwright for the PNG step)
 """
-import json, math, os
+import json, os, sys
+sys.path.insert(0, os.path.dirname(__file__))
 from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.boundsPen import BoundsPen
+from lotus import lotus
 
 ROOT = os.getcwd()
-FS = os.path.join(ROOT, "node_modules/@fontsource-variable")
-ESPRESSO, GOLD, IVORY, GOLD_DEEP = "#20382F", "#B99C6B", "#F4F0E8", "#7A6034"
+NM = os.path.join(ROOT, "node_modules")
 
-def load(path, wght):
-    f = TTFont(path)
-    return instancer.instantiateVariableFont(f, {"wght": wght})
+# Brand colours
+CHAMPAGNE = "#C4A16F"   # symbol leaf, accents
+GOLD_RICH = "#A8834C"   # wordmark/petals on light backgrounds (legible at small sizes)
+GOLD_ON_DARK = "#D6B98A"
+CHARCOAL = "#292724"
+CHARCOAL_SOFT = "#5A524B"
+IVORY = "#F8F5EF"
+
+TAGLINE = "Professional Waxing"
+
+def load_var(path, wght):
+    return instancer.instantiateVariableFont(TTFont(path), {"wght": wght})
 
 FONTS = {
-    "serif": load(f"{FS}/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2", 500),
-    "serif-medium": load(f"{FS}/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2", 600),
-    "italic": load(f"{FS}/cormorant-garamond/files/cormorant-garamond-latin-wght-italic.woff2", 400),
-    "sans": load(f"{FS}/jost/files/jost-latin-wght-normal.woff2", 400),
+    "serif": load_var(f"{NM}/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2", 600),
+    "script": TTFont(f"{NM}/@fontsource/parisienne/files/parisienne-latin-400-normal.woff2"),
+    "sans": load_var(f"{NM}/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2", 420),
 }
 
-def text_path(font_key, text, size, x=0.0, baseline=0.0, tracking=0.0):
-    """Returns (svg path d, advance width) for text at font size `size`."""
-    font = FONTS[font_key]
-    gs = font.getGlyphSet()
-    cmap = font.getBestCmap()
-    upm = font["head"].unitsPerEm
-    s = size / upm
-    pen = SVGPathPen(gs, ntos=lambda v: f"{v:.2f}".rstrip("0").rstrip("."))
+def f2(v):
+    return f"{v:.2f}".rstrip("0").rstrip(".")
+
+def kern_pairs(font):
+    """Very small GPOS-free kerning: rely on advances (fonts are well spaced)."""
+    return {}
+
+def text(font_key, s, size, x=0.0, baseline=0.0, tracking=0.0):
+    font = FONTS[font_key]; gs = font.getGlyphSet(); cmap = font.getBestCmap()
+    sc = size / font["head"].unitsPerEm
+    pen = SVGPathPen(gs, ntos=f2)
+    bp = BoundsPen(gs)
     cx = x
-    for ch in text:
+    for ch in s:
         if ch == " ":
-            cx += font["hmtx"]["space"][0] * s + tracking
+            cx += font["hmtx"]["space"][0] * sc + tracking
             continue
         g = cmap[ord(ch)]
-        tp = TransformPen(pen, (s, 0, 0, -s, cx, baseline))
-        gs[g].draw(tp)
-        cx += font["hmtx"][g][0] * s + tracking
-    return pen.getCommands(), cx - x - tracking
+        t = (sc, 0, 0, -sc, cx, baseline)
+        gs[g].draw(TransformPen(pen, t))
+        gs[g].draw(TransformPen(bp, t))
+        cx += font["hmtx"][g][0] * sc + tracking
+    return pen.getCommands(), cx - x - tracking, bp.bounds  # bounds: xmin, ymin(top), xmax, ymax(bottom)
 
-def text_bounds(font_key, text, size, tracking=0.0):
-    font = FONTS[font_key]; gs = font.getGlyphSet(); cmap = font.getBestCmap()
-    s = size / font["head"].unitsPerEm
-    bp = BoundsPen(gs); cx = 0
-    for ch in text:
-        if ch == " ":
-            cx += font["hmtx"]["space"][0] * s + tracking; continue
-        g = cmap[ord(ch)]
-        gs[g].draw(TransformPen(bp, (s, 0, 0, -s, cx, 0)))
-        cx += font["hmtx"][g][0] * s + tracking
-    return bp.bounds  # xmin, ymin, xmax, ymax (y-down because of flip)
+L = lotus()
 
-def f2(v): return f"{v:.2f}".rstrip("0").rstrip(".")
+def symbol_group(x, y, scale, petal, leaf, drop):
+    petals = "".join(f'<path d="{p}" fill="{petal}" fill-rule="evenodd"/>' for p in L["petals"])
+    return (f'<g transform="translate({f2(x)} {f2(y)}) scale({f2(scale)})">{petals}'
+            f'<path d="{L["swoosh"]}" fill="{leaf}"/><path d="{L["drop"]}" fill="{drop}"/></g>')
 
-# ---------------------------------------------------------------- Concept A
-# "Lumen G": a calligraphic G (thick-thin crescent) with a pearl of light
-# resting in its opening — the glow. Works from 16px favicon to signage.
-def lumen_mark():
-    cx, cy, R = 50.0, 50.0, 44.0
-    icx, ir = 54.0, 35.0           # offset inner circle -> thick left, thin right
-    a0, a1 = 52.0, 0.0             # gap between 0deg and 52deg (upper right)
-    def outer(t): return (cx + R*math.cos(math.radians(t)), cy - R*math.sin(math.radians(t)))
-    def inner(t):
-        ux, uy = math.cos(math.radians(t)), -math.sin(math.radians(t))
-        # intersect ray from (cx,cy) with inner circle
-        dx, dy = cx - icx, cy - cy
-        b = 2*(ux*dx + uy*dy); c = dx*dx + dy*dy - ir*ir
-        tt = (-b + math.sqrt(b*b - 4*c)) / 2
-        return (cx + ux*tt, cy + uy*tt)
-    po0, po1, pi0, pi1 = outer(a0), outer(a1), inner(a0), inner(a1)
-    ring = (f"M{f2(po0[0])} {f2(po0[1])}A{R} {R} 0 1 0 {f2(po1[0])} {f2(po1[1])}"
-            f"L{f2(pi1[0])} {f2(pi1[1])}A{ir} {ir} 0 1 1 {f2(pi0[0])} {f2(pi0[1])}Z")
-    # crossbar (drawn with the same winding so nonzero fill unions it)
-    by0, by1, bx0 = 50.0, 57.0, 58.0
-    bx1 = cx + math.sqrt(R*R - (by1-cy)**2)
-    bar = f"M{f2(bx0)} {f2(by0)}H{f2(po1[0])}A{R} {R} 0 0 1 {f2(bx1)} {f2(by1)}H{f2(bx0)}Z"
-    # pearl of light
-    pt = 26.0; pr = 39.5; prad = 6.2
-    px, py = cx + pr*math.cos(math.radians(pt)), cy - pr*math.sin(math.radians(pt))
-    pearl = (f"M{f2(px-prad)} {f2(py)}a{prad} {prad} 0 1 0 {f2(2*prad)} 0"
-             f"a{prad} {prad} 0 1 0 {f2(-2*prad)} 0Z")
-    return {"viewBox": "0 0 100 100", "body": ring + bar, "accent": pearl}
-
-# ---------------------------------------------------------------- Concept B
-# "Atelier GD": an interlaced G/D monogram inside a slim arch (a mirror /
-# doorway — a nod to a future studio).
-def atelier_mark():
-    g, gw = text_path("italic", "G", 58, 0, 0)
-    gb = text_bounds("italic", "G", 58)
-    d, dw = text_path("serif", "D", 58, 0, 0)
-    db = text_bounds("serif", "D", 58)
-    # place D right of centre, G overlapping from the left
-    gx, dx, base = 21 - gb[0], 43 - db[0], 72
-    g, _ = text_path("italic", "G", 58, gx, base)
-    d, _ = text_path("serif", "D", 58, dx, base)
-    arch = ("M14 96V44A36 36 0 0 1 86 44V96Z"
-            "M16.5 93.5V44A33.5 33.5 0 0 1 83.5 44V93.5Z")  # evenodd frame
-    return {"viewBox": "0 0 100 100", "frame": arch, "g": g, "d": d}
-
-# ---------------------------------------------------------------- Concept C
-# "Halo": a radiant ring with an off-centre core of light, paired with a
-# spaced GLOW wordmark whose O becomes the halo.
-def halo_mark():
-    outer = "M50 4a46 46 0 1 0 0.01 0Z M50 7.5a42.5 42.5 0 1 1 -0.01 0Z"
-    inner = "M50 20a30 30 0 1 0 0.01 0Z M50 30a20 20 0 1 1 -0.01 0Z"
-    core = "M58 42a8 8 0 1 0 0.01 0Z"
-    return {"viewBox": "0 0 100 100", "outer": outer, "inner": inner, "core": core}
-
-def svg(w, h, inner, bg=None, title="Glow by Dilek"):
+def svg(w, h, inner, title="Glow by Dilek", bg=None):
     rect = f'<rect width="{f2(w)}" height="{f2(h)}" fill="{bg}"/>' if bg else ""
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {f2(w)} {f2(h)}" '
-            f'width="{f2(w)}" height="{f2(h)}" role="img" aria-label="{title}">'
-            f"<title>{title}</title>{rect}{inner}</svg>\n")
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {f2(w)} {f2(h)}" width="{f2(w)}" height="{f2(h)}" '
+            f'role="img" aria-label="{title}"><title>{title}</title>{rect}{inner}</svg>\n')
 
 def write(rel, content):
     p = os.path.join(ROOT, "public/brand", rel)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     open(p, "w").write(content)
 
-# ---------------------------------------------------------------- Wordmark
-def wordmark(size=40, x=0, baseline=0):
-    """'Glow by Dilek' with an italic 'by'. Returns (paths list, width)."""
-    parts = []; cx = x
-    d, w = text_path("serif", "Glow", size, cx, baseline, tracking=size*0.01); parts.append(d); cx += w + size*0.20
-    d, w = text_path("italic", "by", size*0.86, cx, baseline); parts.append(d); cx += w + size*0.20
-    d, w = text_path("serif", "Dilek", size, cx, baseline, tracking=size*0.01); parts.append(d); cx += w
-    return " ".join(parts), cx - x
+# ---------------------------------------------------------------- wordmark
+def wordmark(x, baseline, size, glow_col, script_col):
+    """'Glow' (serif) + 'by Dilek' (script). Returns (svg, width, top, bottom)."""
+    gd, gw, gb = text("serif", "Glow", size, x, baseline, tracking=-size * 0.01)
+    sx = x + gw + size * 0.2
+    sd, sw, sb = text("script", "by Dilek", size * 0.86, sx, baseline + size * 0.02)
+    out = f'<path d="{gd}" fill="{glow_col}"/><path d="{sd}" fill="{script_col}"/>'
+    top = min(gb[1], sb[1]); bottom = max(gb[3], sb[3])
+    return out, (sx + sw) - x, top, bottom
 
-def tagline(text, size, x, baseline, tracking_em=0.42):
-    return text_path("sans", text.upper(), size, x, baseline, tracking=size*tracking_em)
+# ------------------------------------------------------- horizontal (header)
+def horizontal(dark=False, with_tagline=True):
+    petal = GOLD_ON_DARK if dark else GOLD_RICH
+    leaf = GOLD_ON_DARK if dark else CHAMPAGNE
+    glow = GOLD_ON_DARK if dark else GOLD_RICH
+    ink = IVORY if dark else CHARCOAL
+    sub = "#CFC5B9" if dark else CHARCOAL_SOFT
+    sym_scale = 0.74
+    sym_w = 120 * sym_scale
+    pad = 4
+    wx = pad + sym_w + 12
+    wm, ww, top, bottom = wordmark(wx, 50, 46, glow, ink)
+    parts = [symbol_group(pad, 2, sym_scale, petal, leaf, petal), wm]
+    width = wx + ww + pad
+    if with_tagline:
+        td, tw, _ = text("sans", TAGLINE.upper(), 8.6, wx + 2, 80, tracking=8.6 * 0.36)
+        parts.append(f'<path d="{td}" fill="{sub}"/>')
+        width = max(width, wx + tw + pad)
+    return svg(width, 86 if with_tagline else 70, "".join(parts)), width
 
-TAG = "Beauty Studio"
-A = lumen_mark()
+# -------------------------------------------------------- stacked (emblem)
+def stacked(dark=False):
+    import math
+    petal = GOLD_ON_DARK if dark else GOLD_RICH
+    leaf = GOLD_ON_DARK if dark else CHAMPAGNE
+    ink = IVORY if dark else CHARCOAL
+    W, H = 560, 440
+    cx, cy, r = W / 2, 222, 168
+    def pt(deg):
+        a = math.radians(deg)
+        return cx + r * math.cos(a), cy - r * math.sin(a)
+    parts = []
+    # Upper arc frames the lotus (from lower-left, over the top, to the right);
+    # lower arc cradles the tagline — both open, as in the approved concept.
+    (x1, y1), (x2, y2) = pt(200), pt(28)
+    parts.append(f'<path d="M{f2(x1)} {f2(y1)}A{r} {r} 0 0 1 {f2(x2)} {f2(y2)}" fill="none" stroke="{leaf}" stroke-width="2.2" stroke-linecap="round"/>')
+    (x3, y3), (x4, y4) = pt(236), pt(304)
+    parts.append(f'<path d="M{f2(x3)} {f2(y3)}A{r} {r} 0 0 0 {f2(x4)} {f2(y4)}" fill="none" stroke="{leaf}" stroke-width="2" stroke-linecap="round"/>')
+    sym_scale = 1.15
+    parts.append(symbol_group(cx - 120 * sym_scale / 2 + 4, 74, sym_scale, petal, leaf, petal))
+    wm, ww, top, bottom = wordmark(0, 0, 96, petal, ink)
+    parts.append(f'<g transform="translate({f2(cx - ww / 2)} 262)">{wm}</g>')
+    td, tw, _ = text("sans", TAGLINE.upper(), 15.5, 0, 0, tracking=15.5 * 0.34)
+    parts.append(f'<path d="{td}" fill="{ink}" transform="translate({f2(cx - tw / 2)} 330)"/>')
+    ly = 324.5
+    parts.append(f'<path d="M{f2(cx - tw/2 - 78)} {ly}H{f2(cx - tw/2 - 20)}M{f2(cx + tw/2 + 20)} {ly}H{f2(cx + tw/2 + 78)}" stroke="{leaf}" stroke-width="1.6"/>')
+    parts.append(symbol_group(cx - 120 * 0.3 / 2, cy + r - 34, 0.3, petal, leaf, petal))
+    return svg(W, H, "".join(parts))
 
-def lumen_group(x, y, scale, body, accent):
-    return (f'<g transform="translate({f2(x)} {f2(y)}) scale({f2(scale)})">'
-            f'<path d="{A["body"]}" fill="{body}"/><path d="{A["accent"]}" fill="{accent}"/></g>')
+# ----------------------------------------------------------------- symbol
+def symbol(dark=False, pad=6, bg=None, rounded=False, solid=False):
+    petal = GOLD_ON_DARK if dark else GOLD_RICH
+    leaf = GOLD_ON_DARK if dark else CHAMPAGNE
+    s = 120 + pad * 2
+    rect = f'<rect width="{s}" height="{s}" rx="{s * 0.22 if rounded else 0}" fill="{bg}"/>' if bg else ""
+    if solid:
+        # simplified, heavier symbol for 16–32 px favicons: filled petals
+        from lotus import lotus as lt
+        LL = lt(outline=False)
+        petals = "".join(f'<path d="{p}" fill="{petal}"/>' for p in LL["petals"])
+        g = (f'<g transform="translate({pad} {pad + 21})">{petals}<path d="{LL["swoosh"]}" fill="{leaf}"/>'
+             f'<path d="{LL["drop"]}" fill="{petal}"/></g>')
+        return svg(s, s, rect + g)
+    return svg(s, s, rect + symbol_group(pad, pad + 18, 1, petal, leaf, petal))
 
-def horizontal(fg, accent, sub, bg=None):
-    mark_h = 64; pad = 8
-    wm, ww = wordmark(40, mark_h + 22, 44)
-    tg, tw = tagline(TAG, 9.2, mark_h + 23, 64)
-    W = mark_h + 22 + max(ww, tw) + pad; H = mark_h + 2*pad
-    inner = (lumen_group(0, pad, mark_h/100, fg, accent) +
-             f'<g transform="translate(0 {pad})"><path d="{wm}" fill="{fg}"/><path d="{tg}" fill="{sub}"/></g>')
-    return svg(W, H, inner, bg)
+# ---------------------------------------------------------------- outputs
+os.makedirs(os.path.join(ROOT, "public/brand"), exist_ok=True)
+for name in os.listdir(os.path.join(ROOT, "public/brand")):
+    if name.endswith(".svg"):
+        os.remove(os.path.join(ROOT, "public/brand", name))
+h_light, h_w = horizontal(False)
+write("logo-horizontal.svg", h_light)
+write("logo-horizontal-dark.svg", horizontal(True)[0])
+write("logo-wordmark.svg", horizontal(False, with_tagline=False)[0])
+write("logo-stacked.svg", stacked(False))
+write("logo-stacked-dark.svg", stacked(True))
+write("logo-symbol.svg", symbol(False))
+write("logo-symbol-dark.svg", symbol(True))
+write("favicon.svg", symbol(True, pad=10, bg=CHARCOAL, rounded=True, solid=True))
+open(os.path.join(ROOT, "src/app/icon.svg"), "w").write(symbol(True, pad=10, bg=CHARCOAL, rounded=True, solid=True))
+write("profile-icon.svg", svg(1080, 1080, f'<rect width="1080" height="1080" fill="{IVORY}"/>'
+      f'<g transform="translate(36 160) scale(1.8)">{stacked(False).split("</title>")[1].replace("</svg>", "")}</g>'))
 
-def stacked(fg, accent, sub, bg=None):
-    mark = 110
-    wm, ww = wordmark(46, 0, 0)
-    tg, tw = tagline(TAG, 10.5, 0, 0)
-    W = max(ww, tw, mark) + 40
-    inner = (lumen_group((W-mark)/2, 16, mark/100, fg, accent) +
-             f'<path d="{wm}" fill="{fg}" transform="translate({f2((W-ww)/2)} {f2(16+mark+52)})"/>'
-             f'<path d="{tg}" fill="{sub}" transform="translate({f2((W-tw)/2)} {f2(16+mark+80)})"/>')
-    return svg(W, 16 + mark + 98, inner, bg)
-
-def icon(fg, accent, bg=None, pad=10, rounded=False):
-    s = 100 + 2*pad
-    rect = ""
-    if bg:
-        rect = f'<rect width="{s}" height="{s}" rx="{s*0.22 if rounded else 0}" fill="{bg}"/>'
-    return svg(s, s, rect + lumen_group(pad, pad, 1, fg, accent))
-
-# Final (Concept A) system --------------------------------------------------
-write("logo-horizontal.svg", horizontal(ESPRESSO, GOLD, "#5F6661"))
-write("logo-horizontal-light.svg", horizontal(IVORY, GOLD, "#C9CFC4"))
-write("logo-stacked.svg", stacked(ESPRESSO, GOLD, "#5F6661"))
-write("logo-stacked-light.svg", stacked(IVORY, GOLD, "#C9CFC4"))
-write("logo-icon.svg", icon(ESPRESSO, GOLD))
-write("logo-icon-light.svg", icon(IVORY, GOLD))
-write("logo-icon-gold.svg", icon(GOLD_DEEP, GOLD_DEEP))
-write("profile-icon.svg", svg(1080, 1080,
-      f'<rect width="1080" height="1080" fill="{ESPRESSO}"/>' + lumen_group(290, 290, 5, IVORY, GOLD)))
-write("favicon.svg", icon(GOLD, IVORY, bg=ESPRESSO, pad=14, rounded=True))
-open(os.path.join(ROOT, "src/app/icon.svg"), "w").write(icon(GOLD, IVORY, bg=ESPRESSO, pad=14, rounded=True))
-
-# Concept presentation artwork ----------------------------------------------
-write("concepts/concept-a-lumen.svg", horizontal(ESPRESSO, GOLD, "#5F6661"))
-write("concepts/concept-a-lumen-icon.svg", icon(ESPRESSO, GOLD))
-
-B = atelier_mark()
-def atelier(fg, accent, sub, bg=None):
-    mark = 72; pad = 6
-    inner_mark = (f'<g transform="translate(0 {pad}) scale({mark/100})">'
-                  f'<path d="{B["frame"]}" fill="{accent}" fill-rule="evenodd"/>'
-                  f'<path d="{B["d"]}" fill="{fg}"/><path d="{B["g"]}" fill="{accent}"/></g>')
-    wm, ww = text_path("serif", "GLOW BY DILEK", 26, mark + 20, pad + 44, tracking=26*0.16)
-    tg, tw = tagline(TAG, 8.5, mark + 21, pad + 64)
-    W = mark + 20 + max(ww, tw) + 6
-    return svg(W, mark + 2*pad, inner_mark + f'<path d="{wm}" fill="{fg}"/><path d="{tg}" fill="{sub}"/>', bg)
-write("concepts/concept-b-atelier.svg", atelier(ESPRESSO, GOLD, "#5F6661"))
-write("concepts/concept-b-atelier-icon.svg", svg(120, 120,
-      f'<g transform="translate(10 10)"><path d="{B["frame"]}" fill="{GOLD}" fill-rule="evenodd"/>'
-      f'<path d="{B["d"]}" fill="{ESPRESSO}"/><path d="{B["g"]}" fill="{GOLD}"/></g>'))
-
-C = halo_mark()
-def halo_icon_group(x, y, scale, fg, accent):
-    return (f'<g transform="translate({f2(x)} {f2(y)}) scale({f2(scale)})">'
-            f'<path d="{C["outer"]}" fill="{accent}" fill-rule="evenodd"/>'
-            f'<path d="{C["inner"]}" fill="{fg}" fill-rule="evenodd"/>'
-            f'<path d="{C["core"]}" fill="{accent}"/></g>')
-def halo(fg, accent, sub, bg=None):
-    size = 54; tr = size*0.22
-    gl, gw = text_path("serif-medium", "GL", size, 0, 52, tracking=tr)
-    ow = size*0.78
-    w_, ww = text_path("serif-medium", "W", size, gw + tr + ow + tr, 52)
-    by, bw = text_path("italic", "by Dilek", 24, 0, 0)
-    total = gw + tr + ow + tr + ww
-    inner = (f'<path d="{gl}" fill="{fg}"/>' + halo_icon_group(gw + tr, 52 - size*0.68, ow/100, fg, accent) +
-             f'<path d="{w_}" fill="{fg}"/>'
-             f'<path d="{by}" fill="{accent}" transform="translate({f2((total-bw)/2)} 90)"/>')
-    return svg(total + 4, 100, inner, bg)
-write("concepts/concept-c-halo.svg", halo(ESPRESSO, GOLD, "#5F6661"))
-write("concepts/concept-c-halo-icon.svg", svg(120, 120, halo_icon_group(10, 10, 1, ESPRESSO, GOLD)))
-
-# Path data for React components ---------------------------------------------
-wm, ww = wordmark(40, 0, 0)
-wb = text_bounds("serif", "Glow", 40)
-tg, tw = tagline(TAG, 9.2, 0, 0)
+# Path data for the React <Logo>: symbol + wordmark + tagline, light & dark tones
+wm_d, wm_w, _t, _b = wordmark(0, 0, 46, "G", "S")
+import re
+glow_d = re.search(r'd="([^"]+)" fill="G"', wm_d).group(1)
+script_d = re.search(r'd="([^"]+)" fill="S"', wm_d).group(1)
+tag_d, tag_w, _ = text("sans", TAGLINE.upper(), 8.6, 0, 0, tracking=8.6 * 0.36)
 data = {
-    "mark": {"viewBox": A["viewBox"], "body": A["body"], "accent": A["accent"]},
-    "wordmark": {"d": wm, "width": round(ww, 2), "ascent": round(-wb[1], 2), "descent": 12},
-    "tagline": {"d": tg, "width": round(tw, 2), "text": TAG},
+    "symbol": {"viewBox": L["viewBox"], "petals": L["petals"], "leaf": L["swoosh"], "drop": L["drop"]},
+    "glow": glow_d,
+    "script": script_d,
+    "wordmarkWidth": round(wm_w, 2),
+    "tagline": {"d": tag_d, "width": round(tag_w, 2), "text": TAGLINE},
+    "colors": {"goldRich": GOLD_RICH, "champagne": CHAMPAGNE, "goldOnDark": GOLD_ON_DARK, "charcoal": CHARCOAL, "charcoalSoft": CHARCOAL_SOFT, "ivory": IVORY},
 }
-ts = ("// Generated by scripts/brand/generate-logos.py — do not edit by hand.\n"
-      f"export const logoData = {json.dumps(data, indent=2)} as const;\n")
 os.makedirs(os.path.join(ROOT, "src/components/brand"), exist_ok=True)
-open(os.path.join(ROOT, "src/components/brand/logoData.ts"), "w").write(ts)
-print("ok", ww, tw)
+open(os.path.join(ROOT, "src/components/brand/logoData.ts"), "w").write(
+    "// Generated by scripts/brand/generate-logos.py — do not edit by hand.\n"
+    f"export const logoData = {json.dumps(data, indent=2)} as const;\n")
+print("ok horizontal width", round(h_w, 1))

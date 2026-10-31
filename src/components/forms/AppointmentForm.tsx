@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { TIME_RANGES, validateAppointment, type ErrorCode, type TimeRange } from "@/lib/forms/validation";
+import { amsterdamToday, TIME_RANGES, validateAppointment, type ErrorCode, type TimeRange } from "@/lib/forms/validation";
 import { Icon } from "../ui/Icon";
 import { Consent } from "./ContactForm";
 import { Honeypot, omit, TextArea, TextField } from "./Fields";
@@ -34,7 +34,8 @@ export function AppointmentForm({
   const { state, submit, reset } = useFormSubmit("/api/appointment");
   const formRef = useRef<HTMLFormElement>(null);
   const ids = useMemo(() => groups.flatMap((g) => g.treatments.map((x) => x.id)), [groups]);
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  // Earliest selectable date = today in Amsterdam (not UTC, not the device zone).
+  const [today] = useState(() => amsterdamToday());
   const empty = { preferredDate: "", alternative: "", name: "", email: "", phone: "", notes: "" };
   const [values, setValues] = useState(empty);
   const [treatments, setTreatments] = useState<string[]>([]);
@@ -56,7 +57,7 @@ export function AppointmentForm({
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const payload = { ...values, treatments, timeRange, privacy, locale };
-    const check = validateAppointment(payload, ids);
+    const check = validateAppointment(payload, ids, amsterdamToday());
     if (!check.ok) {
       setErrors(check.errors);
       requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus());
@@ -88,7 +89,7 @@ export function AppointmentForm({
 
   const chip = (on: boolean) =>
     `inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold-deep ${
-      on ? "border-forest bg-forest text-ivory" : "border-forest/15 bg-ivory-50 text-charcoal hover:border-forest/40"
+      on ? "border-charcoal bg-charcoal text-ivory" : "border-charcoal/15 bg-ivory-50 text-charcoal hover:border-charcoal/40"
     }`;
 
   return (
@@ -96,7 +97,7 @@ export function AppointmentForm({
       <Honeypot value={honeypot} onChange={setHoneypot} />
 
       <fieldset aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
-        <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-forest">
+        <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
           {t.treatments} <span aria-hidden="true" className="text-gold-deep">*</span>
         </legend>
         <p id="appt-treatments-hint" className="mt-1 text-sm text-muted">
@@ -105,7 +106,7 @@ export function AppointmentForm({
         <div className="mt-4 space-y-5">
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="font-serif text-xl text-forest">{g.name}</p>
+              <p className="font-serif text-xl text-charcoal">{g.name}</p>
               <div className="mt-2.5 flex flex-wrap gap-2">
                 {g.treatments.map((tr) => {
                   const on = treatments.includes(tr.id);
@@ -137,7 +138,7 @@ export function AppointmentForm({
       <div className="grid gap-6 sm:grid-cols-2">
         <TextField id="appt-date" label={t.preferredDate} required type="date" min={today} value={values.preferredDate} onChange={set("preferredDate")} error={fe("preferredDate")} />
         <fieldset aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
-          <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-forest">
+          <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
             {t.timeRange} <span aria-hidden="true" className="text-gold-deep">*</span>
           </legend>
           <div className="mt-2 grid grid-cols-2 gap-2">
@@ -198,7 +199,7 @@ export function AppointmentForm({
       <button
         type="submit"
         disabled={state.status === "sending"}
-        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-forest px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-forest-deep disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-charcoal px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-charcoal-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
         {state.status === "sending" ? t.sending : t.submitAppointment}
         <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />

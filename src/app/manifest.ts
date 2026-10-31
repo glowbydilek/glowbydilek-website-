@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Professioneel waxen op afspraak",
     start_url: "/",
     display: "standalone",
-    background_color: "#faf7f2",
-    theme_color: "#faf7f2",
+    background_color: "#f8f5ef",
+    theme_color: "#f8f5ef",
     icons: [
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
       { src: "/brand/icon-512.png", sizes: "512x512", type: "image/png" },

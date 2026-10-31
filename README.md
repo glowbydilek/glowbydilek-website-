@@ -8,7 +8,7 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 
 - Dutch is the default language (no URL prefix). English lives under `/en`. Pages have translated slugs, `hreflang` alternates and a language switcher that keeps you on the same page.
 - Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, Privacy, plus an internal brand page at `/merkidentiteit` (not indexed).
-- Premium design system: forest, ivory, stone, sage, champagne gold and charcoal; Cormorant Garamond with Jost; editorial layouts. Motion includes scroll reveals, image unmasking, parallax, a glass header and a gallery carousel, all respecting reduced motion. See [`docs/RESEARCH.md`](docs/RESEARCH.md) and [`docs/BRAND.md`](docs/BRAND.md).
+- Brand identity based on the approved logo (champagne-gold "Glow", script "by Dilek", lotus symbol) as pure-vector SVGs. Palette: ivory, nude, stone, champagne gold and charcoal. Type: Cormorant Garamond, Jost and Parisienne (signature only). Responsive spacing tokens and a header safe-zone; subtle reveals with no hero parallax, respecting reduced motion. See [`docs/BRAND.md`](docs/BRAND.md) and [`docs/RESEARCH.md`](docs/RESEARCH.md).
 - **Contact form** and **appointment-request form**, sent server-side to `hello@glowbydilek.nl` (Reply-To set to the customer) with a customer acknowledgement in Dutch or English. Includes a honeypot, timing check, rate limit and validation. See [`docs/EMAIL.md`](docs/EMAIL.md).
 - **WhatsApp** button: hidden until `NEXT_PUBLIC_WHATSAPP_NUMBER` is set.
 - Expandable service architecture: laser, skin care, beauty and retail are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
@@ -30,7 +30,8 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 | What | Where |
 | --- | --- |
 | **SMTP environment variables** (required for the forms) | Hostinger → Environment variables; see [`docs/EMAIL.md`](docs/EMAIL.md) |
-| **Photography** (11 slots; botanical artwork panels are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| **Photography** (11 slots; adaptive photo-free layouts are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| Review of first-person copy, and the full list of open items | [`docs/OWNER-CHECKLIST.md`](docs/OWNER-CHECKLIST.md) |
 | WhatsApp number (optional) | `NEXT_PUBLIC_WHATSAPP_NUMBER` |
 | Confirmed prices and durations | `src/content/treatments.ts`, then set `pricesPublished = true` |
 | Real portrait of Dilek, personal story, city/region | `src/content/media.ts`, dictionaries, `src/content/site.ts` |

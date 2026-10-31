@@ -6,14 +6,14 @@ const control =
   "mt-2 block w-full rounded-2xl border bg-ivory-50 px-5 py-4 text-base text-charcoal placeholder:text-muted/70 transition-[border-color,box-shadow] duration-300 focus:outline-none focus:ring-4 focus:ring-gold/20";
 
 function cls(error?: string) {
-  return `${control} ${error ? "border-[#9b3b2f] focus:border-[#9b3b2f]" : "border-forest/15 hover:border-forest/30 focus:border-forest"}`;
+  return `${control} ${error ? "border-[#9b3b2f] focus:border-[#9b3b2f]" : "border-charcoal/15 hover:border-charcoal/30 focus:border-charcoal"}`;
 }
 
 type Base = { id: string; label: string; error?: string; hint?: string; optionalLabel?: string; required?: boolean };
 
 function Label({ id, label, optionalLabel, required }: Base) {
   return (
-    <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-forest">
+    <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
       <span>
         {label}
         {required && <span aria-hidden="true" className="text-gold-deep"> *</span>}

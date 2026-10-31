@@ -21,7 +21,13 @@ function transporterFor(cfg: MailConfig): Transporter {
   return transporter;
 }
 
-export type OutgoingMail = { to: string; replyTo?: string; subject: string; text: string; html: string };
+export type OutgoingMail = {
+  to: string;
+  replyTo?: string | { name: string; address: string };
+  subject: string;
+  text: string;
+  html: string;
+};
 
 export function mailConfigured(): boolean {
   return getMailConfig() !== null;

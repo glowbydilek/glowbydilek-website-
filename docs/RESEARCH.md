@@ -38,8 +38,8 @@ Search volumes were **not** measured; a tool such as Google Keyword Planner is n
 
 ## 4. Design decisions
 
-- **Palette:** forest `#20382F`, ivory `#F4F0E8`, stone `#D5CCBE`, sage `#859283`, gold `#B99C6B`, charcoal `#232825`. Accessible text variants were added: sage-deep `#56634F`, gold-deep `#7A6034` and muted `#5F6661`, each at least 5:1 on ivory.
-- **Typography:** Cormorant Garamond (editorial display, with italic accents) and Jost (clean geometric text with spaced uppercase labels).
-- **Layout:** asymmetric editorial splits, edge-bleed hero imagery, layered photos, alternating light and dark sections, glass UI only where it sits over imagery (hero card, header, ritual card), and fewer generic rounded cards.
+- **Palette (revised, based on the approved logo):** Warm Ivory `#F8F5EF`, Soft Nude `#E9D5C7`, Stone Beige `#DDD2C4`, Champagne Gold `#C4A16F` and Elegant Charcoal `#292724`, plus accessible text variants: gold-deep `#85663A` (4.9:1) and muted `#6B635C` (5.6:1). The earlier deep-green direction was dropped at the owner's request.
+- **Typography:** Cormorant Garamond (editorial display, with italic accents), Jost (clean geometric text with spaced uppercase labels) and Parisienne (Dilek's signature, echoing the logo).
+- **Layout:** editorial splits, an index-style treatment list instead of repeated cards, a single dark band per page, glass UI only for the header and the sticky zone navigation, and images that sit fully below the header (no edge-bleed, no hero parallax). Image positions are adaptive while photography is missing.
 - **Motion:** IntersectionObserver reveals, clip-path image unmasking, subtle parallax (at most 10%), a hide-on-scroll glass header and a scroll-snap gallery. All of it is disabled under `prefers-reduced-motion`, and content stays visible without JavaScript.
 - **Conversion:** two primary paths, *Afspraak aanvragen* (forest/gold buttons) and *Contact*, repeated at natural decision points. Forms state clearly that a request is not yet a confirmed appointment.

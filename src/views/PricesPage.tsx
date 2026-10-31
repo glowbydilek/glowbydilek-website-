@@ -1,4 +1,4 @@
-import { AppointmentCta } from "@/components/AppointmentCta";
+import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
@@ -20,13 +20,13 @@ export function PricesPage({ locale }: { locale: Locale }) {
         </ButtonLink>
       </PageHero>
 
-      <section className="py-16 sm:py-24">
-        <Container className="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:items-start lg:gap-16">
-          <div className="space-y-14">
+      <section className="section-tight">
+        <Container className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-14">
+          <div className="space-y-10">
             {treatmentGroups.map((g) => (
               <div key={g.id} data-reveal>
-                <div className="flex items-baseline justify-between gap-4 border-b border-forest pb-4">
-                  <h2 className="display text-4xl text-forest sm:text-5xl">{g.name[locale]}</h2>
+                <div className="flex items-baseline justify-between gap-4 border-b border-charcoal pb-4">
+                  <h2 className="display text-[2.2rem] sm:text-5xl">{g.name[locale]}</h2>
                   <a
                     href={`${href(locale, "treatments")}#${g.id}`}
                     className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep"
@@ -45,9 +45,9 @@ export function PricesPage({ locale }: { locale: Locale }) {
                   </thead>
                   <tbody>
                     {g.treatments.map((tr) => (
-                      <tr key={tr.id} className="border-b border-forest/10">
+                      <tr key={tr.id} className="border-b border-charcoal/10">
                         <th scope="row" className="py-5 pr-4 align-top font-normal">
-                          <span className="block font-serif text-2xl text-forest">{tr.name[locale]}</span>
+                          <span className="block font-serif text-2xl text-charcoal">{tr.name[locale]}</span>
                           <span className="mt-1 block text-sm leading-relaxed text-muted">{tr.description[locale]}</span>
                         </th>
                         <td className="whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted">
@@ -55,12 +55,12 @@ export function PricesPage({ locale }: { locale: Locale }) {
                         </td>
                         <td className="whitespace-nowrap py-5 text-right align-top">
                           {pricesPublished && tr.price ? (
-                            <span className="font-serif text-2xl text-forest">
+                            <span className="font-serif text-2xl text-charcoal">
                               {tr.price.from && <span className="mr-1 font-sans text-sm text-muted">{t.from}</span>}
                               {formatPrice(tr.price.amount, locale)}
                             </span>
                           ) : (
-                            <span className="inline-block rounded-full bg-sage/15 px-3 py-1 text-xs uppercase tracking-[0.14em] text-sage-deep">
+                            <span className="inline-block rounded-full bg-nude-light px-3 py-1 text-xs uppercase tracking-[0.14em] text-charcoal-soft">
                               {dict.common.onRequest}
                             </span>
                           )}
@@ -73,9 +73,9 @@ export function PricesPage({ locale }: { locale: Locale }) {
             ))}
           </div>
 
-          <aside className="space-y-5 lg:sticky lg:top-28">
+          <aside className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             {!pricesPublished && (
-              <div className="on-dark rounded-[2rem] bg-forest p-8 text-ivory sm:p-10" data-reveal>
+              <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory sm:p-9" data-reveal>
                 <Icon name="mail" className="h-6 w-6 text-gold" />
                 <h2 className="mt-5 font-serif text-3xl text-ivory">{t.notice.title}</h2>
                 <p className="mt-4 leading-relaxed text-ivory/75">{t.notice.body}</p>
@@ -84,7 +84,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                 </ButtonLink>
               </div>
             )}
-            <ul className="space-y-4 rounded-[2rem] bg-ivory-50 p-8" data-reveal>
+            <ul className="space-y-3 rounded-[1.75rem] bg-nude-light p-7" data-reveal>
               {t.notes.map((n) => (
                 <li key={n} className="flex gap-3 leading-relaxed text-charcoal-soft">
                   <Icon name="check" className="mt-1 h-4 w-4 shrink-0 text-gold-deep" />
@@ -96,7 +96,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <AppointmentCta locale={locale} dict={dict} />
+      <ClosingCta locale={locale} dict={dict} />
     </>
   );
 }

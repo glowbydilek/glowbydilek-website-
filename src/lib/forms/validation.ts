@@ -93,10 +93,27 @@ export function validateContact(raw: Record<string, unknown>): Result<ContactInp
   };
 }
 
+/** Today's date (YYYY-MM-DD) in the studio's time zone, Europe/Amsterdam. */
+export function amsterdamToday(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Amsterdam",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+/** Adds whole days to a YYYY-MM-DD date string. */
+export function addDays(isoDate: string, days: number): string {
+  const d = new Date(`${isoDate}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 export function validateAppointment(
   raw: Record<string, unknown>,
   allowedTreatments: readonly string[],
-  today: Date = new Date(),
+  today: string = amsterdamToday(),
 ): Result<AppointmentInput> {
   const errors: FieldErrors = {};
   const treatments = Array.isArray(raw.treatments)
@@ -112,13 +129,13 @@ export function validateAppointment(
 
   if (treatments.length === 0) errors.treatments = "required";
   if (!preferredDate) errors.preferredDate = "required";
-  else if (!DATE.test(preferredDate) || Number.isNaN(Date.parse(`${preferredDate}T12:00:00Z`))) {
+  else if (!DATE.test(preferredDate) || addDays(preferredDate, 0) !== preferredDate) {
+    // Rejects malformed and impossible dates such as 2026-02-30.
     errors.preferredDate = "invalid";
-  } else {
-    const start = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-    const chosen = Date.parse(`${preferredDate}T00:00:00Z`);
-    if (chosen < start) errors.preferredDate = "pastDate";
-    else if (chosen > start + 366 * 864e5) errors.preferredDate = "tooFar";
+  } else if (preferredDate < today) {
+    errors.preferredDate = "pastDate";
+  } else if (preferredDate > addDays(today, 366)) {
+    errors.preferredDate = "tooFar";
   }
   if (!timeRange) errors.timeRange = "required";
   if (alternative.length > 200) errors.alternative = "tooLong";
@@ -148,13 +165,16 @@ export function validateAppointment(
 /**
  * Anti-spam checks: an invisible honeypot field must stay empty, and the form
  * must have been open for a few seconds (bots submit instantly).
+ *
+ * `elapsedMs` is measured entirely in the visitor's browser (time since the
+ * form became interactive), so a wrong device clock can never cause a real
+ * message to be silently discarded.
  */
-export function isLikelySpam(raw: Record<string, unknown>, now: number = Date.now()): boolean {
+export function isLikelySpam(raw: Record<string, unknown>): boolean {
   if (typeof raw.company === "string" && raw.company.trim() !== "") return true;
-  const started = typeof raw.startedAt === "number" ? raw.startedAt : NaN;
-  if (!Number.isFinite(started)) return true;
-  const elapsed = now - started;
-  return elapsed < 3000 || elapsed > 6 * 60 * 60 * 1000;
+  const elapsed = typeof raw.elapsedMs === "number" ? raw.elapsedMs : NaN;
+  if (!Number.isFinite(elapsed)) return true;
+  return elapsed < 3000 || elapsed > 12 * 60 * 60 * 1000;
 }
 
 export function escapeHtml(s: string): string {
