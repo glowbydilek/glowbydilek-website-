@@ -61,7 +61,11 @@ export const routes: Record<RouteKey, Record<Locale, string>> = {
   privacy: { nl: "/privacy", en: "/en/privacy" },
 };
 
-/** Anchor of the request form on the booking page. */
+/**
+ * Anchor of the request form on the booking page. Only used for explicit
+ * same-page links ("go to the form"); links from other pages never carry a
+ * hash, so a new page always opens at the top.
+ */
 export const bookingAnchor = "aanvraag";
 
 export function href(locale: Locale, key: RouteKey): string {
@@ -77,10 +81,13 @@ export function treatmentHref(locale: Locale, id: TreatmentId): string {
   return `${categoryHref(locale, s.category)}/${s[locale]}`;
 }
 
-/** Booking page with the treatment preselected in the request form. */
+/**
+ * Booking page with the treatment preselected in the request form. No hash:
+ * the page opens at the top and the selection is shown in the hero.
+ */
 export function bookingHref(locale: Locale, treatment?: TreatmentId): string {
   const base = routes.booking[locale];
-  return treatment ? `${base}?${bookingParam[locale]}=${encodeURIComponent(treatment)}#${bookingAnchor}` : `${base}#${bookingAnchor}`;
+  return treatment ? `${base}?${bookingParam[locale]}=${encodeURIComponent(treatment)}` : base;
 }
 
 export type PageRef =

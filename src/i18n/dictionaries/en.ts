@@ -394,6 +394,8 @@ export const en: Dictionary = {
       { title: "Confirmation", body: "You receive a personal confirmation with all the details. Only then is your appointment final." },
     ],
     notConfirmed: "This is a request, not yet an appointment. Your appointment is only final once Dilek has confirmed it personally.",
+    preselected: "Selected treatment",
+    toForm: "Go to the form",
     formTitle: "Your request",
     future: {
       title: "Personally scheduled",

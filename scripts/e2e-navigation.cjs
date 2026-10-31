@@ -66,7 +66,7 @@ async function step(name, fn) {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/brazilian-wax`);
     await p.getByRole("link", { name: "Vraag deze behandeling aan" }).first().click();
-    await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian#aanvraag$/);
+    await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
     await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Brazilian"]);
     await p.close();
@@ -75,7 +75,7 @@ async function step(name, fn) {
   await step("treatment card 'request' link preselects (EN)", async () => {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/en/waxing-treatments/face`);
-    await p.locator('a[href="/en/book-appointment?treatment=eyebrows#aanvraag"]').first().click();
+    await p.locator('a[href="/en/book-appointment?treatment=eyebrows"]').first().click();
     await p.waitForURL(/treatment=eyebrows/);
     await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Eyebrows"]);
@@ -84,7 +84,7 @@ async function step(name, fn) {
 
   await step("unknown treatment id is ignored", async () => {
     const p = await desktop.newPage();
-    await p.goto(`${BASE}/afspraak-maken?behandeling=nope#aanvraag`);
+    await p.goto(`${BASE}/afspraak-maken?behandeling=nope`);
     await p.waitForTimeout(400);
     assert.equal((await checked(p)).length, 0);
     await p.close();
@@ -97,7 +97,7 @@ async function step(name, fn) {
     await p.waitForURL(`${BASE}/en/waxing-treatments/body/underarm-waxing`);
     await p.locator('header a[hreflang="nl-NL"]').click();
     await p.waitForURL(`${BASE}/waxbehandelingen/lichaam/oksels-waxen`);
-    await p.goto(`${BASE}/afspraak-maken?behandeling=hollywood#aanvraag`);
+    await p.goto(`${BASE}/afspraak-maken?behandeling=hollywood`);
     await p.locator('header a[hreflang="en"]').click();
     await p.waitForURL(/\/en\/book-appointment\?treatment=hollywood/);
     await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
@@ -140,6 +140,42 @@ async function step(name, fn) {
     assert.equal(await p.locator("#mobile-menu").count(), 0);
     await p.close();
   });
+
+  for (const [label, c] of [["mobile", mobile], ["desktop", desktop]]) {
+    await step(`${label}: pages opened from a scrolled page start at the top`, async () => {
+      const p = await c.newPage();
+      const atTop = async (what) => {
+        await p.waitForLoadState("networkidle");
+        await p.waitForTimeout(600); // images, fonts and hydration settle
+        const y = await p.evaluate(() => window.scrollY);
+        assert.ok(y < 4, `${what}: page opened at scrollY=${y}`);
+        const h1 = await p.locator("h1").boundingBox();
+        const header = await p.locator("header").boundingBox();
+        assert.ok(h1 && header && h1.y >= header.y + header.height, `${what}: heading hidden under the header`);
+      };
+      await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/brazilian-wax`);
+      await p.mouse.wheel(0, 2400);
+      await p.waitForTimeout(400);
+      await p.locator('a[href="/afspraak-maken?behandeling=brazilian"]').last().click();
+      await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
+      await atTop("booking page from a treatment CTA");
+      assert.ok(await p.getByRole("status").filter({ hasText: "Brazilian" }).count(), "preselection notice visible");
+      await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+      await p.mouse.wheel(0, 3000);
+      await p.waitForTimeout(400);
+      await p.locator('footer a[href="/waxbehandelingen/lichaam"]').click();
+      await p.waitForURL(`${BASE}/waxbehandelingen/lichaam`);
+      await atTop("category page from the footer");
+      await p.mouse.wheel(0, 1800);
+      await p.waitForTimeout(300);
+      await p.locator('a[href="/waxbehandelingen/lichaam/rug-waxen"]').first().click();
+      await p.waitForURL(`${BASE}/waxbehandelingen/lichaam/rug-waxen`);
+      await atTop("treatment page from a card");
+      await p.goBack();
+      await p.waitForURL(`${BASE}/waxbehandelingen/lichaam`);
+      await p.close();
+    });
+  }
 
   await step("every header and footer link resolves", async () => {
     const p = await desktop.newPage();
@@ -203,7 +239,7 @@ async function step(name, fn) {
   if (EXPECT_MAIL) {
     await step("appointment request from a treatment page is sent successfully", async () => {
       const p = await desktop.newPage();
-      await p.goto(`${BASE}/en/book-appointment?treatment=half-legs#aanvraag`);
+      await p.goto(`${BASE}/en/book-appointment?treatment=half-legs`);
       await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
       const date = new Date(Date.now() + 9 * 864e5).toISOString().slice(0, 10);
       const fill = async () => {

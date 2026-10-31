@@ -14,7 +14,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
   const dict = getDictionary(locale);
   const nav = navModel(locale);
   return (
-    <html lang={locale}>
+    <html lang={locale} data-scroll-behavior="smooth">
       <body className="flex min-h-dvh flex-col">
         <Header locale={locale} dict={dict} nav={nav} />
         <main id="main" className="flex-1">

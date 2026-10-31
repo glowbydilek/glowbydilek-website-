@@ -397,6 +397,8 @@ export const nl = {
       { title: "Bevestiging", body: "Je ontvangt een persoonlijke bevestiging met alle details. Pas dan staat je afspraak vast." },
     ],
     notConfirmed: "Dit is een aanvraag, nog geen afspraak. Je afspraak staat pas vast als Dilek hem persoonlijk heeft bevestigd.",
+    preselected: "Gekozen behandeling",
+    toForm: "Naar het formulier",
     formTitle: "Je aanvraag",
     future: {
       title: "Persoonlijk ingepland",

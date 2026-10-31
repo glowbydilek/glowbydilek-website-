@@ -1,6 +1,9 @@
 import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { AppointmentFormBlock } from "@/components/FormSections";
+import { PreselectedNotice } from "@/components/forms/PreselectedNotice";
+import { allTreatments } from "@/content/treatments";
+import { bookingAnchor } from "@/i18n/config";
 import { PageHero } from "@/components/PageHero";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -21,6 +24,12 @@ export function BookingPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
+        <PreselectedNotice
+          names={Object.fromEntries(allTreatments().map((x) => [x.id, x.name[locale]]))}
+          label={t.preselected}
+          cta={t.toForm}
+          anchor={bookingAnchor}
+        />
         <ol className="grid gap-4 sm:grid-cols-3">
           {t.steps.map((s, i) => (
             <li key={s.title} className="border-t border-charcoal/15 pt-3">
@@ -32,7 +41,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
         </ol>
       </PageHero>
 
-      <section id="aanvraag" className="section-tight scroll-mt-[var(--header-safe)] bg-ivory-50">
+      <section id={bookingAnchor} className="section-tight scroll-mt-[var(--header-safe)] bg-ivory-50">
         <Container className="grid gap-8 lg:grid-cols-[1.45fr_0.55fr] lg:gap-10">
           <div className="rounded-[1.75rem] bg-ivory p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>

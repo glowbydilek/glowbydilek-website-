@@ -34,7 +34,7 @@
 
 Category and treatment pages are generated from data (`generateStaticParams`, `dynamicParams = false`), so an unknown slug is a 404. To add a treatment: add it to `treatments.ts`, `slugs.ts` (slug + related) and both `copy/treatments.*.ts` files — the type checker and `tests/content.test.ts` flag anything missing.
 
-Appointment links from treatment pages use `bookingHref(locale, id)` → `/afspraak-maken?behandeling=<id>#aanvraag` (`?treatment=` in English). The form preselects that treatment after hydration, so the page stays static.
+Appointment links from treatment pages use `bookingHref(locale, id)` → `/afspraak-maken?behandeling=<id>` (no hash, so the page always opens at the top) (`?treatment=` in English). The form preselects that treatment after hydration, so the page stays static.
 
 ### Adding a new service category later (for example laser hair removal)
 
