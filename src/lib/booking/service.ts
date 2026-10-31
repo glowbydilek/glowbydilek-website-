@@ -104,6 +104,7 @@ export async function loadOverrides(db: DB | Tx, from: LocalDate, to: LocalDate)
     customHours: o.customHours,
     capacity: o.capacity,
     maxAppointments: o.maxAppointments,
+    note: o.note,
     intervals: ints.filter((i) => i.day === o.day).map((i) => ({ kind: i.kind as "open" | "break", start: i.startMinute, end: i.endMinute })),
   }));
 }

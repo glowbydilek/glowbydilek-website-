@@ -19,6 +19,7 @@ export type Override = {
   customHours: boolean;
   capacity: number | null;
   maxAppointments: number | null;
+  note?: string | null;
   intervals: { kind: "open" | "break"; start: number; end: number }[];
 };
 export type Busy = { start: Date; end: Date; kind: "appointment" | "block" };
