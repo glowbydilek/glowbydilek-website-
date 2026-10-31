@@ -7,6 +7,7 @@ import {
   TURNSTILE_TEST_SITE_KEY,
   turnstileConfig,
   turnstileSiteKey,
+  turnstileStatus,
   verifyTurnstile,
   type TurnstileConfig,
 } from "../src/lib/forms/turnstile.ts";
@@ -114,13 +115,14 @@ test("without keys the official Cloudflare test keys are used (production pendin
 test("live keys come from the environment; mock endpoint is ignored in live mode", () => {
   const cfg = turnstileConfig({
     TURNSTILE_SECRET_KEY: "s",
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive",
     NEXT_PUBLIC_SITE_URL: "https://www.glowbydilek.nl",
     TURNSTILE_SITEVERIFY_URL: "http://127.0.0.1:1/",
   });
   assert.equal(cfg.mode, "live");
   assert.equal(cfg.verifyUrl, "https://challenges.cloudflare.com/turnstile/v0/siteverify");
   assert.deepEqual(cfg.hostnames, ["glowbydilek.nl", "www.glowbydilek.nl"]);
-  assert.deepEqual(turnstileConfig({ TURNSTILE_SECRET_KEY: "s", TURNSTILE_ALLOWED_HOSTNAMES: "a.nl, B.nl" }).hostnames, ["a.nl", "b.nl"]);
+  assert.deepEqual(turnstileConfig({ TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive", TURNSTILE_ALLOWED_HOSTNAMES: "a.nl, B.nl" }).hostnames, ["a.nl", "b.nl"]);
 });
 
 test("the shared test token may be reused in test mode only", async () => {
@@ -132,4 +134,26 @@ test("the shared test token may be reused in test mode only", async () => {
   await verifyTurnstile({ token: TURNSTILE_DUMMY_TOKEN, action: "contact", config: live, fetchImpl: liveOk.fetchImpl, now: NOW });
   const r = await verifyTurnstile({ token: TURNSTILE_DUMMY_TOKEN, action: "contact", config: live, fetchImpl: liveOk.fetchImpl, now: NOW });
   assert.equal(!r.ok && r.reason, "replayed");
+});
+
+test("production never silently falls back to the always-passing test keys", async () => {
+  const prod = turnstileConfig({ NODE_ENV: "production" });
+  assert.equal(prod.mode, "missing");
+  const { fetchImpl, calls } = cf({ success: true });
+  const r = await verifyTurnstile({ token: TURNSTILE_DUMMY_TOKEN, action: "contact", config: prod, fetchImpl });
+  assert.deepEqual(r, { ok: false, reason: "unavailable", codes: ["config-missing"] });
+  assert.equal(calls.length, 0, "no request is made with test credentials");
+  // login/reset stay usable (protected by lockout and rate limits)
+  assert.deepEqual(await verifyTurnstile({ token: undefined, action: "login", config: prod, optional: true }), { ok: true });
+  // previews may opt in explicitly
+  assert.equal(turnstileConfig({ NODE_ENV: "production", TURNSTILE_ALLOW_TEST_KEYS: "true" }).mode, "test");
+});
+
+test("a live secret with a missing or test site key is reported as misconfigured", () => {
+  assert.equal(turnstileConfig({ TURNSTILE_SECRET_KEY: "s" }).mode, "missing");
+  assert.equal(turnstileConfig({ TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: TURNSTILE_TEST_SITE_KEY }).mode, "missing");
+  const st = turnstileStatus({ TURNSTILE_SECRET_KEY: "s" });
+  assert.equal(st.mode, "missing");
+  assert.match(st.problem!, /SITE_KEY/);
+  assert.equal(turnstileStatus({ TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive" }).mode, "live");
 });
