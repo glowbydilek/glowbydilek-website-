@@ -71,6 +71,7 @@ export const nl = {
     menu: "Menu",
   },
   cta: {
+    requestShort: "Aanvragen",
     request: "Afspraak aanvragen",
     explore: "Bekijk de behandelingen",
     viewTreatments: "Alle behandelingen",

@@ -142,7 +142,7 @@ export function Header({
               {dict.nav.treatments}
               <Icon
                 name="chevron"
-                className={`h-3 w-3 transition-transform duration-300 ${mega ? "rotate-180" : ""}`}
+                className={`h-3 w-3 transition-transform duration-300 ${mega ? "-rotate-90" : "rotate-90"}`}
               />
             </button>
           </div>

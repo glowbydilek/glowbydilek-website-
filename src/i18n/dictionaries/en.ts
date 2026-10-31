@@ -69,6 +69,7 @@ export const en: Dictionary = {
     menu: "Menu",
   },
   cta: {
+    requestShort: "Request",
     request: "Request appointment",
     explore: "Explore the treatments",
     viewTreatments: "All treatments",

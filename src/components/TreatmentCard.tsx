@@ -32,7 +32,7 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
         </h3>
         <p className="mt-2 flex-1 leading-relaxed text-charcoal-soft">{copy.teaser}</p>
         {price && <p className="mt-3 text-sm text-muted">{price}</p>}
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-stone pt-4">
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-stone pt-3">
           <span className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-charcoal">
             {dict.service.viewTreatment}
             <Icon name="arrow" className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
@@ -41,7 +41,7 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
             href={bookingHref(locale, id)}
             className="relative z-10 inline-flex min-h-11 items-center text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep underline-offset-4 hover:text-charcoal hover:underline"
           >
-            {dict.cta.request}
+            {dict.cta.requestShort}
             <span className="sr-only">: {treatment.name[locale]}</span>
           </Link>
         </div>
