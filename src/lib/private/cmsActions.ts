@@ -6,11 +6,13 @@ import { redirect } from "next/navigation";
 import { assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { audit } from "../db/audit";
-import { notificationTemplates, redirects, treatments } from "../db/schema";
+import { contentEntries, customPages, notificationTemplates, redirects, treatments } from "../db/schema";
+import { BLANK_CUSTOM, validSlug } from "../cms/custom";
 import { invalidateContent } from "../cms/store";
-import { ContentError, discardDraft, publish, resetToDefault, restoreVersion, saveDraft, type Loc } from "../cms/service";
+import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, type Loc } from "../cms/service";
 import { PAGE_SECTIONS } from "../cms/registry";
 import { validateTheme } from "../cms/theme";
+import { validateBusiness, validateMenu } from "../cms/menu";
 import { TEMPLATE_KEYS, validateTemplate, type TemplateKey } from "../notifications/templates";
 import { allPages, matchPage, pagePath } from "@/i18n/config";
 import type { FormState } from "./authActions";
@@ -43,6 +45,12 @@ export async function contentAction(_: FormState, f: FormData): Promise<FormStat
   try {
     if (op === "save" || op === "publish" || op === "preview") {
       let data = parseJson(str(f, "data"));
+      if (docKey === "menu") data = validateMenu(data);
+      if (docKey === "business") {
+        const b = validateBusiness(data);
+        if (b.errors.length) return { error: b.errors.join(" ") };
+        data = b.value;
+      }
       if (docKey === "theme") {
         const v = validateTheme(data);
         if (v.errors.length) return { error: v.errors.join(" ") };
@@ -189,4 +197,46 @@ export async function templateAction(_: FormState, f: FormData): Promise<FormSta
 export async function goToPreview(f: FormData) {
   await assertOwner();
   redirect(`/api/preview?path=${encodeURIComponent(str(f, "path") || "/")}`);
+}
+
+// ───────────────────────────────────────────────────────── Custom pages
+
+export async function createCustomPageAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const slugNl = str(f, "slugNl").trim().toLowerCase();
+  const slugEn = str(f, "slugEn").trim().toLowerCase();
+  if (!validSlug(slugNl) || !validSlug(slugEn)) return { error: "Gebruik alleen kleine letters, cijfers en streepjes (bijv. cadeaubon)." };
+  const db = getDb();
+  let id: number;
+  try {
+    const [res] = (await db.insert(customPages).values({ slugNl, slugEn })) as unknown as [{ insertId: number }];
+    id = res.insertId;
+  } catch {
+    return { error: "Dit adres bestaat al. Kies een ander adres." };
+  }
+  for (const l of ["nl", "en"] as const) await saveDraft(db, `custom:${id}`, l, { ...BLANK_CUSTOM, title: str(f, l === "nl" ? "titleNl" : "titleEn") }, s.user.id);
+  await audit(db, { userId: s.user.id, action: "custom_page.created", entityId: id });
+  redirect(`/admin/paginas/info-${id}`);
+}
+
+export async function customPageSettingsAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const id = Number(f.get("id"));
+  const db = getDb();
+  if (str(f, "op") === "delete") {
+    await db.delete(customPages).where(eq(customPages.id, id));
+    await db.delete(contentEntries).where(eq(contentEntries.docKey, `custom:${id}`));
+    await audit(db, { userId: s.user.id, action: "custom_page.deleted", entityId: id });
+    revalidateSite();
+    redirect("/admin/paginas");
+  }
+  const published = f.get("published") === "on";
+  if (published) {
+    const [nl, en] = await Promise.all(["nl", "en"].map((l) => editorValue(db, `custom:${id}`, l as Loc, BLANK_CUSTOM)));
+    if (!nl.published || !en.published) return { error: "Publiceer eerst de Nederlandse én Engelse tekst; daarna kun je de pagina online zetten." };
+  }
+  await db.update(customPages).set({ published, noindex: f.get("noindex") === "on" }).where(eq(customPages.id, id));
+  await audit(db, { userId: s.user.id, action: published ? "custom_page.published" : "custom_page.unpublished", entityId: id });
+  revalidateSite();
+  return { ok: true, message: published ? "De pagina staat online." : "De pagina is offline." };
 }

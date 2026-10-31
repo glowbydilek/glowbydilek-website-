@@ -3,7 +3,8 @@ import { inArray } from "drizzle-orm";
 import { Card, PageHeader } from "@/components/private/ui";
 import { EDITOR_PAGES } from "@/lib/cms/registry";
 import { getDb } from "@/lib/db/client";
-import { contentEntries } from "@/lib/db/schema";
+import { contentEntries, customPages } from "@/lib/db/schema";
+import { CreateCustomPage } from "@/components/private/cms/CustomPageForms";
 
 export const metadata = { title: "Pagina's" };
 
@@ -11,6 +12,7 @@ export default async function Pages() {
   const keys = EDITOR_PAGES.flatMap((p) => p.docs.map((d) => d.key));
   const rows = await getDb().select({ docKey: contentEntries.docKey, locale: contentEntries.locale, status: contentEntries.status }).from(contentEntries).where(inArray(contentEntries.docKey, keys));
   const groups = [...new Set(EDITOR_PAGES.map((p) => p.group))];
+  const custom = await getDb().select().from(customPages);
   const state = (docs: string[]) => {
     const r = rows.filter((x) => docs.includes(x.docKey));
     return { drafts: r.filter((x) => x.status === "draft").length, edited: r.filter((x) => x.status === "published").length };
@@ -43,6 +45,25 @@ export default async function Pages() {
             </ul>
           </Card>
         ))}
+        <Card title="Eigen informatiepagina's">
+          {custom.length > 0 && (
+            <ul className="mb-5 divide-y divide-stone">
+              {custom.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/admin/paginas/info-${c.id}`} className="flex min-h-12 items-center justify-between gap-3 py-2">
+                    <span>
+                      <span className="block font-medium">/info/{c.slugNl}</span>
+                      <span className="text-xs text-muted">/en/info/{c.slugEn}</span>
+                    </span>
+                    <span className="text-xs">{c.published ? "online" : "offline"}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mb-3 text-sm text-muted">Bijvoorbeeld een pagina over cadeaubonnen of een tijdelijke mededeling. Vul eerst de tekst in beide talen in en publiceer; zet de pagina daarna online.</p>
+          <CreateCustomPage />
+        </Card>
       </div>
     </>
   );

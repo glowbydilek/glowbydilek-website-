@@ -46,10 +46,10 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
   const ids = Object.values(photoMap).filter((n) => Number.isInteger(n));
   const photos = new Map<string, PhotoOverride>();
   if (ids.length) {
-    const ms = await db.select({ id: media.id, width: media.width, height: media.height, altNl: media.altNl, altEn: media.altEn, focusMobile: media.focusMobile, focusDesktop: media.focusDesktop }).from(media);
+    const ms = await db.select({ id: media.id, updatedAt: media.updatedAt, width: media.width, height: media.height, altNl: media.altNl, altEn: media.altEn, focusMobile: media.focusMobile, focusDesktop: media.focusDesktop }).from(media);
     for (const [slot, id] of Object.entries(photoMap)) {
       const m = ms.find((x) => x.id === id);
-      if (m) photos.set(slot, { mediaId: m.id, width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
+      if (m) photos.set(slot, { mediaId: m.id, version: m.updatedAt.getTime(), width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
     }
   }
   return { docs, treatments: tmap, photos, preview: status === "draft", version };

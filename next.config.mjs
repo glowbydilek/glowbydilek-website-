@@ -42,6 +42,8 @@ const securityHeaders = [
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Media uploads in the admin (images up to 12 MB) are sent through Server Actions.
+  experimental: { serverActions: { bodySizeLimit: "14mb" } },
   poweredByHeader: false,
   /**
    * Convenience redirects for short or guessable URLs. No existing page URL

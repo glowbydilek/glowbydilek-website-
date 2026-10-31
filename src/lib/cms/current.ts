@@ -20,7 +20,7 @@ export type TreatmentLive = {
   mediaId: number | null;
 };
 
-export type PhotoOverride = { mediaId: number; width: number; height: number; altNl: string; altEn: string; focusMobile: string; focusDesktop: string };
+export type PhotoOverride = { mediaId: number; version: number; width: number; height: number; altNl: string; altEn: string; focusMobile: string; focusDesktop: string };
 
 export type Snapshot = {
   /** `${docKey}|${locale}` → owner override */

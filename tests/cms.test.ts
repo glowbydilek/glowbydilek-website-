@@ -63,3 +63,20 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
     await assert.rejects(saveDraft(db, "evil:../../x", "nl", {}, 1));
   });
 });
+
+import { detectImageType, processImage } from "../src/lib/cms/media.ts";
+
+test("uploads: only real JPEG/PNG/WebP bytes are accepted; SVG/HTML disguised as images are refused", async () => {
+  assert.equal(detectImageType(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>')), null);
+  assert.equal(detectImageType(Buffer.from("<html><script>x</script></html>        ")), null);
+  await assert.rejects(processImage(Buffer.from("GIF89a..........")), /Alleen JPG/);
+  const sharp = (await import("sharp")).default;
+  const png = await sharp({ create: { width: 1200, height: 800, channels: 3, background: "#c4a16f" } }).png().toBuffer();
+  // payload appended after the image data is removed by re-encoding
+  const withPayload = Buffer.concat([png, Buffer.from("<script>alert(1)</script>")]);
+  const r = await processImage(withPayload);
+  assert.equal(r.width, 1200);
+  assert.equal(r.height, 800);
+  assert.deepEqual(r.variants.map((v) => v.mime), ["image/webp", "image/webp", "image/webp"]);
+  assert.ok(r.variants.every((v) => !v.data.includes(Buffer.from("<script>"))));
+});

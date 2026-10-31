@@ -25,3 +25,15 @@ test("changes render as CSS custom properties", () => {
   assert.match(css, /--color-gold:#b8925e/);
   assert.match(css, /--space-section:/);
 });
+
+import { DEFAULT_MENU, validateBusiness, validateMenu } from "../src/lib/cms/menu.ts";
+
+test("menu edits can only link existing public pages, never private ones", () => {
+  assert.deepEqual(validateMenu(undefined), DEFAULT_MENU);
+  const m = validateMenu({ header: ["about", "admin", "ajanda", "../x", "faq", "faq"], footerInfo: ["https://evil.example", "privacy"] });
+  assert.deepEqual(m.header, ["treatments", "about", "faq"]);
+  assert.deepEqual(m.footerInfo, ["privacy"]);
+  assert.deepEqual(validateBusiness({ phone: "+31 6 1234 5678", instagram: "@glow.by_dilek" }), { value: { phone: "+31 6 1234 5678", instagram: "glow.by_dilek" }, errors: [] });
+  assert.ok(validateBusiness({ instagram: "https://instagram.com/x" }).errors.length);
+  assert.ok(validateBusiness({ phone: "javascript:alert(1)" }).errors.length);
+});

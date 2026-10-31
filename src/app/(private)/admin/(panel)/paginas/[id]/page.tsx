@@ -6,6 +6,10 @@ import { Card, Notice, PageHeader, SubmitButton } from "@/components/private/ui"
 import { EDITOR_PAGES, PAGE_SECTIONS } from "@/lib/cms/registry";
 import { editorValue, translationStatus, versions } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
+import { eq } from "drizzle-orm";
+import { customPages } from "@/lib/db/schema";
+import { BLANK_CUSTOM } from "@/lib/cms/custom";
+import { CustomPageSettings } from "@/components/private/cms/CustomPageForms";
 import { restoreVersionAction } from "@/lib/private/cmsActions";
 import { formatLocal } from "@/lib/time";
 
@@ -16,12 +20,17 @@ type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 export default async function EditPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const { id } = await params;
   const sp = await searchParams;
-  const page = EDITOR_PAGES.find((p) => p.id === id);
+  let page = EDITOR_PAGES.find((p) => p.id === id);
+  let custom: typeof customPages.$inferSelect | undefined;
+  if (!page && /^info-\d+$/.test(id)) {
+    [custom] = await getDb().select().from(customPages).where(eq(customPages.id, Number(id.slice(5))));
+    if (custom) page = { id, label: `Informatiepagina /info/${custom.slugNl}`, group: "Eigen", paths: { nl: `/info/${custom.slugNl}`, en: `/en/info/${custom.slugEn}` }, docs: [{ key: `custom:${custom.id}`, label: "Teksten" }] };
+  }
   if (!page) notFound();
   const docKey = page.docs.find((d) => d.key === sp.doc)?.key ?? page.docs[0].key;
   const locale = sp.taal === "en" ? "en" : "nl";
   const db = getDb();
-  const [ev, hist, ts] = await Promise.all([editorValue(db, docKey, locale), versions(db, docKey, locale), translationStatus(db, docKey)]);
+  const [ev, hist, ts] = await Promise.all([editorValue(db, docKey, locale, custom ? BLANK_CUSTOM : undefined), versions(db, docKey, locale), translationStatus(db, docKey)]);
   const sectionsEv = page.sectionsPage ? await editorValue(db, `sections:${page.sectionsPage}`, "all", {}) : null;
   const sections = (sectionsEv?.value ?? {}) as { order?: string[]; hidden?: string[] };
   const href = (doc: string, taal: string) => `/admin/paginas/${id}?doc=${encodeURIComponent(doc)}&taal=${taal}`;
@@ -58,6 +67,11 @@ export default async function EditPage({ params, searchParams }: { params: Promi
           <ContentEditor key={`${docKey}|${locale}`} docKey={docKey} locale={locale} initial={ev.value as Json} path={locale === "en" ? page.paths.en : page.paths.nl} hasDraft={ev.hasDraft} canReset={Boolean(ev.published)} />
         </Card>
         <div className="space-y-5">
+          {custom && (
+            <Card title="Pagina-instellingen">
+              <CustomPageSettings id={custom.id} published={custom.published} noindex={custom.noindex} />
+            </Card>
+          )}
           {page.sectionsPage && (
             <Card title="Onderdelen">
               <p className="mb-3 text-sm text-muted">Volgorde en zichtbaarheid{page.sectionsPage !== "home" && page.sectionsPage !== "about" ? " (geldt voor alle pagina's van dit type)" : ""}.</p>

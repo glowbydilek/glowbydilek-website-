@@ -262,8 +262,8 @@ export function resolvePhoto(id: PhotoId): { src: string; srcSet: string; aspect
   const o = currentSnapshot().photos.get(id);
   if (o) {
     return {
-      src: `/media/${o.mediaId}/1600`,
-      srcSet: MEDIA_WIDTHS.map((w) => `/media/${o.mediaId}/${w} ${w}w`).join(", "),
+      src: `/media/${o.mediaId}/1600?v=${o.version}`,
+      srcSet: MEDIA_WIDTHS.map((w) => `/media/${o.mediaId}/${w}?v=${o.version} ${w}w`).join(", "),
       aspect: o.width / o.height,
       alt: { nl: o.altNl, en: o.altEn },
       focus: { mobile: o.focusMobile, desktop: o.focusDesktop },

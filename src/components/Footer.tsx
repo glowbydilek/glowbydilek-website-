@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { mailto, siteConfig, whatsappLink } from "@/content/site";
-import { href, type Locale, type RouteKey } from "@/i18n/config";
+import { href, type Locale } from "@/i18n/config";
+import { override } from "@/lib/cms/current";
+import { validateBusiness } from "@/lib/cms/menu";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Logo } from "./brand/Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { NavModel } from "./navModel";
 import { Icon } from "./ui/Icon";
 
-const studioNav: RouteKey[] = ["about", "prices", "booking", "contact"];
 
 /** Compact charcoal footer with grouped navigation and subtle gold accents. */
 export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary; nav: NavModel }) {
   const year = new Date().getFullYear();
   const wa = whatsappLink(dict.whatsapp.message);
+  const biz = validateBusiness(override("business", "all")).value;
   const linkCls = "inline-flex min-h-9 items-center text-ivory/75 transition-colors hover:text-gold-light sm:min-h-0 sm:py-1";
   const heading = "text-[0.66rem] font-medium uppercase tracking-[0.24em] text-gold";
 
@@ -58,10 +60,10 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
           <div>
             <p className={heading}>{dict.footer.studio}</p>
             <ul className="mt-3">
-              {studioNav.map((key) => (
-                <li key={key}>
-                  <Link href={href(locale, key)} className={linkCls}>
-                    {dict.nav[key]}
+              {nav.studio.map((l) => (
+                <li key={l.key}>
+                  <Link href={l.href} className={linkCls}>
+                    {l.label}
                   </Link>
                 </li>
               ))}
@@ -88,6 +90,20 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                   {siteConfig.contact.email}
                 </a>
               </li>
+              {biz.phone && (
+                <li>
+                  <a href={`tel:${biz.phone.replace(/[^+\d]/g, "")}`} className="inline-flex min-h-9 items-center gap-2 text-ivory hover:text-gold-light sm:min-h-0">
+                    {biz.phone}
+                  </a>
+                </li>
+              )}
+              {biz.instagram && (
+                <li>
+                  <a href={`https://www.instagram.com/${biz.instagram}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-2 text-ivory hover:text-gold-light sm:min-h-0">
+                    Instagram · @{biz.instagram}
+                  </a>
+                </li>
+              )}
               {wa && (
                 <li>
                   <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-ivory hover:text-gold-light">
