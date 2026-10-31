@@ -76,6 +76,7 @@ export const nl = {
     location: "Behandelingen vinden plaats op afspraak, vanuit huis. Het adres ontvang je zodra je afspraak is bevestigd.",
     onRequest: "Op aanvraag",
     goodToKnow: "Goed om te weten",
+    moodImage: "Sfeerbeeld",
     suitableFor: "Geschikt voor",
     prev: "Vorige",
     next: "Volgende",

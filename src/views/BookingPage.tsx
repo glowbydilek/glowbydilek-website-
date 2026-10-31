@@ -20,7 +20,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} photo="experience" {...t.hero}>
+      <PageHero locale={locale} photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
         <ol className="grid gap-4 sm:grid-cols-3">
           {t.steps.map((s, i) => (
             <li key={s.title} className="border-t border-charcoal/15 pt-3">

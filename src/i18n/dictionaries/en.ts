@@ -74,6 +74,7 @@ export const en: Dictionary = {
     location: "Treatments take place by appointment at a home-based studio. You'll receive the address once your appointment is confirmed.",
     onRequest: "On request",
     goodToKnow: "Good to know",
+    moodImage: "Mood image",
     suitableFor: "Who it's for",
     prev: "Previous",
     next: "Next",
