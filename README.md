@@ -62,6 +62,17 @@ npm run lint && npm run typecheck && npm run build
 
 `next start` listens on the `PORT` that Hostinger provides.
 
+### Why the build is set up this way
+
+Hostinger's build environment has an older glibc (below 2.29). Next.js's native SWC compiler (`@next/swc-linux-x64-gnu`) needs a newer one, so it cannot load there. The project is therefore set up to build without it:
+
+- `@next/swc-wasm-nodejs` is installed as a dependency, pinned to the exact `next` version. This is the WebAssembly version of the compiler.
+- `scripts/prepare-swc-wasm.mjs` runs automatically before every `npm run build` (`prebuild`). It copies the WebAssembly compiler to where Next.js looks for it, so nothing has to be downloaded during the build.
+- `npm run build` uses `next build --webpack`, because Turbopack only works with the native compiler.
+- The config file is `next.config.mjs` (plain JavaScript), so it can be loaded without compiling.
+
+On computers where the native compiler works, Next.js keeps using it, so local builds stay fast. When upgrading Next.js, always upgrade `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` together to the **same exact version**. The prebuild script stops the build if `next` and `@next/swc-wasm-nodejs` don't match.
+
 ## Project structure
 
 ```
@@ -76,5 +87,6 @@ src/
   i18n/              Locale config, localised routes, dictionaries
   lib/seo.ts         Metadata and structured-data helpers
   lib/booking/       Types and feature flag for the future booking system
+scripts/prepare-swc-wasm.mjs   Offline SWC WebAssembly fallback for Hostinger builds
 docs/ARCHITECTURE.md
 ```
