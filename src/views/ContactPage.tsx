@@ -37,7 +37,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
             </div>
           </div>
 
-          <aside className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
+          <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             <a
               href={mailto(dict.forms.topics.question)}
               className="group block rounded-[1.75rem] bg-nude-light p-7 transition-colors duration-500 hover:bg-nude"
@@ -68,7 +68,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 {dict.cta.request}
               </ButtonLink>
             </div>
-          </aside>
+          </div>
         </Container>
       </section>
 

@@ -87,13 +87,13 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
               </section>
             ))}
             {g.caveat && (
-              <aside className="mt-12 flex gap-4 rounded-[var(--radius-card)] border border-gold/50 bg-nude-light p-6">
+              <div className="mt-12 flex gap-4 rounded-[var(--radius-card)] border border-gold/50 bg-nude-light p-6">
                 <Icon name="info" className="mt-0.5 h-6 w-6 shrink-0 text-gold-deep" />
                 <div>
                   <h2 className="font-serif text-2xl text-charcoal">{dict.guide.caveat}</h2>
                   <p className="mt-2 leading-relaxed text-charcoal-soft">{g.caveat}</p>
                 </div>
-              </aside>
+              </div>
             )}
           </div>
         </Container>

@@ -126,7 +126,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
               </ButtonLink>
             </div>
           </div>
-          <aside className="on-dark rounded-[var(--radius-media)] bg-charcoal p-7 text-ivory sm:p-9" data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
+          <div className="on-dark rounded-[var(--radius-media)] bg-charcoal p-7 text-ivory sm:p-9" data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
             <Icon name="calendar" className="h-6 w-6 text-gold" />
             <h2 className="display mt-4 text-[2rem] text-ivory sm:text-[2.4rem]">{s.request.title}</h2>
             <p className="mt-3 leading-relaxed text-ivory/80">{s.request.body}</p>
@@ -137,7 +137,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
             <ButtonLink href={bookingHref(locale, id)} variant="gold" arrow className="mt-7 w-full sm:w-auto">
               {s.requestThis}
             </ButtonLink>
-          </aside>
+          </div>
         </Container>
       </section>
 

@@ -15,10 +15,10 @@
   --color-stone-light: #ece5dc; /* quiet sections */
   --color-gold: #c4a16f; /* Champagne Gold — accents, rules, symbols (not body text) */
   --color-gold-light: #e2cda8;
-  --color-gold-deep: #85663a; /* gold for text on ivory — 4.9:1 */
+  --color-gold-deep: #765930; /* gold for text — ≥ 4.5:1 on ivory, nude-light, stone-light and nude */
   --color-charcoal: #292724; /* Elegant Charcoal — text, buttons, dark band */
   --color-charcoal-soft: #4a443f; /* body copy — 8.9:1 */
-  --color-muted: #6b635c; /* secondary text — 5.6:1 */
+  --color-muted: #635b54; /* secondary text — ≥ 4.6:1 on every light surface */
 
   --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost Variable", "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;

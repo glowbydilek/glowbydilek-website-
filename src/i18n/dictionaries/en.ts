@@ -64,6 +64,7 @@ export const en: Dictionary = {
     skipToContent: "Skip to content",
     language: "Language",
     main: "Main menu",
+    languageFooter: "Choose language (footer)",
     breadcrumb: "You are here",
     menu: "Menu",
   },

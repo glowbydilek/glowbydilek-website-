@@ -231,13 +231,13 @@ export function HomePage({ locale }: { locale: Locale }) {
         <Container className="grid items-start gap-10 md:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div className="md:sticky md:top-[calc(var(--header-safe)+2rem)]">
             <SectionHeading eyebrow={t.care.eyebrow} title={t.care.title} intro={t.care.intro} />
-            <aside className="mt-7 rounded-[var(--radius-card)] bg-stone-light p-6" data-reveal>
+            <div className="mt-7 rounded-[var(--radius-card)] bg-stone-light p-6" data-reveal>
               <h3 className="flex items-center gap-3 font-serif text-2xl text-charcoal">
                 <Icon name="sparkle" className="h-5 w-5 text-gold-deep" />
                 {t.care.firstTime.title}
               </h3>
               <p className="mt-2 leading-relaxed text-charcoal-soft">{t.care.firstTime.body}</p>
-            </aside>
+            </div>
             <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2" data-reveal>
               <ButtonLink href={href(locale, "preparation")} variant="link" arrow>
                 {dict.nav.preparation}

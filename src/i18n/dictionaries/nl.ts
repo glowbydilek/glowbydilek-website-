@@ -66,6 +66,7 @@ export const nl = {
     skipToContent: "Direct naar inhoud",
     language: "Taal",
     main: "Hoofdmenu",
+    languageFooter: "Taal kiezen (voettekst)",
     breadcrumb: "Je bent hier",
     menu: "Menu",
   },

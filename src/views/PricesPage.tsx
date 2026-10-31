@@ -77,7 +77,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
             ))}
           </div>
 
-          <aside className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
+          <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             {!pricesPublished && (
               <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory sm:p-9" data-reveal>
                 <Icon name="mail" className="h-6 w-6 text-gold" />
@@ -96,7 +96,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
-          </aside>
+          </div>
         </Container>
       </section>
 

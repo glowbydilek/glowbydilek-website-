@@ -111,7 +111,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
               {dict.nav.privacy}
             </Link>
             <span>{dict.footer.note}</span>
-            <LanguageSwitcher locale={locale} label={dict.nav.language} tone="dark" className="-my-2" />
+            <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" className="-my-2" />
           </div>
         </div>
       </div>
