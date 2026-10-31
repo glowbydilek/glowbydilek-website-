@@ -48,7 +48,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
         </div>
         <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-stone pt-5 text-sm sm:grid-cols-3">
           <div>
-            <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">{dict.nav.categories}</dt>
+            <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">{s.areaLabel}</dt>
             <dd className="mt-1 text-charcoal">{cat.label}</dd>
           </div>
           <div>

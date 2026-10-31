@@ -394,8 +394,8 @@ export const en: Dictionary = {
     notConfirmed: "This is a request, not yet an appointment. Your appointment is only final once Dilek has confirmed it personally.",
     formTitle: "Your request",
     future: {
-      title: "Online booking is on its way",
-      body: "A secure online booking system with available times and reminders is in development. Until then, Dilek schedules every appointment with you personally.",
+      title: "Personally scheduled",
+      body: "There is no automatic booking calendar: Dilek reads every request herself and schedules each appointment with you personally, by email.",
     },
   },
   forms: {
@@ -506,6 +506,7 @@ export const en: Dictionary = {
     note: "No tracking, no advertising cookies.",
   },
   service: {
+    areaLabel: "Area",
     categoryPage: "Guide, preparation and aftercare",
     inThisArea: "Treatments in this area",
     inThisAreaIntro: "Choose a treatment for all the details, or request an appointment straight away.",

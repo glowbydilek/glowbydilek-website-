@@ -19,7 +19,7 @@ export function FormSuccess({
 }) {
   return (
     <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-charcoal p-8 text-ivory sm:p-12">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal-deep">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal">
         <Icon name="check" className="h-6 w-6" />
       </span>
       <h3 className="mt-6 font-serif text-4xl">{title}</h3>

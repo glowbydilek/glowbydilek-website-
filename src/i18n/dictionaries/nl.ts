@@ -397,8 +397,8 @@ export const nl = {
     notConfirmed: "Dit is een aanvraag, nog geen afspraak. Je afspraak staat pas vast als Dilek hem persoonlijk heeft bevestigd.",
     formTitle: "Je aanvraag",
     future: {
-      title: "Online boeken volgt",
-      body: "Er wordt gewerkt aan een veilig online afsprakensysteem met beschikbare tijden en herinneringen. Tot die tijd plant Dilek elke afspraak persoonlijk met je in.",
+      title: "Persoonlijk ingepland",
+      body: "Er is geen automatische boekingsagenda: Dilek leest elke aanvraag zelf en plant iedere afspraak persoonlijk met je in, per e-mail.",
     },
   },
   forms: {
@@ -509,6 +509,7 @@ export const nl = {
     note: "Geen tracking, geen reclamecookies.",
   },
   service: {
+    areaLabel: "Zone",
     categoryPage: "Uitleg, voorbereiding en nazorg",
     inThisArea: "Behandelingen in deze zone",
     inThisAreaIntro: "Kies een behandeling voor alle details, of vraag direct een afspraak aan.",

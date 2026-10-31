@@ -81,7 +81,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
             {t.about.facts.map((f, i) => (
               <div key={f.label} className={`flex flex-col items-center px-2 py-8 text-center ${i > 0 ? "border-l border-stone" : ""}`}>
                 <dt className="order-2 mt-2 text-[0.66rem] uppercase tracking-[0.14em] text-muted">{f.label}</dt>
-                <dd className="order-1 font-serif text-[1.7rem] text-charcoal sm:text-[2.6rem]">{f.value}</dd>
+                <dd className="order-1 whitespace-nowrap font-serif text-[1.4rem] text-charcoal min-[400px]:text-[1.7rem] sm:text-[2.6rem]">{f.value}</dd>
               </div>
             ))}
           </dl>

@@ -78,7 +78,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
             </h2>
             <p className="lead mt-4">{s.inThisAreaIntro}</p>
           </div>
-          <ul className={`mt-block grid gap-5 sm:grid-cols-2 lg:grid-cols-3`}>
+          <ul className={`mt-block grid gap-5 sm:grid-cols-2 ${group.treatments.length === 4 ? "xl:grid-cols-4" : "lg:grid-cols-3"}`}>
             {group.treatments.map((t, i) => (
               <li key={t.id} data-reveal style={{ ["--reveal-delay" as string]: `${i * 70}ms` }}>
                 <TreatmentCard locale={locale} id={t.id} />
