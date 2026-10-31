@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ensureContent } from "@/lib/cms/store";
 import { notFound } from "next/navigation";
 import { PageFrame } from "@/components/PageFrame";
 import { categoryCopy } from "@/content/copy";
@@ -18,6 +19,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  await ensureContent();
   const id = findCategory(locale, (await params).category);
   return id ? categoryMetadata(locale, id) : {};
 }

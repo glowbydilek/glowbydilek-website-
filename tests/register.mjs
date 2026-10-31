@@ -21,6 +21,8 @@ export async function resolve(specifier, context, next) {
     }
   }
   if (specifier === "server-only") return { url: "data:text/javascript,", shortCircuit: true };
+  // Next.js subpath modules are CommonJS files without an "exports" map.
+  if (specifier.startsWith("next/") && !specifier.slice(5).includes(".") && !specifier.slice(5).includes("/")) return next(specifier + ".js", context);
   return next(specifier, context);
 }
 `),

@@ -6,9 +6,16 @@ import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SiteShell } from "@/components/SiteShell";
+import { ensureContent } from "@/lib/cms/store";
 import { rootMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = rootMetadata("en");
+/** Owner edits from the CMS appear within 5 minutes even without an explicit publish revalidation. */
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  await ensureContent();
+  return rootMetadata("en");
+}
 
 export const viewport: Viewport = {
   themeColor: "#f8f5ef",

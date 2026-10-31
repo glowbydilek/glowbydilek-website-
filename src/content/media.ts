@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { currentSnapshot } from "@/lib/cms/current";
 
 /**
  * Photography registry.
@@ -251,6 +252,35 @@ export function photoSrcSet(photo: Photo): string | undefined {
   return photoWidths.map((w) => `/images/photos/${photo.file}-${w}.webp ${w}w`).join(", ");
 }
 
+export const MEDIA_WIDTHS = [640, 1024, 1600] as const;
+
+/**
+ * The photo actually shown for a slot: the owner's media-library choice
+ * (CMS) if set, otherwise the built-in licensed photo.
+ */
+export function resolvePhoto(id: PhotoId): { src: string; srcSet: string; aspect: number; alt: Record<Locale, string>; focus: { mobile: string; desktop: string } } | null {
+  const o = currentSnapshot().photos.get(id);
+  if (o) {
+    return {
+      src: `/media/${o.mediaId}/1600`,
+      srcSet: MEDIA_WIDTHS.map((w) => `/media/${o.mediaId}/${w} ${w}w`).join(", "),
+      aspect: o.width / o.height,
+      alt: { nl: o.altNl, en: o.altEn },
+      focus: { mobile: o.focusMobile, desktop: o.focusDesktop },
+    };
+  }
+  const p = photos[id];
+  const srcSet = photoSrcSet(p);
+  if (!p.file || !srcSet) return null;
+  return {
+    src: `/images/photos/${p.file}-1600.webp`,
+    srcSet,
+    aspect: p.aspect,
+    alt: p.alt,
+    focus: { mobile: p.focus?.mobile ?? "50% 40%", desktop: p.focus?.desktop ?? p.focus?.mobile ?? "50% 40%" },
+  };
+}
+
 export function hasPhoto(id: PhotoId): boolean {
-  return Boolean(photos[id].file);
+  return Boolean(photos[id].file) || currentSnapshot().photos.has(id);
 }

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { publishedCategories } from "@/content/services";
 import { siteConfig } from "@/content/site";
-import { pricesPublished, treatmentGroups } from "@/content/treatments";
+import { liveTreatment, treatmentGroups } from "@/content/treatments";
 import { categoryCopy, faqPageCopy, guideCopy, treatmentCopy } from "@/content/copy";
+import { override } from "@/lib/cms/current";
 import type { CategoryId, TreatmentId } from "@/content/slugs";
 import { categoryHref, localeLabels, locales, routes, treatmentHref, type Locale, type RouteKey } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -13,6 +14,8 @@ export function absoluteUrl(path: string): string {
 
 type MetaInput = {
   locale: Locale;
+  /** Key of the owner's SEO overrides ("seo:<key>" content document). */
+  seoKey?: string;
   /** Path of this page per language (for canonical + hreflang). */
   paths: Record<Locale, string>;
   title: string;
@@ -23,7 +26,20 @@ type MetaInput = {
 };
 
 /** Localised metadata with canonical URL, hreflang alternates and Open Graph. */
-export function buildMetadata({ locale, paths, title, description, absolute, noindex }: MetaInput): Metadata {
+export type SeoOverride = { title?: string; description?: string; noindex?: boolean; ogTitle?: string; ogDescription?: string; ogImage?: number | null };
+
+export function seoOverride(seoKey: string | undefined, locale: Locale): SeoOverride {
+  if (!seoKey) return {};
+  const o = override(`seo:${seoKey}`, locale);
+  return o && typeof o === "object" ? (o as SeoOverride) : {};
+}
+
+export function buildMetadata(input: MetaInput): Metadata {
+  const o = seoOverride(input.seoKey, input.locale);
+  const { locale, paths, absolute } = input;
+  const title = o.title?.trim() || input.title;
+  const description = o.description?.trim() || input.description;
+  const noindex = o.noindex ?? input.noindex;
   const dict = getDictionary(locale);
   const path = paths[locale];
   const languages: Record<string, string> = {};
@@ -31,12 +47,11 @@ export function buildMetadata({ locale, paths, title, description, absolute, noi
   languages["x-default"] = paths.nl;
 
   const fullTitle = absolute ? title : `${title} | ${siteConfig.name}`;
-  const ogImage = {
-    url: `/images/og-${locale}.png`,
-    width: 1200,
-    height: 630,
-    alt: `${siteConfig.name} — ${dict.meta.tagline}`,
-  };
+  const ogImage = o.ogImage
+    ? { url: `/media/${o.ogImage}/1600`, width: 1600, height: 900, alt: o.ogTitle || title }
+    : { url: `/images/og-${locale}.png`, width: 1200, height: 630, alt: `${siteConfig.name} — ${dict.meta.tagline}` };
+  const ogTitle = o.ogTitle?.trim() || fullTitle;
+  const ogDescription = o.ogDescription?.trim() || description;
 
   return {
     title: absolute ? { absolute: title } : title,
@@ -46,8 +61,8 @@ export function buildMetadata({ locale, paths, title, description, absolute, noi
     openGraph: {
       type: "website",
       siteName: siteConfig.name,
-      title: fullTitle,
-      description,
+      title: ogTitle,
+      description: ogDescription,
       url: path,
       locale: localeLabels[locale].ogLocale,
       alternateLocale: locales.filter((l) => l !== locale).map((l) => localeLabels[l].ogLocale),
@@ -55,8 +70,8 @@ export function buildMetadata({ locale, paths, title, description, absolute, noi
     },
     twitter: {
       card: "summary_large_image",
-      title: fullTitle,
-      description,
+      title: ogTitle,
+      description: ogDescription,
       images: [ogImage.url],
     },
   };
@@ -77,7 +92,7 @@ export function staticPageMeta(locale: Locale, key: RouteKey): { title: string; 
 
 export function pageMetadata(locale: Locale, key: RouteKey): Metadata {
   const page = staticPageMeta(locale, key);
-  return buildMetadata({ locale, paths: routes[key], ...page, absolute: key === "home" });
+  return buildMetadata({ locale, paths: routes[key], ...page, absolute: key === "home", seoKey: key });
 }
 
 export function categoryMetadata(locale: Locale, id: CategoryId): Metadata {
@@ -87,6 +102,7 @@ export function categoryMetadata(locale: Locale, id: CategoryId): Metadata {
     paths: { nl: categoryHref("nl", id), en: categoryHref("en", id) },
     title: c.seoTitle,
     description: c.seoDescription,
+    seoKey: `category-${id}`,
   });
 }
 
@@ -97,6 +113,7 @@ export function treatmentMetadata(locale: Locale, id: TreatmentId): Metadata {
     paths: { nl: treatmentHref("nl", id), en: treatmentHref("en", id) },
     title: t.seoTitle,
     description: t.seoDescription,
+    seoKey: `treatment-${id}`,
   });
 }
 
@@ -166,7 +183,7 @@ export function serviceJsonLd(locale: Locale) {
         itemListElement: g.treatments.map((t) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: t.name[locale], description: t.description[locale] },
-          ...(pricesPublished && t.price ? { price: t.price.amount, priceCurrency: "EUR" } : {}),
+          ...(liveTreatment(t.id).price ? { price: liveTreatment(t.id).price!.amount, priceCurrency: "EUR" } : {}),
         })),
       })),
     },

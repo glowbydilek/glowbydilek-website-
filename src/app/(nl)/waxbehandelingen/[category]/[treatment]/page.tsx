@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { ensureContent } from "@/lib/cms/store";
 import { notFound } from "next/navigation";
 import { PageFrame } from "@/components/PageFrame";
 import { categoryCopy } from "@/content/copy";
 import { categorySlugs, treatmentIds, treatmentSlugs } from "@/content/slugs";
-import { findTreatmentById } from "@/content/treatments";
+import { findTreatmentById, liveTreatment } from "@/content/treatments";
 import { categoryHref, findCategory, findTreatment, href, treatmentHref } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { treatmentMetadata } from "@/lib/seo";
@@ -28,6 +29,7 @@ async function resolve(params: Props["params"]) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  await ensureContent();
   const id = await resolve(params);
   return id ? treatmentMetadata(locale, id) : {};
 }
@@ -35,6 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const id = await resolve(params);
   if (!id) notFound();
+  await ensureContent();
+  if (!liveTreatment(id).visible) notFound();
   const dict = getDictionary(locale);
   const { treatment, group } = findTreatmentById(id);
   return (

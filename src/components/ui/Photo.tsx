@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { photos, photoSrcSet, type PhotoId } from "@/content/media";
+import { resolvePhoto, type PhotoId } from "@/content/media";
 import type { Locale } from "@/i18n/config";
 import { BotanicalArt } from "./BotanicalArt";
 
@@ -40,12 +40,11 @@ export function Photo({
   /** Small visible caption, e.g. "Sfeerbeeld" for stock interiors that are not the actual studio. */
   label?: string;
 }) {
-  const photo = photos[id];
-  const srcSet = photoSrcSet(photo);
+  const photo = resolvePhoto(id);
   const frame = fill ? "absolute inset-0" : "relative w-full";
-  const frameStyle: CSSProperties = { ...(fill ? {} : { aspectRatio: ratio ?? photo.aspect }), ...style };
+  const frameStyle: CSSProperties = { ...(fill ? {} : { aspectRatio: ratio ?? photo?.aspect ?? 4 / 5 }), ...style };
 
-  if (!photo.file || !srcSet) {
+  if (!photo) {
     return (
       <div className={`${frame} overflow-hidden ${className}`} style={frameStyle} aria-hidden="true" data-photo-missing={id}>
         <BotanicalArt />
@@ -54,16 +53,16 @@ export function Photo({
   }
 
   const focus = {
-    ["--fm" as string]: photo.focus?.mobile ?? "50% 40%",
-    ["--fd" as string]: photo.focus?.desktop ?? photo.focus?.mobile ?? "50% 40%",
+    ["--fm" as string]: photo.focus.mobile,
+    ["--fd" as string]: photo.focus.desktop,
   } as CSSProperties;
 
   return (
     <div className={`${frame} overflow-hidden bg-stone ${className}`} style={frameStyle}>
       {/* eslint-disable-next-line @next/next/no-img-element -- pre-optimised responsive WebP; no runtime image processing on Hostinger */}
       <img
-        src={`/images/photos/${photo.file}-1600.webp`}
-        srcSet={srcSet}
+        src={photo.src}
+        srcSet={photo.srcSet}
         sizes={sizes}
         alt={photo.alt[locale]}
         loading={priority ? "eager" : "lazy"}
