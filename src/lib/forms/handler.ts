@@ -19,8 +19,16 @@ function json(status: number, body: Record<string, unknown>) {
   return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
 }
 
+/**
+ * Client IP for rate limiting. Prefer X-Real-IP (set by the hosting proxy);
+ * otherwise use the LAST X-Forwarded-For entry — the one appended by our own
+ * proxy — because earlier entries can be forged by the client.
+ */
 function clientIp(req: NextRequest): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
+  const real = req.headers.get("x-real-ip")?.trim();
+  if (real) return real;
+  const chain = req.headers.get("x-forwarded-for")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+  return chain[chain.length - 1] || "unknown";
 }
 
 /** Same-origin check (basic CSRF protection for a cookie-less JSON endpoint). */
@@ -56,7 +64,12 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   // Bots get a fake success so they learn nothing.
   if (isLikelySpam(raw)) return json(200, { ok: true });
 
-  if (!rateLimit(`${h.kind}:${clientIp(req)}`)) return json(429, { ok: false, error: "rateLimited" });
+  if (!rateLimit(`${h.kind}:${clientIp(req)}`)) {
+    return NextResponse.json(
+      { ok: false, error: "rateLimited" },
+      { status: 429, headers: { "Cache-Control": "no-store", "Retry-After": "600" } },
+    );
+  }
 
   const result = h.validate(raw);
   if (!result.ok) return json(422, { ok: false, error: "validation", fields: result.errors });
@@ -69,7 +82,7 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   const data = result.data;
   try {
     const owner = h.ownerMail(data);
-    await sendMail({ to: ownerAddress(), replyTo: `"${data.name.replace(/"/g, "")}" <${data.email}>`, ...owner });
+    await sendMail({ to: ownerAddress(), replyTo: { name: data.name, address: data.email }, ...owner });
   } catch (err) {
     console.error(`[${h.kind}] Failed to send notification:`, err instanceof Error ? err.message : err);
     return json(502, { ok: false, error: "sendFailed" });

@@ -6,14 +6,14 @@ export type FaqItem = { q: string; a: string };
 export function Faq({ items, tone = "light" }: { items: FaqItem[]; tone?: "light" | "dark" }) {
   const dark = tone === "dark";
   return (
-    <div className={`divide-y border-y ${dark ? "divide-ivory/12 border-ivory/12" : "divide-forest/12 border-forest/12"}`}>
+    <div className={`divide-y border-y ${dark ? "divide-ivory/12 border-ivory/12" : "divide-charcoal/12 border-charcoal/12"}`}>
       {items.map((item) => (
         <details key={item.q} className="group">
           <summary className="flex cursor-pointer items-center justify-between gap-6 py-6 text-left">
-            <span className={`font-serif text-xl leading-snug sm:text-[1.65rem] ${dark ? "text-ivory" : "text-forest"}`}>{item.q}</span>
+            <span className={`font-serif text-xl leading-snug sm:text-[1.65rem] ${dark ? "text-ivory" : "text-charcoal"}`}>{item.q}</span>
             <span
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-500 group-open:rotate-45 ${
-                dark ? "border-ivory/25 text-gold group-open:bg-ivory group-open:text-forest" : "border-forest/20 text-gold-deep group-open:bg-forest group-open:text-ivory"
+                dark ? "border-ivory/25 text-gold group-open:bg-ivory group-open:text-charcoal" : "border-charcoal/20 text-gold-deep group-open:bg-charcoal group-open:text-ivory"
               }`}
             >
               <Icon name="plus" className="h-4 w-4" />

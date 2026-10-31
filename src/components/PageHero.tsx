@@ -1,9 +1,17 @@
 import type { ReactNode } from "react";
-import type { PhotoId } from "@/content/media";
+import { hasPhoto, type PhotoId } from "@/content/media";
 import type { Locale } from "@/i18n/config";
+import { LogoSymbol } from "./brand/Logo";
+import { Container } from "./Container";
 import { Photo } from "./ui/Photo";
 
-/** Editorial split hero for inner pages: text on ivory, photo bleeding to the edge. */
+/**
+ * Inner-page hero, always below the fixed header (`pt-header`).
+ * - With a registered photo: text + full 4:5 photo (width derived from the
+ *   viewport height, so it is never cropped and never hides under the header).
+ * - Without a photo: a compact typographic hero with the brand symbol —
+ *   no empty image frame.
+ */
 export function PageHero({
   locale,
   eyebrow,
@@ -21,27 +29,45 @@ export function PageHero({
   photo: PhotoId;
   children?: ReactNode;
 }) {
+  const withPhoto = hasPhoto(photo);
+  const text = (
+    <div>
+      <p className="eyebrow rise">{eyebrow}</p>
+      <h1 className="display rise mt-5 text-[2.6rem] [--rise-delay:80ms] sm:text-6xl lg:text-[4.6rem]">
+        {title}
+        {titleEm && (
+          <>
+            <br />
+            <em>{titleEm}</em>
+          </>
+        )}
+      </h1>
+      <p className="lead rise mt-5 max-w-xl [--rise-delay:160ms]">{subtitle}</p>
+      {children && <div className="rise mt-8 [--rise-delay:240ms]">{children}</div>}
+    </div>
+  );
+
+  if (!withPhoto) {
+    return (
+      <section className="pt-header relative overflow-hidden border-b border-stone/70 bg-ivory pb-[var(--space-section-tight)]">
+        <LogoSymbol className="pointer-events-none absolute -right-16 top-[calc(var(--header-safe)+1rem)] hidden h-auto w-[26rem] opacity-[0.12] lg:block xl:right-[4vw]" />
+        <Container className="relative">
+          <div className="max-w-3xl">{text}</div>
+        </Container>
+      </section>
+    );
+  }
+
   return (
-    <section className="relative overflow-hidden bg-ivory">
-      <div className="mx-auto grid max-w-[100rem] lg:min-h-[44rem] lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="flex flex-col justify-center px-5 pb-12 pt-32 sm:px-8 lg:py-36 lg:pl-12 lg:pr-16 xl:pl-[max(3rem,calc((100vw-88rem)/2+3rem))]">
-          <p className="eyebrow rise">{eyebrow}</p>
-          <h1 className="display rise mt-7 text-[2.9rem] [--rise-delay:80ms] sm:text-6xl lg:text-[5rem]">
-            {title}
-            {titleEm && (
-              <>
-                <br />
-                <em>{titleEm}</em>
-              </>
-            )}
-          </h1>
-          <p className="lead rise mt-7 max-w-xl [--rise-delay:160ms]">{subtitle}</p>
-          {children && <div className="rise mt-10 [--rise-delay:240ms]">{children}</div>}
+    <section className="pt-header bg-ivory pb-[var(--space-section-tight)]">
+      <Container className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+        {text}
+        <div className="rise mx-auto w-full max-w-md [--rise-delay:120ms] md:max-w-none">
+          <div className="hero-photo-w mx-auto overflow-hidden rounded-[var(--radius-media)] shadow-soft lg:ml-auto lg:mr-0">
+            <Photo id={photo} locale={locale} priority ratio={4 / 5} sizes="(min-width: 768px) 40vw, 92vw" />
+          </div>
         </div>
-        <div className="relative mx-3 mb-3 h-[24rem] overflow-hidden rounded-[2rem] sm:mx-5 sm:h-[30rem] lg:m-0 lg:h-auto lg:rounded-none lg:rounded-bl-[7rem]" data-reveal="mask">
-          <Photo id={photo} locale={locale} fill priority parallax={0.06} sizes="(min-width: 1024px) 48vw, 100vw" />
-        </div>
-      </div>
+      </Container>
     </section>
   );
 }

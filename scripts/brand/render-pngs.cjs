@@ -18,20 +18,20 @@ const css = `
 
 const og = (lang) => {
   const t = lang === "nl"
-    ? { a: "Zacht, zuiver", b: "en stralend.", c: "Professioneel waxen op afspraak" }
-    : { a: "Soft, pure", b: "and glowing.", c: "Professional waxing by appointment" };
-  return `<body style="--w:1200px;--h:630px;display:flex;background:#f4f0e8">
+    ? { a: "Zacht voor je huid.", b: "Rustig voor jou.", c: "Waxstudio · op afspraak" }
+    : { a: "Gentle on your skin.", b: "Calm for you.", c: "Waxing studio · by appointment" };
+  return `<body style="--w:1200px;--h:630px;display:flex;background:#f8f5ef">
   <div style="flex:1.1;padding:70px 64px;display:flex;flex-direction:column;justify-content:space-between">
-    <div style="height:58px">${svg("logo-horizontal.svg").replace(/width="[^"]*" height="[^"]*"/, 'height="58"')}</div>
+    <div style="height:64px">${svg("logo-horizontal.svg").replace(/width="[^"]*" height="[^"]*"/, 'height="64"')}</div>
     <div>
-      <div style="font-family:Corm;font-weight:500;font-size:88px;line-height:1;color:#20382f;letter-spacing:-2px">${t.a}<br><span style="font-family:CormI;font-weight:400;font-style:italic;color:#56634f">${t.b}</span></div>
-      <div style="margin-top:30px;font-family:Jost;font-size:20px;letter-spacing:6px;text-transform:uppercase;color:#5f6661">${t.c}</div>
+      <div style="font-family:Corm;font-weight:500;font-size:74px;line-height:1.02;color:#292724;letter-spacing:-2px">${t.a}<br><span style="font-family:CormI;font-weight:400;font-style:italic;color:#85663a">${t.b}</span></div>
+      <div style="margin-top:30px;font-family:Jost;font-size:20px;letter-spacing:6px;text-transform:uppercase;color:#6b645d">${t.c}</div>
     </div>
-    <div style="font-family:Jost;font-size:20px;color:#20382f;letter-spacing:1px">glowbydilek.nl</div>
+    <div style="font-family:Jost;font-size:20px;color:#292724;letter-spacing:1px">glowbydilek.nl</div>
   </div>
-  <div style="flex:0.9;position:relative;background:radial-gradient(70% 55% at 55% 35%,rgba(185,156,107,.35),rgba(185,156,107,0) 60%),linear-gradient(160deg,#2d4a3e,#20382f 55%,#162a22);display:flex;align-items:center;justify-content:center">
-    <div style="position:absolute;inset:28px;border:1px solid rgba(250,247,242,.55);border-radius:999px 999px 28px 28px"></div>
-    <div style="width:270px;height:270px">${svg("logo-icon-light.svg").replace(/width="[^"]*" height="[^"]*"/, 'width="270" height="270"')}</div>
+  <div style="flex:0.9;position:relative;background:radial-gradient(70% 55% at 55% 35%,rgba(255,255,255,.75),rgba(255,255,255,0) 60%),linear-gradient(160deg,#f3e8e0,#e8d4c7 55%,#dcc6b6);display:flex;align-items:center;justify-content:center">
+    <div style="position:absolute;inset:28px;border:1px solid rgba(197,164,119,.55);border-radius:999px 999px 28px 28px"></div>
+    <div style="width:440px">${svg("logo-stacked.svg").replace(/width="[^"]*" height="[^"]*"/, 'width="440"')}</div>
   </div></body>`;
 };
 

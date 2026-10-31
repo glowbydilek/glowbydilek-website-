@@ -33,6 +33,8 @@ export type TreatmentGroup = {
   photo: PhotoId;
   name: Localised;
   intro: Localised;
+  /** Who this zone is suitable for (shown on the treatments page). */
+  suitable: Localised;
   note: Localised;
   treatments: Treatment[];
 };
@@ -44,8 +46,12 @@ export const treatmentGroups: TreatmentGroup[] = [
     photo: "zone-face",
     name: { nl: "Gezicht", en: "Face" },
     intro: {
-      nl: "De huid in het gezicht is dun en gevoelig. Daarom werkt Dilek hier extra nauwkeurig, met kleine zones en een rustige, zachte techniek.",
-      en: "Facial skin is thin and sensitive. That is why Dilek works with extra precision here, in small sections and with a calm, gentle technique.",
+      nl: "Gezichtshuid is dun en reageert sneller dan de huid op je lichaam. Daarom wordt hier in kleine delen gewerkt, met een rustige hand en extra oog voor symmetrie en een natuurlijk resultaat.",
+      en: "Facial skin is thinner and more reactive than the skin on your body. So we work in small sections, with a steady hand and close attention to symmetry and a natural finish.",
+    },
+    suitable: {
+      nl: "Voor wie strakke, natuurlijke wenkbrauwen wil of fijne haartjes op bovenlip, kin of wangen liever kwijt is dan ze te scheren of te epileren.",
+      en: "For anyone who wants clean, natural-looking brows, or would rather remove fine hair on the upper lip, chin or cheeks than shave or tweeze it.",
     },
     note: {
       nl: "Gebruik je producten met retinol, AHA of BHA? Stop daar minimaal een week van tevoren mee en meld het altijd vooraf.",
@@ -92,8 +98,12 @@ export const treatmentGroups: TreatmentGroup[] = [
     photo: "zone-body",
     name: { nl: "Lichaam", en: "Body" },
     intro: {
-      nl: "Voor armen, benen, oksels en rug. Waxen verwijdert het haar met wortel en al, waardoor je huid weken langer glad blijft dan na scheren.",
-      en: "For arms, legs, underarms and back. Waxing removes hair from the root, so your skin stays smooth for weeks longer than after shaving.",
+      nl: "Armen, benen, oksels en rug. Omdat het haar met wortel en al wordt verwijderd, blijft je huid weken glad — zonder de stoppels en scheerirritatie die je van een scheermes kent.",
+      en: "Arms, legs, underarms and back. Because the hair is removed from the root, your skin stays smooth for weeks — without the stubble and razor irritation you know from shaving.",
+    },
+    suitable: {
+      nl: "Voor wie het dagelijks of wekelijks scheren beu is, voor een vakantie of speciale gelegenheid, of voor wie gewoon langer een gladde huid wil.",
+      en: "For anyone tired of shaving every day or week, ahead of a holiday or special occasion, or simply for longer-lasting smooth skin.",
     },
     note: {
       nl: "Scrub de huid een dag van tevoren licht, en kom bij voorkeur zonder bodylotion of olie op de te behandelen zone.",
@@ -156,8 +166,12 @@ export const treatmentGroups: TreatmentGroup[] = [
     photo: "zone-intimate",
     name: { nl: "Bikini & intiem", en: "Bikini & intimate" },
     intro: {
-      nl: "Discreet, respectvol en in alle rust. Je bepaalt zelf wat je wilt, Dilek legt elke stap uit en jouw privacy en comfort staan altijd voorop.",
-      en: "Discreet, respectful and unhurried. You decide what you want, Dilek explains every step and your privacy and comfort always come first.",
+      nl: "De meest persoonlijke behandeling vraagt de meeste zorg. Jij bepaalt wat er blijft en wat er weg mag; Dilek werkt discreet, legt vooraf uit wat ze doet en houdt het tempo dat voor jou prettig is.",
+      en: "The most personal treatment asks for the most care. You decide what stays and what goes; Dilek works discreetly, explains each step beforehand and keeps a pace that feels right for you.",
+    },
+    suitable: {
+      nl: "Voor wie voor het eerst een bikini- of intieme wax overweegt én voor wie dat al jaren doet. Twijfel je tussen bikinilijn, Brazilian of Hollywood? Dat bespreken jullie gewoon vooraf.",
+      en: "For first-timers considering a bikini or intimate wax, and for those who have done it for years. Unsure between bikini line, Brazilian or Hollywood? You simply discuss it beforehand.",
     },
     note: {
       nl: "Twijfel je welke behandeling bij je past? Bespreek het gerust vooraf of tijdens de afspraak — er is geen vraag te gek.",

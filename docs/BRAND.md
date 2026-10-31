@@ -2,50 +2,61 @@
 
 ## Logo
 
-Three original concepts were made. All artwork lives in `public/brand/`, and the internal review page is at **`/merkidentiteit`** (not indexed, not linked).
+This is a vector recreation of the **owner-approved concept**: a champagne-gold "Glow" in a classical serif, a handwritten "by Dilek", a lotus symbol with a sweeping leaf and a drop of light, and the tagline "Professional Waxing".
 
-| Concept | Idea | Verdict |
-| --- | --- | --- |
-| **A — Lumen** (recommended, implemented) | A calligraphic G with thick-thin contrast holding a pearl of light (the "glow"). | Most distinctive and recognisable down to 16 px. Not tied to waxing, so it grows with the business. |
-| B — Atelier | An interlaced G/D monogram inside a slim arch (mirror or studio doorway). | Elegant, but fine lines lose strength at small sizes. |
-| C — Halo | A radiant ring with a core of light replacing the O in GLOW. | Modern, but abstract and less tied to the name. |
+- **Construction.** The lotus is original vector geometry (`scripts/brand/lotus.py`). All lettering is converted to outlines from SIL Open Font License fonts, which permit logo use: Cormorant Garamond for "Glow", Parisienne for "by Dilek" and Jost for the tagline. The SVGs contain only `<path>` elements, with no embedded raster images and no font dependency.
+- **What was left out of the reference.** The photographic backdrop, lighting, metallic bevels and shadows were presentation effects only. The production logo uses flat brand colours.
+- **Regenerating.** Run `npm run brand:logos` (needs Python `fonttools` + `brotli`, and Playwright for the PNGs).
 
-### Files (concept A)
+### Files (`public/brand/`)
 
 | File | Use |
 | --- | --- |
-| `logo-horizontal.svg` / `-light.svg` | Website header, documents, email signature |
-| `logo-stacked.svg` / `-light.svg` | Social posts, signage, cards |
-| `logo-icon.svg` / `-light.svg` / `-gold.svg` | Small spaces, watermarks |
-| `favicon.svg`, `src/app/icon.svg`, `src/app/apple-icon.png`, `icon-512.png` | Browser tab, home screen |
-| `profile-icon.svg` / `profile-icon.png` (1080×1080) | Instagram, Google Business, WhatsApp |
+| `logo-horizontal.svg` | Light backgrounds: documents, email signature, wide placements |
+| `logo-horizontal-dark.svg` | Dark backgrounds: the website footer |
+| `logo-wordmark.svg` | Without tagline; the website header uses this form, because the tagline is not legible at header size |
+| `logo-stacked.svg` / `logo-stacked-dark.svg` | Emblem with arcs: signage, social posts, cards, hero brand art |
+| `logo-symbol.svg` / `logo-symbol-dark.svg` | Symbol alone: decorative accents, watermark |
+| `favicon.svg`, `src/app/icon.svg`, `src/app/apple-icon.png`, `icon-512.png` | Browser and home-screen icons (filled symbol for small sizes) |
+| `profile-icon.svg` / `profile-icon.png` (1080×1080) | Instagram, Google Business Profile, WhatsApp |
 
-All logos are pure vector paths (no font needed). To regenerate them after a design change, run `npm run brand:logos`. This needs Python with `fonttools` and `brotli`, plus Playwright for the PNGs.
+The React components `Logo` and `LogoSymbol` (`src/components/brand/Logo.tsx`) render the same generated path data (`logoData.ts`).
 
-Clear space: at least the height of the pearl around the logo. Minimum size: icon 16 px, horizontal logo 120 px wide.
+**Minimum sizes:** the horizontal logo 120 px wide without tagline (240 px with tagline); the favicon symbol 16 px. **Clear space:** at least the height of the "G" around the logo.
 
 ## Colours
 
-| Name | Hex | Use |
-| --- | --- | --- |
-| Warm ivory | `#F4F0E8` | Main background |
-| Deep forest | `#20382F` | Brand colour: dark sections, buttons, headings |
-| Forest deep | `#162A22` | Footer, FAQ section |
-| Soft stone | `#D5CCBE` | Soft surfaces |
-| Botanical sage | `#859283` | Accents (decorative) |
-| Sage (text) | `#56634F` | Italic headline accents and small text (5.6:1 on ivory) |
-| Champagne gold | `#B99C6B` | Accents, the logo pearl, gold buttons, labels on dark (5.0:1 on forest) |
-| Gold (text) | `#7A6034` | Small gold text on ivory (5.3:1) |
-| Rich charcoal | `#232825` | Body text |
-| Muted | `#5F6661` | Secondary text (5.4:1 on ivory) |
+| Token | Hex | Use | Contrast |
+| --- | --- | --- | --- |
+| `ivory` (Warm Ivory) | `#F8F5EF` | Main canvas | — |
+| `ivory-50` | `#FCFAF6` | Raised surfaces, form fields | — |
+| `nude` (Soft Nude) | `#E9D5C7` | Accent surfaces | — |
+| `nude-light` | `#F4E9E1` | Tinted sections | — |
+| `stone` (Stone Beige) | `#DDD2C4` | Rules, dividers | — |
+| `stone-light` | `#ECE5DC` | Quiet sections | — |
+| `gold` (Champagne Gold) | `#C4A16F` | Symbol, rules, accents (not body text) | decorative |
+| `gold-deep` | `#85663A` | Small gold text and italic headline accents | 4.9:1 on ivory |
+| `charcoal` (Elegant Charcoal) | `#292724` | Headings, buttons, the single dark band | 14.6:1 |
+| `charcoal-soft` | `#4A443F` | Body copy | 8.9:1 |
+| `muted` | `#6B635C` | Secondary text | 5.6:1 |
+
+The previous deep-green palette has been removed entirely.
 
 ## Typography
 
-- **Cormorant Garamond**: headlines, with italic for emphasis ("*en stralend.*").
-- **Jost**: body text; buttons and labels in uppercase with wide letter spacing.
+- **Cormorant Garamond:** display headings, with italic accents in `gold-deep`.
+- **Jost:** body text. Labels and buttons are set in uppercase with wide tracking.
+- **Parisienne:** used only as Dilek's handwritten signature (matching "by Dilek" in the logo).
 
-Both fonts are self-hosted under the SIL Open Font License, which permits use in logos.
+## Design system
 
-## Tone of voice
+| Area | Approach |
+| --- | --- |
+| Spacing | CSS variables: `--space-section` (3.5–6.5 rem), `--space-section-tight`, `--space-block`, plus `--header-safe` so content and images never sit under the fixed header |
+| Radii | `--radius-card` (1.5 rem) and `--radius-media` (1.75 rem) |
+| Surfaces | Ivory, then ivory-50 / nude-light / stone-light for rhythm; one charcoal band per page |
+| Motion | Subtle reveals and image unmasking, no parallax on heroes, all disabled under `prefers-reduced-motion` |
 
-Warm, calm, personal and honest. Use both "waxen" and "harsen" in Dutch (see docs/RESEARCH.md). Use "je/jij" in Dutch and "you" in English. Don't make claims that can't be backed up: no invented prices, certifications, reviews or addresses.
+## Voice
+
+Calm, precise and personal; Dutch first, with independently written English. Use "waxen" and "harsen" in Dutch. No superlatives, no invented claims.

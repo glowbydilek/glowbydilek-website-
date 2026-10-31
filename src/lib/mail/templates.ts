@@ -33,20 +33,20 @@ function layout(title: string, rows: [string, string][], intro?: string, outro?:
   const body = rows
     .map(
       ([k, v]) =>
-        `<tr><td style="padding:10px 16px 10px 0;color:#5d675c;font-size:13px;vertical-align:top;white-space:nowrap">${escapeHtml(k)}</td>` +
-        `<td style="padding:10px 0;color:#232825;font-size:15px;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`,
+        `<tr><td style="padding:10px 16px 10px 0;color:#6b635c;font-size:13px;vertical-align:top;white-space:nowrap">${escapeHtml(k)}</td>` +
+        `<td style="padding:10px 0;color:#292724;font-size:15px;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`,
     )
     .join("");
-  return `<!doctype html><html><body style="margin:0;background:#f4f0e8;font-family:Helvetica,Arial,sans-serif">
+  return `<!doctype html><html><body style="margin:0;background:#f8f5ef;font-family:Helvetica,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;padding:32px 20px">
-<div style="background:#20382f;color:#f4f0e8;padding:24px 28px;border-radius:14px 14px 0 0;font-family:Georgia,serif;font-size:22px">Glow by Dilek</div>
+<div style="background:#292724;color:#f8f5ef;padding:22px 28px;border-radius:14px 14px 0 0;font-family:Georgia,serif;font-size:22px"><span style="color:#d6b98a">Glow</span> <i>by Dilek</i></div>
 <div style="background:#ffffff;padding:28px;border-radius:0 0 14px 14px">
-<h1 style="margin:0 0 16px;font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#20382f">${escapeHtml(title)}</h1>
-${intro ? `<p style="margin:0 0 20px;color:#232825;font-size:15px;line-height:1.6">${escapeHtml(intro)}</p>` : ""}
+<h1 style="margin:0 0 16px;font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#292724">${escapeHtml(title)}</h1>
+${intro ? `<p style="margin:0 0 20px;color:#292724;font-size:15px;line-height:1.6">${escapeHtml(intro)}</p>` : ""}
 ${rows.length ? `<table style="border-collapse:collapse;width:100%">${body}</table>` : ""}
-${outro ? `<p style="margin:24px 0 0;color:#232825;font-size:15px;line-height:1.6;white-space:pre-wrap">${escapeHtml(outro)}</p>` : ""}
+${outro ? `<p style="margin:24px 0 0;color:#292724;font-size:15px;line-height:1.6;white-space:pre-wrap">${escapeHtml(outro)}</p>` : ""}
 </div>
-<p style="color:#5d675c;font-size:12px;text-align:center;margin:20px 0 0">Glow by Dilek · hello@glowbydilek.nl · glowbydilek.nl</p>
+<p style="color:#6b635c;font-size:12px;text-align:center;margin:20px 0 0">Glow by Dilek · hello@glowbydilek.nl · glowbydilek.nl</p>
 </div></body></html>`;
 }
 
@@ -87,8 +87,8 @@ export function contactCustomerMail(d: ContactInput): Mail {
         ["Subject", topicLabels[d.topic].en],
         ["Your message", d.message],
       ],
-      "Thank you for your message. Dilek has received it and will reply personally as soon as possible.",
-      "This is an automatic confirmation of receipt. If you have anything to add, simply reply to this email.\n\nWarm regards,\nGlow by Dilek",
+      "Thank you for your message. It has arrived safely, and Dilek will reply personally as soon as she can.",
+      "This is an automatic confirmation of receipt. Anything to add? Simply reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
     );
   }
   return mail(
@@ -98,8 +98,8 @@ export function contactCustomerMail(d: ContactInput): Mail {
       ["Onderwerp", topicLabels[d.topic].nl],
       ["Je bericht", d.message],
     ],
-    "Bedankt voor je bericht. Dilek heeft het ontvangen en reageert zo snel mogelijk persoonlijk.",
-    "Dit is een automatische ontvangstbevestiging. Wil je nog iets toevoegen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nGlow by Dilek",
+    "Dank je wel voor je bericht. Het is goed aangekomen en Dilek antwoordt zo snel mogelijk persoonlijk.",
+    "Dit is een automatische ontvangstbevestiging. Wil je nog iets toevoegen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nDilek — Glow by Dilek",
   );
 }
 
@@ -120,7 +120,7 @@ export function appointmentOwnerMail(d: AppointmentInput, treatmentNames: string
       ["Opmerking", d.notes ?? "—"],
       ["Taal", d.locale === "nl" ? "Nederlands" : "Engels"],
     ],
-    "Er is een nieuwe afspraakaanvraag binnengekomen via glowbydilek.nl. Deze afspraak is nog NIET bevestigd. Beantwoord deze e-mail om een moment met de klant af te stemmen.",
+    "Er is een nieuwe afspraakaanvraag binnengekomen via glowbydilek.nl. Deze afspraak is nog NIET bevestigd. Beantwoord deze e-mail om de afspraak te bevestigen, een ander moment voor te stellen of de aanvraag af te wijzen — je antwoord gaat direct naar de klant.",
   );
 }
 
@@ -135,8 +135,8 @@ export function appointmentCustomerMail(d: AppointmentInput, treatmentNames: str
         ["Preferred time", timeLabels[d.timeRange].en],
         ["Alternative", d.alternative ?? "—"],
       ],
-      "We have received your appointment request. Please note: your appointment is requested, but not yet confirmed. Dilek will personally contact you to confirm a date and time.",
-      "Only after Dilek's personal confirmation is your appointment final. Want to change something? Simply reply to this email.\n\nWarm regards,\nGlow by Dilek",
+      "Thank you — your appointment request has arrived. Please note: this is a request, not yet a confirmed appointment. Dilek will review it and contact you personally to confirm the date and time, or to suggest another moment if yours isn't available.",
+      "Your appointment is only final once Dilek has confirmed it. Want to change or add something? Simply reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
     );
   }
   return mail(
@@ -148,7 +148,7 @@ export function appointmentCustomerMail(d: AppointmentInput, treatmentNames: str
       ["Tijdvoorkeur", timeLabels[d.timeRange].nl],
       ["Alternatief", d.alternative ?? "—"],
     ],
-    "We hebben je afspraakaanvraag goed ontvangen. Let op: je afspraak is aangevraagd, maar nog niet bevestigd. Dilek neemt persoonlijk contact met je op om een datum en tijd te bevestigen.",
-    "Pas na de persoonlijke bevestiging van Dilek staat je afspraak vast. Wil je iets wijzigen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nGlow by Dilek",
+    "Dank je wel — je afspraakaanvraag is binnen. Let op: dit is een aanvraag, nog geen bevestigde afspraak. Dilek bekijkt je aanvraag en neemt persoonlijk contact met je op om datum en tijd te bevestigen, of om een ander moment voor te stellen als het jouwe niet uitkomt.",
+    "Je afspraak staat pas vast als Dilek hem heeft bevestigd. Wil je iets wijzigen of aanvullen? Beantwoord dan gewoon deze e-mail.\n\nHartelijke groet,\nDilek — Glow by Dilek",
   );
 }

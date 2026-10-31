@@ -1,5 +1,5 @@
-import { AppointmentCta } from "@/components/AppointmentCta";
 import { CareTabs } from "@/components/CareTabs";
+import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
@@ -8,6 +8,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { hasPhoto } from "@/content/media";
 import { treatmentGroups } from "@/content/treatments";
 import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -21,7 +22,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="zone-body" {...t.hero}>
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <ButtonLink href={href(locale, "booking")} arrow>
             {dict.cta.request}
           </ButtonLink>
@@ -32,14 +33,14 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       </PageHero>
 
       {/* Zone navigation */}
-      <nav aria-label={t.zonesLabel} className="sticky top-[5.25rem] z-30 lg:top-[6rem]">
-        <Container className="flex justify-center py-3">
+      <nav aria-label={t.zonesLabel} className="sticky top-[var(--header-safe)] z-30">
+        <Container className="flex justify-center py-2">
           <div className="glass flex max-w-full gap-1 overflow-x-auto rounded-full p-1.5">
             {treatmentGroups.map((g) => (
               <a
                 key={g.id}
                 href={`#${g.id}`}
-                className="shrink-0 rounded-full px-5 py-2.5 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-forest transition-colors hover:bg-forest hover:text-ivory"
+                className="shrink-0 rounded-full px-5 py-2.5 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-charcoal transition-colors hover:bg-charcoal hover:text-ivory"
               >
                 {g.name[locale]}
               </a>
@@ -48,22 +49,22 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
         </Container>
       </nav>
 
-      {/* About waxing */}
-      <section className="py-16 sm:py-24">
-        <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+      {/* Why waxing */}
+      <section className="section-tight">
+        <Container className="grid items-center gap-10 md:grid-cols-[1.15fr_0.85fr] lg:gap-16">
           <div>
             <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
             {t.about.paragraphs.map((p) => (
-              <p key={p} className="lead mt-6" data-reveal>
+              <p key={p} className="lead mt-5" data-reveal>
                 {p}
               </p>
             ))}
           </div>
-          <dl className="grid grid-cols-3 overflow-hidden rounded-[2rem] bg-forest text-ivory" data-reveal>
+          <dl className="grid grid-cols-3 border-y border-gold/50" data-reveal>
             {t.about.facts.map((f, i) => (
-              <div key={f.label} className={`flex flex-col items-center px-3 py-12 text-center sm:py-16 ${i > 0 ? "border-l border-ivory/12" : ""}`}>
-                <dt className="order-2 mt-3 text-[0.68rem] uppercase tracking-[0.16em] text-sage-light">{f.label}</dt>
-                <dd className="order-1 font-serif text-3xl text-gold-light sm:text-5xl">{f.value}</dd>
+              <div key={f.label} className={`flex flex-col items-center px-2 py-8 text-center ${i > 0 ? "border-l border-stone" : ""}`}>
+                <dt className="order-2 mt-2 text-[0.66rem] uppercase tracking-[0.14em] text-muted">{f.label}</dt>
+                <dd className="order-1 font-serif text-[1.7rem] text-charcoal sm:text-[2.6rem]">{f.value}</dd>
               </div>
             ))}
           </dl>
@@ -72,35 +73,63 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
 
       {/* Zones */}
       {treatmentGroups.map((g, idx) => {
-        const reverse = idx % 2 === 1;
+        const photo = hasPhoto(g.photo);
+        const tint = idx % 2 === 0 ? "bg-ivory-50" : "";
         return (
-          <section key={g.id} id={g.id} aria-labelledby={`${g.id}-title`} className={`scroll-mt-40 py-16 sm:py-24 ${reverse ? "bg-ivory-50" : ""}`}>
-            <Container className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-              <div className={reverse ? "lg:order-2" : ""}>
-                <div className="overflow-hidden rounded-[2rem] lg:sticky lg:top-44" data-reveal="mask">
-                  <Photo id={g.photo} locale={locale} sizes="(min-width: 1024px) 42vw, 100vw" />
-                </div>
+          <section key={g.id} id={g.id} aria-labelledby={`${g.id}-title`} className={`section scroll-mt-[calc(var(--header-safe)+4rem)] ${tint}`}>
+            <Container className={`grid items-start gap-10 lg:gap-16 ${photo ? "md:grid-cols-[0.85fr_1.15fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`}>
+              <div className={photo && idx % 2 === 1 ? "md:order-2" : ""}>
+                {photo && (
+                  <div className="mb-8 overflow-hidden rounded-[var(--radius-media)] md:sticky md:top-[calc(var(--header-safe)+5rem)] md:mb-0" data-reveal="mask">
+                    <Photo id={g.photo} locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
+                  </div>
+                )}
+                {!photo && (
+                  <div className="lg:sticky lg:top-[calc(var(--header-safe)+5rem)]">
+                    <p className="eyebrow" data-reveal>
+                      0{idx + 1} · {dict.nav.treatments}
+                    </p>
+                    <h2 id={`${g.id}-title`} className="display mt-4 text-[2.7rem] sm:text-6xl" data-reveal>
+                      {g.name[locale]}
+                    </h2>
+                    <p className="lead mt-4" data-reveal>
+                      {g.intro[locale]}
+                    </p>
+                    <div className="mt-6 rounded-[var(--radius-card)] bg-nude-light p-5" data-reveal>
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-gold-deep">{dict.common.suitableFor}</p>
+                      <p className="mt-2 leading-relaxed text-charcoal-soft">{g.suitable[locale]}</p>
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
-                <p className="eyebrow" data-reveal>
-                  {String(idx + 1).padStart(2, "0")} · {dict.nav.treatments}
-                </p>
-                <h2 id={`${g.id}-title`} className="display mt-5 text-5xl text-forest sm:text-6xl" data-reveal>
-                  {g.name[locale]}
-                </h2>
-                <p className="lead mt-6" data-reveal>
-                  {g.intro[locale]}
-                </p>
-                <ul className="mt-10 divide-y divide-forest/12 border-y border-forest/12">
+                {photo && (
+                  <>
+                    <p className="eyebrow" data-reveal>
+                      0{idx + 1} · {dict.nav.treatments}
+                    </p>
+                    <h2 id={`${g.id}-title`} className="display mt-4 text-[2.7rem] sm:text-6xl" data-reveal>
+                      {g.name[locale]}
+                    </h2>
+                    <p className="lead mt-4" data-reveal>
+                      {g.intro[locale]}
+                    </p>
+                    <div className="mt-6 rounded-[var(--radius-card)] bg-nude-light p-5" data-reveal>
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-gold-deep">{dict.common.suitableFor}</p>
+                      <p className="mt-2 leading-relaxed text-charcoal-soft">{g.suitable[locale]}</p>
+                    </div>
+                  </>
+                )}
+                <ul className={`${photo ? "mt-7" : ""} divide-y divide-stone border-y border-stone`}>
                   {g.treatments.map((tr) => (
-                    <li key={tr.id} className="group grid gap-2 py-6 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
+                    <li key={tr.id} className="group grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
                       <div>
-                        <h3 className="font-serif text-2xl text-forest sm:text-[1.75rem]">{tr.name[locale]}</h3>
-                        <p className="mt-2 leading-relaxed text-charcoal-soft">{tr.description[locale]}</p>
+                        <h3 className="font-serif text-[1.65rem] leading-tight text-charcoal">{tr.name[locale]}</h3>
+                        <p className="mt-1.5 leading-relaxed text-charcoal-soft">{tr.description[locale]}</p>
                       </div>
                       <a
                         href={href(locale, "booking")}
-                        className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep transition-colors hover:text-forest"
+                        className="inline-flex min-h-11 items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep transition-colors hover:text-charcoal"
                       >
                         {dict.cta.request}
                         <Icon name="arrow" className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
@@ -108,13 +137,13 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-8 flex gap-4 rounded-2xl bg-sage/12 p-6" data-reveal>
-                  <Icon name="leaf" className="mt-0.5 h-5 w-5 shrink-0 text-sage-deep" />
-                  <p className="leading-relaxed text-charcoal-soft">
-                    <strong className="font-medium text-forest">{dict.common.goodToKnow}: </strong>
+                <p className="mt-6 flex gap-3 leading-relaxed text-charcoal-soft" data-reveal>
+                  <Icon name="leaf" className="mt-1 h-5 w-5 shrink-0 text-gold-deep" />
+                  <span>
+                    <strong className="font-medium text-charcoal">{dict.common.goodToKnow}: </strong>
                     {g.note[locale]}
-                  </p>
-                </div>
+                  </span>
+                </p>
               </div>
             </Container>
           </section>
@@ -122,15 +151,15 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       })}
 
       {/* What to expect */}
-      <section className="on-dark bg-forest py-16 text-ivory sm:py-24">
+      <section className="section bg-stone-light">
         <Container>
           <SectionHeading eyebrow={t.expect.eyebrow} title={t.expect.title} />
-          <ol className="mt-12 grid gap-px overflow-hidden rounded-[2rem] bg-ivory/12 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-block grid gap-px overflow-hidden rounded-[var(--radius-card)] bg-stone sm:grid-cols-2 lg:grid-cols-4">
             {t.expect.items.map((s, i) => (
-              <li key={s.title} className="bg-forest p-8" data-reveal style={{ ["--reveal-delay" as string]: `${i * 100}ms` }}>
-                <span className="font-serif text-4xl italic text-gold">0{i + 1}</span>
-                <h3 className="mt-5 font-serif text-2xl text-ivory">{s.title}</h3>
-                <p className="mt-3 leading-relaxed text-ivory/72">{s.body}</p>
+              <li key={s.title} className="bg-ivory-50 p-6 sm:p-7" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
+                <span className="font-serif text-4xl italic text-gold-deep">0{i + 1}</span>
+                <h3 className="mt-3 font-serif text-[1.6rem] text-charcoal">{s.title}</h3>
+                <p className="mt-2 leading-relaxed text-charcoal-soft">{s.body}</p>
               </li>
             ))}
           </ol>
@@ -138,35 +167,33 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       </section>
 
       {/* Safety + care */}
-      <section className="py-16 sm:py-24">
-        <Container className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <div className="rounded-[2rem] border border-gold/40 bg-ivory-50 p-8 sm:p-12" data-reveal>
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-forest text-gold-light">
-              <Icon name="privacy" />
-            </span>
-            <h2 className="display mt-6 text-4xl text-forest sm:text-5xl">{t.contra.title}</h2>
-            <p className="mt-4 leading-relaxed text-charcoal-soft">{t.contra.intro}</p>
-            <ul className="mt-6 space-y-3">
+      <section className="section">
+        <Container className="grid items-start gap-10 md:grid-cols-2 lg:gap-16">
+          <div className="rounded-[var(--radius-card)] border border-gold/45 p-7 sm:p-9" data-reveal>
+            <Icon name="privacy" className="h-7 w-7 text-gold-deep" />
+            <h2 className="display mt-4 text-[2.2rem] sm:text-5xl">{t.contra.title}</h2>
+            <p className="mt-3 leading-relaxed text-charcoal-soft">{t.contra.intro}</p>
+            <ul className="mt-5 space-y-3">
               {t.contra.items.map((item) => (
                 <li key={item} className="flex gap-3 leading-relaxed text-charcoal-soft">
-                  <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-deep" aria-hidden="true" />
+                  <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
                   {item}
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-muted">{t.contra.outro}</p>
+            <p className="mt-5 text-sm text-muted">{t.contra.outro}</p>
           </div>
           <div data-reveal>
             <p className="eyebrow">{dict.home.care.eyebrow}</p>
-            <h2 className="display mb-8 mt-5 text-4xl text-forest sm:text-5xl">{dict.home.care.title}</h2>
+            <h2 className="display mb-7 mt-4 text-[2.2rem] sm:text-5xl">{dict.home.care.title}</h2>
             <CareTabs care={dict.care} />
           </div>
         </Container>
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="scroll-mt-28 bg-ivory-50 py-16 sm:py-24">
-        <Container className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <section id="faq" className="section scroll-mt-[var(--header-safe)] bg-ivory-50">
+        <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <SectionHeading eyebrow={dict.home.faq.eyebrow} title={t.faqTitle} intro={dict.home.faq.intro} />
           <div data-reveal>
             <Faq items={faqs} />
@@ -176,7 +203,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       </section>
 
       <JsonLd data={serviceJsonLd(locale)} />
-      <AppointmentCta locale={locale} dict={dict} />
+      <ClosingCta locale={locale} dict={dict} />
     </>
   );
 }

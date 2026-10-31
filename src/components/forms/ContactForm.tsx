@@ -89,7 +89,7 @@ export function ContactForm({ locale, t, privacyHref, email, defaultTopic }: Pro
       <button
         type="submit"
         disabled={state.status === "sending"}
-        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-forest px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-forest-deep disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-charcoal px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-charcoal-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
         {state.status === "sending" ? t.sending : t.submitContact}
         <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
@@ -123,11 +123,11 @@ export function Consent({
           onChange={(e) => onChange(e.target.checked)}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
-          className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-forest)]"
+          className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-charcoal)]"
         />
         <label htmlFor={id} className="text-sm leading-relaxed text-charcoal-soft">
           {t.privacy}{" "}
-          <Link href={privacyHref} className="font-medium text-forest underline decoration-gold underline-offset-4" target="_blank">
+          <Link href={privacyHref} className="font-medium text-charcoal underline decoration-gold underline-offset-4" target="_blank">
             {t.privacyLink}
           </Link>
           . <span className="sr-only">({t.required})</span>

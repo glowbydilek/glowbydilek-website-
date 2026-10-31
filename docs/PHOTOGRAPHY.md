@@ -1,9 +1,14 @@
 # Photography
 
-> **Status: blocked. No photographs are in the project yet.**
-> The cloud environment used to build this redesign cannot reach any image source: Unsplash, Pexels, Pixabay, Wikimedia and Openverse all return *403 (network policy)*, and no image-generation service is connected. The owner has chosen to allow the image domains. Once `images.unsplash.com`, `unsplash.com`, `images.pexels.com` and `www.pexels.com` are reachable (this may require a **new session** after changing *Network access → Allowed domains*), the photos below can be sourced, license-checked and added in one pass.
+> **Status: blocked. No photographs are in the project.**
+> The build environment cannot reach any image source: Unsplash, Pexels, Pixabay, Wikimedia and Openverse all return *403 (network policy)*, and no image-generation service is connected. No image files or licences have been invented.
 >
-> Until then, each photo position shows a fine-line botanical artwork on forest green. These are **not** finished photography, and the site should not be published as final with them.
+> **How the site handles this:** every image position is *adaptive* (`hasPhoto()` in `src/content/media.ts`). Without a registered photo:
+> - the homepage hero shows the stacked **logo emblem** as brand art;
+> - inner-page heroes become compact **typographic heroes** with the lotus symbol;
+> - feature sections switch to **photo-free compositions** (quotes with Dilek's signature, editorial lists, numbered steps).
+>
+> There are no empty frames and no fake "photo" panels. As soon as a photo is registered, the image-rich layout for that position switches on automatically.
 
 ## How a photo is added
 
