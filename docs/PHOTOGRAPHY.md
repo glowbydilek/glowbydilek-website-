@@ -1,48 +1,45 @@
 # Photography
 
-> **Status: blocked. No photographs are in the project.**
-> The build environment cannot reach any image source: Unsplash, Pexels, Pixabay, Wikimedia and Openverse all return *403 (network policy)*, and no image-generation service is connected. No image files or licences have been invented.
->
-> **How the site handles this:** every image position is *adaptive* (`hasPhoto()` in `src/content/media.ts`). Without a registered photo:
-> - the homepage hero shows the stacked **logo emblem** as brand art;
-> - inner-page heroes become compact **typographic heroes** with the lotus symbol;
-> - feature sections switch to **photo-free compositions** (quotes with Dilek's signature, editorial lists, numbered steps).
->
-> There are no empty frames and no fake "photo" panels. As soon as a photo is registered, the image-rich layout for that position switches on automatically.
+**Status: complete. All 12 photo slots are filled** (11 planned + a dedicated treatments-page hero) with licensed photos from the **Adobe Stock free collection**. Each was licensed on 31 October 2026 through the connected Adobe account and downloaded at 2400 px.
 
-## How a photo is added
+## Licence
 
-1. Save the original (at least 2400 px on the long side) as `assets/photos/<slot-id>.jpg`.
-2. Run `npm run photos`. This writes WebP files at 640, 1024, 1600 and 2200 px to `public/images/photos/`.
-3. In `src/content/media.ts`, set `file: "<slot-id>"`, `credit: "<photographer> — <source URL> — <license>"` and optionally `focus` (CSS object-position).
-4. Record the photo in the credits table below.
+- Adobe Stock **Standard License**, which covers free-collection assets. It allows commercial use on websites and social media without attribution. (Adobe Stock licence terms: unlimited web views; no resale of the image as a stand-alone file; no use in trademarks or logos; no sensitive or defamatory use of the models.)
+- **Models are not Dilek, staff or clients.** No stock person is presented as Dilek. The About page uses interiors and still lifes only.
+- **Interiors are not the actual studio.** The treatment-room photo (`experience`) carries a visible "Sfeerbeeld / Mood image" label.
+- No watermarked previews, no Unsplash+ content and no AI-generated people are used.
+- Licences are recorded in the Adobe account that performed them, for the asset IDs below.
 
-## Required photos (11 + generated share image)
+## Inventory
 
-| # | Slot id | Used on | Ratio | Direction |
+| Slot | Adobe Stock ID | Original title (Adobe) | Used on | Edits |
 | --- | --- | --- | --- | --- |
-| 1 | `hero` | Home hero | 4:5 | Premium editorial beauty portrait, adult woman, natural skin texture, soft daylight, calm confident expression |
-| 2 | `editorial-portrait` | Home introduction | 4:5 | Second portrait with a different model and skin tone, natural makeup |
-| 3 | `zone-face` | Home + Waxing (face) | 4:5 | Face close-up with natural, groomed brows |
-| 4 | `zone-body` | Home + Waxing hero/body | 4:5 | Tasteful crop of smooth legs or arms in warm light |
-| 5 | `zone-intimate` | Home + Waxing (bikini) | 4:5 | **Discreet still life, no body**: towels, natural products |
-| 6 | `botanical` | Home ritual feature + intro, About | 3:2 | Luxury botanical still life: leaves, natural materials, products |
-| 7 | `materials` | Home (why), Booking | 4:5 | Clean waxing or treatment materials, orderly and hygienic |
-| 8 | `aftercare` | Home (care), Prices hero | 4:5 | Skincare oil and cream still life |
-| 9 | `experience` | Appointment band, Booking hero | 3:2 | Calm treatment room or towels and linen |
-| 10 | `contact` | Contact hero, About | 4:5 | Flowers and natural materials in soft light |
-| 11 | `interior` | Home (about Dilek), About hero | 4:5 | Serene interior detail with greenery |
-| 12 | *(generated)* | Social share | 1200×630 | Rebuilt from the hero photo with `npm run brand:logos` |
+| `hero` | 810843299 | Beautiful young woman with flawless skin and elegant pose… | Home hero | 4:5 crop from the top |
+| `editorial-portrait` | 210591319 | Beauty portrait of attractive African American young woman with perfect skin and natural make up | Home: statement | — |
+| `zone-face` | 473675468 | Removing eyebrows with hot wax | Home index (Gezicht), Waxing: face | 4:5 crop around the face |
+| `zone-body` | 461751709 | Beautiful legs of a woman on a couch in a cosmetology salon | Home index (Lichaam), Waxing: body | — |
+| `treatments-hero` | 513816117 | Young Black Woman Touching Her Smooth Skin On Legs With Feather | Waxing hero | — |
+| `zone-intimate` | 1883849843 | Spa still life | Home index (Bikini), Waxing: bikini | — |
+| `botanical` | 487138394 | Cosmetic bottle containers… with green herbal leaves | About: story | — |
+| `materials` | 410407763 | Yellow hot liquid wax for depilation on a wooden stick | Home: standards, Booking aside | — |
+| `aftercare` | 470172095 | Essential oil or serum and dry pampas herbs on a natural white podium | Prices hero | — |
+| `experience` | 475998587 | Interior of new modern beautician's office… | Closing band, Booking hero (labelled "Sfeerbeeld") | — |
+| `contact` | 423935121 | Round stylish ceramic vase with dried flower lagurus casting shadows | Contact hero, About: vision | — |
+| `interior` | 402582095 | Composition of dried flowers and herbs in a glass vase on a beige wall background | About hero, Home: meet Dilek | — |
 
-## Rules
+Alt text is written per slot in Dutch and English and describes the actual photo content (`src/content/media.ts`).
 
-- Licensed photos only (Unsplash License or Pexels License: free commercial use, no attribution required but recorded here), or original AI images whose terms allow commercial use.
-- **Unsplash+ / premium images are not allowed** under the free license. Check this before downloading.
-- People in stock or AI photos are **models**. They must never be presented as Dilek, staff or clients. The About page uses mood images only; a **real** portrait of Dilek can be added later.
-- Nothing explicit, no before/after claims, no distorted hands or faces.
+## Files
 
-## Credits
+- **Optimised:** `public/images/photos/<slot>-{640,1024,1600,2200}.webp`, 48 files, about 2.3 MB in total. Sizes are chosen via `srcset`. The hero image loads with high priority; the others are lazy-loaded.
+- **Originals:** not committed (`assets/photos/*.jpg` is in `.gitignore`). Re-download them from Adobe Stock using the IDs above when needed.
+- **Focal points:** set per slot and breakpoint in `src/content/media.ts` (`focus.mobile` / `focus.desktop`).
 
-| Slot | Photographer | Source | License |
-| --- | --- | --- | --- |
-| *(none yet)* | | | |
+## Replacing or adding a photo
+
+1. Save the original (≥ 2400 px) as `assets/photos/<slot>.jpg`.
+2. Run `npm run photos` (creates the WebP sizes).
+3. Update `src/content/media.ts`: `aspect`, `focus`, the NL/EN `alt` and `credit`.
+4. Update the inventory table above.
+
+**Recommended later:** a **real portrait of Dilek**, added as a new slot (for example `dilek-portrait`) for the About page and the "Hoi, ik ben Dilek" section. Real photos of the actual treatment space would also strengthen trust; they could replace `experience` and `interior`.

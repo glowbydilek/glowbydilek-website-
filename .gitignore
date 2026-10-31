@@ -152,3 +152,8 @@ vite.config.ts.timestamp-*
 # Next.js
 next-env.d.ts
 *.tsbuildinfo
+
+# Photo originals (licensed Adobe Stock; re-download by ID, see docs/PHOTOGRAPHY.md)
+assets/photos/*.jpg
+assets/photos/*.jpeg
+assets/photos/_stock/

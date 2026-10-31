@@ -41,5 +41,7 @@ In hPanel go to **Websites → glowbydilek.nl → (Node.js app) → Environment 
 
 ## Verification status
 
+- **Mailbox:** `hello@glowbydilek.nl` exists and is active. This was confirmed read-only through the connected Hostinger Mail integration on 31 October 2026. That integration can also be used to confirm that a live test message has arrived.
+
 - Tested end to end against a local SMTP server that requires authentication: the notification, acknowledgement, Reply-To, Dutch/English content, the failure paths and the spam protections all behave as described.
-- **Not yet tested against the real Hostinger mailbox.** This needs the variables above to be configured. After deploying, send one test message through each form and check that it arrives at hello@glowbydilek.nl and that the acknowledgement reaches the sender.
+- **Not yet tested against the real Hostinger SMTP server.** This needs `SMTP_PASS` and the other variables to be configured in Hostinger. Until then, **live email delivery is unverified.** After deploying, send one test message through each form and check that it arrives at hello@glowbydilek.nl and that the acknowledgement reaches the sender.

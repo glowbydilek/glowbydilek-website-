@@ -45,7 +45,7 @@ export function ClosingCta({ locale, dict }: { locale: Locale; dict: Dictionary 
           </div>
           {withPhoto && (
             <div className="relative min-h-[16rem] md:min-h-full">
-              <Photo id="experience" locale={locale} fill sizes="(min-width: 768px) 40vw, 100vw" />
+              <Photo id="experience" locale={locale} fill label={dict.common.moodImage} sizes="(min-width: 768px) 40vw, 100vw" />
             </div>
           )}
         </div>

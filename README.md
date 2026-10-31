@@ -30,7 +30,8 @@ Built with **Next.js 16 (App Router)**, **TypeScript** and **Tailwind CSS 4**. T
 | What | Where |
 | --- | --- |
 | **SMTP environment variables** (required for the forms) | Hostinger → Environment variables; see [`docs/EMAIL.md`](docs/EMAIL.md) |
-| **Photography** (11 slots; adaptive photo-free layouts are shown until then) | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| Photography: 11 licensed Adobe Stock photos in place; real portrait of Dilek optional | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
+| Production release steps | [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md) |
 | Review of first-person copy, and the full list of open items | [`docs/OWNER-CHECKLIST.md`](docs/OWNER-CHECKLIST.md) |
 | WhatsApp number (optional) | `NEXT_PUBLIC_WHATSAPP_NUMBER` |
 | Confirmed prices and durations | `src/content/treatments.ts`, then set `pricesPublished = true` |
@@ -51,6 +52,13 @@ Checks:
 
 ```bash
 npm run lint && npm run typecheck && npm test && npm run build
+```
+
+CI (`.github/workflows/ci.yml`) runs the same checks on every pull request (Node 22), plus a production build on Node 20, as used on Hostinger.
+
+```bash
+# optional: re-optimise photos after replacing originals
+npm run photos
 ```
 
 ## Deploying to Hostinger (Node.js Web Apps)

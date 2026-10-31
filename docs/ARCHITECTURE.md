@@ -15,7 +15,7 @@
 | --- | --- |
 | `src/content/services.ts` | Service categories. Waxing is `published`; laser, skin care and other beauty treatments are planned and **unpublished**. |
 | `src/content/treatments.ts` | Treatment groups and treatments with stable ids. Prices and durations stay empty until confirmed (`pricesPublished`). |
-| `src/content/media.ts` | Photo slots, alt text (NL/EN) and briefs. Brand panels show until real photos are added. |
+| `src/content/media.ts` | Photo registry: files, NL/EN alt text, focal points and licence credits (Adobe Stock). Layouts fall back to photo-free compositions if a slot is ever emptied. |
 | `src/content/site.ts` | Business details: email, and optional phone, socials and address. |
 | `src/i18n/` | Locales, localised routes and dictionaries. English is typed against Dutch. |
 

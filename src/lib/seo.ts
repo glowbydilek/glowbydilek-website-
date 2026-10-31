@@ -78,7 +78,7 @@ export function businessJsonLd(locale: Locale) {
     "@id": `${siteConfig.url}/#business`,
     name: siteConfig.name,
     url: absoluteUrl(routes.home[locale]),
-    logo: `${siteConfig.url}/brand/logo-icon.svg`,
+    logo: `${siteConfig.url}/brand/icon-512.png`,
     image: `${siteConfig.url}/images/og-${locale}.png`,
     description: dict.meta.pages.home.description,
     email: c.email,

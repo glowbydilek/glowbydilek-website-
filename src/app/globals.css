@@ -2,7 +2,7 @@
 
 /*
  * Glow by Dilek — design system
- * Forest green · warm ivory · soft stone · botanical sage · champagne gold · charcoal
+ * Warm ivory · soft nude · stone beige · champagne gold · elegant charcoal
  * Text pairings are checked for WCAG AA (≥ 4.5:1) — see docs/BRAND.md.
  */
 @theme {
@@ -105,7 +105,7 @@
 
   ::selection {
     background-color: var(--color-gold-light);
-    color: var(--color-forest-deep);
+    color: var(--color-charcoal);
   }
 
   :focus-visible {

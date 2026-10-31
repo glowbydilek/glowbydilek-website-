@@ -25,6 +25,7 @@ export function Photo({
   parallax,
   ratio,
   style,
+  label,
 }: {
   id: PhotoId;
   locale: Locale;
@@ -36,6 +37,8 @@ export function Photo({
   /** Override the slot's aspect ratio (width / height). */
   ratio?: number;
   style?: CSSProperties;
+  /** Small visible caption, e.g. "Sfeerbeeld" for stock interiors that are not the actual studio. */
+  label?: string;
 }) {
   const photo = photos[id];
   const srcSet = photoSrcSet(photo);
@@ -70,6 +73,11 @@ export function Photo({
         style={focus}
         data-parallax={parallax}
       />
+      {label && (
+        <span className="glass absolute bottom-3 left-3 rounded-full px-3 py-1 text-[0.66rem] uppercase tracking-[0.16em] text-charcoal-soft">
+          {label}
+        </span>
+      )}
     </div>
   );
 }
