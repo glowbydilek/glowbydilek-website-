@@ -12,6 +12,7 @@
     "photos": "node scripts/optimize-photos.mjs",
     "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs",
     "check:site": "node scripts/check-site.mjs",
+    "test:e2e": "node scripts/e2e-navigation.cjs",
     "test": "node --experimental-strip-types --no-warnings --import ./tests/register.mjs --test tests/*.test.ts"
   },
   "repository": {

@@ -10,6 +10,12 @@
  *
  * Set E2E_EXPECT_MAIL=1 when the server has a (test) SMTP server configured,
  * to also assert successful form submissions.
+ *
+ * The site's own abuse limits apply to these tests too: the browser form
+ * submission counts towards "5 per 10 minutes per IP" and every run sends a
+ * few accepted submissions towards the site-wide "40 per 10 minutes". Run it
+ * a handful of times per 10 minutes at most, or restart the server (limits
+ * are in memory). A 429 is reported as "rate limit reached".
  */
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
@@ -23,6 +29,15 @@ const stub = (autoSolve) => `window.turnstile = {
   reset() { ${autoSolve ? "setTimeout(() => window.__ts.callback('XXXX.DUMMY.TOKEN.XXXX'), 100);" : ""} },
   remove() {},
 };`;
+
+// Documentation-range IPs (TEST-NET-2), different on every run.
+const runIp = (n) => `198.51.${100 + (Date.now() % 50)}.${(n * 37 + Math.floor(Math.random() * 200)) % 254 + 1}`;
+
+/** Fails with a clear message when the server's rate limit answers instead. */
+function expectStatus(res, status, what) {
+  if (res.status === 429 && status !== 429) throw new Error(`${what}: rate limit reached (429) — wait 10 minutes or restart the server`);
+  assert.equal(res.status, status, what);
+}
 
 const results = [];
 async function step(name, fn) {
@@ -173,14 +188,15 @@ async function step(name, fn) {
         headers: { "content-type": "application/json", origin: BASE, "x-real-ip": ip },
         body: b,
       });
-    const missing = await post(body(null, 1), "198.51.100.1");
-    assert.equal(missing.status, 403);
+    const missing = await post(body(null, 1), runIp(1));
+    expectStatus(missing, 403, "missing token");
     assert.equal((await missing.json()).error, "challenge");
     const token = `e2e-${Date.now()}`;
-    const first = await post(body(token, 2), "198.51.100.2");
+    const first = await post(body(token, 2), runIp(2));
+    if (first.status === 429) throw new Error("first use: rate limit reached (429) — wait 10 minutes or restart the server");
     assert.notEqual(first.status, 403, "first use accepted by the challenge check");
-    const replay = await post(body(token, 3), "198.51.100.3");
-    assert.equal(replay.status, 403);
+    const replay = await post(body(token, 3), runIp(3));
+    expectStatus(replay, 403, "replayed token");
     assert.equal((await replay.json()).reason, "replayed");
   });
 
@@ -208,12 +224,13 @@ async function step(name, fn) {
 
   if (EXPECT_MAIL) {
     await step("identical resubmission is reported as duplicate (409), nothing sent twice", async () => {
+      const runId = Date.now();
       const payload = (token) =>
         JSON.stringify({
           name: "Dup Test",
-          email: "dup-test@example.com",
+          email: `dup-${runId}@example.com`,
           topic: "treatment",
-          message: `Duplicate check ${new Date().toISOString().slice(0, 13)}`,
+          message: `Duplicate check ${runId}`,
           privacy: true,
           locale: "en",
           company: "",
@@ -226,10 +243,10 @@ async function step(name, fn) {
           headers: { "content-type": "application/json", origin: BASE, "x-real-ip": ip },
           body: payload(token),
         });
-      const first = await post(`dup-a-${Date.now()}`, "198.51.100.20");
-      assert.equal(first.status, 200);
-      const second = await post(`dup-b-${Date.now()}`, "198.51.100.21");
-      assert.equal(second.status, 409);
+      const first = await post(`dup-a-${Date.now()}`, runIp(20));
+      expectStatus(first, 200, "first submission");
+      const second = await post(`dup-b-${Date.now()}`, runIp(21));
+      expectStatus(second, 409, "identical resubmission");
       assert.equal((await second.json()).error, "duplicate");
     });
   }

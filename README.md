@@ -63,7 +63,19 @@ Checks:
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same checks on every pull request (Node 22), plus a production build on Node 20, as used on Hostinger.
+CI (`.github/workflows/ci.yml`) runs the same checks on every pull request (Node 22), then crawls the built site with `npm run check:site` (every page, internal link, canonical, hreflang and location wording), plus a production build on Node 20, as used on Hostinger.
+
+Browser navigation tests (menus, language switch, booking preselection, Turnstile and duplicate handling) run locally against a started build. They need Playwright with Chromium, which is deliberately not a project dependency:
+
+```bash
+npm run build && npm start
+```
+
+```bash
+npm run test:e2e -- http://localhost:3000
+```
+
+Without SMTP configured, the two mail-sending steps are skipped; set `E2E_EXPECT_MAIL=1` when a (test) SMTP server is configured. The server's own abuse limits apply, so run it only a few times per 10 minutes against the same server process.
 
 ```bash
 # optional: re-optimise photos after replacing originals
