@@ -24,7 +24,9 @@ jobs:
           MARIADB_DATABASE: glow_test
           MARIADB_USER: glow
           MARIADB_PASSWORD: ci-only-password
-          MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+          # Fixed throwaway value for this disposable, job-local container
+          # (avoids MariaDB printing a generated root password in the log).
+          MARIADB_ROOT_PASSWORD: ci-only-root-password
         ports: ["3306:3306"]
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized"

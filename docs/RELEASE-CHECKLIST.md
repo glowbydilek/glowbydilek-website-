@@ -11,6 +11,8 @@ Work through this in order. Do **not** merge or deploy without the owner's appro
 
 ## B. Hostinger configuration (owner, in hPanel; never in chat or Git)
 
+> Hostinger auto-deploys `main`: complete this section **before** merging (`docs/DEPLOYMENT.md` § 0).
+
 - [ ] Production database and user created (Databases → Management).
 - [ ] All environment variables from `docs/DEPLOYMENT.md` § 2 set, including `DATABASE_URL` (host `127.0.0.1`), `DB_MIGRATE_ON_BUILD=true`, `AUTH_SECRET`, `CRON_SECRET`, the SMTP settings, and the **rotated** Turnstile keys. None of the test-only variables are set.
 - [ ] Build settings unchanged: Node 20 or 22, `npm run build`, `npm start`, branch `main`.

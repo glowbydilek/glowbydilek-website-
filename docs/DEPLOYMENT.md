@@ -4,6 +4,14 @@ This guide covers putting the platform (public website + `/admin` + `/ajanda`) l
 
 > **Nothing here has been done on the live site yet.** The live website is only changed after the owner approves the pull request and starts the deploy. DNS, MX records, nameservers and domain settings do **not** need to change.
 
+## 0. Important: merging = deploying
+
+Checked read-only on 1 November 2026: Hostinger **auto-deploys every push to `main`** (Node.js 20, Next.js, `npm run build`, output `.next`). The live site runs commit `23e38dd` (PR #7). Its only environment variable is `NEXT_PUBLIC_SITE_URL`.
+
+So **merging the platform pull request deploys it at once.** Configure sections 1 and 2 **before** merging. Without them the public pages keep working on the built-in content, but `/admin` and `/ajanda` cannot be used, the forms cannot send email, and the public forms show "temporarily unavailable" (no Turnstile keys).
+
+Hostinger also builds a **preview** for open pull requests (a `*.hostingersite.com` address in the PR comments). Give a preview its own test database and test keys, or none. A preview must never receive the production `DATABASE_URL`, `AUTH_SECRET` or SMTP password, so it can never send real customer emails or touch real data.
+
 ## 1. What is needed in Hostinger
 
 | Item | Where in hPanel | Notes |
