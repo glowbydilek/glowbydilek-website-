@@ -41,7 +41,13 @@ export default async function Overviews({ searchParams }: { searchParams: Promis
       <PageHeader
         title="Overzichten"
         subtitle="Komende, afgeronde, geannuleerde en eerdere afspraken."
-        actions={<a href="/ajanda/historie/rapport?p=month" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">Activiteiten (PDF)</a>}
+        actions={
+          // PDF download from a route handler, not a page: a plain link is intended.
+          // eslint-disable-next-line @next/next/no-html-link-for-pages
+          <a href="/ajanda/historie/rapport?p=month" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">
+            Activiteiten (PDF)
+          </a>
+        }
       />
       <nav aria-label="Lijst" className="mb-4 flex flex-wrap gap-1 rounded-2xl bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
