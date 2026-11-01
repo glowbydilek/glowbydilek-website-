@@ -36,7 +36,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/ajanda/instellingen", label: "Instellingen" },
   ];
   const tabs = [
-    { href: "/ajanda", label: "Vandaag", icon: "◐" },
+    { href: "/ajanda", label: "Vandaag", icon: "☀" },
     { href: "/ajanda/agenda", label: "Agenda", icon: "▦" },
     { href: "/ajanda/afspraak/nieuw", label: "Nieuw", icon: "＋" },
     { href: "/ajanda/aanvragen", label: "Aanvragen", icon: "✉", badge: pending },
