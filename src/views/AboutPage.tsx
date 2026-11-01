@@ -41,10 +41,10 @@ export function AboutPage({ locale }: { locale: Locale }) {
                   <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 92vw" />
                 </div>
               ) : (
-                <figure className="rounded-[var(--radius-media)] bg-nude-light px-8 py-12 text-center sm:px-12" data-reveal>
+                <figure className="rounded-[var(--radius-media)] bg-glow-soft px-8 py-12 text-center sm:px-12" data-reveal>
                   <Ornament className="h-8 w-auto" />
-                  <blockquote className="display mt-7 text-[1.9rem] italic text-charcoal sm:text-[2.4rem]">“{t.quote}”</blockquote>
-                  <figcaption className="script mt-6 text-5xl text-gold-deep">Dilek</figcaption>
+                  <blockquote className="display mt-7 text-[1.9rem] italic text-ink sm:text-[2.4rem]">“{t.quote}”</blockquote>
+                  <figcaption className="script mt-6 text-5xl text-accent-deep">Dilek</figcaption>
                 </figure>
               )}
             </div>
@@ -56,8 +56,8 @@ export function AboutPage({ locale }: { locale: Locale }) {
                 </p>
               ))}
               {hasPhoto("botanical") && (
-                <blockquote className="mt-7 border-l-2 border-gold pl-5" data-reveal>
-                  <p className="font-serif text-2xl italic leading-snug text-charcoal sm:text-3xl">“{t.quote}”</p>
+                <blockquote className="mt-7 border-l-2 border-accent pl-5" data-reveal>
+                  <p className="font-serif text-2xl italic leading-snug text-ink sm:text-3xl">“{t.quote}”</p>
                 </blockquote>
               )}
             </div>
@@ -68,15 +68,15 @@ export function AboutPage({ locale }: { locale: Locale }) {
     approach: (
       <>
         {/* Approach */}
-        <section className="section bg-stone-light">
+        <section className="section bg-sand">
           <Container>
             <SectionHeading eyebrow={t.approach.eyebrow} title={t.approach.title} />
             <ul className="mt-block grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {t.approach.items.map((v, i) => (
-                <li key={v.title} className="border-t border-gold/50 pt-5" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                  <span className="font-serif text-3xl italic text-gold-deep">0{i + 1}</span>
-                  <h3 className="mt-3 font-serif text-[1.7rem] text-charcoal">{v.title}</h3>
-                  <p className="mt-2 leading-relaxed text-charcoal-soft">{v.body}</p>
+                <li key={v.title} className="border-t border-accent/50 pt-5" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
+                  <span className="font-serif text-3xl italic text-accent-deep">0{i + 1}</span>
+                  <h3 className="mt-3 font-serif text-[1.7rem] text-ink">{v.title}</h3>
+                  <p className="mt-2 leading-relaxed text-ink-soft">{v.body}</p>
                 </li>
               ))}
             </ul>

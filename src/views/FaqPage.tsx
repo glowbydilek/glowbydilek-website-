@@ -26,7 +26,7 @@ export function FaqPage({ locale }: { locale: Locale }) {
         </div>
       </PageHero>
 
-      <section className="section-tight border-t border-stone/70">
+      <section className="section-tight border-t border-line/70">
         <Container className="space-y-12 lg:space-y-16">
           {f.groups.map((g) => (
             <div key={g.title} className="grid gap-6 md:grid-cols-[0.75fr_1.25fr] lg:gap-16">

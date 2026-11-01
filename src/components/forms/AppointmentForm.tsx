@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/analytics/track";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { amsterdamToday, TIME_RANGES, validateAppointment, type ErrorCode, type TimeRange } from "@/lib/forms/validation";
@@ -84,6 +85,7 @@ export function AppointmentForm({
     const ok = await submit({ ...payload, turnstileToken: challenge.token }, honeypot);
     challenge.renew();
     if (ok) {
+      track("booking_submitted", { form: "request" });
       setValues(empty);
       setTreatments([]);
       setTimeRange("");
@@ -107,8 +109,8 @@ export function AppointmentForm({
   const fe = (k: string) => (errors[k] ? t.errors[errors[k]] : serverFields?.[k] ? t.errors[serverFields[k] as ErrorCode] : undefined);
 
   const chip = (on: boolean) =>
-    `inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold-deep ${
-      on ? "border-charcoal bg-charcoal text-ivory" : "border-charcoal/15 bg-ivory-50 text-charcoal hover:border-charcoal/40"
+    `inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent-deep ${
+      on ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface text-ink hover:border-ink/40"
     }`;
 
   return (
@@ -116,8 +118,8 @@ export function AppointmentForm({
       <Honeypot value={honeypot} onChange={setHoneypot} />
 
       <fieldset aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
-        <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
-          {t.treatments} <span aria-hidden="true" className="text-gold-deep">*</span>
+        <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
+          {t.treatments} <span aria-hidden="true" className="text-accent-deep">*</span>
         </legend>
         <p id="appt-treatments-hint" className="mt-1 text-sm text-muted">
           {t.treatmentsHint}
@@ -125,7 +127,7 @@ export function AppointmentForm({
         <div className="mt-4 space-y-5">
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="font-serif text-xl text-charcoal">{g.name}</p>
+              <p className="font-serif text-xl text-ink">{g.name}</p>
               <div className="mt-2.5 flex flex-wrap gap-2">
                 {g.treatments.map((tr) => {
                   const on = treatments.includes(tr.id);
@@ -157,8 +159,8 @@ export function AppointmentForm({
       <div className="grid gap-6 sm:grid-cols-2">
         <TextField id="appt-date" label={t.preferredDate} required type="date" min={today} value={values.preferredDate} onChange={set("preferredDate")} error={fe("preferredDate")} />
         <fieldset aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
-          <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
-            {t.timeRange} <span aria-hidden="true" className="text-gold-deep">*</span>
+          <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
+            {t.timeRange} <span aria-hidden="true" className="text-accent-deep">*</span>
           </legend>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {TIME_RANGES.map((r) => (
@@ -208,8 +210,8 @@ export function AppointmentForm({
         error={fe("privacy")}
       />
 
-      <p className="flex gap-3 rounded-2xl bg-gold/12 p-4 text-sm leading-relaxed text-charcoal-soft">
-        <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0 text-gold-deep" />
+      <p className="flex gap-3 rounded-2xl bg-accent/12 p-4 text-sm leading-relaxed text-ink-soft">
+        <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0 text-accent-deep" />
         {notConfirmed}
       </p>
 
@@ -234,7 +236,7 @@ export function AppointmentForm({
       <button
         type="submit"
         disabled={state.status === "sending"}
-        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-charcoal px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-charcoal-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-paper shadow-soft transition-colors duration-500 hover:bg-ink-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
         {state.status === "sending" ? t.sending : t.submitAppointment}
         <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />

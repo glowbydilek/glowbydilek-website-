@@ -30,7 +30,7 @@ export default async function Consultation({ params, searchParams }: { params: P
   return (
     <>
       <PageHeader title="Consultatie (vertrouwelijk)" subtitle={`${c.firstName} ${c.lastName}`.trim()} />
-      <p className="mb-4 text-sm"><Link href={`/ajanda/klanten/${id}`} className="text-gold-deep underline">← Terug naar het klantprofiel</Link></p>
+      <p className="mb-4 text-sm"><Link href={`/ajanda/klanten/${id}`} className="text-accent-deep underline">← Terug naar het klantprofiel</Link></p>
       {sp.verwijderd && <div className="mb-4"><Notice tone="success">✓ De consultatiegegevens zijn verwijderd.</Notice></div>}
       {blocked ? (
         <Notice tone="warning">{blocked} <Link href="/admin/privacy" className="underline">Meer informatie</Link></Notice>
@@ -58,7 +58,7 @@ export default async function Consultation({ params, searchParams }: { params: P
             {data && (
               <>
                 <Card title="Inzageverzoek">
-                  <a href={`/ajanda/klanten/${id}/consultatie/export`} className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">Exporteren (JSON)</a>
+                  <a href={`/ajanda/klanten/${id}/consultatie/export`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">Exporteren (JSON)</a>
                   <p className="mt-2 text-xs text-muted">Alleen gebruiken als de klant zelf om deze gegevens vraagt. Wordt gelogd.</p>
                 </Card>
                 <Card title="Verwijderen">

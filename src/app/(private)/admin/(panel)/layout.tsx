@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/systeem", label: "Systeem & logboek", icon: "server" },
   ];
   const banner = !s.user.mfaEnabled ? (
-    <div className="mb-5 rounded-xl border border-gold/60 bg-[#fbf3e4] px-4 py-3 text-sm text-[#5a4320]">
+    <div className="mb-5 rounded-xl border border-accent/60 bg-[#fbf3e4] px-4 py-3 text-sm text-[#5a4320]">
       Beveilig je account met tweestapsverificatie.{" "}
       <Link href="/admin/beveiliging" className="font-medium underline">
         Nu instellen

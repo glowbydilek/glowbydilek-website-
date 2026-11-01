@@ -12,13 +12,13 @@ export function ConsultationForm({ customerId, questions, answers, consentText }
     <ActionForm action={saveConsultationAction} className="space-y-5">
       <input type="hidden" name="customerId" value={customerId} />
       {questions.map((q) => (
-        <fieldset key={q.key} className="rounded-2xl border border-stone p-4">
+        <fieldset key={q.key} className="rounded-2xl border border-line p-4">
           <legend className="px-1 text-sm font-medium">{q.nl}</legend>
           <p className="mb-2 text-xs text-muted">Waarom: {q.why}</p>
           <div className="flex flex-wrap gap-4 text-sm">
             {[["no", "Nee"], ["yes", "Ja"], ["unknown", "Weet niet / niet gevraagd"]].map(([v, l]) => (
               <label key={v} className="flex min-h-11 items-center gap-2">
-                <input type="radio" name={q.key} value={v} defaultChecked={(answers?.[q.key] ?? "unknown") === v} className="h-5 w-5 accent-[var(--color-charcoal)]" />
+                <input type="radio" name={q.key} value={v} defaultChecked={(answers?.[q.key] ?? "unknown") === v} className="h-5 w-5 accent-[var(--color-ink)]" />
                 {l}
               </label>
             ))}
@@ -33,7 +33,7 @@ export function ConsultationForm({ customerId, questions, answers, consentText }
       <Field label="Afgesproken voorzorg bij de behandeling (optioneel)">
         <Textarea name="precautions" rows={2} maxLength={600} defaultValue={answers?.precautions ?? ""} />
       </Field>
-      <div className="space-y-3 rounded-2xl bg-ivory-50 p-4 text-sm">
+      <div className="space-y-3 rounded-2xl bg-surface p-4 text-sm">
         <p className="font-medium">Toestemmingsverklaring (lees voor of laat lezen)</p>
         <p className="leading-relaxed">{consentText}</p>
         <Field label="Hoe is de toestemming gegeven?">
@@ -44,7 +44,7 @@ export function ConsultationForm({ customerId, questions, answers, consentText }
           </Select>
         </Field>
         <label className="flex min-h-11 items-center gap-3">
-          <input type="checkbox" name="consent" required className="h-5 w-5 accent-[var(--color-charcoal)]" />
+          <input type="checkbox" name="consent" required className="h-5 w-5 accent-[var(--color-ink)]" />
           De klant heeft uitdrukkelijk toestemming gegeven voor deze verklaring.
         </label>
       </div>

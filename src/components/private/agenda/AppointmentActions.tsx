@@ -22,12 +22,12 @@ type Props = {
 
 function Panel({ title, children, open = false, tone = "default" }: { title: string; children: ReactNode; open?: boolean; tone?: "default" | "danger" }) {
   return (
-    <details open={open} className={`group rounded-2xl border bg-white ${tone === "danger" ? "border-[#8e2f24]/25" : "border-stone"}`}>
+    <details open={open} className={`group rounded-2xl border bg-white ${tone === "danger" ? "border-[#8e2f24]/25" : "border-line"}`}>
       <summary className="flex min-h-12 cursor-pointer items-center justify-between px-4 font-medium">
         {title}
         <span aria-hidden="true" className="transition group-open:rotate-90">›</span>
       </summary>
-      <div className="border-t border-stone p-4">{children}</div>
+      <div className="border-t border-line p-4">{children}</div>
     </details>
   );
 }
@@ -64,7 +64,7 @@ function Notify({ hasEmail, label }: { hasEmail: boolean; label: string }) {
         Geen e-mailadres bekend: de klant krijgt hier <strong>geen</strong> bericht van. Laat het de klant zelf weten.
       </p>
     );
-  return <p className="rounded-xl bg-ivory-50 px-3 py-2 text-sm text-charcoal-soft">✉ {label}</p>;
+  return <p className="rounded-xl bg-surface px-3 py-2 text-sm text-ink-soft">✉ {label}</p>;
 }
 
 function Hidden({ id, op }: { id: number; op: string }) {
@@ -127,7 +127,7 @@ export function AppointmentActions(p: Props) {
                 <legend className="mb-1.5 text-sm font-medium">Behandeling(en)</legend>
                 <div className="flex flex-wrap gap-2">
                   {p.treatments.map((t) => (
-                    <label key={t.id} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stone bg-white px-3 text-sm has-[:checked]:border-charcoal has-[:checked]:bg-charcoal has-[:checked]:text-ivory">
+                    <label key={t.id} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-white px-3 text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-paper">
                       <input type="checkbox" name="treatments" value={t.id} defaultChecked={p.currentTreatments.includes(t.id)} className="sr-only" />
                       {t.name}
                     </label>

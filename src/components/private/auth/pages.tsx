@@ -71,7 +71,7 @@ export async function ResetPage({ area, searchParams }: { area: Area; searchPara
       ) : (
         <div className="space-y-4">
           <Notice tone="error">Deze link is verlopen of al gebruikt. Een link is 15 minuten geldig en werkt één keer.</Notice>
-          <Link href={`/${area}/wachtwoord-vergeten`} className="block text-center text-sm text-gold-deep underline underline-offset-4">
+          <Link href={`/${area}/wachtwoord-vergeten`} className="block text-center text-sm text-accent-deep underline underline-offset-4">
             Vraag een nieuwe link aan
           </Link>
         </div>

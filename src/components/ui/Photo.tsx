@@ -58,7 +58,7 @@ export function Photo({
   } as CSSProperties;
 
   return (
-    <div className={`${frame} overflow-hidden bg-stone ${className}`} style={frameStyle}>
+    <div className={`${frame} overflow-hidden bg-line ${className}`} style={frameStyle}>
       {/* eslint-disable-next-line @next/next/no-img-element -- pre-optimised responsive WebP; no runtime image processing on Hostinger */}
       <img
         src={photo.src}
@@ -73,7 +73,7 @@ export function Photo({
         data-parallax={parallax}
       />
       {label && (
-        <span className="glass absolute bottom-3 left-3 rounded-full px-3 py-1 text-[0.66rem] uppercase tracking-[0.16em] text-charcoal-soft">
+        <span className="glass absolute bottom-3 left-3 rounded-full px-3 py-1 text-[0.66rem] uppercase tracking-[0.16em] text-ink-soft">
           {label}
         </span>
       )}

@@ -47,7 +47,7 @@ export default async function Invoices({ searchParams }: { searchParams: Promise
             ["/admin/behandelingen/prijslijst", "Prijslijst"],
           ].map(([href, label]) => (
             <li key={href}>
-              <a href={href} className="inline-flex min-h-11 items-center rounded-full border border-charcoal/20 px-4">{label}</a>
+              <a href={href} className="inline-flex min-h-11 items-center rounded-full border border-ink/20 px-4">{label}</a>
             </li>
           ))}
         </ul>
@@ -55,7 +55,7 @@ export default async function Invoices({ searchParams }: { searchParams: Promise
       </Card>
       <Card title={`Facturen (${rows.length})`} className="mt-5">
         {rows.length ? (
-          <ul className="divide-y divide-stone">
+          <ul className="divide-y divide-line">
             {rows.map((r) => {
               const p = paid.get(r.id) ?? 0;
               const tone = r.status === "draft" ? "neutral" : r.kind === "credit" ? "cancelled" : p >= r.totalCents ? "confirmed" : "pending";

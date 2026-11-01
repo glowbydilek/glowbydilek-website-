@@ -16,7 +16,7 @@ export default async function Message({ params }: { params: Promise<{ id: string
   if (!m) notFound();
   if (m.status === "new") await db.update(inquiries).set({ status: "read", readAt: new Date() }).where(eq(inquiries.id, id));
   const subject = encodeURIComponent(m.locale === "en" ? "Re: your question — Glow by Dilek" : "Re: je vraag — Glow by Dilek");
-  const btn = "inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-4 text-sm";
+  const btn = "inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm";
   return (
     <>
       <PageHeader title={m.name} subtitle={`${TOPIC[m.topic] ?? m.topic} · ${formatLocal(m.createdAt, "nl", { dateStyle: "long", timeStyle: "short" })}`} />
@@ -29,9 +29,9 @@ export default async function Message({ params }: { params: Promise<{ id: string
           <dt className="text-muted">Taal</dt>
           <dd>{m.locale === "en" ? "Engels" : "Nederlands"}</dd>
         </dl>
-        <p className="whitespace-pre-wrap rounded-xl bg-ivory-50 p-4 leading-relaxed">{m.message}</p>
+        <p className="whitespace-pre-wrap rounded-xl bg-surface p-4 leading-relaxed">{m.message}</p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <a href={`mailto:${m.email}?subject=${subject}`} className="inline-flex min-h-11 items-center rounded-full bg-charcoal px-5 text-sm text-ivory">Beantwoorden per e-mail</a>
+          <a href={`mailto:${m.email}?subject=${subject}`} className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm text-paper">Beantwoorden per e-mail</a>
           {[["replied", "Markeer als beantwoord"], ["closed", "Afgehandeld"], ["new", "Markeer als ongelezen"]].map(([s, l]) => (
             <form key={s} action={inquiryAction}>
               <input type="hidden" name="id" value={m.id} />

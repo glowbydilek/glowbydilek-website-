@@ -39,17 +39,17 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       <PageHeader
         title={page.label}
         subtitle={`Op de website: ${page.paths.nl} · ${page.paths.en}`}
-        actions={<a href={locale === "en" ? page.paths.en : page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-4 text-sm">Bekijk live ↗</a>}
+        actions={<a href={locale === "en" ? page.paths.en : page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">Bekijk live ↗</a>}
       />
       {sp.hersteld && <div className="mb-4"><Notice tone="success">Eerdere versie teruggezet als concept. Controleer en klik op Publiceren.</Notice></div>}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {page.docs.length > 1 && page.docs.map((d) => (
-          <Link key={d.key} href={href(d.key, locale)} aria-current={d.key === docKey ? "page" : undefined} className={`min-h-10 rounded-full px-4 py-2 text-sm ${d.key === docKey ? "bg-charcoal text-ivory" : "bg-white text-charcoal"}`}>{d.label}</Link>
+          <Link key={d.key} href={href(d.key, locale)} aria-current={d.key === docKey ? "page" : undefined} className={`min-h-10 rounded-full px-4 py-2 text-sm ${d.key === docKey ? "bg-ink text-paper" : "bg-white text-ink"}`}>{d.label}</Link>
         ))}
       </div>
       <div className="mb-4 inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Taal">
         {(["nl", "en"] as const).map((l) => (
-          <Link key={l} href={href(docKey, l)} role="tab" aria-selected={l === locale} className={`min-h-10 rounded-full px-4 py-2 text-sm ${l === locale ? "bg-charcoal text-ivory" : ""}`}>
+          <Link key={l} href={href(docKey, l)} role="tab" aria-selected={l === locale} className={`min-h-10 rounded-full px-4 py-2 text-sm ${l === locale ? "bg-ink text-paper" : ""}`}>
             {l === "nl" ? "Nederlands" : "Engels"}
             {ts[l].draft && " · concept"}
             {ts[l].empty > 0 && ` · ${ts[l].empty} leeg`}

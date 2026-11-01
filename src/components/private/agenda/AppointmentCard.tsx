@@ -32,15 +32,15 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
     return (
       <Link
         href={`/ajanda/afspraak/${appt.id}`}
-        className={`block min-w-0 rounded-xl border border-stone border-l-4 bg-white p-2.5 text-sm shadow-sm transition hover:border-charcoal/30 ${edge[appt.status] ?? "border-l-stone"}`}
+        className={`block min-w-0 rounded-xl border border-line border-l-4 bg-white p-2.5 text-sm shadow-sm transition hover:border-ink/30 ${edge[appt.status] ?? "border-l-line"}`}
       >
-        <p className="font-semibold text-charcoal">
+        <p className="font-semibold text-ink">
           {appt.startAt ? `${time(appt.startAt)}–${time(appt.endAt)}` : (appt.requestedDate ?? "—")}
         </p>
-        <p className="break-words font-medium text-charcoal">
+        <p className="break-words font-medium text-ink">
           {customer.firstName} {customer.lastName}
         </p>
-        <p className="break-words text-xs text-charcoal-soft">{treatments.join(", ") || "—"}</p>
+        <p className="break-words text-xs text-ink-soft">{treatments.join(", ") || "—"}</p>
         <span className="mt-1.5 inline-block">
           <Badge tone={st.tone}>{st.label}</Badge>
         </span>
@@ -50,13 +50,13 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
   return (
     <Link
       href={`/ajanda/afspraak/${appt.id}`}
-      className="group flex items-stretch gap-3 rounded-2xl border border-stone bg-white p-3 shadow-sm transition hover:border-charcoal/30 active:scale-[0.99]"
+      className="group flex items-stretch gap-3 rounded-2xl border border-line bg-white p-3 shadow-sm transition hover:border-ink/30 active:scale-[0.99]"
     >
-      <span aria-hidden="true" className={`w-1.5 shrink-0 rounded-full ${bar[appt.status] ?? "bg-stone"}`} />
+      <span aria-hidden="true" className={`w-1.5 shrink-0 rounded-full ${bar[appt.status] ?? "bg-line"}`} />
       <div className="w-16 shrink-0 text-center">
         {appt.startAt ? (
           <>
-            <p className="text-lg font-semibold leading-tight text-charcoal">{time(appt.startAt)}</p>
+            <p className="text-lg font-semibold leading-tight text-ink">{time(appt.startAt)}</p>
             <p className="text-xs text-muted">{time(appt.endAt)}</p>
           </>
         ) : (
@@ -69,12 +69,12 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="truncate font-medium text-charcoal">
+          <p className="truncate font-medium text-ink">
             {customer.firstName} {customer.lastName}
           </p>
           <Badge tone={st.tone}>{st.label}</Badge>
         </div>
-        <p className="mt-0.5 truncate text-sm text-charcoal-soft">{treatments.join(", ") || "—"}</p>
+        <p className="mt-0.5 truncate text-sm text-ink-soft">{treatments.join(", ") || "—"}</p>
         {showDate && appt.startAt && <p className="mt-0.5 text-xs text-muted">{dayShort(appt.startAt)}</p>}
       </div>
       <span aria-hidden="true" className="self-center text-muted transition group-hover:translate-x-0.5">

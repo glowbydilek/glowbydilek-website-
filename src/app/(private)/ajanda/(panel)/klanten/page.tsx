@@ -30,11 +30,11 @@ export default async function Customers({ searchParams }: { searchParams: Promis
       )}
       <form action="/ajanda/klanten" role="search" className="mb-4 flex gap-2">
         <Input name="q" type="search" defaultValue={q} placeholder="Naam, telefoon of e-mail" aria-label="Zoek klant" autoComplete="off" />
-        <button className="min-h-11 rounded-full bg-charcoal px-5 text-sm text-ivory">Zoeken</button>
+        <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">Zoeken</button>
       </form>
       <Card>
         {rows.length ? (
-          <ul className="divide-y divide-stone">
+          <ul className="divide-y divide-line">
             {rows.map((c) => (
               <li key={c.id}>
                 <Link href={`/ajanda/klanten/${c.id}`} className="flex min-h-14 items-center justify-between gap-3 py-2">

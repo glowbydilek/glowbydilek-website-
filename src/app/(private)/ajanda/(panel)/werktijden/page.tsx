@@ -35,7 +35,7 @@ export default async function Hours() {
           <p className="mb-3 text-sm text-muted">Bijvoorbeeld: een normaal gesloten dag openen, een dag sluiten, of op één datum 09:00–13:00 werken. Het vaste rooster blijft voor andere weken gelijk.</p>
           <OverrideForm defaultDay={today} />
           {ovs.length > 0 && (
-            <ul className="mt-5 divide-y divide-stone border-t border-stone">
+            <ul className="mt-5 divide-y divide-line border-t border-line">
               {ovs.map((o) => {
                 const list = ivs.filter((i) => i.day === o.day);
                 const desc = o.closed
@@ -61,7 +61,7 @@ export default async function Hours() {
           <p className="mb-3 text-sm text-muted">Vakantie, een persoonlijke afspraak of tijdelijk niet beschikbaar.</p>
           <BlockForm defaultDay={today} />
           {bl.length > 0 && (
-            <ul className="mt-5 divide-y divide-stone border-t border-stone">
+            <ul className="mt-5 divide-y divide-line border-t border-line">
               {bl.map((b) => (
                 <li key={b.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
                   <span>

@@ -183,7 +183,7 @@ export function InvoiceEditor({
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => setLines((ls) => [...ls, { description: "", quantity: 1, amount: "" }])} className="min-h-11 rounded-full border border-dashed border-charcoal/30 px-4 text-sm">
+        <button type="button" onClick={() => setLines((ls) => [...ls, { description: "", quantity: 1, amount: "" }])} className="min-h-11 rounded-full border border-dashed border-ink/30 px-4 text-sm">
           ＋ Regel toevoegen
         </button>
         <p className="text-sm">
@@ -206,7 +206,7 @@ export function IssueForm({ id, kind, ready, today }: { id: number; kind: "invoi
       <input type="hidden" name="op" value="issue" />
       {kind === "invoice" && (
         <label className="flex min-h-11 items-center gap-3 text-sm">
-          <input type="checkbox" name="paidNow" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="h-5 w-5 accent-[var(--color-charcoal)]" />
+          <input type="checkbox" name="paidNow" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="h-5 w-5 accent-[var(--color-ink)]" />
           De klant heeft al betaald (de factuur vermeldt dan &quot;Voldaan&quot;)
         </label>
       )}

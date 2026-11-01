@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { href, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { Logo } from "./brand/Logo";
+import { Glint, LogoInline } from "./brand/Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { NavModel } from "./navModel";
 import { Icon } from "./ui/Icon";
@@ -92,26 +92,27 @@ export function Header({
       ? pathname === target || pathname.startsWith(`${target}/`)
       : pathname === target;
   const navLinkCls = (active: boolean) =>
-    `inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors duration-300 ${
-      active
-        ? "bg-nude-light text-charcoal"
-        : "text-charcoal-soft hover:bg-charcoal/5 hover:text-charcoal"
+    `relative inline-flex min-h-11 items-center gap-1.5 px-3 text-[0.95rem] transition-colors duration-300 ${
+      active ? "text-ink" : "text-ink-soft hover:text-ink"
     }`;
+  const activeMark = (active: boolean) =>
+    active ? <Glint className="absolute -top-0.5 left-1/2 h-2.5 w-auto -translate-x-1/2 text-accent" /> : null;
 
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-50 border-b border-stone/80 pt-[env(safe-area-inset-top)]"
+      className="sticky top-0 z-50 border-b border-line/80 pt-[env(safe-area-inset-top)]"
     >
       {/* Frosted background on its own layer: a backdrop-filter on the header
           itself would trap the fixed mobile menu inside the header box. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-ivory/90 backdrop-blur-xl"
+        data-header-bg
+        className="absolute inset-0 -z-10 bg-paper/90 backdrop-blur-xl"
       />
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-charcoal focus:px-5 focus:py-2 focus:text-ivory"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2 focus:text-paper"
       >
         {dict.nav.skipToContent}
       </a>
@@ -122,8 +123,9 @@ export function Header({
           onClick={close}
           aria-label={`Glow by Dilek — ${dict.nav.home}`}
           className="shrink-0"
+          data-logo
         >
-          <Logo withTagline={false} className="h-9 w-auto sm:h-10 lg:h-11" />
+          <LogoInline className="h-8 w-auto sm:h-9 lg:h-10" />
         </Link>
 
         {/* Desktop navigation */}
@@ -139,6 +141,7 @@ export function Header({
               onClick={() => setMega((v) => !v)}
               className={navLinkCls(isActive(treatmentsBase))}
             >
+              {activeMark(isActive(treatmentsBase))}
               {dict.nav.treatments}
               <Icon
                 name="chevron"
@@ -156,6 +159,7 @@ export function Header({
                 aria-current={isActive(l.href) ? "page" : undefined}
                 className={navLinkCls(isActive(l.href))}
               >
+                {activeMark(isActive(l.href))}
                 {l.label}
               </Link>
             ))}
@@ -170,7 +174,7 @@ export function Header({
           <Link
             href={href(locale, "booking")}
             onClick={close}
-            className="rounded-full bg-charcoal px-6 py-3 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-ivory transition-colors duration-500 hover:bg-charcoal-soft"
+            className="btn btn-primary min-h-11 px-5 py-2.5 text-[0.875rem]"
           >
             {dict.nav.booking}
           </Link>
@@ -181,7 +185,7 @@ export function Header({
           <Link
             href={href(locale, "booking")}
             onClick={close}
-            className="hidden rounded-full bg-charcoal px-4 py-2.5 text-[0.64rem] font-medium uppercase tracking-[0.16em] text-ivory min-[400px]:inline-flex"
+            className="btn btn-primary hidden min-h-10 px-4 py-2 text-[0.8125rem] min-[400px]:inline-flex"
           >
             {dict.cta.request}
           </Link>
@@ -195,10 +199,10 @@ export function Header({
             onClick={() => setOpen((v) => !v)}
           >
             <span
-              className={`absolute h-px w-6 bg-charcoal transition-transform duration-500 ${open ? "rotate-45" : "-translate-y-[4px]"}`}
+              className={`absolute h-px w-6 bg-ink transition-transform duration-500 ${open ? "rotate-45" : "-translate-y-[4px]"}`}
             />
             <span
-              className={`absolute h-px w-6 bg-charcoal transition-transform duration-500 ${open ? "-rotate-45" : "translate-y-[4px]"}`}
+              className={`absolute h-px w-6 bg-ink transition-transform duration-500 ${open ? "-rotate-45" : "translate-y-[4px]"}`}
             />
           </button>
         </div>
@@ -208,7 +212,7 @@ export function Header({
       {mega && (
         <div
           id="mega-menu"
-          className="absolute inset-x-0 top-full hidden border-b border-stone bg-ivory shadow-[0_30px_60px_-40px_rgb(41_39_36/0.35)] lg:block"
+          className="absolute inset-x-0 top-full hidden border-b border-line bg-paper shadow-[var(--shadow-soft)] lg:block"
         >
           <div className="mx-auto grid max-w-[88rem] grid-cols-[repeat(3,1fr)_0.9fr] gap-10 px-12 py-10">
             {nav.categories.map((c) => (
@@ -216,12 +220,12 @@ export function Header({
                 <Link
                   href={c.href}
                   onClick={close}
-                  className="group inline-flex items-center gap-2 font-serif text-[1.7rem] leading-tight text-charcoal hover:text-gold-deep"
+                  className="group inline-flex items-center gap-2 font-serif text-[1.65rem] leading-tight text-ink hover:text-accent"
                 >
                   {c.label}
                   <Icon
                     name="arrow"
-                    className="h-4 w-4 text-gold-deep transition-transform duration-500 group-hover:translate-x-1"
+                    className="h-4 w-4 text-accent-deep transition-transform duration-500 group-hover:translate-x-1"
                   />
                 </Link>
                 <p className="mt-1 text-sm leading-relaxed text-muted">
@@ -234,7 +238,7 @@ export function Header({
                         href={t.href}
                         onClick={close}
                         aria-current={pathname === t.href ? "page" : undefined}
-                        className="link-underline text-charcoal-soft hover:text-charcoal"
+                        className="link-underline text-ink-soft hover:text-ink"
                       >
                         {t.label}
                       </Link>
@@ -243,7 +247,7 @@ export function Header({
                 </ul>
               </div>
             ))}
-            <div className="rounded-[var(--radius-card)] bg-nude-light p-6">
+            <div className="border-l border-line pl-8">
               <p className="eyebrow">{dict.nav.info}</p>
               <ul className="mt-4 space-y-2">
                 {nav.info.map((l) => (
@@ -251,7 +255,7 @@ export function Header({
                     <Link
                       href={l.href}
                       onClick={close}
-                      className="link-underline text-charcoal-soft hover:text-charcoal"
+                      className="link-underline text-ink-soft hover:text-ink"
                     >
                       {l.label}
                     </Link>
@@ -261,7 +265,7 @@ export function Header({
               <Link
                 href={treatmentsBase}
                 onClick={close}
-                className="mt-6 inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep hover:text-charcoal"
+                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-deep hover:text-ink"
               >
                 {dict.nav.allTreatments}
                 <Icon name="arrow" className="h-3.5 w-3.5" />
@@ -278,7 +282,7 @@ export function Header({
           role="dialog"
           aria-modal="true"
           aria-label={dict.nav.menu}
-          className="fixed inset-x-0 bottom-0 top-[calc(4rem+env(safe-area-inset-top)+1px)] overflow-y-auto overscroll-contain bg-ivory lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-[calc(4rem+env(safe-area-inset-top)+1px)] overflow-y-auto overscroll-contain bg-paper lg:hidden"
         >
           <nav
             aria-label={dict.nav.main}
@@ -293,15 +297,15 @@ export function Header({
                 },
                 ...nav.primary,
               ].map((l) => (
-                <li key={l.href} className="border-b border-stone">
+                <li key={l.href} className="border-b border-line">
                   <Link
                     href={l.href}
                     onClick={close}
                     aria-current={pathname === l.href ? "page" : undefined}
-                    className={`flex items-center justify-between py-3.5 font-serif text-[1.75rem] leading-tight ${pathname === l.href ? "text-gold-deep" : "text-charcoal"}`}
+                    className={`flex items-center justify-between py-3.5 font-serif text-[1.85rem] leading-tight ${pathname === l.href ? "text-accent" : "text-ink"}`}
                   >
                     {l.label}
-                    <Icon name="arrow" className="h-4 w-4 text-gold-deep" />
+                    {pathname === l.href ? <Glint className="h-4 w-auto text-accent" /> : <Icon name="arrow" className="h-4 w-4 text-muted" />}
                   </Link>
                 </li>
               ))}
@@ -315,9 +319,9 @@ export function Header({
                     href={c.href}
                     onClick={close}
                     aria-current={pathname === c.href ? "page" : undefined}
-                    className="block rounded-2xl border border-stone bg-ivory-50 px-4 py-3"
+                    className="block border-b border-line py-3"
                   >
-                    <span className="block font-serif text-[1.4rem] leading-tight text-charcoal">
+                    <span className="block font-serif text-[1.4rem] leading-tight text-ink">
                       {c.label}
                     </span>
                     <span className="mt-0.5 block text-sm leading-snug text-muted">
@@ -335,7 +339,7 @@ export function Header({
                   <Link
                     href={l.href}
                     onClick={close}
-                    className="flex min-h-11 items-center text-charcoal-soft"
+                    className="flex min-h-11 items-center text-ink-soft"
                   >
                     {l.label}
                   </Link>
@@ -347,7 +351,7 @@ export function Header({
               <Link
                 href={href(locale, "booking")}
                 onClick={close}
-                className="flex items-center justify-center gap-3 rounded-full bg-charcoal px-7 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory"
+                className="btn btn-primary w-full"
               >
                 {dict.nav.booking}
                 <Icon name="arrow" className="h-4 w-4" />

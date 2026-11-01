@@ -29,13 +29,13 @@ export function SeoForm({ seoKey, locale, initial, defaults, path, media }: { se
         <p className="text-lg text-[#1a0dab]">{title}</p>
         <p className="text-muted">{desc}</p>
       </div>
-      <details className="rounded-xl border border-stone p-3">
+      <details className="rounded-xl border border-line p-3">
         <summary className="cursor-pointer text-sm">Delen op sociale media (Open Graph)</summary>
         <div className="mt-3 space-y-3">
           <Field label="Titel bij delen"><Input value={v.ogTitle ?? ""} onChange={(e) => setV({ ...v, ogTitle: e.target.value })} /></Field>
           <Field label="Omschrijving bij delen"><Textarea rows={2} value={v.ogDescription ?? ""} onChange={(e) => setV({ ...v, ogDescription: e.target.value })} /></Field>
           <Field label="Afbeelding bij delen">
-            <select className="block w-full rounded-xl border border-charcoal/20 bg-white px-3 py-2.5" value={v.ogImage ?? ""} onChange={(e) => setV({ ...v, ogImage: e.target.value ? Number(e.target.value) : null })}>
+            <select className="block w-full rounded-xl border border-ink/20 bg-white px-3 py-2.5" value={v.ogImage ?? ""} onChange={(e) => setV({ ...v, ogImage: e.target.value ? Number(e.target.value) : null })}>
               <option value="">Standaard Glow by Dilek-afbeelding</option>
               {media.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
             </select>

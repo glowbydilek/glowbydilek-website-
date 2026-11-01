@@ -6,7 +6,7 @@ import { ActionForm } from "../ActionForm";
 import { Field, Input, SubmitButton } from "../ui";
 
 export function ConsultationSettingsForm({ s }: { s: ConsultationSettings }) {
-  const box = "mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-charcoal)]";
+  const box = "mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-ink)]";
   return (
     <ActionForm action={consultationSettingsAction} className="space-y-4">
       <label className="flex gap-3 text-sm">

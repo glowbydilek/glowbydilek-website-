@@ -26,11 +26,11 @@ export function PricesPage({ locale }: { locale: Locale }) {
           <div className="space-y-10">
             {treatmentGroups.map((g) => (
               <div key={g.id} data-reveal>
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-charcoal pb-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-ink pb-4">
                   <h2 className="display min-w-0 break-words text-[2.2rem] sm:text-5xl">{g.name[locale]}</h2>
                   <Link
                     href={categoryHref(locale, g.id)}
-                    className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep"
+                    className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-accent-deep"
                   >
                     {dict.service.viewTreatment}
                     <span className="sr-only">: {g.name[locale]}</span>
@@ -47,9 +47,9 @@ export function PricesPage({ locale }: { locale: Locale }) {
                   </thead>
                   <tbody>
                     {g.treatments.filter((tr) => liveTreatment(tr.id).visible).map((tr) => (
-                      <tr key={tr.id} className="border-b border-charcoal/10">
+                      <tr key={tr.id} className="border-b border-ink/10">
                         <th scope="row" className="py-5 pr-4 align-top font-normal">
-                          <Link href={treatmentHref(locale, tr.id)} className="block font-serif text-2xl text-charcoal underline-offset-4 hover:text-gold-deep hover:underline">
+                          <Link href={treatmentHref(locale, tr.id)} className="block font-serif text-2xl text-ink underline-offset-4 hover:text-accent-deep hover:underline">
                             {liveTreatment(tr.id).name[locale]}
                           </Link>
                           <span className="mt-1 block text-sm leading-relaxed text-muted">{liveTreatment(tr.id).description[locale]}</span>
@@ -64,12 +64,12 @@ export function PricesPage({ locale }: { locale: Locale }) {
                         </td>
                         <td className="whitespace-nowrap py-5 text-right align-top">
                           {liveTreatment(tr.id).price ? (
-                            <span className="font-serif text-2xl text-charcoal">
+                            <span className="font-serif text-2xl text-ink">
                               {liveTreatment(tr.id).price!.from && <span className="mr-1 font-sans text-sm text-muted">{t.from}</span>}
                               {formatPrice(liveTreatment(tr.id).price!.amount, locale)}
                             </span>
                           ) : (
-                            <span className="inline-block rounded-full bg-nude-light px-3 py-1 text-xs uppercase tracking-[0.14em] text-charcoal-soft">
+                            <span className="inline-block rounded-full bg-glow-soft px-3 py-1 text-xs uppercase tracking-[0.14em] text-ink-soft">
                               {dict.common.onRequest}
                             </span>
                           )}
@@ -84,19 +84,19 @@ export function PricesPage({ locale }: { locale: Locale }) {
 
           <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             {!anyPricePublished() && (
-              <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory sm:p-9" data-reveal>
-                <Icon name="mail" className="h-6 w-6 text-gold" />
-                <h2 className="mt-5 font-serif text-3xl text-ivory">{t.notice.title}</h2>
-                <p className="mt-4 leading-relaxed text-ivory/75">{t.notice.body}</p>
+              <div className="on-dark rounded-[1.75rem] bg-ink p-7 text-paper sm:p-9" data-reveal>
+                <Icon name="mail" className="h-6 w-6 text-accent" />
+                <h2 className="mt-5 font-serif text-3xl text-paper">{t.notice.title}</h2>
+                <p className="mt-4 leading-relaxed text-paper/75">{t.notice.body}</p>
                 <ButtonLink href={mailto(t.notice.subject)} variant="gold" className="mt-8 w-full" arrow>
                   {t.notice.cta}
                 </ButtonLink>
               </div>
             )}
-            <ul className="space-y-3 rounded-[1.75rem] bg-nude-light p-7" data-reveal>
+            <ul className="space-y-3 rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
               {t.notes.map((n) => (
-                <li key={n} className="flex gap-3 leading-relaxed text-charcoal-soft">
-                  <Icon name="check" className="mt-1 h-4 w-4 shrink-0 text-gold-deep" />
+                <li key={n} className="flex gap-3 leading-relaxed text-ink-soft">
+                  <Icon name="check" className="mt-1 h-4 w-4 shrink-0 text-accent-deep" />
                   {n}
                 </li>
               ))}

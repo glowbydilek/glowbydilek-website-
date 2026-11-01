@@ -45,7 +45,7 @@ export function TreatmentForm({ t }: { t: TreatmentRowView }) {
         {check("featured", "Uitgelicht", t.featured)}
         {check("bookableOnline", "Online boekbaar (tijdstip kiezen)", t.bookableOnline, "Alleen mogelijk met een ingevulde duur")}
       </div>
-      <details className="rounded-xl border border-stone p-3">
+      <details className="rounded-xl border border-line p-3">
         <summary className="cursor-pointer text-sm">Naam en korte omschrijving (NL/EN)</summary>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <Field label="Naam (NL)"><Input name="nameNl" defaultValue={t.nameNl} required /></Field>

@@ -37,7 +37,7 @@ export function LoginForm({ area, next, siteKey, captcha, notice }: { area: "adm
         Inloggen
       </SubmitButton>
       <p className="text-center text-sm">
-        <Link href={`/${area}/wachtwoord-vergeten`} className="text-gold-deep underline underline-offset-4">
+        <Link href={`/${area}/wachtwoord-vergeten`} className="text-accent-deep underline underline-offset-4">
           Wachtwoord vergeten?
         </Link>
       </p>

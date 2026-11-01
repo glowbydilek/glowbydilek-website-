@@ -10,16 +10,16 @@ export function Breadcrumbs({ items, label }: { items: BreadcrumbItem[]; label: 
         {items.map((item, i) => (
           <li key={`${item.name}-${i}`} className="flex items-center gap-2">
             {i > 0 && (
-              <span aria-hidden="true" className="text-gold">
+              <span aria-hidden="true" className="text-accent">
                 /
               </span>
             )}
             {item.href ? (
-              <Link href={item.href} className="transition-colors hover:text-gold-deep">
+              <Link href={item.href} className="transition-colors hover:text-accent-deep">
                 {item.name}
               </Link>
             ) : (
-              <span aria-current="page" className="text-charcoal-soft">
+              <span aria-current="page" className="text-ink-soft">
                 {item.name}
               </span>
             )}

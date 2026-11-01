@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/analytics/track";
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -50,6 +51,7 @@ export function ContactForm({ locale, t, privacyHref, email, turnstileSiteKey, d
     const ok = await submit({ ...payload, turnstileToken: challenge.token }, honeypot);
     challenge.renew();
     if (ok) {
+      track("contact_submitted", { form: "contact" });
       setValues({ name: "", email: "", phone: "", topic: defaultTopic ?? "", message: "" });
       setPrivacy(false);
     }
@@ -113,7 +115,7 @@ export function ContactForm({ locale, t, privacyHref, email, turnstileSiteKey, d
       <button
         type="submit"
         disabled={state.status === "sending"}
-        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-charcoal px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-ivory shadow-soft transition-colors duration-500 hover:bg-charcoal-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink px-8 py-4 text-[0.74rem] font-medium uppercase tracking-[0.2em] text-paper shadow-soft transition-colors duration-500 hover:bg-ink-soft disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
         {state.status === "sending" ? t.sending : t.submitContact}
         <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
@@ -147,11 +149,11 @@ export function Consent({
           onChange={(e) => onChange(e.target.checked)}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
-          className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-charcoal)]"
+          className="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-[var(--color-ink)]"
         />
-        <label htmlFor={id} className="text-sm leading-relaxed text-charcoal-soft">
+        <label htmlFor={id} className="text-sm leading-relaxed text-ink-soft">
           {t.privacy}{" "}
-          <Link href={privacyHref} className="font-medium text-charcoal underline decoration-gold underline-offset-4" target="_blank">
+          <Link href={privacyHref} className="font-medium text-ink underline decoration-accent underline-offset-4" target="_blank">
             {t.privacyLink}
           </Link>
           . <span className="sr-only">({t.required})</span>

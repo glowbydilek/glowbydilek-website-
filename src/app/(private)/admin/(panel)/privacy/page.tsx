@@ -23,7 +23,7 @@ export default async function PrivacySettings() {
       </div>
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.2fr_1fr]">
         <Card title="Afweging (AVG)">
-          <div className="space-y-3 text-sm leading-relaxed text-charcoal-soft">
+          <div className="space-y-3 text-sm leading-relaxed text-ink-soft">
             <p><strong>Doel.</strong> Alleen om een waxbehandeling veilig uit te voeren: weten of er een reden is om niet, of anders, te waxen. Niet voor marketing, statistiek of iets anders.</p>
             <p><strong>Welke gegevens.</strong> Uitsluitend deze {QUESTIONS.length} vragen (ja/nee met korte toelichting) en de afgesproken voorzorg. Geen volledige medische geschiedenis, geen diagnoses, geen medicijnlijsten.</p>
             <p><strong>Grondslag.</strong> Het uitvoeren van de afspraak (art. 6 lid 1 sub b AVG). Omdat het gezondheidsgegevens zijn (bijzondere persoonsgegevens, art. 9), is daarnaast een uitzondering nodig. Voor een schoonheidsspecialist die geen zorgverlener is, is dat in de praktijk de <strong>uitdrukkelijke toestemming</strong> van de klant (art. 9 lid 2 sub a). Die toestemming moet vrij gegeven zijn, kan altijd worden ingetrokken en wordt per klant vastgelegd.</p>

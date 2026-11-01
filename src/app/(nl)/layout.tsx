@@ -1,7 +1,6 @@
-import "@fontsource-variable/cormorant-garamond";
-import "@fontsource-variable/cormorant-garamond/wght-italic.css";
-import "@fontsource-variable/jost";
-import "@fontsource/parisienne/400.css";
+import "@fontsource-variable/newsreader/standard.css";
+import "@fontsource-variable/newsreader/standard-italic.css";
+import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";

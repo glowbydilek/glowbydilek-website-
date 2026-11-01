@@ -21,11 +21,11 @@ function Picker({ title, value, choices, labels, onChange, locked = [] }: { titl
       <p className="mb-2 text-sm font-medium">{title}</p>
       <ul className="space-y-1.5">
         {value.map((k, i) => (
-          <li key={k} className="flex items-center justify-between gap-2 rounded-xl border border-stone bg-white px-3 py-1.5 text-sm">
+          <li key={k} className="flex items-center justify-between gap-2 rounded-xl border border-line bg-white px-3 py-1.5 text-sm">
             <span>{labels[k] ?? k}</span>
             <span className="flex gap-1">
-              <button type="button" onClick={() => move(i, -1)} aria-label="Omhoog" className="h-9 w-9 rounded-full hover:bg-charcoal/6">↑</button>
-              <button type="button" onClick={() => move(i, 1)} aria-label="Omlaag" className="h-9 w-9 rounded-full hover:bg-charcoal/6">↓</button>
+              <button type="button" onClick={() => move(i, -1)} aria-label="Omhoog" className="h-9 w-9 rounded-full hover:bg-ink/6">↑</button>
+              <button type="button" onClick={() => move(i, 1)} aria-label="Omlaag" className="h-9 w-9 rounded-full hover:bg-ink/6">↓</button>
               {!locked.includes(k) && <button type="button" onClick={() => onChange(value.filter((x) => x !== k))} aria-label="Verbergen" className="h-9 w-9 rounded-full text-[#8e2f24] hover:bg-[#8e2f24]/10">✕</button>}
             </span>
           </li>
@@ -34,7 +34,7 @@ function Picker({ title, value, choices, labels, onChange, locked = [] }: { titl
       {rest.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {rest.map((k) => (
-            <button key={k} type="button" onClick={() => onChange([...value, k])} className="min-h-9 rounded-full border border-dashed border-charcoal/30 px-3 text-xs">＋ {labels[k] ?? k}</button>
+            <button key={k} type="button" onClick={() => onChange([...value, k])} className="min-h-9 rounded-full border border-dashed border-ink/30 px-3 text-xs">＋ {labels[k] ?? k}</button>
           ))}
         </div>
       )}
@@ -74,8 +74,8 @@ export function BusinessForm({ phone, instagram }: { phone: string; instagram: s
       <input type="hidden" name="data" value={JSON.stringify(v)} />
       <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Telefoonnummer (optioneel, zichtbaar in de footer)"><Input value={v.phone} onChange={(e) => setV({ ...v, phone: e.target.value })} inputMode="tel" /></Field>
-        <Field label="Instagram-gebruikersnaam (optioneel)"><Input value={v.instagram} onChange={(e) => setV({ ...v, instagram: e.target.value })} placeholder="glowbydilek" /></Field>
       </div>
+      <p className="text-xs text-muted">Instagram, Facebook en TikTok stel je in onder Admin → Social media.</p>
       <p className="text-xs text-muted">E-mail: hello@glowbydilek.nl. Een adres of woonplaats wordt bewust nergens op de website getoond.</p>
       <Buttons op="publish">Publiceren</Buttons>
     </ActionForm>

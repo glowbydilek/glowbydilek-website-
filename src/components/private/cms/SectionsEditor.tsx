@@ -22,7 +22,7 @@ export function SectionsEditor({ page, defs, order, hidden }: { page: string; de
       <input type="hidden" name="page" value={page} />
       <ul className="space-y-2">
         {list.map((d, i) => (
-          <li key={d.id} className="flex items-center gap-2 rounded-xl border border-stone bg-white px-3 py-2">
+          <li key={d.id} className="flex items-center gap-2 rounded-xl border border-line bg-white px-3 py-2">
             <input type="hidden" name="order" value={d.id} />
             <label className="flex flex-1 items-center gap-3">
               <input type="checkbox" name={`show-${d.id}`} defaultChecked={d.locked || !hidden.includes(d.id)} disabled={d.locked} className="h-5 w-5" />
@@ -31,8 +31,8 @@ export function SectionsEditor({ page, defs, order, hidden }: { page: string; de
             </label>
             {!d.locked && (
               <span className="flex gap-1">
-                <button type="button" aria-label={`${d.label} omhoog`} onClick={() => move(i, -1)} className="h-10 w-10 rounded-full hover:bg-charcoal/6">↑</button>
-                <button type="button" aria-label={`${d.label} omlaag`} onClick={() => move(i, 1)} className="h-10 w-10 rounded-full hover:bg-charcoal/6">↓</button>
+                <button type="button" aria-label={`${d.label} omhoog`} onClick={() => move(i, -1)} className="h-10 w-10 rounded-full hover:bg-ink/6">↑</button>
+                <button type="button" aria-label={`${d.label} omlaag`} onClick={() => move(i, 1)} className="h-10 w-10 rounded-full hover:bg-ink/6">↓</button>
               </span>
             )}
           </li>

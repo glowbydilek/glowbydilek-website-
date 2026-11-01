@@ -8,6 +8,8 @@ import { appointmentHistory, BookingError, getAppointment } from "@/lib/booking/
 import { getDb } from "@/lib/db/client";
 import { invoices, outbox, payments, treatments } from "@/lib/db/schema";
 import { NewInvoiceButton, PaymentForm } from "@/components/private/finance/FinanceForms";
+import { InviteButton } from "@/components/private/cms/ReviewForms";
+import { getReviewSettings } from "@/lib/reviews/service";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
 
@@ -62,6 +64,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
     db.select({ id: invoices.id, number: invoices.number }).from(invoices).where(eq(invoices.appointmentId, id)),
   ]);
   const paidHere = apptPayments.reduce((s, p) => s + p.amountCents, 0);
+  const reviewSettings = await getReviewSettings(db);
   const st = STATUS[appt.status];
   const local = appt.startAt ? toLocalParts(appt.startAt) : null;
   return (
@@ -118,7 +121,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
               <dt className="text-muted">Aangemaakt</dt>
               <dd>{formatLocal(appt.createdAt, "nl", { dateStyle: "medium", timeStyle: "short" })}</dd>
             </dl>
-            <Link href={`/ajanda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-gold-deep underline">Klantkaart openen</Link>
+            <Link href={`/ajanda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-accent-deep underline">Klantkaart openen</Link>
           </Card>
           {["completed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (
             <Card title="Betaling & factuur">
@@ -139,7 +142,8 @@ export default async function AppointmentPage({ params, searchParams }: { params
               )}
               <div className="mb-4 flex flex-wrap gap-2">
                 <NewInvoiceButton customerId={customer.id} appointmentId={appt.id} />
-                <a href={`/ajanda/afspraak/${appt.id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">
+                {appt.status === "completed" && customer.email && reviewSettings.invitesEnabled && <InviteButton appointmentId={appt.id} />}
+                <a href={`/ajanda/afspraak/${appt.id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
                   Behandeloverzicht (PDF)
                 </a>
               </div>
@@ -153,7 +157,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
           )}
           <Card title="E-mails">
             {mails.length ? (
-              <ul className="divide-y divide-stone text-sm">
+              <ul className="divide-y divide-line text-sm">
                 {mails.map((m) => (
                   <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                     <span className="min-w-0 flex-1 basis-56 break-words">{m.subject}</span>

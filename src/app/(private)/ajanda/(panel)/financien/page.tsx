@@ -32,14 +32,14 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         title="Financiën"
         subtitle="Alleen bedragen die je echt hebt vastgelegd. Er wordt nooit een omzet geschat of verzonnen."
         actions={
-          <a href={`/ajanda/financien/rapport?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">
+          <a href={`/ajanda/financien/rapport?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
             PDF-rapport
           </a>
         }
       />
       <nav aria-label="Periode" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
-          <Link key={k} href={`/ajanda/financien?p=${k}`} aria-current={k === kind ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === kind ? "bg-charcoal text-ivory" : "hover:bg-charcoal/6"}`}>
+          <Link key={k} href={`/ajanda/financien?p=${k}`} aria-current={k === kind ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === kind ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>
             {l}
           </Link>
         ))}
@@ -49,13 +49,13 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
           <input type="hidden" name="p" value="custom" />
           <label className="text-sm">
             Van
-            <input type="date" name="van" defaultValue={period.from} className="ml-2 min-h-11 rounded-xl border border-charcoal/20 bg-white px-3" />
+            <input type="date" name="van" defaultValue={period.from} className="ml-2 min-h-11 rounded-xl border border-ink/20 bg-white px-3" />
           </label>
           <label className="text-sm">
             Tot en met
-            <input type="date" name="tot" defaultValue={period.to} className="ml-2 min-h-11 rounded-xl border border-charcoal/20 bg-white px-3" />
+            <input type="date" name="tot" defaultValue={period.to} className="ml-2 min-h-11 rounded-xl border border-ink/20 bg-white px-3" />
           </label>
-          <button className="min-h-11 rounded-full bg-charcoal px-5 text-sm text-ivory">Toon</button>
+          <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">Toon</button>
         </form>
       )}
       <p className="mb-4 text-sm text-muted">
@@ -77,7 +77,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
       <div className="mt-5 grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <Card title="Per behandeling">
           {r.byTreatment.length ? (
-            <ul className="divide-y divide-stone text-sm">
+            <ul className="divide-y divide-line text-sm">
               {r.byTreatment.map((t) => (
                 <li key={t.name} className="flex justify-between gap-3 py-2">
                   <span className="min-w-0 break-words">
@@ -100,7 +100,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         </Card>
         <Card title="Per betaalmethode">
           {r.byMethod.length ? (
-            <ul className="divide-y divide-stone text-sm">
+            <ul className="divide-y divide-line text-sm">
               {r.byMethod.map((x) => (
                 <li key={x.method} className="flex justify-between gap-3 py-2">
                   <span>
@@ -116,7 +116,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         </Card>
         <Card title="Openstaande facturen">
           {r.openInvoices.length ? (
-            <ul className="divide-y divide-stone text-sm">
+            <ul className="divide-y divide-line text-sm">
               {r.openInvoices.map((i) => (
                 <li key={i.id}>
                   <Link href={`/ajanda/facturen/${i.id}`} className="flex min-h-11 justify-between gap-3 py-2">
@@ -134,7 +134,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         </Card>
         <Card title="Afgerond, nog geen betaling vastgelegd">
           {r.unpaidAppointments.length ? (
-            <ul className="divide-y divide-stone text-sm">
+            <ul className="divide-y divide-line text-sm">
               {r.unpaidAppointments.map((u) => (
                 <li key={u.id}>
                   <Link href={`/ajanda/afspraak/${u.id}`} className="flex min-h-11 justify-between gap-3 py-2">
@@ -156,7 +156,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         <Card title="Per dag" className="mt-5">
           <ul className="grid gap-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
             {r.byDay.map((d) => (
-              <li key={d.day} className="flex justify-between gap-3 rounded-lg px-2 py-1 odd:bg-ivory-50">
+              <li key={d.day} className="flex justify-between gap-3 rounded-lg px-2 py-1 odd:bg-surface">
                 <span>{dateNl(d.day)}</span>
                 <span className="font-medium">{formatCents(d.cents)}</span>
               </li>

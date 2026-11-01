@@ -18,17 +18,17 @@ export function FormSuccess({
   onReset: () => void;
 }) {
   return (
-    <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-charcoal p-8 text-ivory sm:p-12">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-charcoal">
+    <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-ink p-8 text-paper sm:p-12">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-ink">
         <Icon name="check" className="h-6 w-6" />
       </span>
       <h3 className="mt-6 font-serif text-4xl">{title}</h3>
-      <p className="mt-4 max-w-xl leading-relaxed text-ivory/80">{body}</p>
-      {!acknowledged && <p className="mt-3 text-sm text-ivory/65">{t.status.noAck}</p>}
+      <p className="mt-4 max-w-xl leading-relaxed text-paper/80">{body}</p>
+      {!acknowledged && <p className="mt-3 text-sm text-paper/65">{t.status.noAck}</p>}
       <button
         type="button"
         onClick={onReset}
-        className="mt-8 rounded-full border border-ivory/35 px-6 py-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-ivory hover:text-charcoal"
+        className="mt-8 rounded-full border border-paper/35 px-6 py-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-paper hover:text-ink"
       >
         {t.status.again}
       </button>

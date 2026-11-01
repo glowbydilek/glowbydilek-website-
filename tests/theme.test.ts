@@ -9,20 +9,20 @@ test("the approved theme and every preset meet the contrast rules and render no 
 });
 
 test("unreadable or invalid colours are refused; CSS injection is impossible", () => {
-  const bad = validateTheme({ colors: { charcoal: "#dddddd" } });
+  const bad = validateTheme({ colors: { ink: "#dddddd" } });
   assert.ok(bad.errors.some((e) => e.includes("slecht leesbaar")));
-  const inj = validateTheme({ colors: { gold: "red;} body{display:none" }, buttonShape: "x}{" });
+  const inj = validateTheme({ colors: { accent: "red;} body{display:none" }, buttonShape: "x}{" });
   assert.ok(inj.errors.length);
   assert.ok(!themeCss(inj.theme).includes("display:none"));
   assert.equal(inj.theme.buttonShape, "pill");
-  assert.ok(contrast("#292724", "#f8f5ef") > 13);
+  assert.ok(contrast("#221a17", "#f5f0e8") > 13);
 });
 
 test("changes render as CSS custom properties", () => {
-  const { theme, errors } = validateTheme({ ...APPROVED_THEME, colors: { ...APPROVED_THEME.colors, gold: "#b8925e" }, spacing: "airy" });
+  const { theme, errors } = validateTheme({ ...APPROVED_THEME, colors: { ...APPROVED_THEME.colors, accent: "#8f4a1c" }, spacing: "airy" });
   assert.deepEqual(errors, []);
   const css = themeCss(theme);
-  assert.match(css, /--color-gold:#b8925e/);
+  assert.match(css, /--color-accent:#8f4a1c/);
   assert.match(css, /--space-section:/);
 });
 

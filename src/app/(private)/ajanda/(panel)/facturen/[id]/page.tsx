@@ -61,7 +61,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
                   </>
                 )}
               </dl>
-              <ul className="mt-4 divide-y divide-stone text-sm">
+              <ul className="mt-4 divide-y divide-line text-sm">
                 {(inv.lines as ComputedLine[]).map((l, i) => (
                   <li key={i} className="flex justify-between gap-3 py-2">
                     <span className="min-w-0 break-words">{l.quantity} × {l.description}</span>
@@ -79,7 +79,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         </div>
         <div className="space-y-5">
           <Card title="PDF">
-            <a href={`/ajanda/facturen/${id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">
+            <a href={`/ajanda/facturen/${id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
               {draft ? "Voorbeeld bekijken (concept)" : "PDF openen / downloaden"}
             </a>
           </Card>
@@ -93,7 +93,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
                 <p className="mb-3 text-sm text-muted">Bij uitgeven krijgt de factuur het volgende nummer en worden alle gegevens vastgelegd. Sla eerst je wijzigingen op.</p>
               )}
               <IssueForm id={id} kind={credit ? "credit" : "invoice"} ready={missing.length === 0} today={todayLocal()} />
-              <div className="mt-4 border-t border-stone pt-3">
+              <div className="mt-4 border-t border-line pt-3">
                 <InvoiceOpButton id={id} op="delete" label="Concept verwijderen" variant="ghost" confirm="Dit concept verwijderen?" />
               </div>
             </Card>
@@ -124,7 +124,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               {!credit && (
                 <Card title={`Betalingen (${formatCents(paid.cents)} van ${formatCents(inv.totalCents)})`}>
                   {paid.rows.length > 0 && (
-                    <ul className="mb-3 divide-y divide-stone text-sm">
+                    <ul className="mb-3 divide-y divide-line text-sm">
                       {paid.rows.map((p) => (
                         <li key={p.id} className="flex flex-wrap justify-between gap-2 py-2">
                           <span>{dateNl(p.paidOn)} · {METHODS[p.method as keyof typeof METHODS] ?? p.method}</span>
@@ -145,7 +145,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               )}
             </>
           )}
-          <Link href={`/ajanda/klanten/${inv.customerId}`} className="inline-block text-sm text-gold-deep underline">Naar het klantprofiel</Link>
+          <Link href={`/ajanda/klanten/${inv.customerId}`} className="inline-block text-sm text-accent-deep underline">Naar het klantprofiel</Link>
         </div>
       </div>
     </>

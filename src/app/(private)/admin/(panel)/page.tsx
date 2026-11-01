@@ -22,14 +22,14 @@ export default async function AdminHome() {
     <>
       <PageHeader title={`Welkom, ${s.user.name || "Dilek"}`} subtitle="Beheer hier de website. Afspraken en klanten vind je in Ajanda." />
       <div className="mb-5 grid gap-3 sm:grid-cols-3">
-        <Link href="/ajanda/aanvragen" className="rounded-2xl border border-stone bg-white p-4"><span className="block text-3xl font-semibold">{counts.pending}</span><span className="text-sm text-muted">open aanvragen</span></Link>
-        <Link href="/ajanda/berichten" className="rounded-2xl border border-stone bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
-        <Link href="/ajanda/instellingen#emails" className="rounded-2xl border border-stone bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
+        <Link href="/ajanda/aanvragen" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.pending}</span><span className="text-sm text-muted">open aanvragen</span></Link>
+        <Link href="/ajanda/berichten" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
+        <Link href="/ajanda/instellingen#emails" className="rounded-2xl border border-line bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
       </div>
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
           {tiles.map((t) => (
-            <Link key={t.href} href={t.href} className="rounded-2xl border border-stone bg-white p-4 transition hover:border-charcoal/30">
+            <Link key={t.href} href={t.href} className="rounded-2xl border border-line bg-white p-4 transition hover:border-ink/30">
               <span className="block font-serif text-2xl">{t.title}</span>
               <span className="mt-1 block text-sm text-muted">{t.body}</span>
             </Link>

@@ -1,5 +1,5 @@
-import "@fontsource-variable/cormorant-garamond";
-import "@fontsource-variable/jost";
+import "@fontsource-variable/newsreader/standard.css";
+import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 export default function PrivateRoot({ children }: { children: ReactNode }) {
   return (
     <html lang="nl">
-      <body className="min-h-dvh bg-[#f4f1ea] text-charcoal antialiased">{children}</body>
+      <body className="min-h-dvh bg-[#f4f1ea] text-ink antialiased">{children}</body>
     </html>
   );
 }

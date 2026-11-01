@@ -22,12 +22,12 @@ export default async function Emails({ searchParams }: { searchParams: Promise<R
           <ul className="space-y-1">
             {TEMPLATE_KEYS.map((k) => (
               <li key={k}>
-                <Link href={`/admin/e-mails?mail=${k}&taal=${locale}`} aria-current={k === key ? "page" : undefined} className={`flex min-h-11 items-center rounded-xl px-3 text-sm ${k === key ? "bg-charcoal text-ivory" : "hover:bg-charcoal/6"}`}>{TEMPLATE_LABELS[k]}</Link>
+                <Link href={`/admin/e-mails?mail=${k}&taal=${locale}`} aria-current={k === key ? "page" : undefined} className={`flex min-h-11 items-center rounded-xl px-3 text-sm ${k === key ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>{TEMPLATE_LABELS[k]}</Link>
               </li>
             ))}
           </ul>
         </Card>
-        <Card title={TEMPLATE_LABELS[key]} actions={<span className="inline-flex rounded-full bg-ivory-50 p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/e-mails?mail=${key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-charcoal text-ivory" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
+        <Card title={TEMPLATE_LABELS[key]} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/e-mails?mail=${key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
           <TemplateForm key={`${key}-${locale}`} k={key} locale={locale} subject={t.subject} body={t.body} custom={customRows.some((r) => r.key === key)} />
         </Card>
       </div>

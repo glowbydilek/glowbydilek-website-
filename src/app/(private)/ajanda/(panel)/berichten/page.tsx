@@ -18,10 +18,10 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<Re
   const rows = await getDb().select().from(inquiries).where(all ? undefined : ne(inquiries.status, "closed")).orderBy(desc(inquiries.createdAt)).limit(200);
   return (
     <>
-      <PageHeader title="Berichten" subtitle="Vragen via het contactformulier. Je ontvangt ze ook per e-mail." actions={<Link href={all ? "/ajanda/berichten" : "/ajanda/berichten?alle=1"} className="text-sm text-gold-deep underline">{all ? "Alleen open berichten" : "Toon ook afgehandeld"}</Link>} />
+      <PageHeader title="Berichten" subtitle="Vragen via het contactformulier. Je ontvangt ze ook per e-mail." actions={<Link href={all ? "/ajanda/berichten" : "/ajanda/berichten?alle=1"} className="text-sm text-accent-deep underline">{all ? "Alleen open berichten" : "Toon ook afgehandeld"}</Link>} />
       <Card>
         {rows.length ? (
-          <ul className="divide-y divide-stone">
+          <ul className="divide-y divide-line">
             {rows.map((m) => (
               <li key={m.id}>
                 <Link href={`/ajanda/berichten/${m.id}`} className="flex min-h-14 items-start justify-between gap-3 py-3">

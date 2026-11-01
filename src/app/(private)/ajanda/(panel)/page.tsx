@@ -40,7 +40,7 @@ export default async function Today() {
           </Notice>
         )}
         {pending.length > 0 && (
-          <Link href="/ajanda/aanvragen" className="flex items-center justify-between rounded-2xl border border-gold/60 bg-[#fbf3e4] px-4 py-3 text-[#5a4320]">
+          <Link href="/ajanda/aanvragen" className="flex items-center justify-between rounded-2xl border border-accent/60 bg-[#fbf3e4] px-4 py-3 text-[#5a4320]">
             <span>
               <strong>{pending.length}</strong> {pending.length === 1 ? "aanvraag wacht" : "aanvragen wachten"} op je reactie
             </span>
@@ -60,7 +60,7 @@ export default async function Today() {
             <p className="text-muted">Geen afspraken vandaag.</p>
           )}
         </Card>
-        <Card title={`Morgen (${tomorrowItems.length})`} actions={<Link href={`/ajanda/agenda?view=day&d=${tomorrow}`} className="text-sm text-gold-deep underline">Bekijk dag</Link>}>
+        <Card title={`Morgen (${tomorrowItems.length})`} actions={<Link href={`/ajanda/agenda?view=day&d=${tomorrow}`} className="text-sm text-accent-deep underline">Bekijk dag</Link>}>
           {tomorrowItems.length ? (
             <ul className="space-y-2">
               {tomorrowItems.map((i) => (

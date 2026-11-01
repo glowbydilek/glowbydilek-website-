@@ -86,7 +86,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
       <fieldset className="space-y-3">
         <legend className="mb-1 text-sm font-medium">Klant</legend>
         {selected ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-charcoal/20 bg-ivory-50 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/20 bg-surface p-4">
             <div className="min-w-0">
               <p className="font-medium">
                 {selected.firstName} {selected.lastName}
@@ -95,7 +95,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
               <p className="mt-1 text-xs text-muted">Bestaande klant: de afspraak komt in dit klantprofiel.</p>
             </div>
             {!customer && (
-              <button type="button" onClick={() => setSelected(null)} className="min-h-11 rounded-full border border-charcoal/20 px-4 text-sm">
+              <button type="button" onClick={() => setSelected(null)} className="min-h-11 rounded-full border border-ink/20 px-4 text-sm">
                 Andere klant
               </button>
             )}
@@ -123,7 +123,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
               </Field>
             </div>
             {visibleSuggestions.length > 0 && (
-              <div role="status" className="space-y-2 rounded-2xl border border-gold/60 bg-[#fbf3e4] p-4">
+              <div role="status" className="space-y-2 rounded-2xl border border-accent/60 bg-[#fbf3e4] p-4">
                 <p className="text-sm font-medium">Bestaande klant{visibleSuggestions.length > 1 ? "en" : ""} gevonden</p>
                 <ul className="space-y-2">
                   {visibleSuggestions.map((sg) => (
@@ -141,7 +141,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                           setSelected(sg);
                           setForceNew(false);
                         }}
-                        className="min-h-11 rounded-full bg-charcoal px-4 text-sm text-ivory"
+                        className="min-h-11 rounded-full bg-ink px-4 text-sm text-paper"
                       >
                         Deze klant gebruiken
                       </button>
@@ -150,7 +150,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                 </ul>
                 {strongMatch && (
                   <label className="flex min-h-11 items-center gap-3 text-sm">
-                    <input type="checkbox" checked={forceNew} onChange={(e) => setForceNew(e.target.checked)} className="h-5 w-5 accent-[var(--color-charcoal)]" />
+                    <input type="checkbox" checked={forceNew} onChange={(e) => setForceNew(e.target.checked)} className="h-5 w-5 accent-[var(--color-ink)]" />
                     Nee, dit is een andere persoon: maak een nieuw klantprofiel
                   </label>
                 )}
@@ -169,10 +169,10 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
               {g.items.map((t) => {
                 const on = picked.includes(t.id);
                 return (
-                  <label key={t.id} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm ${on ? "border-charcoal bg-charcoal text-ivory" : "border-stone bg-white"}`}>
+                  <label key={t.id} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm ${on ? "border-ink bg-ink text-paper" : "border-line bg-white"}`}>
                     <input type="checkbox" name="treatments" value={t.id} checked={on} onChange={() => setPicked((p) => (on ? p.filter((x) => x !== t.id) : [...p, t.id]))} className="sr-only" />
                     {t.name}
-                    <span className={`text-xs ${on ? "text-ivory/70" : "text-muted"}`}>{t.duration ? `${t.duration} min` : "duur?"}</span>
+                    <span className={`text-xs ${on ? "text-paper/70" : "text-muted"}`}>{t.duration ? `${t.duration} min` : "duur?"}</span>
                   </label>
                 );
               })}
@@ -192,7 +192,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
           <Input id="duration" name="duration" type="number" min={5} max={600} step={5} inputMode="numeric" placeholder={auto ? String(auto) : "bijv. 45"} value={manualDuration} onChange={(e) => setManualDuration(e.target.value)} />
         </Field>
       </div>
-      <p className="rounded-xl bg-ivory-50 px-4 py-3 text-sm">
+      <p className="rounded-xl bg-surface px-4 py-3 text-sm">
         Eindtijd: <strong>{duration ? addMinutes(start, duration) : "—"}</strong>
       </p>
 
@@ -206,13 +206,13 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
       <Field label="Interne notitie (alleen voor jou)" hint="Geen gezondheidsinformatie: daarvoor is het consultatieformulier." htmlFor="internalNote">
         <Textarea id="internalNote" name="internalNote" rows={3} maxLength={2000} />
       </Field>
-      <p className="rounded-xl border border-stone bg-white px-4 py-3 text-sm text-charcoal-soft">
+      <p className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink-soft">
         {selected?.email || person.email
           ? "De klant krijgt automatisch een bevestiging per e-mail, en een herinnering vóór de afspraak."
           : "Zonder e-mailadres kan er geen bevestiging of herinnering worden verstuurd. Laat het de klant dan zelf weten."}
       </p>
       <label className="flex min-h-11 items-center gap-3">
-        <input type="checkbox" name="allowOutsideHours" className="h-5 w-5 accent-[var(--color-charcoal)]" />
+        <input type="checkbox" name="allowOutsideHours" className="h-5 w-5 accent-[var(--color-ink)]" />
         <span>Toestaan buiten mijn werktijden</span>
       </label>
       <SubmitButton className="w-full sm:w-auto" pending="Bezig met opslaan…" disabled={!selected && strongMatch && !forceNew}>

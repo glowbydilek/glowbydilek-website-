@@ -27,9 +27,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
         </div>
       </PageHero>
 
-      <section id="bericht" className="section-tight scroll-mt-[var(--header-safe)] bg-ivory-50">
+      <section id="bericht" className="section-tight scroll-mt-[var(--header-safe)] bg-surface">
         <Container className="grid items-start gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
-          <div className="rounded-[1.75rem] bg-ivory p-6 shadow-card sm:p-9" data-reveal>
+          <div className="rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <p className="mt-3 text-muted">{t.formIntro}</p>
             <div className="mt-8">
@@ -40,30 +40,30 @@ export function ContactPage({ locale }: { locale: Locale }) {
           <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
             <a
               href={mailto(dict.forms.topics.question)}
-              className="group block rounded-[1.75rem] bg-nude-light p-7 transition-colors duration-500 hover:bg-nude"
+              className="group block rounded-[1.75rem] bg-glow-soft p-7 transition-colors duration-500 hover:bg-glow"
               data-reveal
             >
-              <Icon name="mail" className="h-6 w-6 text-gold-deep" />
+              <Icon name="mail" className="h-6 w-6 text-accent-deep" />
               <p className="mt-4 text-xs uppercase tracking-[0.18em] text-muted">{t.emailLabel}</p>
-              <p className="mt-1 break-all font-serif text-2xl text-charcoal">{siteConfig.contact.email}</p>
-              <p className="mt-2 text-sm text-charcoal-soft">{t.emailNote}</p>
+              <p className="mt-1 break-all font-serif text-2xl text-ink">{siteConfig.contact.email}</p>
+              <p className="mt-2 text-sm text-ink-soft">{t.emailNote}</p>
             </a>
             {wa && (
-              <a href={wa} target="_blank" rel="noopener noreferrer" className="block rounded-[1.75rem] bg-nude-light p-7" data-reveal>
-                <Icon name="whatsapp" className="h-6 w-6 text-gold-deep" />
-                <p className="mt-4 font-serif text-2xl text-charcoal">{dict.whatsapp.label}</p>
+              <a href={wa} target="_blank" rel="noopener noreferrer" className="block rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
+                <Icon name="whatsapp" className="h-6 w-6 text-accent-deep" />
+                <p className="mt-4 font-serif text-2xl text-ink">{dict.whatsapp.label}</p>
               </a>
             )}
-            <div className="rounded-[1.75rem] border border-charcoal/10 p-7" data-reveal>
-              <Icon name="pin" className="h-6 w-6 text-gold-deep" />
-              <h3 className="mt-4 font-serif text-2xl text-charcoal">{t.locationTitle}</h3>
-              <p className="mt-2 leading-relaxed text-charcoal-soft">{dict.common.location}</p>
-              <h3 className="mt-6 font-serif text-2xl text-charcoal">{t.hoursTitle}</h3>
-              <p className="mt-2 leading-relaxed text-charcoal-soft">{t.hoursBody}</p>
+            <div className="rounded-[1.75rem] border border-ink/10 p-7" data-reveal>
+              <Icon name="pin" className="h-6 w-6 text-accent-deep" />
+              <h3 className="mt-4 font-serif text-2xl text-ink">{t.locationTitle}</h3>
+              <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.location}</p>
+              <h3 className="mt-6 font-serif text-2xl text-ink">{t.hoursTitle}</h3>
+              <p className="mt-2 leading-relaxed text-ink-soft">{t.hoursBody}</p>
             </div>
-            <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory" data-reveal>
-              <Icon name="calendar" className="h-6 w-6 text-gold" />
-              <p className="mt-4 leading-relaxed text-ivory/80">{t.appointmentHint}</p>
+            <div className="on-dark rounded-[1.75rem] bg-ink p-7 text-paper" data-reveal>
+              <Icon name="calendar" className="h-6 w-6 text-accent" />
+              <p className="mt-4 leading-relaxed text-paper/80">{t.appointmentHint}</p>
               <ButtonLink href={href(locale, "booking")} variant="gold" className="mt-6 w-full" arrow>
                 {dict.cta.request}
               </ButtonLink>

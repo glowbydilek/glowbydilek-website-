@@ -43,6 +43,7 @@ export const routeKeys = [
   "preparation",
   "aftercare",
   "faq",
+  "reviews",
   "privacy",
 ] as const;
 export type RouteKey = (typeof routeKeys)[number];
@@ -58,6 +59,7 @@ export const routes: Record<RouteKey, Record<Locale, string>> = {
   preparation: { nl: "/voorbereiding", en: "/en/preparation" },
   aftercare: { nl: "/nazorg", en: "/en/aftercare" },
   faq: { nl: "/veelgestelde-vragen", en: "/en/faq" },
+  reviews: { nl: "/beoordelingen", en: "/en/reviews" },
   privacy: { nl: "/privacy", en: "/en/privacy" },
 };
 

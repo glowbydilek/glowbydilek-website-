@@ -50,7 +50,7 @@ export async function CustomPageView({ locale, slug }: { locale: Locale; slug: s
   const dict = getDictionary(locale);
   return (
     <>
-      <section className="pt-header border-b border-stone/70 bg-ivory pb-[var(--space-section-tight)]">
+      <section className="pt-header border-b border-line/70 bg-paper pb-[var(--space-section-tight)]">
         <Container>
           <div className="max-w-3xl">
             <div className="mb-6"><Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: locale === "nl" ? "/" : "/en" }, { name: r.c.title }]} /></div>
@@ -66,7 +66,7 @@ export async function CustomPageView({ locale, slug }: { locale: Locale; slug: s
               <section key={i}>
                 {s.heading && <h2 className="display text-[1.9rem] sm:text-[2.4rem]">{s.heading}</h2>}
                 {paragraphs(s.text).map((p, j) => (
-                  <p key={j} className="mt-4 whitespace-pre-line text-[1.05rem] leading-relaxed text-charcoal-soft">{p}</p>
+                  <p key={j} className="mt-4 whitespace-pre-line text-[1.05rem] leading-relaxed text-ink-soft">{p}</p>
                 ))}
               </section>
             ))}

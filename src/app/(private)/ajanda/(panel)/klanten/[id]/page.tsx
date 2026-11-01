@@ -92,7 +92,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             {stats.treatments.length ? (
               <ul className="flex flex-wrap gap-2 text-sm">
                 {stats.treatments.map((t) => (
-                  <li key={t.name} className="rounded-full bg-ivory-50 px-3 py-1.5">
+                  <li key={t.name} className="rounded-full bg-surface px-3 py-1.5">
                     {t.name} <span className="text-muted">× {t.count}</span>
                   </li>
                 ))}
@@ -100,14 +100,14 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             ) : (
               <p className="text-sm text-muted">Nog geen afgeronde behandelingen.</p>
             )}
-            <form action={`/ajanda/klanten/${c.id}/rapport`} target="_blank" className="mt-4 flex flex-wrap items-end gap-2 border-t border-stone pt-4 text-sm">
+            <form action={`/ajanda/klanten/${c.id}/rapport`} target="_blank" className="mt-4 flex flex-wrap items-end gap-2 border-t border-line pt-4 text-sm">
               <label>
-                Van <input type="date" name="van" className="ml-1 min-h-11 rounded-xl border border-charcoal/20 bg-white px-2" />
+                Van <input type="date" name="van" className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
               </label>
               <label>
-                Tot en met <input type="date" name="tot" defaultValue={todayLocal()} className="ml-1 min-h-11 rounded-xl border border-charcoal/20 bg-white px-2" />
+                Tot en met <input type="date" name="tot" defaultValue={todayLocal()} className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
               </label>
-              <button className="min-h-11 rounded-full border border-charcoal/25 px-4">Behandeloverzicht (PDF)</button>
+              <button className="min-h-11 rounded-full border border-ink/25 px-4">Behandeloverzicht (PDF)</button>
             </form>
             {!c.anonymizedAt && (
               <a href={`/ajanda/klanten/${c.id}/export`} className="mt-3 inline-block text-xs text-muted underline">
@@ -125,7 +125,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
           </Card>
           <Card title="Betalingen">
             {pays.length > 0 && (
-              <ul className="mb-4 divide-y divide-stone text-sm">
+              <ul className="mb-4 divide-y divide-line text-sm">
                 {pays.map((p) => (
                   <li key={p.id} className={`flex flex-wrap items-center justify-between gap-2 py-2 ${p.voidedAt ? "text-muted line-through" : ""}`}>
                     <span>
@@ -142,7 +142,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
           </Card>
           <Card title={`Facturen (${invs.length})`}>
             {invs.length ? (
-              <ul className="divide-y divide-stone text-sm">
+              <ul className="divide-y divide-line text-sm">
                 {invs.map((i) => (
                   <li key={i.id}>
                     <Link href={`/ajanda/facturen/${i.id}`} className="flex min-h-11 items-center justify-between gap-3 py-2">

@@ -19,28 +19,28 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
   const live = liveTreatment(id);
   const price = live.price ? `${live.price.from ? `${dict.prices.from} ` : ""}${formatPrice(live.price.amount, locale)}` : null;
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-ivory-50 transition-shadow duration-500 hover:shadow-card">
+    <article className="group relative flex h-full flex-col">
       {withPhoto && hasPhoto(treatment.photo) && (
-        <div className="zoom-frame">
+        <div className="zoom-frame mb-5 overflow-hidden rounded-[var(--radius-media)]">
           <Photo id={treatment.photo} locale={locale} ratio={3 / 2} sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 92vw" />
         </div>
       )}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-serif text-[1.6rem] leading-tight text-charcoal">
+      <div className={`flex flex-1 flex-col ${withPhoto ? "" : "border-t border-line pt-5"}`}>
+        <h3 className="font-serif text-[1.65rem] leading-tight text-ink transition-colors group-hover:text-accent">
           <Link href={treatmentHref(locale, id)} className="after:absolute after:inset-0 after:content-['']">
             {live.name[locale]}
           </Link>
         </h3>
-        <p className="mt-2 flex-1 leading-relaxed text-charcoal-soft">{copy.teaser}</p>
+        <p className="mt-2 flex-1 leading-relaxed text-ink-soft">{copy.teaser}</p>
         {price && <p className="mt-3 text-sm text-muted">{price}</p>}
-        <div className="mt-5 flex items-center justify-between gap-3 border-t border-stone pt-3">
-          <span className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-charcoal">
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-ink">
             {dict.service.viewTreatment}
             <Icon name="arrow" className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
           </span>
           <Link
             href={bookingHref(locale, id)}
-            className="relative z-10 inline-flex min-h-11 items-center text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep underline-offset-4 hover:text-charcoal hover:underline"
+            className="relative z-10 inline-flex min-h-11 items-center text-sm font-medium text-accent-deep underline-offset-4 hover:text-ink hover:underline"
           >
             {dict.cta.requestShort}
             <span className="sr-only">: {treatment.name[locale]}</span>

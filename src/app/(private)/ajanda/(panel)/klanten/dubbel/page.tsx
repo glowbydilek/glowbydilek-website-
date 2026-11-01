@@ -23,7 +23,7 @@ export default async function Duplicates({ searchParams }: { searchParams: Promi
                 <p className="mb-3 text-sm text-muted">Overeenkomst: {matchLabel(p.reasons)}{p.reasons.length === 1 && p.reasons[0] === "name" ? " — let op: alleen de naam is gelijk, controleer goed of het dezelfde persoon is." : ""}</p>
                 <div className="mb-4 grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
                   {[p.a, p.b].map((c) => (
-                    <Link key={c.id} href={`/ajanda/klanten/${c.id}`} className="rounded-xl bg-ivory-50 p-3 text-sm">
+                    <Link key={c.id} href={`/ajanda/klanten/${c.id}`} className="rounded-xl bg-surface p-3 text-sm">
                       <span className="block font-medium">{label(c)}</span>
                       <span className="block break-words text-muted">{[c.phone, c.email].filter(Boolean).join(" · ") || "—"}</span>
                     </Link>
