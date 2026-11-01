@@ -12,7 +12,9 @@ import { InviteButton } from "@/components/private/cms/ReviewForms";
 import { QuoteForm } from "@/components/private/agenda/QuoteForm";
 import { ownerTreatments } from "@/lib/catalogue/owner";
 import { quotesForAppointment } from "@/lib/booking/quotes";
-import { withdrawQuoteAction } from "@/lib/private/agendaActions";
+import { applyPromotionAction, removePromotionAction, withdrawQuoteAction } from "@/lib/private/agendaActions";
+import { runningPromotions } from "@/lib/promotions/service";
+import { promotions } from "@/lib/db/schema";
 import { getReviewSettings } from "@/lib/reviews/service";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
@@ -46,6 +48,9 @@ const DONE: Record<string, string> = {
   unarchive: "Uit het archief gehaald.",
   offerte: "Prijsvoorstel verstuurd. Zodra de klant accepteert, wordt het bedrag de afgesproken prijs.",
   ingetrokken: "Openstaand prijsvoorstel ingetrokken.",
+  actie: "Actie toegepast: de afgesproken prijs is aangepast.",
+  "actie-niet": "Deze actie kon niet worden toegepast (geen vaste prijs, buiten de periode, minimumbedrag of limiet bereikt).",
+  "actie-weg": "Actie verwijderd: de oorspronkelijke prijs geldt weer.",
 };
 const QUOTE_STATUS: Record<string, { label: string; tone: "pending" | "done" | "cancelled" | "neutral" }> = {
   sent: { label: "Wacht op klant", tone: "pending" },
@@ -80,6 +85,10 @@ export default async function AppointmentPage({ params, searchParams }: { params
   const reviewSettings = await getReviewSettings(db);
   const quotes = await quotesForAppointment(db, id);
   const openQuote = quotes.find((q) => q.status === "sent");
+  const [running, appliedPromo] = await Promise.all([
+    runningPromotions(db),
+    appt.promotionId ? db.select().from(promotions).where(eq(promotions.id, appt.promotionId)).then((r) => r[0]) : Promise.resolve(undefined),
+  ]);
   const st = STATUS[appt.status];
   const local = appt.startAt ? toLocalParts(appt.startAt) : null;
   return (
@@ -163,6 +172,32 @@ export default async function AppointmentPage({ params, searchParams }: { params
                 <QuoteForm appointmentId={appt.id} hasOpen={Boolean(openQuote)} />
               ) : (
                 <Notice tone="warning">Deze klant heeft geen e-mailadres. Bespreek de prijs persoonlijk en leg hem vast bij de afspraak (Wijzigen → Afgesproken prijs).</Notice>
+              )}
+            </Card>
+          )}
+          {!customer.anonymizedAt && (appliedPromo || (running.length > 0 && appt.priceCents != null && ["requested", "proposed", "confirmed"].includes(appt.status))) && (
+            <Card title="Actie">
+              {appliedPromo ? (
+                <form action={removePromotionAction} className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                  <input type="hidden" name="appointmentId" value={appt.id} />
+                  <span>
+                    <strong>{appliedPromo.nameNl}</strong> · korting {formatCents(appt.discountCents ?? 0)}
+                  </span>
+                  <button className="min-h-11 text-[#8e2f24] underline">Actie verwijderen</button>
+                </form>
+              ) : (
+                <form action={applyPromotionAction} className="flex flex-wrap items-end gap-3">
+                  <input type="hidden" name="appointmentId" value={appt.id} />
+                  <label className="text-sm">
+                    <span className="mb-1 block text-muted">Lopende actie</span>
+                    <select name="promotionId" className="min-h-11 rounded-xl border border-ink/20 bg-white px-3">
+                      {running.map((p) => (
+                        <option key={p.id} value={p.id}>{p.nameNl}{p.code ? ` (${p.code})` : ""}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <button className="min-h-11 rounded-full border border-ink/25 px-5 text-sm">Toepassen</button>
+                </form>
               )}
             </Card>
           )}

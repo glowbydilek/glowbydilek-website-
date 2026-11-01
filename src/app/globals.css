@@ -545,3 +545,10 @@ html.glow-nav main {
     }
   }
 }
+
+/* Campaign slider: gentle crossfade, none with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .campaign-slide {
+    animation: page-in 0.6s var(--ease-luxe) both;
+  }
+}

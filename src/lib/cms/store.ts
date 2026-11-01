@@ -5,7 +5,7 @@ import { cache } from "react";
 import { currentSession } from "../auth/session";
 import { databaseConfigured, getDb } from "../db/client";
 import { contentEntries, media, packageItems, serviceGroups, serviceSections, treatments } from "../db/schema";
-import { EMPTY_SNAPSHOT, setSnapshotResolver, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
+import { EMPTY_SNAPSHOT, setSnapshotResolver, type MarketingSnapshot, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
 
 /**
  * Loads owner-edited content for rendering.
@@ -36,6 +36,17 @@ export function invalidateContent() {
   cacheState.version++;
 }
 
+async function loadMarketing(db: ReturnType<typeof getDb>): Promise<MarketingSnapshot> {
+  const { activeCampaigns, historyFor, runningPromotions } = await import("../promotions/service");
+  const [promos, campaigns] = await Promise.all([runningPromotions(db), activeCampaigns(db)]);
+  const shown = promos.filter((p) => p.showPublic);
+  const ids = shown.some((p) => p.scope !== "items") ? null : [...new Set(shown.flatMap((p) => p.scopeIds))];
+  const rows = shown.length ? await historyFor(db, ids ?? [...(await db.select({ id: treatments.id }).from(treatments)).map((r) => r.id)]) : [];
+  const history: MarketingSnapshot["history"] = {};
+  for (const r of rows) (history[r.itemId] ??= []).push({ createdAt: r.createdAt, priceCents: r.priceCents, pricingMode: r.pricingMode });
+  return { promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)) };
+}
+
 async function load(status: "published" | "draft"): Promise<Snapshot> {
   const db = getDb();
   const rows = await db.select().from(contentEntries).where(eq(contentEntries.status, "published"));
@@ -57,7 +68,8 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
       if (m) photos.set(slot, { mediaId: m.id, version: m.updatedAt.getTime(), width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
     }
   }
-  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, photos, preview: status === "draft", version: cacheState.version };
+  const marketing = await loadMarketing(db);
+  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**

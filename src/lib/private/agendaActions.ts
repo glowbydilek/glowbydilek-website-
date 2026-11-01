@@ -419,3 +419,26 @@ export async function withdrawQuoteAction(f: FormData) {
   refresh();
   redirect(`/agenda/afspraak/${id}?melding=ingetrokken`);
 }
+
+// ───────────────────────────────────────────────────────── Promotions
+
+export async function applyPromotionAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const promotionId = Number(str(f, "promotionId"));
+  const { applyPromotion } = await import("../promotions/service");
+  const r = await applyPromotion(getDb(), id, null, { promotionId });
+  await audit(getDb(), { userId: s.user.id, action: "promotion.applied", entity: "appointment", entityId: String(id), details: { promotionId, applied: Boolean(r) } });
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=${r ? "actie" : "actie-niet"}`);
+}
+
+export async function removePromotionAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const { removePromotion } = await import("../promotions/service");
+  await removePromotion(getDb(), id);
+  await audit(getDb(), { userId: s.user.id, action: "promotion.removed", entity: "appointment", entityId: String(id) });
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=actie-weg`);
+}

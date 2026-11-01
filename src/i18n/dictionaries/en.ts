@@ -443,6 +443,7 @@ export const en: Dictionary = {
     },
   },
   forms: {
+    promoCode: "Promo code",
     name: "Name",
     email: "Email address",
     phone: "Phone number",
@@ -475,6 +476,7 @@ export const en: Dictionary = {
     sending: "Sending…",
     required: "required",
     errors: {
+      promoCode: "This promo code is not (or no longer) valid.",
       required: "Please fill in this field.",
       invalid: "Please check this field.",
       tooShort: "This is a little too short.",
@@ -622,6 +624,21 @@ export const en: Dictionary = {
       unavailable: "Something went wrong. Please try again later or email us.",
     },
   },
+  offer: {
+    badge: "Offer",
+    until: "until {date}",
+    code: "with code {code}",
+    actionPrice: "Offer price",
+    reference: "Lowest price in the past 30 days: {price}",
+  },
+  campaign: {
+    region: "Offers and news",
+    prev: "Previous",
+    next: "Next",
+    pause: "Pause",
+    play: "Play",
+    slide: "{n} of {total}",
+  },
   footer: {
     follow: "Follow Glow by Dilek",
     login: "Log in",
@@ -635,6 +652,7 @@ export const en: Dictionary = {
     note: "No tracking, no advertising cookies.",
   },
   service: {
+    categoryLabel: "Category",
     areaLabel: "Area",
     categoryPage: "Guide, preparation and aftercare",
     inThisArea: "Treatments in this area",

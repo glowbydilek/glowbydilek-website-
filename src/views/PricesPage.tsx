@@ -3,6 +3,7 @@ import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
+import { OfferBadge } from "@/components/OfferBadge";
 import { Icon } from "@/components/ui/Icon";
 import { mailto } from "@/content/site";
 import { groupCopy } from "@/content/copy";
@@ -71,6 +72,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                               {tr.name[locale]}
                             </Link>
                             <span className="mt-1 block text-sm leading-relaxed text-muted">{tr.description[locale]}</span>
+                            <OfferBadge item={tr} locale={locale} compact />
                             {d ? (
                               <span className="mt-1 block text-sm text-muted sm:hidden">
                                 {d} {t.minutes}

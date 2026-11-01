@@ -12,7 +12,8 @@ type Outcome<T> = { ok: true; data: T } | { ok: false; errors: FieldErrors };
 
 type Handler<T extends { email: string; name: string }> = {
   kind: "contact" | "appointment";
-  validate: (raw: Record<string, unknown>) => Outcome<T>;
+  /** May be async (e.g. a promotion code checked against the database). */
+  validate: (raw: Record<string, unknown>) => Outcome<T> | Promise<Outcome<T>>;
   /** Optional: persist the submission (e.g. contact inbox, agenda request). Runs after the owner email was sent. */
   store?: (data: T) => Promise<void>;
   /** Stable content used to detect duplicate submissions. */
@@ -110,7 +111,7 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   const ip = clientIp(req);
   if (!(await limiter.hit(`ip:${h.kind}:${fingerprint(ip)}`, LIMITS.ip.limit, LIMITS.ip.windowMs))) return tooMany();
 
-  const result = h.validate(raw);
+  const result = await h.validate(raw);
   if (!result.ok) return json(422, { ok: false, error: "validation", fields: result.errors });
   const data = result.data;
 

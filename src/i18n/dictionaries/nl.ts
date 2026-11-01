@@ -446,6 +446,7 @@ export const nl = {
     },
   },
   forms: {
+    promoCode: "Actiecode",
     name: "Naam",
     email: "E-mailadres",
     phone: "Telefoonnummer",
@@ -478,6 +479,7 @@ export const nl = {
     sending: "Bezig met versturen…",
     required: "verplicht",
     errors: {
+      promoCode: "Deze actiecode is niet (meer) geldig.",
       required: "Vul dit veld in.",
       invalid: "Controleer dit veld.",
       tooShort: "Dit is iets te kort.",
@@ -625,6 +627,21 @@ export const nl = {
       unavailable: "Er ging iets mis. Probeer het later opnieuw of mail ons.",
     },
   },
+  offer: {
+    badge: "Actie",
+    until: "t/m {date}",
+    code: "met code {code}",
+    actionPrice: "Actieprijs",
+    reference: "Laagste prijs in de afgelopen 30 dagen: {price}",
+  },
+  campaign: {
+    region: "Acties en nieuws",
+    prev: "Vorige",
+    next: "Volgende",
+    pause: "Pauzeren",
+    play: "Afspelen",
+    slide: "{n} van {total}",
+  },
   footer: {
     follow: "Volg Glow by Dilek",
     login: "Inloggen",
@@ -638,6 +655,7 @@ export const nl = {
     note: "Geen tracking, geen reclamecookies.",
   },
   service: {
+    categoryLabel: "Categorie",
     areaLabel: "Zone",
     categoryPage: "Uitleg, voorbereiding en nazorg",
     inThisArea: "Behandelingen in deze zone",

@@ -18,6 +18,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/navigatie", label: "Menu & footer", icon: "navigation" },
     { href: "/admin/media", label: "Media", icon: "image" },
     { href: "/admin/behandelingen", label: "Behandelingen & prijzen", icon: "tag" },
+    { href: "/admin/acties", label: "Acties & kortingen", icon: "percent" },
     { href: "/admin/beoordelingen", label: "Beoordelingen", icon: "star" },
     { href: "/admin/social", label: "Social media", icon: "share" },
     { href: "/admin/seo", label: "SEO & doorverwijzingen", icon: "search" },

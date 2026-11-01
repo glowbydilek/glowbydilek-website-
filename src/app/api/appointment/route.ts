@@ -6,6 +6,7 @@ import { validateAppointment, type AppointmentInput } from "@/lib/forms/validati
 import { appointmentCustomerMail, appointmentOwnerMail } from "@/lib/mail/templates";
 import { createLegacyRequest } from "@/lib/booking/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
+import { applyPromotion, checkCode } from "@/lib/promotions/service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,16 +27,23 @@ export async function POST(req: NextRequest) {
   const ids = publicItems().map((t) => t.id);
   return handleForm(req, {
     kind: "appointment",
-    validate: (raw) => validateAppointment(raw, ids),
+    validate: async (raw) => {
+      const v = validateAppointment(raw, ids);
+      // An unknown or expired code is reported on the field; nothing is stored.
+      if (v.ok && v.data.promoCode && databaseConfigured() && (await checkCode(getDb(), v.data.promoCode))) return { ok: false as const, errors: { promoCode: "invalid" as const } };
+      return v;
+    },
     // Also appears in Agenda → Aanvragen, where Dilek confirms it at an exact time.
     store: async (d) => {
       if (!databaseConfigured()) return;
       const [firstName, ...rest] = d.name.trim().split(/\s+/);
-      await createLegacyRequest(
+      const id = await createLegacyRequest(
         getDb(),
         { firstName, lastName: rest.join(" "), email: d.email, phone: d.phone ?? null, locale: d.locale, treatmentIds: d.treatments, preferredDate: d.preferredDate, timeRange: d.timeRange, alternative: d.alternative, note: d.notes },
         {},
       );
+      // Automatic promotions, or the one matching the code (only for treatments with a fixed price).
+      await applyPromotion(getDb(), id, d.promoCode ?? null).catch((err) => console.error("[appointment] promotion not applied:", err instanceof Error ? err.message.slice(0, 120) : err));
     },
     signature: (d) => [[...d.treatments].sort().join(","), d.preferredDate, d.timeRange, d.notes ?? ""].join("|"),
     ownerMail: (d) => appointmentOwnerMail(d, names(d, "nl")),

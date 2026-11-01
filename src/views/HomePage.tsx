@@ -3,6 +3,8 @@ import Link from "next/link";
 import { HeroVisual, Ornament } from "@/components/BrandVisual";
 import { Glint } from "@/components/brand/Logo";
 import { CareTabs } from "@/components/CareTabs";
+import { CampaignSlider } from "@/components/CampaignSlider";
+import { currentSnapshot } from "@/lib/cms/current";
 import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
@@ -17,9 +19,15 @@ import { treatmentGroups } from "@/content/treatments";
 import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { groupCopy, sectionCopy } from "@/content/copy";
-import { href, type Locale } from "@/i18n/config";
+import { alternatePath, href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
+
+/** Campaign links are stored as Dutch paths; on the English site they map to the English page when known. */
+function localiseHref(path: string, locale: Locale): string {
+  if (locale === "nl" || path.startsWith("/en")) return path;
+  return alternatePath(path, "en") !== "/en" || path === "/" ? alternatePath(path, "en") : path;
+}
 
 const defaultFeatured = ["eyebrows", "underarms", "full-legs", "brazilian"];
 
@@ -116,6 +124,16 @@ export function HomePage({ locale }: { locale: Locale }) {
         </section>
       </>
     ),
+    campaigns: (() => {
+      const camp = currentSnapshot().marketing?.campaigns ?? [];
+      if (!camp.length) return null;
+      return (
+        <CampaignSlider
+          slides={camp.map((c) => ({ id: c.id, title: c.title[locale], text: c.text[locale], cta: c.cta[locale], href: localiseHref(c.href, locale), image: c.mediaId ? `/media/${c.mediaId}/1024` : null }))}
+          labels={dict.campaign}
+        />
+      );
+    })(),
     statement: (
       <>
         {/* 2 ─ Statement: a still life beside the quote (photo editable in Admin → Foto's) */}

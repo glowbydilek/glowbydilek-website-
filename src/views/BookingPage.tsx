@@ -2,6 +2,7 @@ import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { AppointmentFormBlock } from "@/components/FormSections";
 import { PreselectedNotice } from "@/components/forms/PreselectedNotice";
+import { currentSnapshot } from "@/lib/cms/current";
 import { getCatalogue, groupById, itemById, priceLabel, publicItems, sectionById } from "@/lib/catalogue";
 import { BookingJourney } from "@/components/forms/BookingJourney";
 import { siteConfig } from "@/content/site";
@@ -79,6 +80,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
                   privacyHref={href(locale, "privacy")}
                   email={siteConfig.contact.email}
                   turnstileSiteKey={turnstileSiteKey()}
+                  promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
                 />
               ) : (
                 <AppointmentFormBlock locale={locale} dict={dict} />

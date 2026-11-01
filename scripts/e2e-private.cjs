@@ -522,6 +522,42 @@ function mailsSince(since) {
       assert.match(txt, /Prijs\s*€ 65,00/);
     });
 
+    await step("promotions: an active public offer shows on the prices page; a slide appears on the homepage", async () => {
+      await p.goto(`${BASE}/admin/acties`);
+      const add = p.locator("details").filter({ has: p.locator(":scope > summary", { hasText: "Nieuwe actie" }) });
+      await add.locator(":scope > summary").click();
+      await add.locator('input[name="nameNl"]').fill("E2E-actie");
+      await add.locator('input[name="value"]').fill("10");
+      await add.locator('select[name="status"]').selectOption("active");
+      await add.locator('input[name="showPublic"]').check();
+      await add.getByRole("button", { name: "Actie aanmaken" }).click();
+      await add.getByText("De actie geldt binnen de ingestelde periode").waitFor();
+      const prices = (await (await fetch(`${BASE}/prijzen`)).text()).replace(/\u00a0|&nbsp;|&#160;/g, " ");
+      assert.match(prices, /10% korting/, "offer label on /prijzen");
+      const slide = p.locator("details").filter({ has: p.locator(":scope > summary", { hasText: "Nieuwe slide" }) });
+      await slide.locator(":scope > summary").click();
+      await slide.locator('input[name="titleNl"]').fill("E2E-slide");
+      await slide.locator('input[name="href"]').fill("/prijzen");
+      await slide.locator('input[name="ctaNl"]').fill("Bekijk");
+      await slide.locator('select[name="status"]').selectOption("active");
+      await slide.getByRole("button", { name: "Slide toevoegen" }).click();
+      await slide.getByText("De slide staat op de homepage").waitFor();
+      const home = await (await fetch(`${BASE}/`)).text();
+      assert.match(home, /aria-roledescription="carousel"/);
+      assert.match(home, /E2E-slide/);
+      // Archive both again so later runs start clean.
+      await p.reload();
+      for (const name of ["E2E-actie", "E2E-slide"]) {
+        const d = p.locator("details").filter({ has: p.locator(":scope > summary", { hasText: name }) }).first();
+        await d.locator(":scope > summary").click();
+        await d.locator('select[name="status"]').selectOption("archived");
+        await d.getByRole("button", { name: /opslaan/i }).click();
+        await d.getByText("Opgeslagen").waitFor();
+      }
+      const home2 = await (await fetch(`${BASE}/`)).text();
+      assert.doesNotMatch(home2, /aria-roledescription="carousel"/, "slider hidden without active slides");
+    });
+
     await step("Overal uitloggen ends the sessions on every device", async () => {
       const c2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
       await c2.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));

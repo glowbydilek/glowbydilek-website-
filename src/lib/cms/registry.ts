@@ -114,6 +114,7 @@ export const EDITOR_PAGES: EditorPage[] = [
 export const PAGE_SECTIONS: Record<string, { id: string; label: string; locked?: boolean }[]> = {
   home: [
     { id: "hero", label: "Openingsbeeld", locked: true },
+    { id: "campaigns", label: "Actieslider (alleen zichtbaar met actieve slides)" },
     { id: "statement", label: "De gedachte achter Glow" },
     { id: "treatments", label: "Behandelzones" },
     { id: "featured", label: "Uitgelichte behandelingen" },

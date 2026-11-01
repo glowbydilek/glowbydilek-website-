@@ -1,4 +1,15 @@
 import type { CatalogueRows } from "../catalogue/types";
+import type { Promotion } from "../promotions/core";
+
+export type MarketingSnapshot = {
+  /** Running promotions the owner chose to show on the website. */
+  promotions: Promotion[];
+  campaigns: { id: number; title: { nl: string; en: string }; text: { nl: string; en: string }; cta: { nl: string; en: string }; href: string; mediaId: number | null }[];
+  /** True while at least one running promotion uses a code (the booking forms then show a code field). */
+  hasCodes: boolean;
+  /** Price history per item id (for the 30-day reference price next to an offer). */
+  history: Record<string, { createdAt: Date; priceCents: number | null; pricingMode: string }[]>;
+};
 
 /**
  * The content snapshot used while rendering. Pure module: the server-only
@@ -43,12 +54,13 @@ export type Snapshot = {
   treatments: Map<string, TreatmentLive>;
   /** Sections, groups and package contents (null without a database). */
   catalogue: CatalogueRows | null;
+  marketing: MarketingSnapshot | null;
   photos: Map<string, PhotoOverride>;
   preview: boolean;
   version: number;
 };
 
-export const EMPTY_SNAPSHOT: Snapshot = { docs: new Map(), treatments: new Map(), catalogue: null, photos: new Map(), preview: false, version: 0 };
+export const EMPTY_SNAPSHOT: Snapshot = { docs: new Map(), treatments: new Map(), catalogue: null, marketing: null, photos: new Map(), preview: false, version: 0 };
 
 let resolver: () => Snapshot | null = () => null;
 

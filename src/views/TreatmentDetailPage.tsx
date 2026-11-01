@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { ButtonLink } from "@/components/ui/Button";
+import { OfferBadge } from "@/components/OfferBadge";
 import { CheckList } from "@/components/ui/CheckList";
 import { Icon } from "@/components/ui/Icon";
 import { groupCopy, itemCopy } from "@/content/copy";
@@ -99,7 +100,7 @@ export function TreatmentDetailPage({
           <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-line pt-5 text-sm sm:grid-cols-3">
             <div>
               <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">
-                {s.areaLabel}
+                {group ? s.areaLabel : s.categoryLabel}
               </dt>
               <dd className="mt-1 text-ink">{parent.label}</dd>
             </div>
@@ -127,6 +128,7 @@ export function TreatmentDetailPage({
               </dd>
             </div>
           </dl>
+          <OfferBadge item={item} locale={locale} />
         </PageHero>
       </>
     ),

@@ -1,6 +1,7 @@
 import { siteConfig } from "@/content/site";
 import { groupCopy } from "@/content/copy";
 import { publicGroups, publicItems, publicSections } from "@/lib/catalogue";
+import { currentSnapshot } from "@/lib/cms/current";
 import { href, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { AppointmentForm } from "./forms/AppointmentForm";
@@ -32,6 +33,7 @@ export function AppointmentFormBlock({ locale, dict }: { locale: Locale; dict: D
       email={siteConfig.contact.email}
       notConfirmed={dict.booking.notConfirmed}
       turnstileSiteKey={turnstileSiteKey()}
+      promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
     />
   );
 }
