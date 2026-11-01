@@ -1,6 +1,8 @@
-# Contact and appointment forms: email setup
+# Email: forms, appointment emails and reminders
 
-Both forms post to server-side endpoints (`/api/contact` and `/api/appointment`). These validate the input, send a notification to the studio mailbox with the customer as **Reply-To**, and send the customer an acknowledgement in their language. Nothing is stored in a database.
+The public forms post to server-side endpoints (`/api/contact`, `/api/appointment` and, when online booking is switched on, `/api/booking/request`). These validate the input, **store** the message or request in the database (visible in Ajanda → Berichten / Aanvragen), send a notification to the studio mailbox with the customer as **Reply-To**, and send the customer an acknowledgement in their language.
+
+Appointment emails sent from Ajanda (confirmation, proposal, decline, reschedule, cancellation, reminder) go through a **transactional outbox** (`outbox` table): the email is queued in the same database transaction as the appointment change, then delivered immediately and, if that fails, retried by the cron job. Production setup: `docs/DEPLOYMENT.md`.
 
 ## Hostinger environment variables (set by the owner, never committed)
 
@@ -38,26 +40,43 @@ In hPanel go to **Websites → glowbydilek.nl → (Node.js app) → Environment 
 
 Full details and Hostinger settings: `docs/SECURITY.md`.
 
-- **Cloudflare Turnstile** on both forms, verified **server-side** (Siteverify) before any email is sent. Missing, invalid, expired, reused, wrong-hostname and wrong-action tokens are rejected. On a failed or expired check the visitor keeps everything they typed and can simply retry.
+- **Cloudflare Turnstile** on every public form, verified **server-side** (Siteverify) before any email is sent. Missing, invalid, expired, reused, wrong-hostname and wrong-action tokens are rejected. On a failed or expired check the visitor keeps everything they typed and can simply retry.
 - Server-side validation (shared with the browser): length limits, email and phone formats, allowed treatments, and a date from today up to one year ahead.
 - A hidden **honeypot** field, a **minimum fill time** (3 seconds, measured in the browser) and a link-spam check. Bots get a fake success and no email is sent.
 - **Same-origin** check, JSON-only requests and a 12 KB body limit.
-- **Rate limits** (in memory, hashed keys): 5 per 10 minutes per IP and form, 3 per hour per email address, 40 per 10 minutes for the whole site.
+- **Rate limits** (stored in the database, hashed keys): 5 per 10 minutes per IP and form, 3 per hour per email address, 40 per 10 minutes for the whole site.
 - **Duplicate detection:** the same submission is accepted once per 24 hours (409 "already received"); the button is also locked while a request is in flight.
 - Newlines are stripped from single-line fields (no header injection), all values are HTML-escaped in emails, Reply-To is set as a structured address.
 - Logs contain error codes only — never names, email addresses, messages, IPs or tokens.
 
 ## The request workflow (no automatic confirmation)
 
-1. The visitor sends a request. The site emails Dilek (subject *Afspraakaanvraag — name — date*, Reply-To = customer) and sends the visitor an acknowledgement that clearly says the appointment is **not yet confirmed**.
-2. Dilek reviews her calendar.
-3. Dilek replies to the notification email to **confirm**, **suggest another moment** or **decline**. The reply goes straight to the customer. Practical location details are shared in that personal confirmation only.
+1. The visitor sends a request (preferred date/time, or an exact free time when online booking is on). It is stored as **"aanvraag" (pending approval)**; the visitor's acknowledgement clearly says it is **not yet confirmed**. Dilek also gets an email.
+2. In **Ajanda → Aanvragen**, Dilek approves, proposes another time, or declines, optionally with a personal note.
+3. The customer receives the matching email. Practical location details (Ajanda → Instellingen, private) are only inserted in **confirmation, reschedule and reminder** emails, never on the website or in the request acknowledgement.
+4. Before an approved appointment, a **reminder** is sent (default 24 hours before; setting in Ajanda). Cancelled or moved appointments never receive a stale reminder.
 
-There is no admin dashboard or calendar on the website yet, and none is pretended. See `docs/ARCHITECTURE.md` for the plan for approvals and reminders.
+### Outbox behaviour
+
+| State | Meaning |
+| --- | --- |
+| `pending` | Queued, will be sent now or by the next cron run |
+| `sending` | Being sent (claimed atomically, so two processes never send the same email) |
+| `sent` | Accepted by the SMTP server |
+| `failed` | Gave up after 6 attempts (retries after 1, 5, 15, 60, 240 and 720 minutes) — visible on the appointment and the admin overview, with **Opnieuw versturen** |
+| `cancelled` | No longer relevant (e.g. reminder of a cancelled appointment) |
+
+Every email has a deduplication key, so retries, double clicks and repeated cron runs never send the same email twice.
+
+### Editable templates
+
+**Admin → E-mails** holds the Dutch and English text of each customer email (request received, confirmed, proposed, declined, rescheduled, cancelled, reminder). Placeholders such as `{{firstName}}`, `{{date}}` and `{{time}}` are filled in automatically. Saving is refused when a required placeholder is missing, an unknown placeholder is used, or braces are unbalanced, so a broken template can never be sent. Customer input is always HTML-escaped. The original text can be restored at any time.
+
+Password-reset emails are deliberately **not** editable and **not** queued: they are sent directly and expire after 15 minutes.
 
 ## Verification status
 
 - **Mailbox:** `hello@glowbydilek.nl` exists and is active. This was confirmed read-only through the connected Hostinger Mail integration on 31 October 2026. That integration can also be used to confirm that a live test message has arrived.
 
-- Tested end to end against a local SMTP server that requires authentication: the notification, acknowledgement, Reply-To, Dutch/English content, the failure paths and the spam protections all behave as described.
-- **Not yet tested against the real Hostinger SMTP server.** This needs `SMTP_PASS` and the other variables to be configured in Hostinger. Until then, **live email delivery is unverified.** After deploying, send one test message through each form and check that it arrives at hello@glowbydilek.nl and that the acknowledgement reaches the sender.
+- Tested end to end against a local SMTP server that requires authentication: notifications, acknowledgements, Reply-To, Dutch/English content, appointment emails from Ajanda, outbox retries and deduplication, reminders, the password-reset email, the failure paths and the spam protections all behave as described.
+- **Not yet tested against the real Hostinger SMTP server.** This needs `SMTP_PASS` and the other variables to be configured in Hostinger. Until then, **live email delivery, password recovery and reminders are unverified.** After deploying: request a password reset for hello@glowbydilek.nl, send one test message through each form with your own address, and check that everything arrives.

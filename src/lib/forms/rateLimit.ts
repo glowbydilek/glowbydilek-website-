@@ -1,6 +1,9 @@
 /**
- * In-memory abuse limits (per server process). Keys are SHA-256 hashes, so
- * no raw IP or email address is kept in memory.
+ * Abuse limits. Stored in MySQL when a database is configured (see
+ * src/lib/forms/handler.ts); these in-memory maps are the fallback.
+ * Keys are keyed HMAC-SHA-256 fingerprints (secret: AUTH_SECRET), so no raw
+ * IP or email address is stored, and an IP cannot be recovered by hashing
+ * every possible address.
  *
  * - per IP and form:     5 submissions / 10 min
  * - per email address:   3 submissions / hour (both forms)
@@ -8,11 +11,8 @@
  *   the mailbox can never be overwhelmed
  * - duplicates:          the same submission content is accepted once / 24 h
  *
- * Good enough for a single Hostinger Node.js instance (the limits reset when
- * the app restarts). If the site ever runs on several instances, swap the
- * Map for a shared store such as Redis — see docs/SECURITY.md.
  */
-import { createHash } from "node:crypto";
+import { createHmac } from "node:crypto";
 
 const windows = new Map<string, number[]>();
 const seen = new Map<string, number>();
@@ -25,7 +25,8 @@ export const LIMITS = {
 } as const;
 
 export function fingerprint(...parts: string[]): string {
-  return createHash("sha256").update(parts.join("\u0000")).digest("hex").slice(0, 32);
+  const key = process.env.AUTH_SECRET || "glowbydilek-fingerprint-fallback";
+  return createHmac("sha256", key).update(parts.join("\u0000")).digest("hex").slice(0, 32);
 }
 
 /** Sliding-window limiter. Returns false when the limit is reached. */

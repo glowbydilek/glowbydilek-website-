@@ -501,19 +501,19 @@ export const nl = {
       },
       {
         h: "Welke gegevens we ontvangen",
-        p: "Als je het contact- of afspraakformulier gebruikt, ontvangen we de gegevens die je zelf invult: je naam, je e-mailadres, eventueel je telefoonnummer en je bericht, en bij een afspraakaanvraag de gekozen behandeling(en) en je voorkeursmoment. Deel via de formulieren geen medische of andere gevoelige gegevens die niet nodig zijn.",
+        p: "Als je het contact- of afspraakformulier gebruikt, ontvangen we de gegevens die je zelf invult: je naam, je e-mailadres, eventueel je telefoonnummer en je bericht, en bij een afspraak de gekozen behandeling(en) en het gekozen of gewenste moment. Bij een afspraak legt Glow by Dilek daarnaast vast wanneer de afspraak is bevestigd, verzet, geannuleerd of afgerond, en eventueel korte praktische notities. Deel via de formulieren geen medische of andere gevoelige gegevens die niet nodig zijn.",
       },
       {
         h: "Waarvoor we ze gebruiken",
-        p: "Alleen om je vraag te beantwoorden en je afspraak met je af te stemmen. We sturen geen nieuwsbrieven of reclame zonder je uitdrukkelijke toestemming en verkopen je gegevens nooit aan derden.",
+        p: "Om je vraag te beantwoorden, je afspraak in te plannen en met je af te stemmen, en om je e-mails over je afspraak te sturen: een ontvangstbevestiging, de bevestiging of wijziging van je afspraak en een herinnering kort vooraf. De grondslag is het uitvoeren van de afspraak die je aanvraagt. We sturen geen nieuwsbrieven of reclame zonder je uitdrukkelijke toestemming en verkopen je gegevens nooit aan derden.",
       },
       {
-        h: "Hoe ze worden bewaard",
-        p: "De website zelf slaat je gegevens niet op in een database. Je bericht wordt als e-mail verstuurd naar de mailbox van Glow by Dilek, die door onze e-mailprovider wordt gehost. Berichten bewaren we niet langer dan nodig is om je vraag of afspraak af te handelen, tenzij een wettelijke bewaarplicht geldt.",
+        h: "Hoe en hoe lang ze worden bewaard",
+        p: "Je gegevens worden opgeslagen in een beveiligde database van de website, bij onze hostingprovider (Hostinger), en de e-mails in de mailbox van Glow by Dilek bij dezelfde provider. Alleen Dilek heeft toegang, via een beveiligde inlog. We bewaren je gegevens zolang dat nodig is voor je afspraken en uiterlijk 24 maanden na je laatste afspraak of contact; daarna worden ze verwijderd of geanonimiseerd, tenzij een wettelijke bewaarplicht geldt (bijvoorbeeld voor de administratie).",
       },
       {
         h: "Cookies en meetinstrumenten",
-        p: "Deze website gebruikt geen tracking- of advertentiecookies en geen analysediensten van derden.",
+        p: "Deze website plaatst bij bezoekers geen cookies en gebruikt geen tracking-, advertentie- of analysediensten. Alleen het beveiligde beheergedeelte gebruikt een noodzakelijke inlogcookie voor de eigenaar.",
       },
       {
         h: "Beveiliging tegen spam (Cloudflare Turnstile)",
@@ -521,11 +521,11 @@ export const nl = {
       },
       {
         h: "Misbruikpreventie op de server",
-        p: "Om herhaalde of geautomatiseerde inzendingen te beperken, houdt de server kortstondig (maximaal 24 uur, alleen in het werkgeheugen) een versleutelde vingerafdruk bij van je IP-adres en e-mailadres. Deze gegevens worden niet gekoppeld aan je bericht, niet gedeeld en automatisch gewist.",
+        p: "Om herhaalde of geautomatiseerde inzendingen te beperken, bewaart de server kortstondig (maximaal 24 uur) een onomkeerbaar versleutelde vingerafdruk van je IP-adres en e-mailadres. Deze vingerafdrukken worden niet gekoppeld aan je bericht, niet gedeeld en automatisch gewist.",
       },
       {
         h: "Jouw rechten",
-        p: "Je kunt vragen om inzage in je gegevens, om correctie of om verwijdering. Stuur daarvoor een e-mail naar hello@glowbydilek.nl. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.",
+        p: "Je kunt vragen om inzage in je gegevens, om een kopie ervan, om correctie of om verwijdering. Stuur daarvoor een e-mail naar hello@glowbydilek.nl; we reageren binnen een maand. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.",
       },
     ],
   },

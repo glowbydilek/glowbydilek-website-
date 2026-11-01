@@ -7,6 +7,8 @@
  * contain scripts); images are re-encoded, which strips metadata and any
  * appended payload; size and pixel limits prevent decompression bombs.
  */
+import { stripMetadata } from "./strip";
+
 export const MAX_UPLOAD_BYTES = 12 * 1024 * 1024;
 export const VARIANT_WIDTHS = [640, 1024, 1600] as const;
 const MAX_PIXELS = 40_000_000;
@@ -42,8 +44,18 @@ export async function processImage(input: Buffer): Promise<Processed> {
     sharp = null;
   }
   if (!sharp) {
-    // Without an image library the original is stored after the byte check (dimensions unknown → 4:3 frame).
-    return { width: 1600, height: 1200, mime: type, variants: [{ width: 1600, mime: type, data: input }] };
+    // Without the image library (e.g. an older glibc on the host): keep the
+    // pixels but always remove EXIF/XMP/IPTC metadata (GPS position!).
+    let stripped;
+    try {
+      stripped = stripMetadata(input, type);
+    } catch {
+      throw new MediaError("Deze foto kon niet worden gelezen. Probeer een andere JPG of PNG.");
+    }
+    const width = stripped.width ?? 1600;
+    const height = stripped.height ?? 1200;
+    if (width * height > MAX_PIXELS) throw new MediaError("Deze foto is te groot (maximaal 40 megapixel).");
+    return { width, height, mime: type, variants: [{ width, mime: type, data: stripped.data }] };
   }
   const img = sharp(input, { limitInputPixels: MAX_PIXELS, failOn: "error" }).rotate();
   const meta = await img.metadata();

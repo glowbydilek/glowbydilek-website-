@@ -30,6 +30,10 @@ export async function systemStatus(db: DB): Promise<{ checks: Check[]; counts: {
     },
     { label: "Automatische taak (cron)", ok: Boolean(cronFresh && !cron?.error), detail: cron ? `Laatst ${cron.startedAt.toISOString().slice(0, 16).replace("T", " ")} UTC${cron.error ? ` — ${cron.error}` : ""}` : "Nog nooit uitgevoerd" },
     { label: "Sessiesleutel (AUTH_SECRET)", ok: Boolean(process.env.AUTH_SECRET && process.env.AUTH_SECRET.length >= 32), detail: process.env.AUTH_SECRET ? "Ingesteld" : "Niet ingesteld" },
+    (() => {
+      const risky = ["TURNSTILE_ALLOW_TEST_KEYS", "INSECURE_COOKIES", "ALLOW_INSECURE_DEV_SECRET", "TURNSTILE_SITEVERIFY_URL"].filter((k) => process.env[k]);
+      return { label: "Testinstellingen uit", ok: risky.length === 0, detail: risky.length ? `Alleen voor testen, verwijder in Hostinger: ${risky.join(", ")}` : "Geen testinstellingen actief" };
+    })(),
     { label: "Werktijden", ok: Number(wh.n) > 0, detail: Number(wh.n) > 0 ? "Ingesteld" : "Nog niet ingesteld in Ajanda → Werktijden" },
   ];
   return { checks, counts: { pending: Number(p.n), unread: Number(u.n), failedMail: mail.failed } };

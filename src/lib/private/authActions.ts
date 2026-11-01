@@ -11,6 +11,7 @@ import {
   ensureOwner,
   login,
   resetPassword,
+  revokeAllSessions,
   revokeSession,
   startMfaEnrolment,
   verifyMfa,
@@ -27,6 +28,7 @@ import {
 } from "../auth/session";
 import { createSession } from "../auth/service";
 import { verifyTurnstile } from "../forms/turnstile";
+import { audit } from "../db/audit";
 
 export type FormState = { error?: string; ok?: boolean; message?: string; data?: Record<string, unknown> };
 
@@ -108,6 +110,16 @@ export async function logoutAction(form: FormData) {
   if (token && databaseConfigured()) await revokeSession(getDb(), token);
   await clearSessionCookie();
   redirect(`/${a}/login?uitgelogd=1`);
+}
+
+/** Ends every session of the owner, including this one (lost or shared device). */
+export async function logoutEverywhereAction() {
+  const s = await assertOwner();
+  const db = getDb();
+  await revokeAllSessions(db, s.user.id);
+  await audit(db, { userId: s.user.id, action: "auth.logout_all" });
+  await clearSessionCookie();
+  redirect("/admin/login?uitgelogd=1");
 }
 
 export async function changePasswordAction(_: FormState, form: FormData): Promise<FormState> {

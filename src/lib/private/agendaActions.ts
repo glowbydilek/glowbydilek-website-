@@ -221,6 +221,9 @@ export async function saveWeeklyHoursAction(_: FormState, f: FormData): Promise<
   });
   await audit(db, { userId: s.user.id, action: "schedule.weekly_saved", details: { intervals: rows.length } });
   refresh();
+  // Whether online booking is operational depends on working hours.
+  revalidatePath("/afspraak-maken");
+  revalidatePath("/en/book-appointment");
   return { ok: true, message: "Werktijden opgeslagen. De beschikbaarheid is direct bijgewerkt." };
 }
 

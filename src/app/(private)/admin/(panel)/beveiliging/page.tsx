@@ -1,6 +1,7 @@
 import { and, desc, eq, gt, isNull } from "drizzle-orm";
 import { ChangePasswordForm, MfaSetup } from "@/components/private/SecurityForms";
-import { Card, PageHeader } from "@/components/private/ui";
+import { Card, PageHeader, SubmitButton } from "@/components/private/ui";
+import { logoutEverywhereAction } from "@/lib/private/authActions";
 import { remainingRecoveryCodes } from "@/lib/auth/service";
 import { requireOwner } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
@@ -20,6 +21,7 @@ const ACTION_NL: Record<string, string> = {
   "auth.account_locked": "Account tijdelijk geblokkeerd",
   "auth.login_recovery_code": "Ingelogd met herstelcode",
   "auth.mfa_failed": "Verkeerde verificatiecode",
+  "auth.logout_all": "Overal uitgelogd",
 };
 
 export default async function Security() {
@@ -45,7 +47,10 @@ export default async function Security() {
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-xs text-muted">Overal uitloggen? Wijzig je wachtwoord: alle andere sessies worden dan beëindigd.</p>
+          <form action={logoutEverywhereAction} className="mt-4">
+            <SubmitButton variant="outline" confirm="Op alle apparaten uitloggen, ook op dit apparaat?">Overal uitloggen</SubmitButton>
+          </form>
+          <p className="mt-2 text-xs text-muted">Gebruik dit als een telefoon of computer kwijt is. Vermoed je dat iemand je wachtwoord kent? Wijzig dan ook je wachtwoord.</p>
         </Card>
         <Card title="Recente beveiligingsgebeurtenissen">
           <ul className="space-y-1.5 text-sm">

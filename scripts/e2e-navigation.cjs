@@ -14,8 +14,10 @@
  * The site's own abuse limits apply to these tests too: the browser form
  * submission counts towards "5 per 10 minutes per IP" and every run sends a
  * few accepted submissions towards the site-wide "40 per 10 minutes". Run it
- * a handful of times per 10 minutes at most, or restart the server (limits
- * are in memory). A 429 is reported as "rate limit reached".
+ * a handful of times per 10 minutes at most. With a database the limits are
+ * stored there (they survive restarts; clear the rate_limits table of a
+ * DEVELOPMENT database to reset them); without one they are in memory and
+ * reset on restart. A 429 is reported as "rate limit reached".
  */
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
@@ -35,7 +37,7 @@ const runIp = (n) => `198.51.${100 + (Date.now() % 50)}.${(n * 37 + Math.floor(M
 
 /** Fails with a clear message when the server's rate limit answers instead. */
 function expectStatus(res, status, what) {
-  if (res.status === 429 && status !== 429) throw new Error(`${what}: rate limit reached (429) — wait 10 minutes or restart the server`);
+  if (res.status === 429 && status !== 429) throw new Error(`${what}: rate limit reached (429) — wait 10 minutes (limits are stored in the database when one is configured)`);
   assert.equal(res.status, status, what);
 }
 
@@ -229,7 +231,7 @@ async function step(name, fn) {
     assert.equal((await missing.json()).error, "challenge");
     const token = `e2e-${Date.now()}`;
     const first = await post(body(token, 2), runIp(2));
-    if (first.status === 429) throw new Error("first use: rate limit reached (429) — wait 10 minutes or restart the server");
+    if (first.status === 429) throw new Error("first use: rate limit reached (429) — wait 10 minutes (limits are stored in the database when one is configured)");
     assert.notEqual(first.status, 403, "first use accepted by the challenge check");
     const replay = await post(body(token, 3), runIp(3));
     expectStatus(replay, 403, "replayed token");

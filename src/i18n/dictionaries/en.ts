@@ -498,19 +498,19 @@ export const en: Dictionary = {
       },
       {
         h: "What information we receive",
-        p: "When you use the contact or appointment form, we receive the details you enter yourself: your name, email address, optionally your phone number and your message, and for an appointment request your chosen treatment(s) and preferred time. Please don't share medical or other sensitive information through the forms unless it's necessary.",
+        p: "When you use the contact or appointment form, we receive the details you enter yourself: your name, your email address, optionally your phone number and your message, and for an appointment the chosen treatment(s) and the chosen or preferred time. For appointments, Glow by Dilek also records when an appointment was confirmed, moved, cancelled or completed, and possibly short practical notes. Please do not share medical or other sensitive information through the forms unless it is necessary.",
       },
       {
         h: "What we use it for",
-        p: "Only to answer your question and arrange your appointment with you. We never send newsletters or advertising without your explicit consent, and we never sell your data to third parties.",
+        p: "To answer your question, to schedule and arrange your appointment with you, and to email you about your appointment: an acknowledgement, the confirmation or any change, and a reminder shortly beforehand. The legal basis is carrying out the appointment you request. We never send newsletters or advertising without your explicit consent, and we never sell your information to third parties.",
       },
       {
-        h: "How it is kept",
-        p: "The website itself does not store your data in a database. Your message is sent as an email to the Glow by Dilek mailbox, which is hosted by our email provider. We keep messages no longer than necessary to handle your question or appointment, unless a legal retention obligation applies.",
+        h: "How it is kept and for how long",
+        p: "Your information is stored in a secured database of the website at our hosting provider (Hostinger), and the emails in the Glow by Dilek mailbox at the same provider. Only Dilek has access, through a secured login. We keep your information as long as needed for your appointments and no longer than 24 months after your last appointment or contact; it is then deleted or anonymised, unless a legal retention obligation applies (for example for bookkeeping).",
       },
       {
         h: "Cookies and analytics",
-        p: "This website uses no tracking or advertising cookies and no third-party analytics.",
+        p: "This website sets no cookies for visitors and uses no tracking, advertising or analytics services. Only the secured management area uses a strictly necessary login cookie for the owner.",
       },
       {
         h: "Spam protection (Cloudflare Turnstile)",
@@ -518,11 +518,11 @@ export const en: Dictionary = {
       },
       {
         h: "Abuse prevention on the server",
-        p: "To limit repeated or automated submissions, the server briefly keeps (for at most 24 hours, in memory only) a hashed fingerprint of your IP address and email address. This data is not linked to your message, not shared and is deleted automatically.",
+        p: "To limit repeated or automated submissions, the server briefly (at most 24 hours) keeps an irreversibly encrypted fingerprint of your IP address and email address. These fingerprints are not linked to your message, not shared and are deleted automatically.",
       },
       {
         h: "Your rights",
-        p: "You can ask to access, correct or delete your data by emailing hello@glowbydilek.nl. If you disagree with how we handle your data, you can lodge a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).",
+        p: "You can ask to see your information, to receive a copy of it, to correct it or to have it deleted. Email hello@glowbydilek.nl; we respond within one month. If you disagree with how we handle your information, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).",
       },
     ],
   },

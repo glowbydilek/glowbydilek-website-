@@ -244,8 +244,16 @@ function latestResetLink(since) {
     });
 
     await step("Contact messages appear in the inbox", async () => {
-      await p.goto(`${BASE}/ajanda/berichten?alle=1`);
-      await p.locator("a[href^='/ajanda/berichten/']").first().waitFor();
+      const marker = `Inboxtest ${Date.now()}`;
+      const r = await fetch(`${BASE}/api/contact`, {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: BASE, "x-real-ip": `198.51.100.${(Date.now() % 200) + 20}` },
+        body: JSON.stringify({ name: "Inbox Test", email: `inbox.${Date.now()}@example.com`, topic: "question", message: `${marker}: komt dit bericht in Ajanda aan?`, privacy: true, locale: "nl", company: "", elapsedMs: 5000, turnstileToken: `e2e-inbox-${Date.now()}` }),
+      });
+      assert.equal(r.status, 200, `contact form → ${r.status}`);
+      await p.goto(`${BASE}/ajanda/berichten`);
+      await p.getByText("Inbox Test").first().click();
+      await p.getByText(marker).waitFor();
     });
 
     await step("Media: upload, describe, place on the homepage, restore the original photo", async () => {
@@ -273,13 +281,39 @@ function latestResetLink(since) {
       await slot.getByText("De oorspronkelijke foto staat weer").waitFor();
     });
 
+    await step("Overal uitloggen ends the sessions on every device", async () => {
+      const c2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+      await c2.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));
+      const other = await c2.newPage();
+      await other.goto(`${BASE}/admin/login`);
+      await other.fill("#email", "hello@glowbydilek.nl");
+      await other.fill("#password", PASSWORD);
+      await other.waitForTimeout(400);
+      await other.getByRole("button", { name: "Inloggen" }).click();
+      await other.waitForURL(`${BASE}/admin`);
+      p.once("dialog", (d) => d.accept());
+      await p.goto(`${BASE}/admin/beveiliging`);
+      await p.getByRole("button", { name: "Overal uitloggen" }).click();
+      await p.waitForURL(/\/admin\/login\?uitgelogd=1/);
+      await other.goto(`${BASE}/admin/beveiliging`);
+      assert.match(other.url(), /\/admin\/login/, "other device is signed out");
+      // Sign this device back in for the remaining steps.
+      await other.close();
+      await c2.close();
+      await p.fill("#email", "hello@glowbydilek.nl");
+      await p.fill("#password", PASSWORD);
+      await p.waitForTimeout(400);
+      await p.getByRole("button", { name: "Inloggen" }).click();
+      await p.waitForURL(`${BASE}/admin`);
+    });
+
     await step("admin uses the same login; logout ends the session", async () => {
       await p.goto(`${BASE}/admin`);
       await p.getByRole("heading", { name: /Welkom/ }).waitFor();
       await p.goto(`${BASE}/admin/beveiliging`);
       await p.getByText("Tweestapsverificatie").first().waitFor();
       await p.getByRole("button", { name: "Menu" }).click();
-      await p.getByRole("button", { name: "Uitloggen" }).click();
+      await p.getByRole("button", { name: "Uitloggen", exact: true }).click();
       await p.waitForURL(/\/admin\/login\?uitgelogd=1/);
       await p.goto(`${BASE}/ajanda`);
       assert.match(p.url(), /\/ajanda\/login/);

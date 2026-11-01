@@ -1,8 +1,8 @@
-# Security: forms, Turnstile and abuse protection
+# Security: private areas, forms, Turnstile and abuse protection
 
 ## Cloudflare Turnstile
 
-Both forms (`/contact`, `/afspraak-maken` and the English equivalents) show a Cloudflare Turnstile check. The token is verified **on the server** with Cloudflare Siteverify before anything is emailed (`src/lib/forms/turnstile.ts`).
+The public forms (contact, appointment request, online booking) and the private login and password-reset forms show a Cloudflare Turnstile check. The token is verified **on the server** with Cloudflare Siteverify before anything is stored or emailed (`src/lib/forms/turnstile.ts`).
 
 | Check | Result |
 | --- | --- |
@@ -18,14 +18,24 @@ Both forms (`/contact`, `/afspraak-maken` and the English equivalents) show a Cl
 
 The browser requests a fresh token after every attempt (tokens are single-use). A failed or expired check never clears the form.
 
-### Status: production keys pending
+### Status and modes
 
-No live keys are configured yet. Without them the code uses Cloudflare's **official test keys** (`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`): the widget appears and the whole flow runs, but **every token passes**, so this is not real protection yet.
+The server runs in one of three modes, shown on the admin overview:
+
+| Mode | When | Behaviour |
+| --- | --- | --- |
+| `live` | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` set to real keys | Full protection |
+| `test` | Development, or `TURNSTILE_ALLOW_TEST_KEYS=true` (local/preview only) | Cloudflare's official test keys: the flow works, **every token passes** |
+| `missing` | Production without keys (or with test keys and no explicit opt-in) | Public forms **refuse** submissions and show "temporarily unavailable — email hello@glowbydilek.nl". Login and password reset stay usable so the owner is never locked out; they remain protected by rate limits and lockout |
+
+Production therefore never silently runs on test keys.
+
+**Live keys are not configured yet.** The secret that appeared in an earlier screenshot must be **rotated** before production use. The connected Cloudflare integration can read the account, but it has **no Turnstile permission** (the widget API returns 403), so keys could not be checked or rotated from here; this is done by the owner in the Cloudflare dashboard, as described below. No Cloudflare settings, DNS or nameservers were changed.
 
 ### Setting the live keys (owner, in Cloudflare and Hostinger)
 
 1. Cloudflare dashboard → **Turnstile** → **Add widget**. Name: *Glow by Dilek forms*. Hostnames: `glowbydilek.nl` and `www.glowbydilek.nl`. Widget mode: *Managed*. (Turnstile is free; it does not require moving DNS to Cloudflare.)
-2. Copy the **site key** and **secret key**. Never paste the secret key into chat, email or GitHub.
+2. For the existing widget: **Rotate secret key** first (the old one was exposed). Copy the **site key** and the new **secret key**. Never paste the secret key into chat, email or GitHub.
 3. Hostinger → the Node.js app → **Environment variables**:
 
    | Name | Value | Notes |
@@ -43,13 +53,28 @@ No live keys are configured yet. Without them the code uses Cloudflare's **offic
 
 - Honeypot field, minimum fill time and link-spam check (silent fake success for bots).
 - Same-origin check, JSON only, 12 KB body limit, strict field limits, newline stripping (no email header injection), HTML escaping.
-- Rate limits: 5 / 10 min per IP and form, 3 / hour per email address, 40 / 10 min site-wide (protects against distributed floods), with `Retry-After`.
-- Duplicate content accepted once per 24 hours (409), reserved before sending so parallel duplicates are also rejected.
+- Rate limits: 5 / 10 min per IP and form, 3 / hour per email address, 40 / 10 min site-wide (protects against distributed floods), with `Retry-After`. Stored in MySQL (`rate_limits`, hashed keys), so they survive restarts; without a database they fall back to memory.
+- Duplicate content accepted once per 24 hours (409), reserved atomically in the database before sending, so parallel duplicates are also rejected. Turnstile tokens are also claimed once in the database (replay protection across restarts).
 - Client IP: `X-Real-IP` or the last `X-Forwarded-For` entry (set by the host's proxy). If the site is ever proxied through Cloudflare, set `TRUST_CF_CONNECTING_IP=true`.
 - Logs contain codes only — no personal data, tokens or message content.
 - Security headers incl. a Content-Security-Policy that only allows `challenges.cloudflare.com` as an external script/frame source.
 
+## Private areas (`/admin`, `/ajanda`)
+
+- One owner account (`OWNER_EMAIL`, default hello@glowbydilek.nl), created automatically **without a password**. There is no registration and no default password; the first password is set through "Wachtwoord vergeten?".
+- Passwords: scrypt (N=32768, r=8, p=1) with a per-user salt; minimum 12 characters; obviously weak passwords (e.g. containing "wachtwoord", the business name or the email name) are refused.
+- Sessions: random 256-bit token, stored only as a SHA-256 hash; cookie `__Host-glow_session` (HttpOnly, Secure, SameSite=Lax, path /). Idle timeout 14 days, absolute 30 days. Logout, password change and password reset end sessions; **Overal uitloggen** (all devices) is available in Admin → Beveiliging, which also lists the active sessions.
+- Password reset: 15 minutes, single use, token stored hashed, ends **all** sessions; responses are neutral (no account enumeration). The reset email is sent directly (not through the outbox) and the link always uses `NEXT_PUBLIC_SITE_URL`, never the request host.
+- Brute force: 8 failed attempts lock the account for 15 minutes; IP- and account-based rate limits on login, MFA and reset.
+- Two-step verification (TOTP, authenticator app): secret encrypted with AES-256-GCM (key derived from `AUTH_SECRET`), replay of a used code refused, 10 single-use recovery codes stored hashed. Strongly recommended; the admin shows a banner until it is enabled.
+- CSRF: server actions only accept same-origin requests (Next.js Origin check) plus an explicit same-origin check; cookies are SameSite.
+- Audit log of logins, failures, resets, MFA changes, content publishes and appointment actions (Admin → Systeem). Logs never contain passwords, tokens or secrets.
+- Private routes are `noindex`, `no-store`, `no-referrer`, excluded from the sitemap and disallowed in robots.txt.
+- Uploads: only JPEG/PNG/WebP (checked by the file's content, not its name), max 12 MB and 40 megapixels; re-encoded to WebP (metadata stripped); served with `nosniff` and a sandbox CSP.
+
+**Verification status:** all of the above is covered by automated tests and a browser walkthrough against a local database and a local SMTP sink. Password recovery counts as operational only after a **real reset email** has been received from the production SMTP server.
+
 ### Limits of this setup (honest)
 
-- Rate limits and replay memory are **in memory per Node.js process**. They reset when Hostinger restarts the app and are not shared between instances. Turnstile remains the main defence; if the site ever runs on several instances, move these to Redis or the booking database.
+- Rate limits, replay and duplicate memory live in MySQL and are shared by all app processes. If the database is unreachable they fall back to per-process memory until it is back.
 - No protection makes spam disappear completely. Expect it to drop sharply, not to zero.

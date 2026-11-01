@@ -14,8 +14,23 @@ concurrency:
 
 jobs:
   checks:
-    name: Lint, typecheck, tests, build (Node 22)
+    name: Lint, typecheck, tests (incl. MariaDB), build (Node 22)
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        # Hostinger's MySQL is MariaDB. Throwaway CI database, no real data.
+        image: mariadb:11.4
+        env:
+          MARIADB_DATABASE: glow_test
+          MARIADB_USER: glow
+          MARIADB_PASSWORD: ci-only-password
+          MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      TEST_DATABASE_URL: mysql://glow:ci-only-password@127.0.0.1:3306/glow_test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,7 +40,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      - name: Unit, integration and database tests (booking concurrency, auth, outbox)
+        run: npm test
       - run: npm run build
       - name: Crawl the built site (pages, links, canonical, hreflang, location wording)
         run: |

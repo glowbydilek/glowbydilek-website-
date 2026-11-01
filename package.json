@@ -4,7 +4,8 @@
   "description": "Official website for Glow by Dilek – premium waxing & beauty in the Netherlands",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/prepare-swc-wasm.mjs",
+    "prebuild": "node scripts/prepare-swc-wasm.mjs && node scripts/db-migrate.mjs --on-build",
+    "db:migrate": "node scripts/db-migrate.mjs",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
@@ -13,6 +14,7 @@
     "brand:logos": "python3 scripts/brand/generate-logos.py && node scripts/brand/render-pngs.cjs",
     "check:site": "node scripts/check-site.mjs",
     "test:e2e": "node scripts/e2e-navigation.cjs",
+    "test:e2e:private": "node scripts/e2e-private.cjs",
     "test": "node --experimental-strip-types --no-warnings --import ./tests/register.mjs --test --test-concurrency=1 tests/*.test.ts"
   },
   "repository": {
