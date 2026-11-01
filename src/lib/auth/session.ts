@@ -44,7 +44,14 @@ export async function sessionToken(): Promise<string | undefined> {
 /** The current session (memoised per request). */
 export const currentSession = cache(async (): Promise<SessionInfo | null> => {
   if (!databaseConfigured()) return null;
-  return getSession(getDb(), await sessionToken());
+  const token = await sessionToken();
+  try {
+    return await getSession(getDb(), token);
+  } catch (err) {
+    // A failing database means "not signed in" (fail closed); the login page explains why.
+    console.error("[auth] session lookup failed:", (err as { code?: string })?.code ?? "error");
+    return null;
+  }
 });
 
 /**

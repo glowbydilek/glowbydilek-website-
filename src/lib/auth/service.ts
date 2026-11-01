@@ -13,6 +13,7 @@
  * - MFA: TOTP (RFC 6238) with replay protection, 10 single-use recovery codes.
  */
 import { and, eq, gt, isNull, lt, or, sql } from "drizzle-orm";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { Secret, TOTP } from "otpauth";
 import type { DB } from "../db/client";
 import { audit } from "../db/audit";
@@ -143,6 +144,51 @@ export async function login(db: DB, emailRaw: string, password: string, ctx: Ctx
   const token = await createSession(db, user, ctx, !user.mfaEnabled);
   await audit(db, { userId: user.id, action: user.mfaEnabled ? "auth.password_ok_mfa_pending" : "auth.login", ipHash: hashIp(ctx.ip) });
   return { ok: true, token, mfaRequired: user.mfaEnabled, user };
+}
+
+// ───────────────────────────────────────────── First password without email
+
+/**
+ * First-run fallback when email (SMTP) is not working yet: the owner sets
+ * OWNER_SETUP_TOKEN (min. 24 random characters) in the hosting panel and
+ * uses it once on /login/eerste-wachtwoord to choose a password.
+ * Only works while the owner account has NO password, is rate limited and
+ * audited; the token is compared in constant time and never stored.
+ */
+export function setupTokenEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return (env.OWNER_SETUP_TOKEN ?? "").length >= 24;
+}
+
+export async function setInitialPassword(
+  db: DB,
+  input: { token: string; email: string; password: string },
+  ctx: Ctx,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<{ ok: true } | { ok: false; reason: "disabled" | "invalid" | "rateLimited" | "tooShort" | "tooLong" | "weak" }> {
+  const now = ctx.now ?? new Date();
+  if (!setupTokenEnabled(env)) return { ok: false, reason: "disabled" };
+  if (!(await hitLimit(db, `setup:ip:${hashIp(ctx.ip) ?? "unknown"}`, 5, 3600_000, now))) return { ok: false, reason: "rateLimited" };
+  await ensureOwner(db);
+  const email = normEmail(input.email).slice(0, 190);
+  const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const a = createHash("sha256").update(input.token).digest();
+  const b = createHash("sha256").update(env.OWNER_SETUP_TOKEN ?? "").digest();
+  const tokenOk = timingSafeEqual(a, b);
+  if (!tokenOk || !user || user.role !== "owner" || user.passwordHash || user.disabled) {
+    await audit(db, { action: "auth.setup_refused", ipHash: hashIp(ctx.ip) });
+    return { ok: false, reason: "invalid" };
+  }
+  const policy = checkPasswordPolicy(input.password, user.email);
+  if (policy) return { ok: false, reason: policy };
+  const hash = await hashPassword(input.password);
+  // Only succeeds while no password exists (protects against a race).
+  const [res] = (await db
+    .update(users)
+    .set({ passwordHash: hash, passwordChangedAt: now, failedLogins: 0, lockedUntil: null })
+    .where(and(eq(users.id, user.id), isNull(users.passwordHash)))) as unknown as [{ affectedRows: number }];
+  if (res.affectedRows !== 1) return { ok: false, reason: "invalid" };
+  await audit(db, { userId: user.id, action: "auth.initial_password_set", ipHash: hashIp(ctx.ip) });
+  return { ok: true };
 }
 
 // ───────────────────────────────────────────────────────── Password reset

@@ -5,6 +5,7 @@ import { currentSession, safeNext, type Area } from "@/lib/auth/session";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { turnstileConfig, turnstileSiteKey } from "@/lib/forms/turnstile";
 import { Notice } from "../ui";
+import { DB_HINT, dbErrorKind } from "@/lib/ops/errors";
 import { AuthShell } from "./AuthShell";
 import { ForgotForm } from "./ForgotForm";
 import { LoginForm } from "./LoginForm";
@@ -15,10 +16,11 @@ type SP = Promise<Record<string, string | string[] | undefined>>;
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const captcha = () => turnstileConfig().mode !== "missing";
 
-function NoDb({ area }: { area: Area }) {
+function NoDb({ area, hint }: { area: Area; hint?: string }) {
   return (
-    <AuthShell area={area} title="Nog niet gekoppeld">
-      <Notice tone="warning">De database is nog niet gekoppeld (DATABASE_URL). Volg docs/DEPLOYMENT.md om de beheeromgeving te activeren.</Notice>
+    <AuthShell area={area} title={hint ? "Database niet bereikbaar" : "Nog niet gekoppeld"}>
+      <Notice tone="warning">{hint ?? "De database is nog niet gekoppeld (DATABASE_URL). Volg docs/DEPLOYMENT.md om de beheeromgeving te activeren."}</Notice>
+      <Link href="/login/status" className="mt-4 block text-center text-sm text-accent-deep underline underline-offset-4">Systeemstatus bekijken</Link>
     </AuthShell>
   );
 }
@@ -29,7 +31,11 @@ export async function LoginPage({ area, searchParams }: { area: Area; searchPara
   const s = await currentSession();
   const next = safeNext(one(sp.next), area);
   if (s && (!s.mfaRequired || s.mfaPassed)) redirect(next);
-  await ensureOwner(getDb());
+  try {
+    await ensureOwner(getDb());
+  } catch (err) {
+    return <NoDb area={area} hint={DB_HINT[dbErrorKind(err)]} />;
+  }
   const notice = one(sp.reset) ? "Je wachtwoord is opgeslagen. Log in met je nieuwe wachtwoord." : one(sp.uitgelogd) ? "Je bent uitgelogd." : undefined;
   return (
     <AuthShell area={area} title="Inloggen">

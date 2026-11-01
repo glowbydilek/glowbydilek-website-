@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ensureOwner } from "@/lib/auth/service";
+import { DB_HINT, dbErrorKind } from "@/lib/ops/errors";
 import { currentSession } from "@/lib/auth/session";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { turnstileConfig, turnstileSiteKey } from "@/lib/forms/turnstile";
@@ -25,6 +26,7 @@ export default async function CentralLogin({ searchParams }: { searchParams: Pro
     return (
       <AuthShell area="agenda" title="Nog niet gekoppeld" label={LABEL}>
         <Notice tone="warning">De database is nog niet gekoppeld (DATABASE_URL). Volg docs/DEPLOYMENT.md om de beheeromgeving te activeren.</Notice>
+        <Link href="/login/status" className="mt-4 block text-center text-sm text-accent-deep underline underline-offset-4">Systeemstatus bekijken</Link>
       </AuthShell>
     );
   }
@@ -58,7 +60,16 @@ export default async function CentralLogin({ searchParams }: { searchParams: Pro
       </AuthShell>
     );
   }
-  await ensureOwner(getDb());
+  try {
+    await ensureOwner(getDb());
+  } catch (err) {
+    return (
+      <AuthShell area="agenda" title="Database niet bereikbaar" label={LABEL}>
+        <Notice tone="warning">{DB_HINT[dbErrorKind(err)]}</Notice>
+        <Link href="/login/status" className="mt-4 block text-center text-sm text-accent-deep underline underline-offset-4">Systeemstatus bekijken</Link>
+      </AuthShell>
+    );
+  }
   const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
   const notice = one(sp.reset) ? "Je wachtwoord is opgeslagen. Log in met je nieuwe wachtwoord." : one(sp.uitgelogd) ? "Je bent uitgelogd." : undefined;
   return (
