@@ -58,7 +58,8 @@ for (const [href, from] of links) {
   const res = await fetch(url, { redirect: "manual" });
   if (res.status >= 400) problems.push(`dead link ${href} (on ${from}) → ${res.status}`);
   const pre = url.searchParams.get("behandeling") ?? url.searchParams.get("treatment");
-  if (pre && treatmentIds.size && !treatmentIds.has(pre)) problems.push(`booking link preselects unknown treatment "${pre}" (on ${from})`);
+  // The RSC payload can split an entry across script chunks; fall back to a plain id search.
+  if (pre && treatmentIds.size && !treatmentIds.has(pre) && !appointmentSource.includes(`\\"${pre}\\"`)) problems.push(`booking link preselects unknown treatment "${pre}" (on ${from})`);
 }
 
 console.log(`Checked ${pages.length} pages and ${links.size} internal links.`);

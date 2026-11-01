@@ -659,6 +659,8 @@ export const en: Dictionary = {
     note: "No tracking, no advertising cookies.",
   },
   service: {
+    requestPackage: "Request this package",
+    packageArea: "What is in this package?",
     categoryLabel: "Category",
     areaLabel: "Area",
     categoryPage: "Guide, preparation and aftercare",

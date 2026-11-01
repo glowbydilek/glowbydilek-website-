@@ -662,6 +662,8 @@ export const nl = {
     note: "Geen tracking, geen reclamecookies.",
   },
   service: {
+    requestPackage: "Vraag dit pakket aan",
+    packageArea: "Wat zit er in dit pakket?",
     categoryLabel: "Categorie",
     areaLabel: "Zone",
     categoryPage: "Uitleg, voorbereiding en nazorg",

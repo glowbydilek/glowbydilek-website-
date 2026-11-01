@@ -42,6 +42,8 @@ export function TreatmentDetailPage({
   const s = dict.service;
   const id = item.id;
   const t = itemCopy(locale, id, item);
+  // Generated copy for packages talks about "the treatment"; use package wording unless the owner wrote her own.
+  const itemHasOwnCopy = t.areaTitle !== (locale === "nl" ? "Wat houdt de behandeling in?" : "What does the treatment involve?");
   const section = sectionById(item.sectionId)!;
   const group = item.groupId ? groupById(item.groupId) : undefined;
   const parent = group
@@ -91,7 +93,7 @@ export function TreatmentDetailPage({
         >
           <div className="flex flex-wrap items-center gap-3">
             <ButtonLink href={bookingHref(locale, id)} arrow>
-              {s.requestThis}
+              {item.kind === "package" ? s.requestPackage : s.requestThis}
             </ButtonLink>
             <ButtonLink href={href(locale, "process")} variant="outline">
               {s.readProcess}
@@ -139,7 +141,7 @@ export function TreatmentDetailPage({
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <div data-reveal>
               <h2 className="display text-[2rem] sm:text-[2.6rem]">
-                {t.areaTitle || s.area}
+                {item.kind === "package" && !itemHasOwnCopy ? s.packageArea : t.areaTitle || s.area}
               </h2>
               <p className="lead mt-5">{t.area}</p>
               {parts.length > 0 && (
@@ -292,7 +294,7 @@ export function TreatmentDetailPage({
                 arrow
                 className="mt-7 w-full sm:w-auto"
               >
-                {s.requestThis}
+                {item.kind === "package" ? s.requestPackage : s.requestThis}
               </ButtonLink>
             </div>
           </Container>

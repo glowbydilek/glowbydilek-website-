@@ -39,9 +39,11 @@ type Basic = { name: Record<Locale, string>; description: Record<Locale, string>
 export function defaultTreatmentCopy(locale: Locale, b: Basic): TreatmentCopy {
   const name = b.name[locale] || b.name.nl;
   const desc = b.description[locale] || b.description.nl;
+  // Search engines want a fuller description; add a neutral, factual closing sentence.
+  const tail = locale === "nl" ? " Bij Glow by Dilek, uitsluitend op afspraak. Lees wat je kunt verwachten en vraag je afspraak aan." : " At Glow by Dilek, by appointment only. Read what to expect and request your appointment.";
   return {
     seoTitle: name,
-    seoDescription: desc,
+    seoDescription: (desc.length < 90 ? `${desc}${tail}` : desc).slice(0, 300),
     title: name,
     lead: desc,
     teaser: desc,
