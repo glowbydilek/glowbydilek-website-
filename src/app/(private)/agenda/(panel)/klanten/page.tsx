@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CustomerAvatar } from "@/components/private/CustomerAvatar";
 import { Card, Input, LinkButton, Notice, PageHeader, Stat } from "@/components/private/ui";
 import { searchCustomers } from "@/lib/booking/service";
 import { customerMetrics, findDuplicates } from "@/lib/crm/service";
@@ -38,9 +39,12 @@ export default async function Customers({ searchParams }: { searchParams: Promis
             {rows.map((c) => (
               <li key={c.id}>
                 <Link href={`/agenda/klanten/${c.id}`} className="flex min-h-14 items-center justify-between gap-3 py-2">
-                  <span>
+                  <span className="flex min-w-0 items-center gap-3">
+                    <CustomerAvatar size={36} />
+                    <span className="min-w-0">
                     <span className="block font-medium">{c.firstName} {c.lastName}</span>
-                    <span className="block text-sm text-muted">{[c.phone, c.email].filter(Boolean).join(" · ") || "—"}</span>
+                    <span className="block truncate text-sm text-muted">{[c.phone, c.email].filter(Boolean).join(" · ") || "—"}</span>
+                    </span>
                   </span>
                   <span aria-hidden="true" className="text-muted">›</span>
                 </Link>

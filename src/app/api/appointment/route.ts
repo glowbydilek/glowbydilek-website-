@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 import { getCatalogue, publicItems } from "@/lib/catalogue";
 import { ensureContent } from "@/lib/cms/store";
 import { handleForm } from "@/lib/forms/handler";
-import { validateAppointment, type AppointmentInput } from "@/lib/forms/validation";
+import { amsterdamToday, validateAppointment, type AppointmentInput } from "@/lib/forms/validation";
+import { isClosedDay, requestCalendar } from "@/lib/booking/public";
 import { appointmentCustomerMail, appointmentOwnerMail } from "@/lib/mail/templates";
 import { createLegacyRequest } from "@/lib/booking/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
@@ -30,6 +31,8 @@ export async function POST(req: NextRequest) {
     validate: async (raw) => {
       const v = validateAppointment(raw, ids);
       // An unknown or expired code is reported on the field; nothing is stored.
+      // A closed weekday or closed date is refused (the calendar already disables them).
+      if (v.ok && databaseConfigured() && isClosedDay(await requestCalendar(getDb(), amsterdamToday()), v.data.preferredDate)) return { ok: false as const, errors: { preferredDate: "closedDay" as const } };
       if (v.ok && v.data.promoCode && databaseConfigured() && (await checkCode(getDb(), v.data.promoCode))) return { ok: false as const, errors: { promoCode: "invalid" as const } };
       return v;
     },

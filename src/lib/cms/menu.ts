@@ -9,7 +9,7 @@ export const MENU_CHOICES: RouteKey[] = ["treatments", "prices", "about", "revie
 export type MenuConfig = { header: RouteKey[]; footerStudio: RouteKey[]; footerInfo: RouteKey[] };
 
 export const DEFAULT_MENU: MenuConfig = {
-  header: ["treatments", "prices", "about", "contact"],
+  header: ["treatments", "prices", "about", "faq", "contact"],
   footerStudio: ["about", "prices", "reviews", "booking", "contact"],
   footerInfo: ["process", "preparation", "aftercare", "faq"],
 };

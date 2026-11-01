@@ -8,17 +8,17 @@
  */
 export const nl = {
   meta: {
-    tagline: "Professional waxing",
+    tagline: "Beauty & relaxation",
     pages: {
       services: {
         title: "Alle behandelingen",
         description:
-          "Alle behandelingen van Glow by Dilek op één plek: waxen en — zodra beschikbaar — gezichts- en lichaamsbehandelingen, massages en pakketten. Uitsluitend op afspraak.",
+          "Alle behandelingen van Glow by Dilek op één plek: ontspannende massages, waxen en meer persoonlijke schoonheidsbehandelingen voor vrouwen. Uitsluitend op afspraak.",
       },
       home: {
-        title: "Glow by Dilek — Waxstudio op afspraak",
+        title: "Glow by Dilek — Beauty & relaxation voor vrouwen",
         description:
-          "Persoonlijke waxstudio voor gezicht, lichaam en bikinizone. Eén klant tegelijk, een vaste hygiënische werkwijze en tijd voor jou. Vraag online je afspraak aan.",
+          "Persoonlijke schoonheidsbehandelingen en ontspannende massages voor vrouwen, met aandacht voor jouw wensen en comfort. Uitsluitend op afspraak; vraag online je afspraak aan.",
       },
       treatments: {
         title: "Waxen voor gezicht, lichaam en bikinizone",
@@ -26,24 +26,24 @@ export const nl = {
           "Waxen (harsen) voor gezicht, lichaam en bikinizone: van wenkbrauwen tot Brazilian. Lees per zone wat je kunt verwachten en hoe je je voorbereidt.",
       },
       prices: {
-        title: "Tarieven waxbehandelingen",
+        title: "Tarieven",
         description:
-          "Alle waxbehandelingen van Glow by Dilek op een rij. De actuele tarieven ontvang je snel en persoonlijk via hello@glowbydilek.nl.",
+          "Alle behandelingen van Glow by Dilek op een rij, met tarief, duur of ‘op aanvraag’. Heb je een vraag over een tarief? Mail naar hello@glowbydilek.nl.",
       },
       about: {
         title: "Over Dilek",
         description:
-          "Het verhaal en de werkwijze achter Glow by Dilek: een kleine, persoonlijke waxstudio waar rust, zorg en eerlijk advies centraal staan.",
+          "Het verhaal en de werkwijze achter Glow by Dilek: persoonlijke schoonheidsbehandelingen en ontspanning, met rust, zorg en eerlijk advies.",
       },
       contact: {
         title: "Contact",
         description:
-          "Een vraag over waxen of een behandeling? Stuur een bericht via het formulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
+          "Een vraag over een behandeling of een afspraak? Stuur een bericht via het formulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
       },
       booking: {
         title: "Afspraak aanvragen",
         description:
-          "Vraag online je waxafspraak aan. Kies je behandeling en voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
+          "Vraag online je afspraak aan. Kies je behandeling en voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
       },
       reviews: {
         title: "Beoordelingen van klanten",
@@ -70,7 +70,7 @@ export const nl = {
     aftercare: "Nazorg",
     faq: "Veelgestelde vragen",
     reviews: "Beoordelingen",
-    categories: "Behandelingen per zone",
+    categories: "Behandelingen per categorie",
     allTreatments: "Alle behandelingen",
     info: "Goed om te weten",
     openMenu: "Menu openen",
@@ -85,7 +85,7 @@ export const nl = {
   cta: {
     requestShort: "Aanvragen",
     request: "Afspraak aanvragen",
-    explore: "Bekijk de behandelingen",
+    explore: "Ontdek de behandelingen",
     viewTreatments: "Alle behandelingen",
     viewPrices: "Tarieven",
     contact: "Stel je vraag",
@@ -107,13 +107,13 @@ export const nl = {
   whatsapp: {
     label: "Stuur een WhatsApp-bericht",
     short: "WhatsApp",
-    message: "Hoi Dilek, ik heb een vraag over een waxbehandeling.",
+    message: "Hoi Dilek, ik heb een vraag over een behandeling.",
   },
   trust: [
     {
       icon: "hygiene",
       title: "Hygiëne als vertrekpunt",
-      body: "Een opgeruimde, schone werkplek, verse materialen voor iedere klant en elke keer dezelfde zorgvuldige volgorde. Bij waxen is dat geen extraatje, maar de basis.",
+      body: "Een opgeruimde, schone werkplek, verse materialen voor iedere klant en elke keer dezelfde zorgvuldige volgorde. Dat is geen extraatje, maar de basis.",
     },
     {
       icon: "privacy",
@@ -133,76 +133,78 @@ export const nl = {
   ],
   home: {
     hero: {
-      eyebrow: "Waxstudio · op afspraak",
-      title: "Zacht voor je huid.",
-      titleEm: "Rustig voor jou.",
+      eyebrow: "Glow by Dilek · Beauty & relaxation",
+      title: "Jouw moment",
+      titleEm: "om te stralen.",
       subtitle:
-        "Glow by Dilek is een kleine, persoonlijke waxstudio voor gezicht, lichaam en bikinizone. Eén klant tegelijk, een vaste hygiënische werkwijze en de tijd om je op je gemak te voelen.",
-      facts: ["Eén klant tegelijk", "Uitsluitend op afspraak", "Persoonlijk bevestigd"],
+        "Persoonlijke schoonheidsbehandelingen en ontspannende massages voor vrouwen. Met aandacht voor jouw wensen, je comfort en een moment dat helemaal van jou is.",
+      facts: ["Persoonlijke aandacht", "Uitsluitend op afspraak", "Door Dilek zelf bevestigd"],
     },
     statement: {
-      eyebrow: "De gedachte achter Glow",
-      quote: "Waxen is persoonlijk. Daarom hoort het ook zo te voelen.",
-      body: "Je vertrouwt iemand je huid toe, soms op plekken waar je liever niet over praat. Bij Glow by Dilek begint een behandeling daarom niet bij de wax, maar bij een kort gesprek: wat wil je, hoe reageert je huid, waar moet rekening mee worden gehouden? Pas daarna wordt er gewerkt — nauwkeurig, rustig en zonder haast.",
+      eyebrow: "Even helemaal voor jezelf",
+      quote: "Een afspraak bij Glow voelt niet als een agendapunt, maar als een pauze.",
+      body: "Je komt binnen, je hoeft even niets. Of je nu komt voor een ontspannende massage of een verzorgende behandeling: er is tijd voor een kort gesprek over wat jij prettig vindt, en daarna voor rust. Zonder haast, zonder drukte, in jouw tempo.",
       signature: "Dilek",
     },
     treatments: {
       eyebrow: "Behandelingen",
-      title: "Drie zones, één zorgvuldige werkwijze",
-      intro: "Van een strakke wenkbrauwlijn tot een volledig gladde bikinizone. Elke behandeling wordt afgestemd op jouw huid, je haargroei en wat jij prettig vindt.",
+      title: "Ontdek jouw behandeling",
+      intro: "Van een rustgevende massage tot verzorgend waxen. Kies wat bij jou past; elke pagina vertelt eerlijk wat je kunt verwachten.",
       count: "behandelingen",
-      more: "Lees meer",
+      countOne: "behandeling",
+      more: "Bekijk",
     },
     experience: {
-      eyebrow: "Zo werkt het",
-      title: "Van aanvraag tot gladde huid",
-      intro: "Geen ingewikkeld boekingssysteem, wel persoonlijk contact. Zo verloopt een afspraak.",
+      eyebrow: "Afspraak maken",
+      title: "Zo werkt een afspraak",
+      intro: "Geen ingewikkeld systeem, wel persoonlijk contact. Je afspraak staat pas vast als Dilek hem heeft bevestigd.",
       steps: [
-        { title: "Je vraagt een afspraak aan", body: "Kies online je behandeling en een voorkeursmoment. Je ontvangt meteen een ontvangstbevestiging per e-mail." },
-        { title: "Dilek bevestigt persoonlijk", body: "Dilek bekijkt je aanvraag en stemt datum en tijd met je af. Pas na haar bevestiging staat je afspraak vast." },
-        { title: "Een kort gesprek", body: "Aan het begin van de afspraak bespreken jullie je wensen, je huid en eventuele gevoeligheden of medicijnen." },
-        { title: "Behandeling en nazorg", body: "Rustig en nauwkeurig gewaxt, daarna een kalmerende verzorging en advies voor de dagen erna." },
+        { title: "Kies je behandeling", body: "Kies online een of meer behandelingen en geef je voorkeursmoment door." },
+        { title: "Je aanvraag is binnen", body: "Je ontvangt direct een ontvangstbevestiging per e-mail. Dit is nog geen bevestigde afspraak." },
+        { title: "Dilek bevestigt persoonlijk", body: "Dilek bekijkt je aanvraag en bevestigt de afspraak, of stelt een ander moment voor." },
+        { title: "Alle details volgen", body: "Na de bevestiging ontvang je persoonlijk de praktische gegevens voor je afspraak." },
       ],
     },
     standards: {
-      eyebrow: "Waarom Glow by Dilek",
-      title: "Waar je op kunt rekenen",
-      intro: "Wat een goede waxbehandeling onderscheidt, zit zelden in grote woorden. Het zit in de details die je merkt vanaf het eerste contact.",
+      eyebrow: "Glow by Dilek",
+      title: "Met aandacht voor elk detail",
+      intro: "Wat een behandeling bijzonder maakt, zit in kleine dingen: de tijd die je krijgt, de rust en de zorg waarmee wordt gewerkt.",
     },
     care: {
       eyebrow: "Voorbereiding en nazorg",
-      title: "Een mooi resultaat begint vóór je afspraak",
-      intro: "Een paar eenvoudige stappen voor en na je afspraak maken de behandeling prettiger en houden je huid rustig.",
+      title: "Goed voorbereid, langer genieten",
+      intro: "Een paar eenvoudige stappen vóór en na je afspraak maken de behandeling prettiger en houden je huid rustig.",
       firstTime: {
-        title: "Voor het eerst waxen?",
-        body: "Dat is spannender dan het hoeft te zijn. Laat het haar een paar weken groeien, stel gerust al je vragen vooraf en reken op een rustige, duidelijke uitleg tijdens de behandeling.",
+        title: "Voor het eerst?",
+        body: "Stel al je vragen gerust vooraf. Dilek legt tijdens de afspraak uit wat ze doet en stemt alles af op wat jij prettig vindt.",
       },
     },
     dilek: {
       eyebrow: "Maak kennis",
       title: "Hoi, ik ben Dilek",
-      body: "Ik heb Glow by Dilek opgericht omdat ik geloof dat waxen meer aandacht verdient dan het vaak krijgt. Bij mij ben je de enige klant op dat moment. Ik neem de tijd, leg uit wat ik doe en werk nauwkeurig — en je mag me alles vragen.",
+      body: "Bij Glow by Dilek werk je met één vast aanspreekpunt: mij. Ik neem de tijd voor je, vertel wat ik doe voordat ik het doe en stem de behandeling af op jouw wensen. Je mag me alles vragen.",
       quote: "Jouw comfort en vertrouwen gaan bij mij voor alles.",
     },
     faq: {
       eyebrow: "Veelgestelde vragen",
       title: "Goed om te weten",
-      intro: "De vragen die het vaakst worden gesteld, kort en eerlijk beantwoord. Staat jouw vraag er niet bij? Stuur dan gerust een bericht.",
+      intro: "De vragen die het vaakst worden gesteld, kort en eerlijk beantwoord. Staat jouw vraag er niet bij? Stuur gerust een bericht.",
     },
     closing: {
       eyebrow: "Afspraak",
-      title: "Zin in een gladde huid, zonder haast?",
-      body: "Vraag in een paar stappen je afspraak aan. Je krijgt direct een ontvangstbevestiging, en Dilek neemt persoonlijk contact met je op om datum en tijd te bevestigen.",
+      title: "Tijd voor een moment voor jezelf?",
+      body: "Vraag in een paar stappen je afspraak aan. Je krijgt direct een ontvangstbevestiging, en Dilek neemt persoonlijk contact met je op om je afspraak te bevestigen.",
     },
     contact: {
       eyebrow: "Liever eerst iets vragen?",
       body: "Twijfel je welke behandeling bij je past, of wil je iets bespreken voordat je een afspraak aanvraagt? Stuur een bericht of mail direct.",
     },
   },
+
   care: {
     before: {
       title: "Voor je afspraak",
-      lead: "Een goede voorbereiding maakt de behandeling prettiger en het resultaat mooier.",
+      lead: "Voor waxen maakt een goede voorbereiding de behandeling prettiger en het resultaat mooier.",
       items: [
         "Laat het haar minimaal 0,5 cm lang worden, ongeveer de lengte van een rijstkorrel. Dat is meestal twee tot vier weken na het scheren.",
         "Scrub de huid een of twee dagen van tevoren licht, zodat losse huidschilfers verdwijnen.",
@@ -213,7 +215,7 @@ export const nl = {
     },
     after: {
       title: "Na je behandeling",
-      lead: "Lichte roodheid is normaal en trekt meestal binnen een dag weg.",
+      lead: "Na het waxen is lichte roodheid normaal; die trekt meestal binnen een dag weg.",
       items: [
         "Vermijd de eerste 24 uur sauna, zonnebank, zwembad, hete douches en intensief sporten.",
         "Draag liefst losse, ademende kleding over de behandelde huid.",
@@ -226,12 +228,24 @@ export const nl = {
   faq: {
     general: [
       {
-        q: "Hoe lang moet mijn haar zijn om te kunnen waxen?",
-        a: "Minimaal 0,5 cm, ongeveer de lengte van een rijstkorrel. Dat is meestal twee tot vier weken na het scheren. Is het haar veel langer, dan wordt het vooraf iets ingekort.",
+        q: "Hoe vraag ik een afspraak aan?",
+        a: "Via de pagina ‘Afspraak aanvragen’ kies je je behandeling, een voorkeursdatum en een tijdvak. Je ontvangt meteen een ontvangstbevestiging. De afspraak is pas definitief als Dilek hem persoonlijk heeft bevestigd.",
+      },
+      {
+        q: "Waar vinden de behandelingen plaats?",
+        a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+      },
+      {
+        q: "Wat kan ik verwachten van een ontspanningsmassage?",
+        a: "Een rustig moment om even helemaal tot jezelf te komen. Voor de massage bespreek je kort met Dilek wat je prettig vindt en of er iets is waar ze rekening mee moet houden. De prijs en de duur hoor je persoonlijk bij je aanvraag.",
       },
       {
         q: "Doet waxen pijn?",
         a: "Je voelt een korte, felle prikkel die snel wegtrekt. Hoe dat voelt, verschilt per persoon en per zone; de eerste keer is meestal het gevoeligst. Bij regelmatig waxen groeit het haar vaak fijner terug, waardoor veel mensen het daarna minder intens vinden.",
+      },
+      {
+        q: "Hoe lang moet mijn haar zijn om te kunnen waxen?",
+        a: "Minimaal 0,5 cm, ongeveer de lengte van een rijstkorrel. Dat is meestal twee tot vier weken na het scheren. Is het haar veel langer, dan wordt het vooraf iets ingekort.",
       },
       {
         q: "Hoe lang blijft mijn huid glad?",
@@ -242,16 +256,8 @@ export const nl = {
         a: "Ja. In Nederland worden beide woorden gebruikt voor het verwijderen van haar met (warme) wax. Het haar wordt met wortel en al verwijderd, waardoor het resultaat weken meegaat.",
       },
       {
-        q: "Waar vinden de behandelingen plaats?",
-        a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
-      },
-      {
-        q: "Hoe vraag ik een afspraak aan?",
-        a: "Via de pagina ‘Afspraak aanvragen’ kies je je behandeling, een voorkeursdatum en een tijdvak. Je ontvangt meteen een ontvangstbevestiging. De afspraak is pas definitief als Dilek hem persoonlijk heeft bevestigd.",
-      },
-      {
         q: "Bieden jullie ook laserontharing of andere behandelingen aan?",
-        a: "Op dit moment richt Glow by Dilek zich volledig op waxing. Nieuwe behandelingen worden pas aangekondigd als ze echt beschikbaar zijn.",
+        a: "Laserontharing wordt niet aangeboden. Op de website staan alleen behandelingen die echt beschikbaar zijn; nieuwe behandelingen verschijnen pas als ze er zijn.",
       },
     ],
     treatments: [
@@ -358,9 +364,9 @@ export const nl = {
       eyebrow: "Het verhaal",
       title: "Waarom Glow by Dilek bestaat",
       paragraphs: [
-        "Mijn naam is Dilek. Ik ben Glow by Dilek begonnen met één wens: dat waxen voelt als een moment voor jezelf, en niet als iets wat je snel even ‘moet’.",
+        "Mijn naam is Dilek. Ik ben Glow by Dilek begonnen met één wens: dat een behandeling voelt als een moment voor jezelf, en niet als iets wat je snel even ‘moet’.",
         "Dat begint bij de basis. Een rustige, schone ruimte. Tijd voor een gesprek. Uitleg over wat ik doe en waarom. En een werkwijze die elke keer hetzelfde is, zodat jij weet waar je aan toe bent.",
-        "Of het nu je allereerste behandeling is of je al jaren waxt: je bent welkom zoals je bent, met al je vragen.",
+        "Of het nu je allereerste behandeling is of je al jaren vaste klant bent: je bent welkom zoals je bent, met al je vragen.",
       ],
     },
     quote: "Ik werk liever met minder klanten en meer aandacht.",
@@ -371,13 +377,13 @@ export const nl = {
         { title: "Tijd", body: "Afspraken worden ruim ingepland. Je hoeft je nooit gehaast te voelen." },
         { title: "Uitleg", body: "Ik vertel wat ik ga doen voordat ik het doe, zeker bij je eerste behandeling." },
         { title: "Discretie", body: "Eén klant tegelijk en een respectvolle omgang. Wat je deelt, blijft tussen ons." },
-        { title: "Eerlijkheid", body: "Is waxen op dit moment niet verstandig voor je huid, dan zeg ik dat — ook als het betekent dat we de afspraak verzetten." },
+        { title: "Eerlijkheid", body: "Is een behandeling op dit moment niet verstandig, dan zeg ik dat — ook als het betekent dat we de afspraak verzetten." },
       ],
     },
     vision: {
       eyebrow: "Vooruitkijken",
       title: "Klein begonnen, met ruimte om te groeien",
-      body: "Glow by Dilek begint bij waxing, omdat ik daar volledig achter sta. Stap voor stap wil ik de studio verder uitbouwen, altijd met dezelfde zorg. Nieuwe behandelingen kondig ik pas aan als ze echt beschikbaar zijn.",
+      body: "Glow by Dilek groeit stap voor stap, altijd met dezelfde zorg. Nieuwe behandelingen verschijnen pas op de website als ze echt beschikbaar zijn.",
     },
   },
   contact: {
@@ -432,7 +438,7 @@ export const nl = {
       email: "E-mailadres",
       phone: "Telefoonnummer",
       note: "Opmerking (optioneel)",
-      notePlaceholder: "Bijvoorbeeld: eerste keer waxen (geen medische details)",
+      notePlaceholder: "Bijvoorbeeld: eerste keer, of een voorkeur (geen medische details)",
       submit: "Afspraak aanvragen",
       sending: "Bezig met versturen…",
       successTitle: "Je aanvraag is ontvangen",
@@ -464,12 +470,21 @@ export const nl = {
     treatments: "Welke behandeling(en)?",
     treatmentsHint: "Je kunt meerdere zones kiezen.",
     preferredDate: "Voorkeursdatum",
+    datePicker: {
+      choose: "Kies een datum",
+      prev: "Vorige maand",
+      next: "Volgende maand",
+      close: "Sluiten",
+      closed: "geen afspraken",
+      today: "vandaag",
+      hint: "Gebruik de pijltjestoetsen om door de dagen te gaan.",
+    },
     timeRange: "Voorkeur voor tijd",
     timeRanges: { morning: "Ochtend", afternoon: "Middag", evening: "Avond", flexible: "Flexibel" },
     alternative: "Een ander moment dat ook past",
     alternativePlaceholder: "Bijvoorbeeld: ook dinsdagavond of zaterdagochtend",
     notes: "Opmerking",
-    notesPlaceholder: "Bijvoorbeeld: eerste keer waxen, of een vraag vooraf (geen medische details)",
+    notesPlaceholder: "Bijvoorbeeld: eerste keer, of een vraag vooraf (geen medische details)",
     privacy: "Ik ga ermee akkoord dat mijn gegevens worden gebruikt om mijn aanvraag te beantwoorden, zoals beschreven in de",
     privacyLink: "privacyverklaring",
     challengeLabel: "Beveiligingscontrole",
@@ -487,6 +502,7 @@ export const nl = {
       tooLong: "Dit is te lang.",
       pastDate: "Kies een datum vanaf vandaag.",
       tooFar: "Kies een datum binnen een jaar.",
+      closedDay: "Op deze dag zijn er geen afspraken. Kies een andere datum.",
       consent: "Geef toestemming, dan kunnen we je aanvraag beantwoorden.",
       challenge: "Rond eerst de korte beveiligingscontrole af.",
       summary: "Controleer de gemarkeerde velden.",
@@ -558,7 +574,7 @@ export const nl = {
     sections: [
       {
         h: "Wie wij zijn",
-        p: "Glow by Dilek is een waxstudio die behandelingen aanbiedt op afspraak. Vragen over privacy kun je stellen via hello@glowbydilek.nl.",
+        p: "Glow by Dilek biedt persoonlijke schoonheidsbehandelingen en massages aan, uitsluitend op afspraak. Vragen over privacy kun je stellen via hello@glowbydilek.nl.",
       },
       {
         h: "Welke gegevens we ontvangen",
@@ -652,7 +668,7 @@ export const nl = {
   footer: {
     follow: "Volg Glow by Dilek",
     login: "Inloggen",
-    tagline: "Persoonlijke waxbehandelingen voor gezicht, lichaam en bikinizone, met rust, zorg en eerlijk advies. Uitsluitend op afspraak.",
+    tagline: "Persoonlijke schoonheidsbehandelingen en ontspannende massages voor vrouwen, met rust, zorg en eerlijk advies. Uitsluitend op afspraak.",
     treatments: "Behandelingen",
     studio: "Studio",
     info: "Goed om te weten",

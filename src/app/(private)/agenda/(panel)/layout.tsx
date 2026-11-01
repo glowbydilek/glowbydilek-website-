@@ -30,6 +30,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
     { href: "/agenda/afspraak/nieuw", label: "Nieuwe afspraak", icon: "plus" },
     { href: "/agenda/klanten", label: "Klanten", icon: "users" },
+    { href: "/agenda/intake", label: "Intakeformulier", icon: "invoice" },
     { href: "/agenda/financien", label: "Financiën", icon: "euro" },
     { href: "/agenda/facturen", label: "Facturen & PDF", icon: "invoice" },
     { href: "/agenda/uitgaven", label: "Uitgaven", icon: "euro" },
@@ -44,6 +45,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/afspraak/nieuw", label: "Nieuw", icon: "plus" },
     { href: "/agenda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
     { href: "/agenda/klanten", label: "Klanten", icon: "users" },
+    { href: "/agenda/intake", label: "Intakeformulier", icon: "invoice" },
   ];
   return (
     <PanelShell area="agenda" nav={nav} tabs={tabs}>

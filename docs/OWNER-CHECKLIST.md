@@ -87,3 +87,13 @@ There is no address, city, district, service area, map or walk-in information. `
 - [ ] **Products & protocols**: enter the products you use (Admin → Producten & materialen). The public products page stays off unless you switch it on.
 - [ ] **Promotions & slider**: nothing is active. A promotion only works when set to Active within its dates.
 - [ ] **Expenses**: record purchases with receipts in Agenda → Uitgaven; export the CSV for your accountant from Financiën.
+
+## New in the Luminous Beauty Atelier release (November 2026)
+
+- [ ] **"Drein"**: tell us the exact name and what the treatment involves before anything is published about it. Nothing about drainage or health benefits is on the site.
+- [ ] **Massage details**: price (or keep "op aanvraag"), duration and the techniques you actually use for the Ontspanningsmassage (Admin → Behandelingen). No techniques or benefits are named until you confirm them.
+- [ ] **Facials, body care, packages**: still drafts. Publish only what you really offer.
+- [ ] **Intake & consent form** (`docs/INTAKE.md`): legal (AVG) review of the v1 wording and the retention period; then set `INTAKE_DOCUMENT_KEY`, keep two-step verification on, confirm Admin → Privacy & consultatie, and add the retention period to the privacy statement.
+- [ ] **New look**: review the homepage, colours (Admin → Thema & Design; the previous style is kept as the "Vorige stijl" preset) and the new social preview image (`public/images/og-nl.png`, `og-en.png`).
+- [ ] **Hero photo**: the model portrait is licensed stock (Adobe Stock #810843299, representative model — not Dilek and not a client). Replace it if you prefer a different image.
+

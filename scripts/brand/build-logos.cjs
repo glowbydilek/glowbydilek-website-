@@ -20,7 +20,7 @@ const sharp = require("sharp");
 
 const ROOT = path.join(__dirname, "..", "..");
 const FONTS = path.join(__dirname, "fonts");
-const C = { ink: "#221A17", paper: "#F5F0E8", accent: "#A0461E", glow: "#F0D3B4", sand: "#EAE1D5" };
+const C = { ink: "#2B202B", paper: "#FFFCFB", accent: "#8E4759", glow: "#C69B73", sand: "#F5E6E7" };
 const r = (n) => Math.round(n * 100) / 100;
 
 function text(file, str, vars, size, tracking = 0) {

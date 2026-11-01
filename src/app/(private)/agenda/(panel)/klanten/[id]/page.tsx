@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { CustomerAvatar } from "@/components/private/CustomerAvatar";
+import { IntakeCard } from "@/components/private/intake/IntakeCard";
+import { requireOwner } from "@/lib/auth/session";
 import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { AppointmentCard } from "@/components/private/agenda/AppointmentCard";
@@ -23,6 +26,7 @@ const day = (d: Date | null) => (d ? formatLocal(d, "nl", { day: "numeric", mont
 
 export default async function CustomerPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const id = Number((await params).id);
+  const session = await requireOwner("agenda", `/agenda/klanten/${id}`);
   const sp = await searchParams;
   const db = getDb();
   const [c] = await db.select().from(customers).where(eq(customers.id, id));
@@ -76,7 +80,14 @@ export default async function CustomerPage({ params, searchParams }: { params: P
 
       <div className="mt-5 grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <div className="space-y-5">
-          <Card title="Gegevens">{c.anonymizedAt ? <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice> : <CustomerForm c={c} />}</Card>
+          <Card title="Gegevens">
+            <div className="mb-4 flex items-center gap-3">
+              <CustomerAvatar size={48} />
+              <p className="text-sm text-muted">Klantnummer {c.id}</p>
+            </div>
+            {c.anonymizedAt ? <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice> : <CustomerForm c={c} />}
+          </Card>
+          {!c.anonymizedAt && <IntakeCard db={db} customerId={c.id} mfa={session.user.mfaEnabled && session.mfaPassed} />}
           {!c.anonymizedAt && (
             <Card title="Consultatie (vertrouwelijk)">
               {consult.enabled ? (
@@ -111,7 +122,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             </form>
             {!c.anonymizedAt && (
               <a href={`/agenda/klanten/${c.id}/export`} className="mt-3 inline-block text-xs text-muted underline">
-                Alle persoonsgegevens exporteren (AVG-inzageverzoek, JSON, zonder consultatie)
+                Alle persoonsgegevens exporteren (AVG-inzageverzoek, JSON, zonder consultatie en intakeformulieren)
               </a>
             )}
           </Card>

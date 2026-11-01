@@ -28,7 +28,7 @@ export function ClosingCta({ locale, dict }: { locale: Locale; dict: Dictionary 
                 </ButtonLink>
               </div>
             </div>
-            <ul className="mt-8 grid gap-3 border-t border-paper/12 pt-6 text-sm text-paper/75 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            <ul className={`mt-8 grid gap-3 border-t border-paper/12 pt-6 text-sm text-paper/75 ${withPhoto ? "" : "lg:mt-0 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"}`}>
               <li className="flex items-start gap-3">
                 <Icon name="clock" className="h-5 w-5 shrink-0 text-glow" />
                 {dict.common.byAppointment}

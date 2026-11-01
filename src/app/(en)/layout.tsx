@@ -1,6 +1,5 @@
 import "@fontsource-variable/newsreader/standard.css";
 import "@fontsource-variable/newsreader/standard-italic.css";
-import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -17,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#f8f5ef",
+  themeColor: "#fffcfb",
   width: "device-width",
   initialScale: 1,
 };

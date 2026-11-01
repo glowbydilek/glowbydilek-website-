@@ -79,13 +79,13 @@ export function GlowTransition() {
       <svg className="glow-diamond" viewBox="-100 -100 200 200">
         <defs>
           <radialGradient id="glow-bloom">
-            <stop offset="0" stopColor="#f7e8d8" stopOpacity="0.95" />
+            <stop offset="0" stopColor="#eee3f2" stopOpacity="0.95" />
             <stop offset="0.35" stopColor="#f0d3b4" stopOpacity="0.5" />
             <stop offset="1" stopColor="#f0d3b4" stopOpacity="0" />
           </radialGradient>
           <linearGradient id="glow-ray" x1="0" x2="1">
-            <stop offset="0" stopColor="#a0461e" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#a0461e" stopOpacity="0" />
+            <stop offset="0" stopColor="#c69b73" stopOpacity="0.7" />
+            <stop offset="1" stopColor="#c69b73" stopOpacity="0" />
           </linearGradient>
         </defs>
         <circle className="glow-bloom" r="90" fill="url(#glow-bloom)" />

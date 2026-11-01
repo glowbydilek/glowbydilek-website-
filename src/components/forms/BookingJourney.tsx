@@ -4,9 +4,11 @@ import { track } from "@/lib/analytics/track";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { amsterdamToday } from "@/lib/forms/validation";
 import { Icon } from "../ui/Icon";
 import { Consent } from "./ContactForm";
 import { Honeypot, TextArea, TextField } from "./Fields";
+import { ReceivedMark } from "./FormStatus";
 import { Turnstile, useTurnstileToken } from "./Turnstile";
 
 export type JourneyTreatment = { id: string; name: string; category: string; duration: number; price: string | null };
@@ -38,7 +40,7 @@ export function BookingJourney({
   promoField?: boolean;
 }) {
   const [picked, setPicked] = useState<string[]>([]);
-  const [from, setFrom] = useState(() => new Date().toISOString().slice(0, 10));
+  const [from, setFrom] = useState(() => amsterdamToday());
   const [days, setDays] = useState<Day[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export function BookingJourney({
   const shift = (n: number) => {
     const d = new Date(`${from}T12:00:00Z`);
     d.setUTCDate(d.getUTCDate() + n);
-    const today = new Date().toISOString().slice(0, 10);
+    const today = amsterdamToday();
     setFrom(d.toISOString().slice(0, 10) < today ? today : d.toISOString().slice(0, 10));
   };
 
@@ -144,8 +146,8 @@ export function BookingJourney({
 
   if (status === "done") {
     return (
-      <div role="status" className="rounded-[1.75rem] bg-ink p-8 text-paper sm:p-12">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-ink"><Icon name="check" className="h-6 w-6" /></span>
+      <div role="status" className="plum-band rounded-[1.75rem] p-8 sm:p-12">
+        <ReceivedMark />
         <h3 className="mt-6 font-serif text-4xl">{t.successTitle}</h3>
         <p className="mt-4 max-w-xl leading-relaxed text-paper/80">{t.successBody}</p>
       </div>

@@ -7,7 +7,7 @@
  */
 
 export type Locale = "nl" | "en";
-export type ErrorCode = "required" | "invalid" | "tooShort" | "tooLong" | "pastDate" | "tooFar" | "consent";
+export type ErrorCode = "required" | "invalid" | "tooShort" | "tooLong" | "pastDate" | "tooFar" | "closedDay" | "consent";
 export type FieldErrors = Record<string, ErrorCode>;
 export type Result<T> = { ok: true; data: T } | { ok: false; errors: FieldErrors };
 

@@ -11,10 +11,10 @@ import { logoData } from "../../components/brand/logoData";
  * no font files are needed at runtime.
  */
 
-const INK = "#221A17";
-const MUTED = "#6B5D52";
-const LINE = "#D9CBBA";
-const ACCENT = "#A0461E";
+const INK = "#2B202B";
+const MUTED = "#6B5867";
+const LINE = "#E6D0D6";
+const ACCENT = "#8E4759";
 
 function toBuffer(doc: PDFKit.PDFDocument): Promise<Buffer> {
   return new Promise((resolve, reject) => {

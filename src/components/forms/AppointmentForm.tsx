@@ -7,6 +7,8 @@ import { amsterdamToday, TIME_RANGES, validateAppointment, type ErrorCode, type 
 import { Icon } from "../ui/Icon";
 import { Consent } from "./ContactForm";
 import { Honeypot, omit, TextArea, TextField } from "./Fields";
+import { DatePicker } from "./DatePicker";
+import { shiftDays, type RequestCalendar } from "@/lib/booking/calendar";
 import { FormError, FormSuccess } from "./FormStatus";
 import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
@@ -22,6 +24,7 @@ export function AppointmentForm({
   locale,
   t,
   groups,
+  calendar,
   privacyHref,
   email,
   notConfirmed,
@@ -31,6 +34,8 @@ export function AppointmentForm({
   locale: "nl" | "en";
   t: Dictionary["forms"];
   groups: Group[];
+  /** Closed weekdays and dates (disabled in the calendar, refused by the API). */
+  calendar: RequestCalendar;
   privacyHref: string;
   email: string;
   notConfirmed: string;
@@ -51,6 +56,20 @@ export function AppointmentForm({
   const [privacy, setPrivacy] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<Record<string, ErrorCode>>({});
+  // The page is cached: refresh closed days (working hours, closed dates) live.
+  const [closedDays, setClosedDays] = useState<RequestCalendar>(calendar);
+  useEffect(() => {
+    let live = true;
+    fetch("/api/booking/closed-days", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: (RequestCalendar & { ok?: boolean }) | null) => {
+        if (live && d?.ok && Array.isArray(d.closedWeekdays) && Array.isArray(d.closedDates)) setClosedDays({ closedWeekdays: d.closedWeekdays, closedDates: d.closedDates });
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
 
   const clear = (k: string) => errors[k] && setErrors((e) => omit(e, k));
   const set = (k: keyof typeof values) => (e: { target: { value: string } }) => {
@@ -161,7 +180,19 @@ export function AppointmentForm({
       </fieldset>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <TextField id="appt-date" label={t.preferredDate} required type="date" min={today} value={values.preferredDate} onChange={set("preferredDate")} error={fe("preferredDate")} />
+        <DatePicker
+          id="appt-date"
+          label={t.preferredDate}
+          required
+          value={values.preferredDate}
+          onChange={(d) => set("preferredDate")({ target: { value: d } })}
+          min={today}
+          max={shiftDays(today, 365)}
+          calendar={closedDays}
+          locale={locale}
+          error={fe("preferredDate")}
+          labels={t.datePicker}
+        />
         <fieldset aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
             {t.timeRange} <span aria-hidden="true" className="text-accent-deep">*</span>

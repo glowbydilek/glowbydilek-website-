@@ -910,3 +910,62 @@ export const expenseReceipts = mysqlTable(
   },
   (t) => [index("receipt_exp_idx").on(t.expenseId)],
 );
+
+// ─────────────────────────────────────── Intake & consent (printed, signed)
+
+/**
+ * Master "Intake & toestemming" form, one per language, with controlled
+ * revisions: a new version starts as a draft; activating it retires the
+ * previous one. Active and retired versions are never edited, so every
+ * signed copy can be traced to the exact wording the client signed.
+ */
+export const intakeTemplates = mysqlTable(
+  "intake_templates",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    locale: varchar("locale", { length: 2 }).notNull(),
+    version: varchar("version", { length: 40 }).notNull(),
+    status: varchar("status", { length: 10 }).notNull(), // draft | active | retired
+    title: varchar("title", { length: 200 }).notNull(),
+    source: text("source").notNull(),
+    changeNote: varchar("change_note", { length: 300 }),
+    createdBy: int("created_by"),
+    createdAt: created(),
+    activatedAt: ts("activated_at"),
+    retiredAt: ts("retired_at"),
+  },
+  (t) => [uniqueIndex("intake_tpl_version_idx").on(t.locale, t.version), index("intake_tpl_status_idx").on(t.locale, t.status)],
+);
+
+/**
+ * Signed intake forms uploaded per customer (photo or PDF). The file is
+ * stored encrypted (AES-256-GCM, INTAKE_DOCUMENT_KEY) in the database —
+ * never under /media or the public folder. Images are re-encoded first so
+ * EXIF/GPS metadata is removed. Older uploads stay as history; deletion
+ * wipes the file and keeps only non-health metadata for the audit trail.
+ */
+export const intakeDocuments = mysqlTable(
+  "intake_documents",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    customerId: int("customer_id").notNull(),
+    templateVersion: varchar("template_version", { length: 40 }).notNull(),
+    locale: varchar("locale", { length: 2 }).notNull(),
+    signedOn: date("signed_on", { mode: "string" }).notNull(),
+    status: varchar("status", { length: 12 }).notNull(), // current | superseded | deleted
+    mime: varchar("mime", { length: 60 }).notNull(),
+    size: int("size").notNull(),
+    sha256: varchar("sha256", { length: 64 }).notNull(),
+    originalSha256: varchar("original_sha256", { length: 64 }).notNull(),
+    metadataStripped: boolean("metadata_stripped").notNull().default(false),
+    dataEnc: longblob("data_enc"),
+    note: varchar("note", { length: 300 }),
+    uploadedBy: int("uploaded_by"),
+    createdAt: created(),
+    supersededAt: ts("superseded_at"),
+    deletedAt: ts("deleted_at"),
+    deletedBy: int("deleted_by"),
+    deleteReason: varchar("delete_reason", { length: 200 }),
+  },
+  (t) => [index("intake_doc_customer_idx").on(t.customerId, t.status)],
+);

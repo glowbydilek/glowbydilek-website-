@@ -9,7 +9,7 @@ import { Buttons } from "./ContentEditor";
 
 const OPTIONS: { key: keyof Theme; label: string; options: [string, string][] }[] = [
   { key: "buttonShape", label: "Vorm van knoppen", options: [["pill", "Rond (standaard)"], ["rounded", "Licht afgerond"], ["square", "Recht"]] },
-  { key: "headingFont", label: "Lettertype koppen", options: [["newsreader", "Newsreader (standaard, redactioneel)"], ["instrument", "Instrument Sans (modern, strak)"]] },
+  { key: "headingFont", label: "Lettertype koppen", options: [["bodoni", "Bodoni Moda (standaard, luxe redactioneel)"], ["newsreader", "Newsreader (zacht redactioneel)"], ["instrument", "Instrument Sans (modern, strak)"]] },
   { key: "headingWeight", label: "Dikte koppen", options: [["340", "Licht"], ["380", "Normaal (standaard)"], ["460", "Krachtig"]] },
   { key: "logoHeight", label: "Logogrootte in de header", options: [["small", "Klein"], ["medium", "Normaal (standaard)"], ["large", "Groot"]] },
   { key: "headerStyle", label: "Header", options: [["frosted", "Licht transparant (standaard)"], ["solid", "Effen"]] },
@@ -70,8 +70,8 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
 
       <div className="rounded-2xl p-5" style={{ background: c.paper, color: c.ink }}>
         <p className="text-xs uppercase tracking-[0.22em]" style={{ color: c.accentDeep }}>Voorbeeld</p>
-        <p className="mt-2 text-3xl" style={{ fontFamily: theme.headingFont === "instrument" ? "Instrument Sans Variable, sans-serif" : "Newsreader Variable, serif", fontWeight: theme.headingWeight }}>
-          Gladde huid, <em style={{ color: c.accent }}>rustig gedaan.</em>
+        <p className="mt-2 text-3xl" style={{ fontFamily: theme.headingFont === "instrument" ? "var(--font-instrument), sans-serif" : theme.headingFont === "newsreader" ? "Newsreader Variable, serif" : "var(--font-bodoni), serif", fontWeight: theme.headingWeight }}>
+          Jouw moment <em style={{ color: c.accent }}>om te stralen.</em>
         </p>
         <p className="mt-2 text-sm" style={{ color: c.inkSoft }}>Zo ziet lopende tekst eruit, met <span style={{ color: c.muted }}>gedempte tekst</span>.</p>
         <span className="mt-4 inline-block px-6 py-3 text-sm" style={{ background: c.ink, color: c.paper, borderRadius: theme.buttonShape === "pill" ? 999 : theme.buttonShape === "rounded" ? 8 : 2 }}>Afspraak aanvragen</span>

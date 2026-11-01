@@ -113,7 +113,7 @@ async function step(name, fn) {
     await p.getByRole("button", { name: "Behandelingen" }).click();
     const menu = p.locator("#mega-menu");
     await menu.waitFor();
-    for (const name of ["Gezicht", "Lichaam", "Bikini & intiem", "Wenkbrauwen", "Hollywood", "Nazorg"]) {
+    for (const name of ["Massages", "Ontspanningsmassage", "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem", "Nazorg"]) {
       assert.ok(await menu.getByRole("link", { name, exact: true }).count(), `missing ${name}`);
     }
     await p.keyboard.press("Escape");
@@ -137,8 +137,8 @@ async function step(name, fn) {
     await p.locator("#mobile-menu").waitFor({ state: "detached" });
     assert.equal(await p.evaluate(() => document.documentElement.style.overflow), "");
     await toggle.click();
-    await p.locator("#mobile-menu").getByRole("link", { name: /^Body/ }).click();
-    await p.waitForURL(`${BASE}/en/waxing-treatments/body`);
+    await p.locator("#mobile-menu").getByRole("link", { name: /^Massages/ }).click();
+    await p.waitForURL(`${BASE}/en/massages`);
     assert.equal(await p.locator("#mobile-menu").count(), 0);
     await p.close();
   });
@@ -165,9 +165,14 @@ async function step(name, fn) {
       await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
       await p.mouse.wheel(0, 3000);
       await p.waitForTimeout(400);
-      await p.locator('footer a[href="/waxbehandelingen/lichaam"]').click();
+      await p.locator('footer a[href="/waxbehandelingen"]').click();
+      await p.waitForURL(`${BASE}/waxbehandelingen`);
+      await atTop("section page from the footer");
+      await p.mouse.wheel(0, 1200);
+      await p.waitForTimeout(300);
+      await p.locator('main a[href="/waxbehandelingen/lichaam"]').first().click();
       await p.waitForURL(`${BASE}/waxbehandelingen/lichaam`);
-      await atTop("category page from the footer");
+      await atTop("category page from a card");
       await p.mouse.wheel(0, 1800);
       await p.waitForTimeout(300);
       await p.locator('a[href="/waxbehandelingen/lichaam/rug-waxen"]').first().click();
@@ -245,7 +250,16 @@ async function step(name, fn) {
       await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
       const date = new Date(Date.now() + 9 * 864e5).toISOString().slice(0, 10);
       const fill = async () => {
-        await p.fill("#appt-date", date);
+        // Custom calendar (no native date input): Escape closes and returns focus, then pick the day.
+        await p.click("#appt-date");
+        await p.getByRole("dialog").waitFor();
+        await p.keyboard.press("Escape");
+        await p.getByRole("dialog").waitFor({ state: "detached" });
+        assert.equal(await p.evaluate(() => document.activeElement?.id), "appt-date", "focus returns to the date field");
+        await p.click("#appt-date");
+        for (let i = 0; i < 3 && !(await p.locator(`[data-day="${date}"]`).count()); i++) await p.getByRole("button", { name: "Next month" }).click();
+        await p.locator(`[data-day="${date}"]`).click();
+        await p.getByRole("dialog").waitFor({ state: "detached" });
         await p.getByText("Afternoon", { exact: true }).click();
         await p.fill("#appt-name", "E2E Visitor");
         await p.fill("#appt-email", `e2e-${Date.now() % 100000}@example.com`);

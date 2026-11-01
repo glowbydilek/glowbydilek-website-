@@ -1,8 +1,25 @@
 "use client";
 
 import type { Dictionary } from "@/i18n/dictionaries";
+import { Glint } from "../brand/Logo";
 import { Icon } from "../ui/Icon";
 import type { SubmitState } from "./useFormSubmit";
+
+/**
+ * "Request received" mark: a champagne glint with a brief burst of light
+ * (once, ~900 ms; none with reduced motion). Deliberately not a checkmark —
+ * a request is received, not confirmed.
+ */
+export function ReceivedMark() {
+  return (
+    <span className="received-mark relative flex h-14 w-14 items-center justify-center rounded-full border border-champagne/60 text-champagne" aria-hidden="true">
+      <Glint className="h-6 w-auto" />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <span key={i} className="received-spark" style={{ ["--a" as string]: `${i * 60}deg` }} />
+      ))}
+    </span>
+  );
+}
 
 export function FormSuccess({
   title,
@@ -18,10 +35,8 @@ export function FormSuccess({
   onReset: () => void;
 }) {
   return (
-    <div role="status" aria-live="polite" className="flex flex-col items-start rounded-[1.75rem] bg-ink p-8 text-paper sm:p-12">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-ink">
-        <Icon name="check" className="h-6 w-6" />
-      </span>
+    <div role="status" aria-live="polite" className="plum-band flex flex-col items-start rounded-[1.75rem] p-8 sm:p-12">
+      <ReceivedMark />
       <h3 className="mt-6 font-serif text-4xl">{title}</h3>
       <p className="mt-4 max-w-xl leading-relaxed text-paper/80">{body}</p>
       {!acknowledged && <p className="mt-3 text-sm text-paper/65">{t.status.noAck}</p>}

@@ -18,7 +18,7 @@ export type Theme = {
     glowSoft: string;
   };
   buttonShape: "pill" | "rounded" | "square";
-  headingFont: "newsreader" | "instrument";
+  headingFont: "bodoni" | "newsreader" | "instrument";
   headingWeight: 340 | 380 | 460;
   logoHeight: "small" | "medium" | "large";
   headerStyle: "frosted" | "solid";
@@ -27,23 +27,23 @@ export type Theme = {
   radius: "editorial" | "soft" | "none";
 };
 
-/** The approved 2026 identity: porcelain, espresso and resin. */
+/** The approved identity "Luminous Beauty Atelier": pearl, soft rose, deep plum and rosewood. */
 export const APPROVED_THEME: Theme = {
   colors: {
-    paper: "#f5f0e8",
-    surface: "#fbf8f3",
-    sand: "#eae1d5",
-    line: "#d9cbba",
-    ink: "#221a17",
-    inkSoft: "#45392f",
-    muted: "#6b5d52",
-    accent: "#a0461e",
-    accentDeep: "#86391a",
-    glow: "#f0d3b4",
-    glowSoft: "#f7e8d8",
+    paper: "#fffcfb",
+    surface: "#fcf7f6",
+    sand: "#f5e6e7",
+    line: "#e6d0d6",
+    ink: "#2b202b",
+    inkSoft: "#4a3a48",
+    muted: "#6b5867",
+    accent: "#8e4759",
+    accentDeep: "#743749",
+    glow: "#e9c9a8",
+    glowSoft: "#eee3f2",
   },
   buttonShape: "pill",
-  headingFont: "newsreader",
+  headingFont: "bodoni",
   headingWeight: 380,
   logoHeight: "medium",
   headerStyle: "frosted",
@@ -53,17 +53,17 @@ export const APPROVED_THEME: Theme = {
 };
 
 export const COLOR_LABELS: Record<keyof Theme["colors"], string> = {
-  paper: "Achtergrond (porselein)",
+  paper: "Achtergrond (parel)",
   surface: "Kaarten en invoervelden",
-  sand: "Rustige secties (zand)",
+  sand: "Rustige secties (zacht roze)",
   line: "Lijnen",
-  ink: "Inkt (koppen, knoppen, donkere secties)",
+  ink: "Diep pruim (koppen, knoppen, donkere secties)",
   inkSoft: "Lopende tekst",
   muted: "Gedempte tekst",
-  accent: "Hars (accentkleur, links, glinstering)",
-  accentDeep: "Donkere hars (kleine accenttekst)",
-  glow: "Gloed (accent op donker)",
-  glowSoft: "Zachte gloed (gekleurde blokken)",
+  accent: "Rozenhout (accentkleur, links, glinstering)",
+  accentDeep: "Donker rozenhout (kleine accenttekst)",
+  glow: "Champagne (accent op donker)",
+  glowSoft: "Orchidee (gekleurde blokken)",
 };
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -106,7 +106,7 @@ export function validateTheme(input: unknown): { theme: Theme; errors: string[] 
   const theme: Theme = {
     colors,
     buttonShape: pick("buttonShape", ["pill", "rounded", "square"]),
-    headingFont: pick("headingFont", ["newsreader", "instrument"]),
+    headingFont: pick("headingFont", ["bodoni", "newsreader", "instrument"]),
     headingWeight: pick("headingWeight", [340, 380, 460]),
     logoHeight: pick("logoHeight", ["small", "medium", "large"]),
     headerStyle: pick("headerStyle", ["frosted", "solid"]),
@@ -145,7 +145,8 @@ export function themeCss(theme: Theme): string {
   if (radius) vars.push(`--radius-card:${radius[0]}`, `--radius-media:${radius[1]}`);
   const spacing = { compact: ["clamp(2.5rem,1.75rem + 3vw,4.5rem)", "clamp(2rem,1.5rem + 2vw,3.25rem)"], normal: null, airy: ["clamp(4.5rem,3rem + 5vw,8.5rem)", "clamp(3rem,2rem + 3.5vw,5.5rem)"] }[theme.spacing];
   if (spacing) vars.push(`--space-section:${spacing[0]}`, `--space-section-tight:${spacing[1]}`);
-  if (theme.headingFont === "instrument") vars.push(`--font-serif:"Instrument Sans Variable","Instrument Sans",ui-sans-serif,system-ui,sans-serif`);
+  if (theme.headingFont === "newsreader") vars.push(`--font-serif:"Newsreader Variable","Newsreader",Georgia,serif`);
+  if (theme.headingFont === "instrument") vars.push(`--font-serif:var(--font-instrument),ui-sans-serif,system-ui,sans-serif`);
   if (theme.headingWeight !== 380) vars.push(`--heading-weight:${theme.headingWeight}`);
   if (theme.buttonShape !== "pill") vars.push(`--radius-button:${theme.buttonShape === "rounded" ? "0.5rem" : "0.125rem"}`);
   const rules: string[] = [];
@@ -158,11 +159,12 @@ export function themeCss(theme: Theme): string {
 }
 
 export const THEME_PRESETS: { id: string; label: string; theme: Theme }[] = [
-  { id: "approved", label: "Goedgekeurd Glow-thema (standaard)", theme: APPROVED_THEME },
+  { id: "approved", label: "Goedgekeurd thema: Luminous Beauty Atelier (standaard)", theme: APPROVED_THEME },
+  { id: "warm", label: "Vorige stijl: porselein en hars", theme: { ...APPROVED_THEME, headingFont: "newsreader", colors: { paper: "#f5f0e8", surface: "#fbf8f3", sand: "#eae1d5", line: "#d9cbba", ink: "#221a17", inkSoft: "#45392f", muted: "#6b5d52", accent: "#a0461e", accentDeep: "#86391a", glow: "#f0d3b4", glowSoft: "#f7e8d8" } } },
   {
     id: "lighter",
     label: "Lichter en zachter",
-    theme: { ...APPROVED_THEME, colors: { ...APPROVED_THEME.colors, paper: "#f8f4ee", sand: "#efe7dd", glowSoft: "#f9eee2" } },
+    theme: { ...APPROVED_THEME, colors: { ...APPROVED_THEME.colors, sand: "#f9eeef", glowSoft: "#f4ecf6" } },
   },
   { id: "airy", label: "Luchtiger, met meer witruimte", theme: { ...APPROVED_THEME, spacing: "airy" } },
   { id: "compact", label: "Compacter", theme: { ...APPROVED_THEME, spacing: "compact" } },
