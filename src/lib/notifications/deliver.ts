@@ -1,6 +1,7 @@
 import "server-only";
 import { desc, eq } from "drizzle-orm";
 import { purgeAuthData } from "../auth/service";
+import { purgeExpiredConsultations } from "../consultation/service";
 import type { DB } from "../db/client";
 import { purgeExpiredLimits } from "../db/limits";
 import { cronRuns } from "../db/schema";
@@ -26,6 +27,7 @@ export async function cronTick(db: DB) {
     const r = mailConfigured() ? await processOutbox(db, smtpSender, { limit: 40 }) : { sent: 0, failed: 0, skipped: 0 };
     await purgeExpiredLimits(db);
     await purgeAuthData(db);
+    await purgeExpiredConsultations(db);
     await db.update(cronRuns).set({ finishedAt: new Date(), sent: r.sent, failed: r.failed, error: mailConfigured() ? null : "SMTP not configured" }).where(eq(cronRuns.id, res.insertId));
     return r;
   } catch (err) {

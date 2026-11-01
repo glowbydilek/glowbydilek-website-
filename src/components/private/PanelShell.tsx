@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { LogoSymbol } from "@/components/brand/Logo";
 import { logoutAction } from "@/lib/private/authActions";
+import { PanelIcon } from "./PanelIcon";
 
 export type NavItem = { href: string; label: string; icon?: string; badge?: number };
 
@@ -43,7 +44,10 @@ export function PanelShell({
               active(n.href) ? "bg-charcoal text-ivory" : "text-charcoal hover:bg-charcoal/6"
             }`}
           >
-            <span>{n.label}</span>
+            <span className="flex items-center gap-3">
+              {n.icon && <PanelIcon name={n.icon} className={`h-5 w-5 ${active(n.href) ? "text-ivory" : "text-muted"}`} />}
+              {n.label}
+            </span>
             {n.badge ? <span className="rounded-full bg-gold px-2 text-xs font-semibold text-charcoal">{n.badge}</span> : null}
           </Link>
         </li>
@@ -117,7 +121,7 @@ export function PanelShell({
                     aria-current={active(t.href) ? "page" : undefined}
                     className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.72rem] font-medium ${active(t.href) ? "text-charcoal" : "text-muted"}`}
                   >
-                    <span aria-hidden="true" className="text-lg leading-none">{`${t.icon}\uFE0E`}</span>
+                    {t.icon && <PanelIcon name={t.icon} className="h-6 w-6" />}
                     {t.label}
                     {t.badge ? <span className="absolute right-[22%] top-1.5 min-w-5 rounded-full bg-gold px-1 text-center text-[0.65rem] font-semibold text-charcoal">{t.badge}</span> : null}
                   </Link>

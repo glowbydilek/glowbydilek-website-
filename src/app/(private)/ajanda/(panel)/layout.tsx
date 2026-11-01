@@ -25,22 +25,24 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
   const pending = Number(p.n);
   const unread = Number(m.n);
   const nav = [
-    { href: "/ajanda", label: "Vandaag" },
-    { href: "/ajanda/agenda", label: "Agenda" },
-    { href: "/ajanda/aanvragen", label: "Aanvragen", badge: pending },
-    { href: "/ajanda/afspraak/nieuw", label: "Nieuwe afspraak" },
-    { href: "/ajanda/klanten", label: "Klanten" },
-    { href: "/ajanda/berichten", label: "Berichten", badge: unread },
-    { href: "/ajanda/historie", label: "Geschiedenis" },
-    { href: "/ajanda/werktijden", label: "Werktijden" },
-    { href: "/ajanda/instellingen", label: "Instellingen" },
+    { href: "/ajanda", label: "Vandaag", icon: "today" },
+    { href: "/ajanda/agenda", label: "Agenda", icon: "calendar" },
+    { href: "/ajanda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
+    { href: "/ajanda/afspraak/nieuw", label: "Nieuwe afspraak", icon: "plus" },
+    { href: "/ajanda/klanten", label: "Klanten", icon: "users" },
+    { href: "/ajanda/financien", label: "Financiën", icon: "euro" },
+    { href: "/ajanda/facturen", label: "Facturen & PDF", icon: "invoice" },
+    { href: "/ajanda/berichten", label: "Berichten", icon: "messages", badge: unread },
+    { href: "/ajanda/historie", label: "Overzichten", icon: "history" },
+    { href: "/ajanda/werktijden", label: "Werktijden", icon: "clock" },
+    { href: "/ajanda/instellingen", label: "Instellingen", icon: "settings" },
   ];
   const tabs = [
-    { href: "/ajanda", label: "Vandaag", icon: "☀" },
-    { href: "/ajanda/agenda", label: "Agenda", icon: "▦" },
-    { href: "/ajanda/afspraak/nieuw", label: "Nieuw", icon: "＋" },
-    { href: "/ajanda/aanvragen", label: "Aanvragen", icon: "✉", badge: pending },
-    { href: "/ajanda/klanten", label: "Klanten", icon: "☺" },
+    { href: "/ajanda", label: "Vandaag", icon: "today" },
+    { href: "/ajanda/agenda", label: "Agenda", icon: "calendar" },
+    { href: "/ajanda/afspraak/nieuw", label: "Nieuw", icon: "plus" },
+    { href: "/ajanda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
+    { href: "/ajanda/klanten", label: "Klanten", icon: "users" },
   ];
   return (
     <PanelShell area="ajanda" nav={nav} tabs={tabs}>

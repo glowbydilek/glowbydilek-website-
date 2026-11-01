@@ -17,6 +17,7 @@ import {
   appointments,
   appointmentTreatments,
   blocks,
+  consultations,
   customers,
   dateOverrides,
   overrideIntervals,
@@ -705,7 +706,9 @@ export async function anonymizeCustomer(db: DB, id: number, ctx: Ctx) {
       for (const a of ids) await cancelPending(tx, a, ["reminder", "confirmed", "proposed", "rescheduled", "request_received"]);
     }
   });
-  await audit(db, { userId: ctx.userId, action: "customer.anonymized", entity: "customer", entityId: id });
+  // Special category data is removed completely with the personal data.
+  const [del] = (await db.delete(consultations).where(eq(consultations.customerId, id))) as unknown as [{ affectedRows: number }];
+  await audit(db, { userId: ctx.userId, action: "customer.anonymized", entity: "customer", entityId: id, details: { consultationDeleted: del.affectedRows > 0 } });
 }
 
 /** All personal data of a customer (GDPR access/export). */

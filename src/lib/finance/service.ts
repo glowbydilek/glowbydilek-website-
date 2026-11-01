@@ -40,14 +40,16 @@ export async function recordPayment(
     const [a] = await db.select({ customerId: appointments.customerId }).from(appointments).where(eq(appointments.id, p.appointmentId));
     if (!a || a.customerId !== p.customerId) throw new FinanceError("Deze afspraak hoort niet bij deze klant.");
   }
+  let appointmentId = p.appointmentId ?? null;
   if (p.invoiceId) {
-    const [i] = await db.select({ customerId: invoices.customerId, status: invoices.status }).from(invoices).where(eq(invoices.id, p.invoiceId));
+    const [i] = await db.select({ customerId: invoices.customerId, status: invoices.status, appointmentId: invoices.appointmentId }).from(invoices).where(eq(invoices.id, p.invoiceId));
     if (!i || i.customerId !== p.customerId || i.status !== "issued") throw new FinanceError("Deze factuur hoort niet bij deze klant of is nog niet uitgegeven.");
+    appointmentId = appointmentId ?? i.appointmentId;
   }
   const amount = p.kind === "refund" ? -p.amountCents : p.amountCents;
   const [res] = (await db.insert(payments).values({
     customerId: p.customerId,
-    appointmentId: p.appointmentId ?? null,
+    appointmentId,
     invoiceId: p.invoiceId ?? null,
     amountCents: amount,
     method: p.method,

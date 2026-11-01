@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import { AppointmentActions } from "@/components/private/agenda/AppointmentActions";
 import { STATUS, TIME_RANGE_NL, time } from "@/components/private/agenda/format";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { appointmentHistory, BookingError, getAppointment } from "@/lib/booking/service";
 import { getDb } from "@/lib/db/client";
-import { outbox, treatments } from "@/lib/db/schema";
+import { invoices, outbox, payments, treatments } from "@/lib/db/schema";
+import { NewInvoiceButton, PaymentForm } from "@/components/private/finance/FinanceForms";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
 
@@ -56,6 +57,11 @@ export default async function AppointmentPage({ params, searchParams }: { params
     db.select({ id: treatments.id, nameNl: treatments.nameNl }).from(treatments).where(eq(treatments.active, true)).orderBy(asc(treatments.sort)),
   ]);
   const { appt, customer, items } = v;
+  const [apptPayments, apptInvoices] = await Promise.all([
+    db.select().from(payments).where(and(eq(payments.appointmentId, id), isNull(payments.voidedAt))),
+    db.select({ id: invoices.id, number: invoices.number }).from(invoices).where(eq(invoices.appointmentId, id)),
+  ]);
+  const paidHere = apptPayments.reduce((s, p) => s + p.amountCents, 0);
   const st = STATUS[appt.status];
   const local = appt.startAt ? toLocalParts(appt.startAt) : null;
   return (
@@ -114,6 +120,37 @@ export default async function AppointmentPage({ params, searchParams }: { params
             </dl>
             <Link href={`/ajanda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-gold-deep underline">Klantkaart openen</Link>
           </Card>
+          {["completed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (
+            <Card title="Betaling & factuur">
+              <p className="mb-3 text-sm">
+                Betaald: <strong>{formatCents(paidHere)}</strong>
+                {appt.priceCents != null ? ` van ${formatCents(appt.priceCents)} afgesproken` : ""}
+              </p>
+              {apptInvoices.length > 0 && (
+                <ul className="mb-3 text-sm">
+                  {apptInvoices.map((i) => (
+                    <li key={i.id}>
+                      <Link href={`/ajanda/facturen/${i.id}`} className="underline">
+                        {i.number ?? "Factuurconcept"}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mb-4 flex flex-wrap gap-2">
+                <NewInvoiceButton customerId={customer.id} appointmentId={appt.id} />
+                <a href={`/ajanda/afspraak/${appt.id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-charcoal/25 px-5 text-sm">
+                  Behandeloverzicht (PDF)
+                </a>
+              </div>
+              <details>
+                <summary className="cursor-pointer text-sm font-medium">Betaling vastleggen</summary>
+                <div className="mt-3">
+                  <PaymentForm customerId={customer.id} appointments={[{ id: appt.id, label: "Deze afspraak" }]} defaultAppointmentId={appt.id} defaultAmount={appt.priceCents != null ? Math.max(0, appt.priceCents - paidHere) || null : null} today={todayLocal()} />
+                </div>
+              </details>
+            </Card>
+          )}
           <Card title="E-mails">
             {mails.length ? (
               <ul className="divide-y divide-stone text-sm">

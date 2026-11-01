@@ -137,3 +137,14 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
     </div>
   );
 }
+
+/** Key figure (finance, CRM metrics). */
+export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
+  return (
+    <div className="min-w-0 rounded-2xl border border-stone bg-white p-4">
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="mt-1 break-words font-serif text-[1.7rem] leading-tight text-charcoal">{value}</p>
+      {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
+    </div>
+  );
+}
