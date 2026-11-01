@@ -51,7 +51,8 @@ export function navModel(locale: Locale): NavModel {
     categories,
     allHref: sections.length > 1 ? href(locale, "services") : href(locale, "treatments"),
     info: menu.footerInfo.map(link),
-    primary: menu.header.map(link),
+    // "Behandelingen" always leads to the overview of every published section.
+    primary: menu.header.map((k) => (k === "treatments" ? { ...link(k), href: sections.length > 1 ? href(locale, "services") : href(locale, "treatments") } : link(k))),
     studio: menu.footerStudio.map(link),
   };
 }

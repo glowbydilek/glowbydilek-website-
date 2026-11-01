@@ -194,11 +194,11 @@ function mailsSince(since) {
 
     await step("CMS: edit the homepage title, publish, see it live, restore the original", async () => {
       await p.goto(`${BASE}/admin/paginas/home`);
-      await p.locator("#f-root-hero-title").fill("Zacht voor je huid — test.");
+      await p.locator("#f-root-hero-title").fill("Jouw moment — test.");
       await p.getByRole("button", { name: "Publiceren", exact: true }).click();
       await p.getByText("Gepubliceerd (versie").waitFor();
       const html = await (await fetch(`${BASE}/`)).text();
-      assert.ok(html.includes("Zacht voor je huid — test."), "published title is live");
+      assert.ok(html.includes("Jouw moment — test."), "published title is live");
       p.once("dialog", (d) => d.accept());
       await p.getByRole("button", { name: "Oorspronkelijke tekst" }).click();
       await p.getByText("De oorspronkelijke tekst staat weer op de website").waitFor();

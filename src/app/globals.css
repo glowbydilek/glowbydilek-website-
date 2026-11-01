@@ -1,40 +1,44 @@
 @import "tailwindcss";
 
 /*
- * Glow by Dilek — design system (2026)
+ * Glow by Dilek — design system: "Luminous Beauty Atelier" (2026)
  *
- * Direction: warm, editorial, quietly confident. Porcelain paper, espresso
- * ink and one signature colour: Resin, the warm amber of wax. The glint (a
- * four-point star of light) is the only ornament. No gold, no gradients.
+ * Premium skincare house meets boutique wellness editorial. Pearl light,
+ * soft rose and orchid surfaces, deep plum ink and one signature colour:
+ * Rosewood. Champagne is a restrained metallic detail only. The glint (a
+ * four-point star of light) is the ornament. No gold gradients, no glitter.
  *
- * Every text/background pair used below is ≥ 4.5:1 (WCAG AA); see
- * docs/BRAND.md. On dark backgrounds the accent switches to Glow.
- * The owner can adjust these tokens in Admin → Thema & Design
- * (validated, with a one-click restore of this approved theme).
+ * Every text/background pair used below is ≥ 5:1 (WCAG AA); see
+ * docs/BRAND.md. On dark plum the accent switches to Glow (champagne light).
+ * Token names are kept from the previous identity so every component follows;
+ * the owner can adjust them in Admin → Thema & Design (validated).
  */
 @theme {
-  --color-paper: #f5f0e8; /* Porcelain — page background */
-  --color-surface: #fbf8f3; /* raised surfaces, fields */
-  --color-sand: #eae1d5; /* quiet sections */
-  --color-line: #d9cbba; /* hairlines, dividers */
-  --color-ink: #221a17; /* Espresso — text, dark sections, primary buttons */
-  --color-ink-soft: #45392f; /* body copy */
-  --color-muted: #6b5d52; /* secondary text */
-  --color-accent: #a0461e; /* Resin — signature, links, glint */
-  --color-accent-deep: #86391a; /* Resin for small text */
-  --color-glow: #f0d3b4; /* Glow — accent on dark, highlights */
-  --color-glow-soft: #f7e8d8; /* tinted callouts */
+  --color-paper: #fffcfb; /* Pearl — page background */
+  --color-surface: #fcf7f6; /* raised surfaces, fields */
+  --color-sand: #f5e6e7; /* Soft rose — quiet sections */
+  --color-line: #e6d0d6; /* hairlines, dividers */
+  --color-ink: #2b202b; /* Deep plum — text, dark sections, primary buttons */
+  --color-ink-soft: #4a3a48; /* body copy */
+  --color-muted: #6b5867; /* secondary text */
+  --color-accent: #8e4759; /* Rosewood — signature, links, glint */
+  --color-accent-deep: #743749; /* Rosewood for small text */
+  --color-glow: #e9c9a8; /* Champagne light — accent on dark */
+  --color-glow-soft: #eee3f2; /* Orchid mist — tinted callouts */
+  --color-champagne: #c69b73; /* metallic detail (decorative, not for text on light) */
+  --color-ivory: #faf5ee; /* warm secondary surface */
 
-  --font-serif: "Newsreader Variable", "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Bodoni Moda Variable", "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --font-text-serif: "Newsreader Variable", "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-sans: "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --radius-card: 0.75rem;
   --radius-media: 0.375rem;
   --radius-button: 999px;
 
-  --shadow-soft: 0 30px 60px -40px rgb(34 26 23 / 0.35);
-  --shadow-card: 0 1px 0 rgb(34 26 23 / 0.04), 0 18px 40px -30px rgb(34 26 23 / 0.3);
-  --shadow-glass: 0 10px 30px -22px rgb(34 26 23 / 0.35);
+  --shadow-soft: 0 30px 60px -40px rgb(43 32 43 / 0.32);
+  --shadow-card: 0 1px 0 rgb(43 32 43 / 0.04), 0 18px 40px -30px rgb(142 71 89 / 0.28);
+  --shadow-glass: 0 10px 30px -22px rgb(43 32 43 / 0.32);
 
   --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
@@ -60,7 +64,7 @@
     --space-section: clamp(3.5rem, 2rem + 5vw, 7rem);
     --space-section-tight: clamp(2.5rem, 1.5rem + 3.5vw, 4.75rem);
     --space-block: clamp(1.75rem, 1.25rem + 2vw, 3rem);
-    --heading-weight: 380;
+    --heading-weight: 400;
   }
   @media (min-width: 1024px) {
     :root {
@@ -194,7 +198,7 @@
     }
   }
   .on-dark .lead {
-    color: rgb(245 240 232 / 0.8);
+    color: rgb(255 252 251 / 0.8);
   }
   .on-dark .text-accent,
   .on-dark .text-accent-deep {
@@ -248,12 +252,12 @@
     background: var(--color-accent-deep);
   }
   .btn-outline {
-    border: 1px solid rgb(34 26 23 / 0.28);
+    border: 1px solid rgb(43 32 43 / 0.28);
     color: var(--color-ink);
   }
   .btn-outline:hover {
     border-color: var(--color-ink);
-    background: rgb(34 26 23 / 0.04);
+    background: rgb(43 32 43 / 0.04);
   }
   .on-dark .btn-primary {
     background: var(--color-paper);
@@ -263,7 +267,7 @@
     background: var(--color-glow);
   }
   .on-dark .btn-outline {
-    border-color: rgb(245 240 232 / 0.4);
+    border-color: rgb(255 252 251 / 0.4);
     color: var(--color-paper);
   }
 
@@ -315,16 +319,16 @@
   }
 
   .glass {
-    background: rgb(245 240 232 / 0.86);
+    background: rgb(255 252 251 / 0.86);
     -webkit-backdrop-filter: blur(16px) saturate(1.3);
     backdrop-filter: blur(16px) saturate(1.3);
     box-shadow: var(--shadow-glass);
   }
   .glass-dark {
-    background: rgb(34 26 23 / 0.6);
+    background: rgb(43 32 43 / 0.6);
     -webkit-backdrop-filter: blur(16px) saturate(1.2);
     backdrop-filter: blur(16px) saturate(1.2);
-    border: 1px solid rgb(245 240 232 / 0.14);
+    border: 1px solid rgb(255 252 251 / 0.14);
   }
 
   .link-underline {
@@ -363,7 +367,7 @@
   display: grid;
   place-items: center;
   pointer-events: none;
-  background: rgb(245 240 232 / 0);
+  background: rgb(255 252 251 / 0);
 }
 .glow-veil[data-state="in"] {
   animation: veil-in 0.36s var(--ease-soft) forwards;
@@ -405,15 +409,15 @@
 }
 @keyframes veil-in {
   to {
-    background: rgb(245 240 232 / 0.62);
+    background: rgb(255 252 251 / 0.62);
   }
 }
 @keyframes veil-out {
   from {
-    background: rgb(245 240 232 / 0.62);
+    background: rgb(255 252 251 / 0.62);
   }
   to {
-    background: rgb(245 240 232 / 0);
+    background: rgb(255 252 251 / 0);
   }
 }
 @keyframes star-in {
@@ -551,5 +555,116 @@ html.glow-nav main {
 @media (prefers-reduced-motion: no-preference) {
   .campaign-slide {
     animation: page-in 0.6s var(--ease-luxe) both;
+  }
+}
+
+/*
+ * Luminous Beauty Atelier — composition helpers.
+ * Soft light is painted with gradients (no images, no layout cost).
+ */
+@layer components {
+  /* Hero backdrop: pearl with an orchid glow top right and a rose glow lower left. */
+  .atelier-light {
+    background:
+      radial-gradient(60rem 36rem at 92% -8%, rgb(238 227 242 / 0.95), transparent 62%),
+      radial-gradient(44rem 30rem at -12% 108%, rgb(245 230 231 / 0.9), transparent 64%),
+      var(--color-paper);
+  }
+  /* Soft rose to ivory section wash (replaces flat beige). */
+  .atelier-wash {
+    background: linear-gradient(180deg, var(--color-ivory) 0%, var(--color-sand) 100%);
+  }
+  .atelier-mist {
+    background:
+      radial-gradient(40rem 26rem at 100% 0%, rgb(238 227 242 / 0.8), transparent 70%),
+      var(--color-ivory);
+  }
+  /* Arched portrait frame with a champagne hairline offset behind it. */
+  .arch {
+    position: relative;
+    isolation: isolate;
+  }
+  .arch > .arch-media {
+    overflow: hidden;
+    border-radius: 999px 999px var(--radius-media) var(--radius-media);
+  }
+  .arch::before {
+    content: "";
+    position: absolute;
+    inset: -0.9rem 0.9rem 0.9rem -0.9rem;
+    z-index: -1;
+    border: 1px solid var(--color-champagne);
+    border-radius: 999px 999px var(--radius-media) var(--radius-media);
+    opacity: 0.75;
+  }
+  /* Seal on the hero image: tells the visitor the photo is a mood image. */
+  .seal {
+    display: grid;
+    place-items: center;
+    width: 7.25rem;
+    height: 7.25rem;
+    border-radius: 999px;
+    background: rgb(255 252 251 / 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+  }
+  /* Deep plum band for the appointment steps. */
+  .plum-band {
+    background:
+      radial-gradient(50rem 30rem at 85% 0%, rgb(142 71 89 / 0.35), transparent 65%),
+      radial-gradient(40rem 24rem at 0% 100%, rgb(198 155 115 / 0.16), transparent 70%),
+      var(--color-ink);
+    color: var(--color-paper);
+  }
+  .champagne-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-champagne), transparent);
+  }
+  /* Discovery card: image with copy laid over a soft plum gradient. */
+  .discover-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-media);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .discover-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(43 32 43 / 0) 22%, rgb(43 32 43 / 0.55) 55%, rgb(43 32 43 / 0.9) 100%);
+    pointer-events: none;
+  }
+  .discover-card > .discover-copy {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
+  }
+}
+
+/* Selection sheen: one light sweep (~420 ms) on hover, focus and press. */
+@media (prefers-reduced-motion: no-preference) {
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 252 251 / 0.38) 50%, transparent 65%);
+    transform: translateX(-110%);
+  }
+  .sheen:hover::before,
+  .sheen:focus-visible::before,
+  .sheen[data-selected="true"]::before {
+    transform: translateX(110%);
+    transition: transform 0.42s var(--ease-soft);
   }
 }

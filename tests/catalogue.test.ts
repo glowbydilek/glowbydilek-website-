@@ -65,11 +65,15 @@ after(() => setSnapshotResolver(() => null));
 
 // ───────────────────────────────────────────────────────── pure
 
-test("without a database the site shows exactly the 13 published waxing treatments; all new entries are drafts", () => {
+test("without a database the site shows massage and the 13 waxing treatments; the other new entries are drafts", () => {
   withSnapshot({});
-  assert.deepEqual(publicSections().map((s) => s.id), ["waxing"]);
-  assert.equal(publicItems().length, 13);
-  for (const id of ["facial-manual-cleansing", "facial-brush-cleansing", "facial-exfoliation", "facial-mask", "facial-complete", "body-wrap", "massage-relaxation", "pkg-glow-face-trio", "pkg-smooth-essentials", "pkg-glow-complete", "pkg-bikini-smooth"]) {
+  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing"]);
+  assert.equal(publicItems().length, 14);
+  const m = itemById("massage-relaxation")!;
+  assert.equal(isPublicItem(m), true);
+  assert.equal(m.pricing.mode, "on_request", "massage has no invented price");
+  assert.equal(m.durationMinutes, null, "massage has no invented duration");
+  for (const id of ["facial-manual-cleansing", "facial-brush-cleansing", "facial-exfoliation", "facial-mask", "facial-complete", "body-wrap", "pkg-glow-face-trio", "pkg-smooth-essentials", "pkg-glow-complete", "pkg-bikini-smooth"]) {
     const i = itemById(id)!;
     assert.equal(i.status, "draft", id);
     assert.equal(isPublicItem(i), false, id);
@@ -105,7 +109,7 @@ test("an item is public only when it, its section and (for packages) every part 
   assert.equal(itemHref("en", itemById("facial-exfoliation")!), "/en/facial-treatments/facial-exfoliation");
   assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "gezichtspeeling"])?.type, "item");
   assert.equal(alternateCataloguePath("/gezichtsbehandelingen/gezichtspeeling", "en"), "/en/facial-treatments/facial-exfoliation");
-  assert.deepEqual(publicSections().map((s) => s.id), ["waxing", "facial", "packages"]);
+  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing", "facial", "packages"]);
 });
 
 test("archived or hidden items disappear, owner-created items resolve by their own slugs", () => {

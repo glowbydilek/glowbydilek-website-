@@ -1,4 +1,6 @@
 import "@fontsource-variable/newsreader/standard.css";
+import "@fontsource-variable/bodoni-moda/opsz.css";
+import "@fontsource-variable/bodoni-moda/opsz-italic.css";
 import "@fontsource-variable/newsreader/standard-italic.css";
 import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
@@ -17,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#f8f5ef",
+  themeColor: "#fffcfb",
   width: "device-width",
   initialScale: 1,
 };

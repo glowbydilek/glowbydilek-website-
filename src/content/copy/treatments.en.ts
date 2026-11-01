@@ -33,7 +33,7 @@ export const treatmentsEn: TreatmentCopySet = {
     faqs: [
       {
         q: "Can I have my brows tinted too?",
-        a: "At the moment Glow by Dilek focuses on waxing. Other treatments are only mentioned once they are genuinely available.",
+        a: "Brow tinting is not offered at the moment. Treatments only appear on the website once they are genuinely available.",
       },
       {
         q: "What if I’m not happy with the shape?",

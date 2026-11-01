@@ -18,7 +18,7 @@ export const BUILTIN_SECTIONS: Section[] = [
   { id: "waxing", kind: "treatments", slug: { nl: "waxbehandelingen", en: "waxing-treatments" }, name: { nl: "Waxbehandelingen", en: "Waxing" }, status: "published", sort: 0, photo: "treatments-hero", mediaId: null, builtin: true },
   { id: "facial", kind: "treatments", slug: { nl: "gezichtsbehandelingen", en: "facial-treatments" }, name: { nl: "Gezichtsbehandelingen", en: "Facial treatments" }, status: "draft", sort: 1, photo: "facial", mediaId: null, builtin: true },
   { id: "bodycare", kind: "treatments", slug: { nl: "lichaamsbehandelingen", en: "body-treatments" }, name: { nl: "Lichaamsbehandelingen", en: "Body treatments" }, status: "draft", sort: 2, photo: "bodycare", mediaId: null, builtin: true },
-  { id: "massage", kind: "treatments", slug: { nl: "massages", en: "massages" }, name: { nl: "Massages", en: "Massages" }, status: "draft", sort: 3, photo: "massage", mediaId: null, builtin: true },
+  { id: "massage", kind: "treatments", slug: { nl: "massages", en: "massages" }, name: { nl: "Massages", en: "Massages" }, status: "published", sort: -1, photo: "massage", mediaId: null, builtin: true },
   { id: "packages", kind: "packages", slug: { nl: "pakketten", en: "packages" }, name: { nl: "Pakketten", en: "Packages" }, status: "draft", sort: 4, photo: "aftercare", mediaId: null, builtin: true },
 ];
 
@@ -154,7 +154,12 @@ const massage: Item[] = [
     photo: "massage",
     sort: 0,
   }),
-];
+].map((i) => ({
+  ...i,
+  // Confirmed by the owner (November 2026): massage is offered. Price and
+  // duration are not confirmed yet, so it stays "on request" without a duration.
+  status: "published" as const,
+}));
 
 const packages: Item[] = [
   draft(

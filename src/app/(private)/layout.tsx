@@ -1,4 +1,6 @@
 import "@fontsource-variable/newsreader/standard.css";
+import "@fontsource-variable/bodoni-moda/opsz.css";
+import "@fontsource-variable/bodoni-moda/opsz-italic.css";
 import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#292724",
+  themeColor: "#2b202b",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

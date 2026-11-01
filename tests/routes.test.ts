@@ -84,12 +84,14 @@ test("educational pages exist in both languages", () => {
 
 test("sitemap lists every page in both languages with hreflang alternates", async () => {
   const entries = await sitemap();
-  // The "all treatments" overview is left out while waxing is the only published section;
-  // of the legal pages only the cookie policy is online by default.
-  assert.equal(entries.length, (allPages().length - 1 + 1) * 2);
+  // With massage and waxing published, the "all treatments" overview, the massage landing page
+  // and the relaxation massage are listed too; of the legal pages only the cookie policy is online.
+  assert.equal(entries.length, (allPages().length + 3) * 2);
   assert.ok(entries.some((e) => e.url.endsWith("/cookiebeleid")));
   assert.ok(!entries.some((e) => e.url.endsWith("/algemene-voorwaarden")));
-  assert.ok(!entries.some((e) => e.url.endsWith("/behandelingen")));
+  assert.ok(entries.some((e) => e.url.endsWith("/behandelingen")));
+  assert.ok(entries.some((e) => e.url.endsWith("/massages/ontspanningsmassage")));
+  assert.ok(entries.some((e) => e.url.endsWith("/en/massages/relaxation-massage")));
   for (const e of entries) {
     assert.ok(e.url.startsWith("https://"), e.url);
     const langs = e.alternates?.languages as Record<string, string>;

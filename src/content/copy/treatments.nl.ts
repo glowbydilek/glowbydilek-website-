@@ -33,7 +33,7 @@ export const treatmentsNl: TreatmentCopySet = {
     faqs: [
       {
         q: "Kan ik mijn wenkbrauwen ook laten verven?",
-        a: "Op dit moment richt Glow by Dilek zich op waxen. Andere behandelingen worden pas genoemd als ze echt beschikbaar zijn.",
+        a: "Wenkbrauwen verven wordt op dit moment niet aangeboden. Behandelingen verschijnen pas op de website als ze echt beschikbaar zijn.",
       },
       {
         q: "Wat als ik niet tevreden ben over de vorm?",

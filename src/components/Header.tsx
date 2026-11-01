@@ -134,6 +134,15 @@ export function Header({
           aria-label={dict.nav.main}
           className="hidden items-center gap-1 lg:flex"
         >
+          <Link
+            href={href(locale, "home")}
+            onClick={close}
+            aria-current={pathname === href(locale, "home") ? "page" : undefined}
+            className={`${navLinkCls(pathname === href(locale, "home"))} hidden xl:inline-flex`}
+          >
+            {activeMark(pathname === href(locale, "home"))}
+            {dict.nav.home}
+          </Link>
           <div className="relative">
             <button
               type="button"

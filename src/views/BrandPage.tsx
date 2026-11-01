@@ -67,14 +67,14 @@ export function BrandPage() {
         <h2 className="display mt-16 text-4xl">Typografie</h2>
         <div className="mt-7 grid gap-5 lg:grid-cols-3">
           <div className="rounded-[var(--radius-card)] bg-surface p-7">
-            <p className="eyebrow">Koppen · Newsreader</p>
+            <p className="eyebrow">Koppen · Bodoni Moda</p>
             <p className="display mt-4 text-5xl">
-              Gladde huid, <em>rustig gedaan.</em>
+              Jouw moment <em>om te stralen.</em>
             </p>
           </div>
           <div className="rounded-[var(--radius-card)] bg-surface p-7">
             <p className="eyebrow">Tekst · Instrument Sans</p>
-            <p className="mt-4 text-lg leading-relaxed">Een kleine, persoonlijke waxstudio voor gezicht, lichaam en bikinizone.</p>
+            <p className="mt-4 text-lg leading-relaxed">Beauty &amp; relaxation voor vrouwen: ontspanning en verzorging, op afspraak bij Dilek.</p>
             <p className="mt-3 text-sm font-medium">Knoppen in gewone zinsvorm, nooit in spatiërende hoofdletters.</p>
           </div>
           <div className="rounded-[var(--radius-card)] bg-surface p-7">

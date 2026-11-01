@@ -29,7 +29,7 @@ function localiseHref(path: string, locale: Locale): string {
   return alternatePath(path, "en") !== "/en" || path === "/" ? alternatePath(path, "en") : path;
 }
 
-const defaultFeatured = ["eyebrows", "underarms", "full-legs", "brazilian"];
+const defaultFeatured = ["massage-relaxation", "eyebrows", "underarms", "full-legs"];
 
 /**
  * Service discovery rows: the published sections once there are several
@@ -87,37 +87,47 @@ export function HomePage({ locale }: { locale: Locale }) {
   const sections: Record<string, ReactNode> = {
     hero: (
       <>
-        {/* 1 ─ Hero */}
-        <section className="pt-header bg-paper pb-[var(--space-section-tight)]">
-          <Container className="grid items-center gap-10 md:grid-cols-[1.08fr_0.92fr] lg:gap-20">
+        {/* 1 ─ Hero: luminous backdrop, arched mood portrait */}
+        <section className="atelier-light pt-header relative overflow-hidden pb-[var(--space-section-tight)]">
+          <Container className="grid items-center gap-12 md:grid-cols-[1.1fr_0.9fr] lg:gap-20">
             <div>
               <p className="eyebrow rise">{t.hero.eyebrow}</p>
-              <h1 className="display rise mt-5 text-[2.9rem] [--rise-delay:80ms] sm:text-7xl lg:text-[5.4rem]">
+              <h1 className="display rise mt-5 text-[2.75rem] [--rise-delay:80ms] min-[400px]:text-[3.1rem] sm:text-7xl lg:text-[5.6rem]">
                 {t.hero.title}
                 <br />
                 <em>{t.hero.titleEm}</em>
               </h1>
               <p className="lead rise mt-6 max-w-lg [--rise-delay:160ms]">{t.hero.subtitle}</p>
               <div className="rise mt-8 flex flex-wrap items-center gap-3 [--rise-delay:240ms]">
-                <ButtonLink href={href(locale, "booking")} arrow>
+                <ButtonLink href={href(locale, "booking")} arrow className="sheen">
                   {dict.cta.request}
                 </ButtonLink>
-                <ButtonLink href={href(locale, "treatments")} variant="outline">
+                <ButtonLink href={rows.length > 1 ? href(locale, "services") : href(locale, "treatments")} variant="outline">
                   {dict.cta.explore}
                 </ButtonLink>
               </div>
               <ul className="rise mt-9 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-ink-soft [--rise-delay:320ms]">
                 {t.hero.facts.map((f) => (
                   <li key={f} className="flex items-center gap-2">
-                    <Glint className="h-3 w-auto text-accent" />
+                    <Glint className="h-3 w-auto text-champagne" />
                     {f}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="rise [--rise-delay:120ms]">
-              <div className={`mx-auto lg:ml-auto lg:mr-0 ${hasPhoto("hero") ? "hero-photo-w [--hero-max:32rem]" : "w-full max-w-[30rem]"}`}>
-                <HeroVisual photo="hero" locale={locale} />
+              <div className={`relative mx-auto lg:ml-auto lg:mr-0 ${hasPhoto("hero") ? "hero-photo-w [--hero-max:30rem]" : "w-full max-w-[28rem]"}`}>
+                <div className="arch">
+                  <div className="arch-media">
+                    <HeroVisual photo="hero" locale={locale} />
+                  </div>
+                </div>
+                <div className="seal absolute -bottom-6 -left-4 sm:-left-8" aria-hidden="true">
+                  <span>
+                    <Glint className="mx-auto h-4 w-auto text-accent" />
+                    <span className="mt-1.5 block px-3 font-serif text-[0.95rem] italic leading-tight text-ink">{dict.meta.tagline}</span>
+                  </span>
+                </div>
               </div>
             </div>
           </Container>
@@ -166,10 +176,10 @@ export function HomePage({ locale }: { locale: Locale }) {
     statement: (
       <>
         {/* 2 ─ Statement: a still life beside the quote (photo editable in Admin → Foto's) */}
-        <section className="section bg-sand">
+        <section className="section atelier-wash">
           <Container className="grid items-center gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div data-reveal className="mx-auto w-full max-w-[22rem] md:max-w-none">
-              <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 90vw" className="rounded-[var(--radius-card)]" />
+              <div className="arch"><div className="arch-media"><Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 90vw" /></div></div>
             </div>
             <div data-reveal className="text-center md:text-left">
               <p className="eyebrow">{t.statement.eyebrow}</p>
@@ -197,40 +207,33 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </ButtonLink>
               </div>
             </div>
-            <ol className="mt-block border-t border-line">
+            <ul className={`mt-block grid gap-5 ${rows.length === 2 ? "md:grid-cols-2" : rows.length >= 3 ? "sm:grid-cols-2 lg:grid-cols-3" : ""}`}>
               {rows.map((g, i) => (
-                <li key={g.id} className="border-b border-line" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                  <Link
-                    href={g.href}
-                    className="group grid gap-4 py-7 transition-colors duration-500 hover:bg-surface sm:px-4 md:grid-cols-[4rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-8"
-                  >
+                <li key={g.id} data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
+                  <Link href={g.href} className="discover-card sheen group">
                     {hasPhoto(g.photo) ? (
-                      <div className="zoom-frame w-24 overflow-hidden rounded-[var(--radius-media)] md:w-16">
-                        <Photo id={g.photo} locale={locale} ratio={1} sizes="96px" />
+                      <div className="zoom-frame">
+                        <Photo id={g.photo} locale={locale} ratio={rows.length <= 2 ? 5 / 4 : 4 / 5} sizes={rows.length <= 2 ? "(min-width: 768px) 46vw, 92vw" : "(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"} />
                       </div>
                     ) : (
-                      <span className="font-serif text-4xl italic text-accent-deep">0{i + 1}</span>
+                      <div className="aspect-[5/4] bg-accent-deep" />
                     )}
-                    <div>
-                      <h3 className="font-serif text-[2rem] leading-none text-ink sm:text-[2.4rem]">{g.label}</h3>
-                      <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted">
-                        {g.names.length} {t.treatments.count}
+                    <div className="discover-copy">
+                      <p className="text-xs uppercase tracking-[0.2em] text-paper/80">
+                        {g.names.length} {g.names.length === 1 ? t.treatments.countOne : t.treatments.count}
                       </p>
-                    </div>
-                    <div>
-                      <p className="leading-relaxed text-ink-soft">{g.intro}</p>
-                      <p className="mt-3 text-sm text-muted">{g.names.join(" · ")}</p>
-                    </div>
-                    <span className="flex h-12 w-12 items-center justify-center justify-self-start rounded-full border border-ink/20 text-ink transition-all duration-500 group-hover:border-ink group-hover:bg-ink group-hover:text-paper md:justify-self-end">
-                      <span className="sr-only">
-                        {t.treatments.more}: {g.label}
+                      <h3 className="mt-2 font-serif text-[2.1rem] leading-none text-paper sm:text-[2.6rem]">{g.label}</h3>
+                      <p className="mt-3 max-w-md leading-relaxed text-paper/85">{g.intro}</p>
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-paper">
+                        <span className="sr-only">{t.treatments.more}: </span>
+                        {g.names.slice(0, 3).join(" · ")}
+                        <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
                       </span>
-                      <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:-rotate-45" />
-                    </span>
+                    </div>
                   </Link>
                 </li>
               ))}
-            </ol>
+            </ul>
           </Container>
         </section>
       </>
@@ -257,25 +260,22 @@ export function HomePage({ locale }: { locale: Locale }) {
     process: (
       <>
         {/* 4 ─ How it works */}
-        <section className="section bg-sand">
+        <section className="section plum-band on-dark">
           <Container>
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-              <SectionHeading eyebrow={t.experience.eyebrow} title={dict.hub.afterTitle} intro={t.experience.intro} />
+              <SectionHeading eyebrow={t.experience.eyebrow} title={t.experience.title} intro={t.experience.intro} />
               <div data-reveal className="shrink-0">
-                <ButtonLink href={href(locale, "process")} variant="outline" arrow>
+                <ButtonLink href={href(locale, "process")} variant="outline-light" arrow>
                   {dict.hub.afterLink}
                 </ButtonLink>
               </div>
             </div>
             <ol className="mt-block grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
               {t.experience.steps.map((s, i) => (
-                <li key={s.title} className="relative border-t border-ink/25 pt-6" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                  <span aria-hidden="true" className="absolute -top-[0.45rem] left-0 bg-sand pr-3 text-accent">
-                    <Glint className="h-3.5 w-auto" />
-                  </span>
-                  <span className="font-serif text-sm italic text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-2 font-serif text-[1.6rem] leading-tight text-ink">{s.title}</h3>
-                  <p className="mt-2 leading-relaxed text-ink-soft">{s.body}</p>
+                <li key={s.title} className="relative border-t border-paper/20 pt-6" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
+                  <span className="font-serif text-5xl italic leading-none text-champagne">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="mt-4 font-serif text-[1.6rem] leading-tight text-paper">{s.title}</h3>
+                  <p className="mt-2 leading-relaxed text-paper/80">{s.body}</p>
                 </li>
               ))}
             </ol>
@@ -312,7 +312,7 @@ export function HomePage({ locale }: { locale: Locale }) {
     dilek: (
       <>
         {/* 6 ─ Meet Dilek */}
-        <section className="section bg-glow-soft">
+        <section className="section atelier-mist">
           <Container className="grid items-center gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-24">
             {hasPhoto("interior") ? (
               <div className="mx-auto w-full max-w-sm overflow-hidden rounded-[var(--radius-media)] md:max-w-none" data-reveal="mask">

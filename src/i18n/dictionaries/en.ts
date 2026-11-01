@@ -6,17 +6,17 @@ import type { Dictionary } from "./nl";
  */
 export const en: Dictionary = {
   meta: {
-    tagline: "Professional waxing",
+    tagline: "Beauty & relaxation",
     pages: {
       services: {
         title: "All treatments",
         description:
-          "All Glow by Dilek treatments in one place: waxing and — once available — facial and body treatments, massages and packages. By appointment only.",
+          "All Glow by Dilek treatments in one place: relaxing massages, waxing and more personal beauty treatments for women. By appointment only.",
       },
       home: {
-        title: "Glow by Dilek — Waxing studio by appointment",
+        title: "Glow by Dilek — Beauty & relaxation for women",
         description:
-          "A personal waxing studio for face, body and bikini area. One client at a time, a consistent hygienic routine and time for you. Request your appointment online.",
+          "Personal beauty treatments and relaxing massages for women, tailored to your wishes and comfort. By appointment only; request your appointment online.",
       },
       treatments: {
         title: "Face, body and bikini waxing",
@@ -24,24 +24,24 @@ export const en: Dictionary = {
           "Eyebrow, upper lip, underarm, arm, leg, back, bikini line, Brazilian and Hollywood waxing. Find out who each treatment suits, what to expect and how to prepare.",
       },
       prices: {
-        title: "Waxing prices",
+        title: "Prices",
         description:
-          "Every waxing treatment at Glow by Dilek in one overview. Current prices are sent to you quickly and personally via hello@glowbydilek.nl.",
+          "Every Glow by Dilek treatment in one overview, with price, duration or ‘upon request’. A question about a price? Email hello@glowbydilek.nl.",
       },
       about: {
         title: "About Dilek",
         description:
-          "The story and approach behind Glow by Dilek: a small, personal waxing studio built around calm, care and honest advice.",
+          "The story and approach behind Glow by Dilek: personal beauty treatments and relaxation, built around calm, care and honest advice.",
       },
       contact: {
         title: "Contact",
         description:
-          "A question about waxing or a treatment? Send a message through the form or email hello@glowbydilek.nl. Dilek replies personally.",
+          "A question about a treatment or an appointment? Send a message through the form or email hello@glowbydilek.nl. Dilek replies personally.",
       },
       booking: {
         title: "Request an appointment",
         description:
-          "Request your waxing appointment online. Choose your treatment and a preferred time; Dilek reviews your request and confirms the appointment personally.",
+          "Request your appointment online. Choose your treatment and a preferred time; Dilek reviews your request and confirms the appointment personally.",
       },
       reviews: {
         title: "Client reviews",
@@ -68,7 +68,7 @@ export const en: Dictionary = {
     aftercare: "Aftercare",
     faq: "FAQ",
     reviews: "Reviews",
-    categories: "Treatments by area",
+    categories: "Treatments by category",
     allTreatments: "All treatments",
     info: "Good to know",
     openMenu: "Open menu",
@@ -83,7 +83,7 @@ export const en: Dictionary = {
   cta: {
     requestShort: "Request",
     request: "Request appointment",
-    explore: "Explore the treatments",
+    explore: "Explore treatments",
     viewTreatments: "All treatments",
     viewPrices: "Prices",
     contact: "Ask a question",
@@ -105,13 +105,13 @@ export const en: Dictionary = {
   whatsapp: {
     label: "Send a WhatsApp message",
     short: "WhatsApp",
-    message: "Hi Dilek, I have a question about a waxing treatment.",
+    message: "Hi Dilek, I have a question about a treatment.",
   },
   trust: [
     {
       icon: "hygiene",
       title: "Hygiene comes first",
-      body: "A clean, orderly workspace, fresh materials for every client and the same careful sequence each time. With waxing, that isn't a bonus — it's the foundation.",
+      body: "A clean, orderly workspace, fresh materials for every client and the same careful sequence each time. That isn't a bonus — it's the foundation.",
     },
     {
       icon: "privacy",
@@ -131,76 +131,78 @@ export const en: Dictionary = {
   ],
   home: {
     hero: {
-      eyebrow: "Waxing studio · by appointment",
-      title: "Gentle on your skin.",
-      titleEm: "Calm for you.",
+      eyebrow: "Glow by Dilek · Beauty & relaxation",
+      title: "A little moment,",
+      titleEm: "just for you.",
       subtitle:
-        "Glow by Dilek is a small, personal waxing studio for face, body and bikini area. One client at a time, a consistent hygienic routine, and time to feel completely at ease.",
-      facts: ["One client at a time", "By appointment only", "Personally confirmed"],
+        "Personal beauty treatments and relaxing massages for women, thoughtfully tailored to your comfort, your preferences and time for yourself.",
+      facts: ["Personal attention", "By appointment only", "Confirmed by Dilek herself"],
     },
     statement: {
-      eyebrow: "The idea behind Glow",
-      quote: "Waxing is personal. It should feel that way, too.",
-      body: "You're trusting someone with your skin — sometimes in places you'd rather not discuss. That's why a treatment at Glow by Dilek doesn't start with the wax, but with a short conversation: what would you like, how does your skin react, is there anything to take into account? Only then does the work begin — precise, calm and unhurried.",
+      eyebrow: "Time for yourself",
+      quote: "An appointment at Glow should feel less like a diary entry and more like a pause.",
+      body: "You arrive and, for a while, nothing is expected of you. Whether you come for a relaxing massage or a caring treatment, there is time for a short conversation about what you enjoy, and then for calm. No rush, no crowds, at your pace.",
       signature: "Dilek",
     },
     treatments: {
       eyebrow: "Treatments",
-      title: "Three areas, one careful approach",
-      intro: "From a clean brow line to a completely smooth bikini area. Every treatment is tailored to your skin, your hair growth and what feels right to you.",
+      title: "Discover your treatment",
+      intro: "From a calming massage to caring waxing. Choose what suits you; every page tells you honestly what to expect.",
       count: "treatments",
-      more: "Read more",
+      countOne: "treatment",
+      more: "View",
     },
     experience: {
-      eyebrow: "How it works",
-      title: "From request to smooth skin",
-      intro: "No complicated booking system — just personal contact. Here's how an appointment unfolds.",
+      eyebrow: "Booking",
+      title: "How appointments work",
+      intro: "No complicated system, just personal contact. Your appointment is only fixed once Dilek has confirmed it.",
       steps: [
-        { title: "You send a request", body: "Choose your treatment and a preferred time online. You'll receive a confirmation of receipt by email straight away." },
-        { title: "Dilek confirms personally", body: "Dilek reviews your request and agrees the date and time with you. Your appointment is only final once she has confirmed it." },
-        { title: "A short conversation", body: "At the start of the appointment, you discuss your wishes, your skin and any sensitivities or medication." },
-        { title: "Treatment and aftercare", body: "Calm, precise waxing, followed by soothing care and advice for the days ahead." },
+        { title: "Choose your treatment", body: "Choose one or more treatments online and share your preferred time." },
+        { title: "Your request arrives", body: "You receive an email straight away that we have your request. This is not yet a confirmed appointment." },
+        { title: "Dilek confirms personally", body: "Dilek reviews your request and confirms it, or suggests another time." },
+        { title: "All details follow", body: "After confirmation you receive the practical details for your appointment personally." },
       ],
     },
     standards: {
-      eyebrow: "Why Glow by Dilek",
-      title: "What you can count on",
-      intro: "What sets a good waxing treatment apart rarely lies in big promises. It's in the details you notice from the very first contact.",
+      eyebrow: "Glow by Dilek",
+      title: "Every detail matters",
+      intro: "What makes a treatment special lies in the small things: the time you are given, the calm and the care with which it is done.",
     },
     care: {
       eyebrow: "Preparation and aftercare",
-      title: "Great results start before your appointment",
+      title: "Well prepared, longer enjoyed",
       intro: "A few simple steps before and after your appointment make the treatment more comfortable and keep your skin calm.",
       firstTime: {
-        title: "First time waxing?",
-        body: "It's less daunting than you might think. Let the hair grow for a few weeks, ask any questions beforehand, and expect a calm, clear explanation throughout your treatment.",
+        title: "Your first time?",
+        body: "Feel free to ask anything beforehand. During the appointment Dilek explains what she is doing and adjusts everything to what feels right for you.",
       },
     },
     dilek: {
       eyebrow: "Meet Dilek",
       title: "Hi, I'm Dilek",
-      body: "I founded Glow by Dilek because I believe waxing deserves more attention than it usually gets. With me, you're the only client at that moment. I take my time, explain what I'm doing and work precisely — and you can ask me anything.",
-      quote: "Your comfort and trust come before everything else.",
+      body: "At Glow by Dilek you have one familiar point of contact: me. I take time for you, explain what I do before I do it and tailor the treatment to your wishes. You can ask me anything.",
+      quote: "Your comfort and trust come first.",
     },
     faq: {
       eyebrow: "Frequently asked questions",
       title: "Good to know",
-      intro: "The questions we hear most often, answered briefly and honestly. Can't find yours? Just send a message.",
+      intro: "The questions asked most often, answered briefly and honestly. Can't find yours? Feel free to send a message.",
     },
     closing: {
       eyebrow: "Appointment",
-      title: "Ready for smooth skin, without the rush?",
-      body: "Request your appointment in a few simple steps. You'll receive a confirmation of receipt straight away, and Dilek will contact you personally to confirm the date and time.",
+      title: "Ready for a moment for yourself?",
+      body: "Request your appointment in a few steps. You receive an acknowledgement straight away, and Dilek contacts you personally to confirm your appointment.",
     },
     contact: {
-      eyebrow: "Prefer to ask first?",
+      eyebrow: "Questions first?",
       body: "Not sure which treatment suits you, or want to discuss something before requesting an appointment? Send a message or email directly.",
     },
   },
+
   care: {
     before: {
       title: "Before your appointment",
-      lead: "Good preparation makes the treatment more comfortable and the result more beautiful.",
+      lead: "For waxing, good preparation makes the treatment more comfortable and the result more beautiful.",
       items: [
         "Let the hair grow to at least 0.5 cm — roughly the length of a grain of rice. That's usually two to four weeks after shaving.",
         "Gently exfoliate one or two days beforehand to lift away loose skin.",
@@ -211,7 +213,7 @@ export const en: Dictionary = {
     },
     after: {
       title: "After your treatment",
-      lead: "Some redness is normal and usually fades within a day.",
+      lead: "After waxing, some redness is normal and usually fades within a day.",
       items: [
         "For the first 24 hours, avoid saunas, sunbeds, swimming pools, hot showers and intense exercise.",
         "Wear loose, breathable clothing over the treated skin if you can.",
@@ -224,12 +226,24 @@ export const en: Dictionary = {
   faq: {
     general: [
       {
-        q: "How long does my hair need to be?",
-        a: "At least 0.5 cm, roughly the length of a grain of rice. That's usually two to four weeks after shaving. If it's much longer, it will be trimmed slightly first.",
+        q: "How do I request an appointment?",
+        a: "On the ‘Request appointment’ page, choose your treatment, a preferred date and a time of day. You'll receive a confirmation of receipt straight away. The appointment is only final once Dilek has confirmed it personally.",
+      },
+      {
+        q: "Where do treatments take place?",
+        a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+      },
+      {
+        q: "What can I expect from a relaxation massage?",
+        a: "A calm moment to take some time entirely for yourself. Before the massage you briefly discuss with Dilek what feels comfortable and whether there is anything she should take into account. You will hear the price and duration personally when you send your request.",
       },
       {
         q: "Does waxing hurt?",
         a: "You'll feel a brief, sharp sensation that fades quickly. How it feels varies from person to person and area to area, and the first time is usually the most sensitive. With regular waxing, hair often grows back finer, so many people find it less intense over time.",
+      },
+      {
+        q: "How long does my hair need to be?",
+        a: "At least 0.5 cm, roughly the length of a grain of rice. That's usually two to four weeks after shaving. If it's much longer, it will be trimmed slightly first.",
       },
       {
         q: "How long will my skin stay smooth?",
@@ -240,16 +254,8 @@ export const en: Dictionary = {
         a: "Yes. In Dutch, both words describe removing hair with (warm) wax. The hair is removed from the root, so the result lasts for weeks.",
       },
       {
-        q: "Where do treatments take place?",
-        a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
-      },
-      {
-        q: "How do I request an appointment?",
-        a: "On the ‘Request appointment’ page, choose your treatment, a preferred date and a time of day. You'll receive a confirmation of receipt straight away. The appointment is only final once Dilek has confirmed it personally.",
-      },
-      {
         q: "Do you offer laser hair removal or other treatments?",
-        a: "At the moment, Glow by Dilek focuses entirely on waxing. New treatments will only be announced once they are genuinely available.",
+        a: "Laser hair removal is not offered. The website only shows treatments that are genuinely available; new treatments appear once they are.",
       },
     ],
     treatments: [
@@ -356,9 +362,9 @@ export const en: Dictionary = {
       eyebrow: "The story",
       title: "Why Glow by Dilek exists",
       paragraphs: [
-        "My name is Dilek. I started Glow by Dilek with one wish: that waxing should feel like a moment for yourself, not something you quickly ‘have to’ get done.",
+        "My name is Dilek. I started Glow by Dilek with one wish: that a treatment should feel like a moment for yourself, not something you quickly ‘have to’ get done.",
         "That starts with the basics. A calm, clean space. Time for a conversation. An explanation of what I do and why. And a routine that's the same every time, so you always know what to expect.",
-        "Whether it's your very first treatment or you've been waxing for years, you're welcome as you are — questions and all.",
+        "Whether it's your very first treatment or you've been coming for years, you're welcome as you are — questions and all.",
       ],
     },
     quote: "I'd rather see fewer clients and give each one more attention.",
@@ -369,13 +375,13 @@ export const en: Dictionary = {
         { title: "Time", body: "Appointments are never squeezed in. You'll never feel rushed." },
         { title: "Explanation", body: "I tell you what I'm going to do before I do it — especially at your first treatment." },
         { title: "Discretion", body: "One client at a time and a respectful approach. What you share stays between us." },
-        { title: "Honesty", body: "If waxing isn't wise for your skin right now, I'll tell you — even if that means rescheduling." },
+        { title: "Honesty", body: "If a treatment isn't wise for you right now, I'll tell you — even if that means rescheduling." },
       ],
     },
     vision: {
       eyebrow: "Looking ahead",
       title: "Started small, with room to grow",
-      body: "Glow by Dilek begins with waxing because it's something I fully stand behind. Step by step, I'd like to grow the studio — always with the same care. New treatments will only be announced once they're genuinely available.",
+      body: "Glow by Dilek grows step by step, always with the same care. New treatments only appear on the website once they are genuinely available.",
     },
   },
   contact: {
@@ -429,7 +435,7 @@ export const en: Dictionary = {
       email: "Email address",
       phone: "Phone number",
       note: "Note (optional)",
-      notePlaceholder: "For example: first time waxing (no medical details)",
+      notePlaceholder: "For example: first time, or a preference (no medical details)",
       submit: "Request appointment",
       sending: "Sending…",
       successTitle: "Your request has been received",
@@ -466,7 +472,7 @@ export const en: Dictionary = {
     alternative: "Another time that also works",
     alternativePlaceholder: "For example: Tuesday evening or Saturday morning",
     notes: "Note",
-    notesPlaceholder: "For example: first time waxing, or a question beforehand (no medical details)",
+    notesPlaceholder: "For example: first time, or a question beforehand (no medical details)",
     privacy: "I agree that my details may be used to answer my request, as described in the",
     privacyLink: "privacy statement",
     challengeLabel: "Security check",
@@ -555,7 +561,7 @@ export const en: Dictionary = {
     sections: [
       {
         h: "Who we are",
-        p: "Glow by Dilek is a waxing studio offering treatments by appointment. Privacy questions can be sent to hello@glowbydilek.nl.",
+        p: "Glow by Dilek offers personal beauty treatments and massages, by appointment only. Privacy questions can be sent to hello@glowbydilek.nl.",
       },
       {
         h: "What information we receive",
@@ -649,7 +655,7 @@ export const en: Dictionary = {
   footer: {
     follow: "Follow Glow by Dilek",
     login: "Log in",
-    tagline: "Personal waxing treatments for face, body and bikini area, with calm, care and honest advice. By appointment only.",
+    tagline: "Personal beauty treatments and relaxing massages for women, with calm, care and honest advice. By appointment only.",
     treatments: "Treatments",
     studio: "Studio",
     info: "Good to know",

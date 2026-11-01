@@ -35,7 +35,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
 
   test("draft → publish → version history → restore → discard", async () => {
     const base = (await editorValue(db, "dict:home", "nl")).value as { hero: { title: string } };
-    assert.equal(base.hero.title, "Zacht voor je huid.");
+    assert.equal(base.hero.title, "Jouw moment");
     await saveDraft(db, "dict:home", "nl", { ...base, hero: { ...base.hero, title: "Nieuwe titel" } }, 1);
     let v = await editorValue(db, "dict:home", "nl");
     assert.equal(v.hasDraft, true);
@@ -56,7 +56,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
     v = await editorValue(db, "dict:home", "nl");
     assert.equal((v.value as typeof base).hero.title, "Tweede titel", "published unchanged");
     // EN untouched
-    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "Gentle on your skin.");
+    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "A little moment,");
   });
 
   test("unknown documents are rejected", async () => {
