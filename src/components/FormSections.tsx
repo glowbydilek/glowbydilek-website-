@@ -1,3 +1,4 @@
+import type { RequestCalendar } from "@/lib/booking/calendar";
 import { siteConfig } from "@/content/site";
 import { groupCopy } from "@/content/copy";
 import { publicGroups, publicItems, publicSections } from "@/lib/catalogue";
@@ -13,7 +14,7 @@ export function ContactFormBlock({ locale, dict }: { locale: Locale; dict: Dicti
   return <ContactForm locale={locale} t={dict.forms} privacyHref={href(locale, "privacy")} email={siteConfig.contact.email} turnstileSiteKey={turnstileSiteKey()} />;
 }
 
-export function AppointmentFormBlock({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function AppointmentFormBlock({ locale, dict, calendar }: { locale: Locale; dict: Dictionary; calendar: RequestCalendar }) {
   // Every published treatment and package, grouped by zone (waxing) or section.
   const groups = publicSections().flatMap((s) => {
     const zones = publicGroups(s.id).map((g) => ({
@@ -29,6 +30,7 @@ export function AppointmentFormBlock({ locale, dict }: { locale: Locale; dict: D
       locale={locale}
       t={dict.forms}
       groups={groups}
+      calendar={calendar}
       privacyHref={href(locale, "privacy")}
       email={siteConfig.contact.email}
       notConfirmed={dict.booking.notConfirmed}

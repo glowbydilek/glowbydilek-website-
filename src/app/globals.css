@@ -668,3 +668,33 @@ html.glow-nav main {
     transition: transform 0.42s var(--ease-soft);
   }
 }
+
+/* "Request received": six champagne sparks drift out once and fade. */
+.received-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px;
+  border-radius: 999px;
+  background: var(--color-champagne);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .received-mark {
+    animation: received-pop 0.45s var(--ease-soft) both;
+  }
+  .received-spark {
+    animation: received-spark 0.9s var(--ease-soft) 0.15s both;
+  }
+}
+@keyframes received-pop {
+  from { transform: scale(0.8); opacity: 0.001; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes received-spark {
+  0% { opacity: 0; transform: rotate(var(--a)) translateY(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(-2.6rem); }
+}

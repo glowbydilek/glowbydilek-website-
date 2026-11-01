@@ -6,7 +6,8 @@ import { currentSnapshot } from "@/lib/cms/current";
 import { getCatalogue, groupById, itemById, priceLabel, publicItems, sectionById } from "@/lib/catalogue";
 import { BookingJourney } from "@/components/forms/BookingJourney";
 import { siteConfig } from "@/content/site";
-import { onlineBookingStatus } from "@/lib/booking/public";
+import { onlineBookingStatus, requestCalendar } from "@/lib/booking/public";
+import { amsterdamToday } from "@/lib/forms/validation";
 import { withDbOrFallback } from "@/lib/db/client";
 import { turnstileSiteKey } from "@/lib/forms/turnstile";
 import { bookingAnchor, href } from "@/i18n/config";
@@ -27,6 +28,8 @@ export async function BookingPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.booking;
   // The availability-aware journey only when it is genuinely operational.
+  // Closed weekdays and closed dates for the request form's calendar.
+  const calendar = await withDbOrFallback((db) => requestCalendar(db, amsterdamToday()), { closedWeekdays: [], closedDates: [] });
   const online = await withDbOrFallback(async (db) => {
     const st = await onlineBookingStatus(db);
     return st.enabled ? st.bookable : null;
@@ -83,7 +86,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
                   promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
                 />
               ) : (
-                <AppointmentFormBlock locale={locale} dict={dict} />
+                <AppointmentFormBlock locale={locale} dict={dict} calendar={calendar} />
               )}
             </div>
           </div>
