@@ -122,9 +122,10 @@ export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormSt
   try {
     if (op === "issue") {
       const paid = f.get("paidNow") === "on" ? { method: str(f, "method"), paidOn: str(f, "paidOn") || todayLocal() } : undefined;
-      const number = await issueInvoice(db, id, ctx, { paid });
+      await issueInvoice(db, id, ctx, { paid });
       refresh();
-      return { ok: true, message: `Factuur ${number} is uitgegeven. Je kunt hem nu downloaden of mailen.` };
+      // The draft form disappears once issued: show the result on the page itself.
+      redirect(`/ajanda/facturen/${id}?melding=uitgegeven`);
     }
     if (op === "email") {
       await emailInvoice(db, id, ctx);

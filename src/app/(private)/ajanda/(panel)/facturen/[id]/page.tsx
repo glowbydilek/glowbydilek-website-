@@ -16,8 +16,9 @@ export const metadata = { title: "Factuur" };
 const MAIL: Record<string, string> = { pending: "in de wachtrij", sending: "wordt verstuurd", sent: "verstuurd", failed: "mislukt", cancelled: "vervallen" };
 const dateNl = (d: string | null) => (d ? d.split("-").reverse().join("-") : "—");
 
-export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function InvoicePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const id = Number((await params).id);
+  const sp = await searchParams;
   const db = getDb();
   const [inv] = await db.select().from(invoices).where(eq(invoices.id, id));
   if (!inv) notFound();
@@ -39,6 +40,13 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
         subtitle={`${c?.firstName ?? ""} ${c?.lastName ?? ""}`.trim()}
         actions={<Badge tone={draft ? "neutral" : credit ? "cancelled" : open <= 0 ? "confirmed" : "pending"}>{draft ? "Concept" : credit ? "Credit" : open <= 0 ? "Betaald" : "Open"}</Badge>}
       />
+      {sp.melding === "uitgegeven" && inv.status === "issued" && (
+        <div className="mb-4">
+          <Notice tone="success">
+            ✓ {credit ? "Creditfactuur" : "Factuur"} {inv.number} is uitgegeven. Je kunt hem nu downloaden of mailen.
+          </Notice>
+        </div>
+      )}
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.2fr_1fr]">
         <div className="space-y-5">
           {draft ? (

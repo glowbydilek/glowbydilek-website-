@@ -559,8 +559,20 @@ export const en: Dictionary = {
         p: "Your information is stored in a secured database of the website at our hosting provider (Hostinger), and the emails in the Glow by Dilek mailbox at the same provider. Only Dilek has access, through a secured login. We keep your information as long as needed for your appointments and no longer than 24 months after your last appointment or contact; it is then deleted or anonymised, unless a legal retention obligation applies (for example for bookkeeping).",
       },
       {
-        h: "Cookies and analytics",
-        p: "This website sets no cookies for visitors and uses no tracking, advertising or analytics services. Only the secured management area uses a strictly necessary login cookie for the owner.",
+        h: "Payments and invoices",
+        p: "If you receive an invoice or receipt, your name, the treatment, the amount and the payment are recorded. Dutch tax law requires Glow by Dilek to keep these records for seven years; they are only used for the accounts.",
+      },
+      {
+        h: "Consultation form",
+        p: "For some treatments it helps to know beforehand whether your skin is sensitive or whether there is a reason to take extra care. Only if you give your explicit consent are your answers to a few short questions about this recorded: encrypted, seen only by Dilek, never shared and deleted at the latest when the retention period ends. You can withdraw your consent at any time and the answers are deleted immediately. You are always free to decline.",
+      },
+      {
+        h: "Reviews",
+        p: "If you write a review, your rating, your text and the name you choose (first name, initials or anonymous) are published on the website after Dilek has read it. An email address is optional, never shown, and only helps prevent abuse. If you want your review removed, email hello@glowbydilek.nl.",
+      },
+      {
+        h: "Cookies and Google Analytics",
+        p: "This website sets no cookies without your permission. If Glow by Dilek uses Google Analytics, the website asks first. Only after ‘Accept’ is Google Analytics loaded, to see which pages are viewed and whether forms are sent. No names, email addresses, phone numbers, appointment details or health information are shared, advertising features are off, and you can change your choice at any time through ‘Cookie settings’ at the bottom of the page. The management area only uses a strictly necessary login cookie for the owner.",
       },
       {
         h: "Spam protection (Cloudflare Turnstile)",

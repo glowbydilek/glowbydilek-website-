@@ -20,6 +20,7 @@ export function ModerateButtons({ id, status }: { id: number; status: string }) 
         <ActionForm key={op} action={moderateReviewAction} className="">
           <input type="hidden" name="id" value={id} />
           <input type="hidden" name="op" value={op} />
+          <input type="hidden" name="from" value={status} />
           <SubmitButton variant={variant}>{label}</SubmitButton>
         </ActionForm>
       ))}

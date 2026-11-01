@@ -562,8 +562,20 @@ export const nl = {
         p: "Je gegevens worden opgeslagen in een beveiligde database van de website, bij onze hostingprovider (Hostinger), en de e-mails in de mailbox van Glow by Dilek bij dezelfde provider. Alleen Dilek heeft toegang, via een beveiligde inlog. We bewaren je gegevens zolang dat nodig is voor je afspraken en uiterlijk 24 maanden na je laatste afspraak of contact; daarna worden ze verwijderd of geanonimiseerd, tenzij een wettelijke bewaarplicht geldt (bijvoorbeeld voor de administratie).",
       },
       {
-        h: "Cookies en meetinstrumenten",
-        p: "Deze website plaatst bij bezoekers geen cookies en gebruikt geen tracking-, advertentie- of analysediensten. Alleen het beveiligde beheergedeelte gebruikt een noodzakelijke inlogcookie voor de eigenaar.",
+        h: "Betalingen en facturen",
+        p: "Als je een factuur of betaalbewijs ontvangt, worden je naam, de behandeling, het bedrag en de betaling vastgelegd. Die gegevens moet Glow by Dilek volgens de fiscale bewaarplicht zeven jaar bewaren; ze worden alleen voor de administratie gebruikt.",
+      },
+      {
+        h: "Consultatieformulier",
+        p: "Voor sommige behandelingen is het goed om vooraf te weten of je huid gevoelig is of dat er een reden is om voorzichtig te zijn. Alleen als je daar uitdrukkelijk toestemming voor geeft, worden je antwoorden op een paar korte vragen hierover vastgelegd: versleuteld, alleen in te zien door Dilek, niet gedeeld en uiterlijk na de bewaartermijn verwijderd. Je kunt je toestemming altijd intrekken; de antwoorden worden dan direct verwijderd. Weigeren is altijd mogelijk.",
+      },
+      {
+        h: "Beoordelingen",
+        p: "Als je een beoordeling schrijft, worden je waardering, je tekst en de naam die je kiest (voornaam, initialen of anoniem) op de website geplaatst nadat Dilek hem heeft gelezen. Een e-mailadres is optioneel, wordt nooit getoond en dient alleen om misbruik te voorkomen. Wil je dat je beoordeling verdwijnt, mail dan naar hello@glowbydilek.nl.",
+      },
+      {
+        h: "Cookies en Google Analytics",
+        p: "Deze website plaatst geen cookies zonder jouw toestemming. Als Glow by Dilek Google Analytics gebruikt, vraagt de website eerst of dat mag. Alleen na ‘Akkoord’ wordt Google Analytics geladen om te zien welke pagina's worden bekeken en of formulieren worden verstuurd. Er worden geen namen, e-mailadressen, telefoonnummers, afspraakgegevens of gezondheidsinformatie gedeeld, advertentiefuncties staan uit en je kunt je keuze altijd wijzigen via ‘Cookie-instellingen’ onderaan de pagina. Het beheergedeelte gebruikt alleen een noodzakelijke inlogcookie voor de eigenaar.",
       },
       {
         h: "Beveiliging tegen spam (Cloudflare Turnstile)",

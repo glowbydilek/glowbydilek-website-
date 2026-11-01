@@ -22,6 +22,11 @@ async function step(name, fn) {
     results.push(`✓ ${name}`);
   } catch (e) {
     results.push(`✗ ${name}\n    ${String(e.message).split("\n")[0]}`);
+    // Screenshot of the page at the moment of failure (set E2E_SHOTS to a folder).
+    if (process.env.E2E_SHOTS && globalThis.__page) {
+      await globalThis.__page.screenshot({ path: path.join(process.env.E2E_SHOTS, `failed-${Date.now()}.png`), fullPage: true }).catch(() => {});
+      results.push(`    at ${globalThis.__page.url()}`);
+    }
     throw e;
   }
 }
@@ -37,6 +42,26 @@ function latestResetLink(since) {
   return null;
 }
 
+/** Emails written by the local SMTP sink since a timestamp: decoded subject, recipient and attachment names. */
+function mailsSince(since) {
+  const decode = (v) =>
+    v.replace(/=\?utf-8\?([qb])\?([^?]*)\?=/gi, (_, enc, txt) =>
+      enc.toLowerCase() === "b" ? Buffer.from(txt, "base64").toString("utf8") : Buffer.from(txt.replace(/_/g, " ").replace(/=([0-9a-f]{2})/gi, (_m, h) => String.fromCharCode(parseInt(h, 16))), "latin1").toString("utf8"),
+    ).replace(/\?=\s+=\?/g, "");
+  return fs
+    .readdirSync(MAIL_DIR)
+    .map((f) => path.join(MAIL_DIR, f))
+    .filter((f) => fs.statSync(f).mtimeMs >= since)
+    .map((f) => {
+      const raw = fs.readFileSync(f, "utf8");
+      const head = raw.split(/\r?\n\r?\n/)[0].replace(/\r?\n[ \t]+/g, " ");
+      const subject = decode((head.match(/^Subject: (.*)$/im) || [])[1] || "");
+      const to = (head.match(/^To: (.*)$/im) || [])[1] || "";
+      const attachments = [...raw.matchAll(/filename="?([^";\r\n]+)"?/g)].map((m) => m[1]);
+      return { subject, to, attachments, raw };
+    });
+}
+
 (async () => {
   assert.ok(MAIL_DIR, "set MAIL_DIR to the local SMTP sink folder");
   const browser = await chromium.launch();
@@ -44,6 +69,7 @@ function latestResetLink(since) {
   globalThis.__browser = browser;
   await ctx.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));
   const p = await ctx.newPage();
+  globalThis.__page = p;
   try {
     await step("private pages require login and are noindex", async () => {
       for (const url of ["/admin", "/ajanda", "/ajanda/klanten", "/admin/beveiliging"]) {
@@ -143,17 +169,22 @@ function latestResetLink(since) {
       void day;
     });
 
-    await step("reschedule and cancel send customer emails", async () => {
+    await step("reschedule and cancel always email the customer (material changes)", async () => {
+      const since = Date.now() - 1000;
       await p.goto(appointmentUrl);
       await p.locator('input[name="time"]').first().fill("11:00");
       await p.getByRole("button", { name: "Wijziging opslaan" }).click();
-      await p.getByText("Afspraak opgeslagen. Is het tijdstip veranderd").waitFor();
+      await p.getByText("Wijziging opgeslagen.").waitFor();
       p.once("dialog", (d) => d.accept());
       await p.locator("summary", { hasText: "Annuleren" }).click();
       await p.getByRole("button", { name: "Afspraak annuleren" }).click();
-      await p.getByText("Afspraak geannuleerd. De klant krijgt een bericht").waitFor();
-      const r = await fetch(`${BASE}/api/cron/tick`, { headers: { authorization: `Bearer ${process.env.CRON_SECRET || "x"}` } });
-      assert.ok([200, 401].includes(r.status));
+      await p.getByText("Afspraak geannuleerd. Het tijdstip is weer vrij.").waitFor();
+      let subjects = [];
+      for (let i = 0; i < 30 && subjects.length < 2; i++) {
+        await new Promise((r) => setTimeout(r, 300));
+        subjects = mailsSince(since).map((m) => m.subject).filter((s) => /verplaatst|geannuleerd/i.test(s));
+      }
+      assert.equal(subjects.length, 2, `rescheduled + cancelled emails received (${subjects.join(" | ")})`);
     });
 
     await step("customer search by phone", async () => {
@@ -279,6 +310,122 @@ function latestResetLink(since) {
       await slot.locator("select").selectOption("");
       await slot.getByRole("button", { name: "Toepassen" }).click();
       await slot.getByText("De oorspronkelijke foto staat weer").waitFor();
+    });
+
+    let repeatUrl;
+    await step("CRM: a returning customer is recognised by phone in another notation and reused", async () => {
+      const before = (await (await p.request.get(`${BASE}/ajanda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
+      const day = new Date(Date.now() + 10 * 864e5);
+      while ([0, 6].includes(day.getUTCDay())) day.setUTCDate(day.getUTCDate() + 1);
+      await p.goto(`${BASE}/ajanda/afspraak/nieuw?d=${day.toISOString().slice(0, 10)}`);
+      await p.fill("#phone", "+31 6 1234 5678");
+      await p.getByText("Bestaande klant gevonden").waitFor();
+      await p.getByText("zelfde telefoonnummer").waitFor();
+      await p.getByRole("button", { name: "Deze klant gebruiken" }).click();
+      await p.getByText("Bestaande klant: de afspraak komt in dit klantprofiel.").waitFor();
+      await p.locator("label", { hasText: "Wenkbrauwen" }).click();
+      await p.fill("#time", "09:00");
+      await p.fill("#duration", "30");
+      await p.fill("#price", "45,00");
+      await p.getByRole("button", { name: "Afspraak opslaan" }).click();
+      await p.waitForURL(/\/ajanda\/afspraak\/\d+\?opgeslagen=1/);
+      repeatUrl = p.url().split("?")[0];
+      await p.getByText("€ 45,00").first().waitFor();
+      const after = (await (await p.request.get(`${BASE}/ajanda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
+      assert.equal(after, before, "no duplicate customer profile");
+    });
+
+    await step("Invoices: blocked until business details exist; issue, PDF and email with the PDF attached", async () => {
+      await p.goto(repeatUrl);
+      await p.locator("summary", { hasText: "Status" }).click();
+      await p.getByRole("button", { name: "✓ Afgerond" }).click();
+      await p.waitForURL(/melding=complete/);
+      await p.getByRole("button", { name: "＋ Factuur maken" }).first().click();
+      await p.waitForURL(/\/ajanda\/facturen\/\d+$/);
+      const invoiceUrl = p.url();
+      await p.getByText("Nog niet mogelijk").waitFor();
+      // Business details (test values in the development database only).
+      await p.goto(`${BASE}/admin/bedrijf`);
+      await p.fill('input[name="legalName"]', "Testonderneming (alleen test)");
+      await p.fill('input[name="kvk"]', "12345678");
+      await p.fill('input[name="street"]', "Teststraat 1");
+      await p.fill('input[name="postcode"]', "1234 AB");
+      await p.fill('input[name="city"]', "Teststad");
+      await p.selectOption('select[name="vatMode"]', "exempt");
+      await p.fill('textarea[name="exemptionText"]', "Testtekst vrijstelling (geen echte gegevens).");
+      await p.getByRole("button", { name: "Opslaan" }).click();
+      await p.getByText("Je kunt nu facturen uitgeven").waitFor();
+      await p.goto(invoiceUrl);
+      await p.getByText("Totaal: € 45,00").waitFor();
+      await p.locator('input[name="paidNow"]').check();
+      p.once("dialog", (d) => d.accept());
+      await p.getByRole("button", { name: "Factuur uitgeven" }).click();
+      await p.waitForURL(/melding=uitgegeven/);
+      await p.getByText(/Factuur GBD-\d{4}-\d{4} is uitgegeven/).waitFor();
+      await p.reload({ waitUntil: "networkidle" });
+      const pdf = await p.request.get(`${invoiceUrl}/pdf`);
+      assert.equal(pdf.headers()["content-type"], "application/pdf");
+      assert.equal((await pdf.body()).subarray(0, 5).toString(), "%PDF-");
+      const since = Date.now() - 1000;
+      await p.waitForTimeout(800); // hydration after the reload
+      const mailButton = p.getByRole("button", { name: /PDF mailen naar test\.klant@example\.com/ });
+      await mailButton.scrollIntoViewIfNeeded();
+      await mailButton.click();
+      const notice = p.locator("form", { has: mailButton }).locator('[role="alert"], [role="status"]').first();
+      await notice.waitFor();
+      assert.match(await notice.innerText(), /verzendwachtrij/);
+      let mail;
+      for (let i = 0; i < 30 && !mail; i++) {
+        await new Promise((r) => setTimeout(r, 300));
+        mail = mailsSince(since).find((m) => m.attachments.some((a) => /^factuur-GBD-\d{4}-\d{4}\.pdf$/.test(a)));
+      }
+      assert.ok(mail, "invoice email with PDF attachment received");
+      assert.match(mail.to, /test\.klant@example\.com/);
+      await p.reload();
+      await p.getByText("verstuurd").first().waitFor();
+    });
+
+    await step("Finance shows recorded revenue only; customer profile shows visits and payments", async () => {
+      await p.goto(`${BASE}/ajanda/financien?p=year`);
+      await p.getByText("Omzet (ontvangen)").waitFor();
+      assert.match(await p.locator("main").innerText(), /€ 45,00/);
+      const pdf = await p.request.get(`${BASE}/ajanda/financien/rapport?p=year`);
+      assert.equal((await pdf.body()).subarray(0, 5).toString(), "%PDF-");
+      await p.goto(`${BASE}/ajanda/klanten?q=Test`);
+      await p.getByRole("link", { name: /Test Klant/ }).first().click();
+      await p.getByText("Betaald (vastgelegd)").waitFor();
+      await p.getByText("Wenkbrauwen × 1").waitFor();
+      await p.getByText("Het consultatieformulier staat uit").waitFor();
+    });
+
+    await step("Reviews: a submitted review is only public after moderation", async () => {
+      const body = `Rustige en duidelijke behandeling, test ${Date.now()}.`;
+      const r = await fetch(`${BASE}/api/reviews`, {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: BASE, "x-real-ip": `198.51.100.${(Date.now() % 150) + 60}` },
+        body: JSON.stringify({ rating: 5, body, displayName: "Testklant", displayMode: "name", privacy: true, locale: "nl", company: "", elapsedMs: 5000, turnstileToken: `e2e-review-${Date.now()}` }),
+      });
+      assert.equal(r.status, 200);
+      assert.ok(!(await (await fetch(`${BASE}/beoordelingen`)).text()).includes(body), "not public before moderation");
+      await p.goto(`${BASE}/admin/beoordelingen`);
+      await p.getByText(body).waitFor();
+      await p.getByRole("button", { name: "Publiceren", exact: true }).first().click();
+      await p.getByText("Gepubliceerd op de website").waitFor();
+      assert.ok((await (await fetch(`${BASE}/beoordelingen`)).text()).includes(body), "public after moderation");
+    });
+
+    await step("Social media: a link appears in the footer only after it is set and enabled", async () => {
+      assert.ok(!(await (await fetch(`${BASE}/`)).text()).includes("instagram.com/glowtest"));
+      await p.goto(`${BASE}/admin/social`);
+      const ig = p.locator("li", { hasText: "Instagram" });
+      await ig.locator('input[type="url"]').fill("https://www.instagram.com/glowtest");
+      await ig.locator('input[type="checkbox"]').check();
+      await p.getByRole("button", { name: "Publiceren", exact: true }).click();
+      await p.getByText("Gepubliceerd (versie").waitFor();
+      assert.ok((await (await fetch(`${BASE}/`)).text()).includes("https://www.instagram.com/glowtest"));
+      await ig.locator('input[type="checkbox"]').uncheck();
+      await p.getByRole("button", { name: "Publiceren", exact: true }).click();
+      await p.getByText("Gepubliceerd (versie").waitFor();
     });
 
     await step("Overal uitloggen ends the sessions on every device", async () => {

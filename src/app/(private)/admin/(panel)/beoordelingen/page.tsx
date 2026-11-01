@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { ModerateButtons, ReplyForm, ReviewSettingsForm } from "@/components/private/cms/ReviewForms";
-import { Badge, Card, PageHeader } from "@/components/private/ui";
+import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
 import { reviews } from "@/lib/db/schema";
 import { displayName, getReviewSettings } from "@/lib/reviews/service";
@@ -17,13 +17,20 @@ const TABS = [
 ] as const;
 
 export default async function Reviews({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
-  const requested = (await searchParams).s;
+  const sp = await searchParams;
+  const requested = sp.s;
+  const done: Record<string, string> = { publish: "Gepubliceerd op de website.", reject: "Afgewezen: niet zichtbaar op de website.", remove: "Offline gehaald.", pending: "Teruggezet naar ‘te beoordelen’." };
   const tab = TABS.some(([k]) => k === requested) ? requested! : "pending";
   const db = getDb();
   const [rows, settings] = await Promise.all([db.select().from(reviews).where(eq(reviews.status, tab)).orderBy(desc(reviews.createdAt)).limit(200), getReviewSettings(db)]);
   return (
     <>
       <PageHeader title="Beoordelingen" subtitle="Elke beoordeling verschijnt pas na jouw controle. Plaats positieve én kritische beoordelingen over echte behandelingen; wijs alleen spam, beledigingen of persoonsgegevens af." />
+      {sp.melding && done[sp.melding] && (
+        <div className="mb-4">
+          <Notice tone="success">✓ {done[sp.melding]}</Notice>
+        </div>
+      )}
       <nav aria-label="Status" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/admin/beoordelingen?s=${k}`} aria-current={k === tab ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === tab ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>

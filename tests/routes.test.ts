@@ -17,8 +17,8 @@ test("every page has a unique path per language", () => {
       assert.match(p, /^\/[a-z0-9/-]*$/, `clean slug ${p}`);
     }
   }
-  // 11 static + 3 categories + 13 treatments, in two languages
-  assert.equal(seen.size, (11 + 3 + 13) * 2);
+  // static pages + categories + treatments, in two languages
+  assert.equal(seen.size, (12 + 3 + 13) * 2); // 12 static (incl. reviews) + 3 categories + 13 treatments
 });
 
 test("category routes match the agreed URLs", () => {

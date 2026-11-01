@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { siteConfig } from "@/content/site";
@@ -22,7 +23,8 @@ export async function moderateReviewAction(_: FormState, f: FormData): Promise<F
   if (!["publish", "reject", "remove", "pending"].includes(op)) return { error: "Onbekende actie." };
   await moderateReview(getDb(), id, op as "publish", str(f, "note"), s.user.id);
   refreshPublic();
-  return { ok: true, message: op === "publish" ? "Gepubliceerd op de website." : op === "pending" ? "Teruggezet naar ‘te beoordelen’." : "Niet (meer) zichtbaar op de website." };
+  // The review moves to another list: show the result on the page itself.
+  redirect(`/admin/beoordelingen?s=${encodeURIComponent(str(f, "from") || "pending")}&melding=${op}`);
 }
 
 export async function replyReviewAction(_: FormState, f: FormData): Promise<FormState> {
