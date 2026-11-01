@@ -26,8 +26,8 @@ export function PricesPage({ locale }: { locale: Locale }) {
           <div className="space-y-10">
             {treatmentGroups.map((g) => (
               <div key={g.id} data-reveal>
-                <div className="flex items-baseline justify-between gap-4 border-b border-charcoal pb-4">
-                  <h2 className="display text-[2.2rem] sm:text-5xl">{g.name[locale]}</h2>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-charcoal pb-4">
+                  <h2 className="display min-w-0 break-words text-[2.2rem] sm:text-5xl">{g.name[locale]}</h2>
                   <Link
                     href={categoryHref(locale, g.id)}
                     className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep"
@@ -41,7 +41,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                   <thead className="sr-only">
                     <tr>
                       <th scope="col">{t.columns.treatment}</th>
-                      <th scope="col">{t.columns.duration}</th>
+                      <th scope="col" className="hidden sm:table-cell">{t.columns.duration}</th>
                       <th scope="col">{t.columns.price}</th>
                     </tr>
                   </thead>
@@ -53,8 +53,13 @@ export function PricesPage({ locale }: { locale: Locale }) {
                             {liveTreatment(tr.id).name[locale]}
                           </Link>
                           <span className="mt-1 block text-sm leading-relaxed text-muted">{liveTreatment(tr.id).description[locale]}</span>
+                          {liveTreatment(tr.id).durationMinutes ? (
+                            <span className="mt-1 block text-sm text-muted sm:hidden">
+                              {liveTreatment(tr.id).durationMinutes} {t.minutes}
+                            </span>
+                          ) : null}
                         </th>
-                        <td className="whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted">
+                        <td className="hidden whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted sm:table-cell">
                           {liveTreatment(tr.id).durationMinutes ? `${liveTreatment(tr.id).durationMinutes} ${t.minutes}` : ""}
                         </td>
                         <td className="whitespace-nowrap py-5 text-right align-top">
