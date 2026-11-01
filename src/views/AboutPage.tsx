@@ -10,6 +10,7 @@ import { hasPhoto } from "@/content/media";
 import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
+import { publicProfile } from "@/lib/profile";
 
 /**
  * About Dilek. Stock or AI images of people are never presented as Dilek:
@@ -19,7 +20,50 @@ export function AboutPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.about;
 
+  const profile = publicProfile();
+  const showDiploma = Boolean(profile?.verified && profile.diplomaTitle);
+  const background = profile ? (locale === "nl" ? profile.backgroundNl : profile.backgroundEn || profile.backgroundNl) : "";
+
   const sections: Record<string, ReactNode> = {
+    education:
+      profile && (showDiploma || profile.certificates.length || background) ? (
+        <section className="section-tight border-t border-line/70 bg-surface">
+          <Container className="grid items-start gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+            <div data-reveal>
+              <p className="eyebrow">{t.education.eyebrow}</p>
+              <h2 className="display mt-4 text-[2.1rem] sm:text-[2.8rem]">{t.education.title}</h2>
+              {profile.photoMediaId && profile.photoIsReal && (
+                // eslint-disable-next-line @next/next/no-img-element -- owner-uploaded portrait served by /media
+                <img src={`/media/${profile.photoMediaId}/1024`} alt={t.education.photoAlt} className="mt-8 aspect-[4/5] w-full max-w-xs rounded-[var(--radius-media)] object-cover" loading="lazy" />
+              )}
+            </div>
+            <div data-reveal>
+              {background && <p className="lead">{background}</p>}
+              <dl className="mt-6 divide-y divide-line border-y border-line">
+                {showDiploma && (
+                  <div className="grid gap-1 py-4 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)]">
+                    <dt className="text-sm text-muted">{t.education.diploma}</dt>
+                    <dd className="text-ink">
+                      {profile.diplomaTitle}
+                      {profile.level && ` · ${profile.level}`}
+                      {(profile.institution || profile.year) && <span className="block text-sm text-muted">{[profile.institution, profile.year].filter(Boolean).join(", ")}</span>}
+                    </dd>
+                  </div>
+                )}
+                {profile.certificates.map((c) => (
+                  <div key={c.name} className="grid gap-1 py-4 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)]">
+                    <dt className="text-sm text-muted">{t.education.certificate}</dt>
+                    <dd className="text-ink">
+                      {c.name}
+                      {(c.issuer || c.year) && <span className="block text-sm text-muted">{[c.issuer, c.year].filter(Boolean).join(", ")}</span>}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </Container>
+        </section>
+      ) : null,
     hero: (
       <>
         <PageHero locale={locale} photo="interior" {...t.hero}>

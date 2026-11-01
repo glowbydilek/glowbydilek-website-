@@ -44,7 +44,9 @@ async function loadMarketing(db: ReturnType<typeof getDb>): Promise<MarketingSna
   const rows = shown.length ? await historyFor(db, ids ?? [...(await db.select({ id: treatments.id }).from(treatments)).map((r) => r.id)]) : [];
   const history: MarketingSnapshot["history"] = {};
   for (const r of rows) (history[r.itemId] ??= []).push({ createdAt: r.createdAt, priceCents: r.priceCents, pricingMode: r.pricingMode });
-  return { promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)) };
+  const { getSetting } = await import("../db/settings");
+  const productsPage = (await getSetting(db, "products_public", { enabled: false })).enabled === true;
+  return { promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)), productsPage };
 }
 
 async function load(status: "published" | "draft"): Promise<Snapshot> {

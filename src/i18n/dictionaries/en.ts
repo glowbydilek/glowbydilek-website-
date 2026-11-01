@@ -344,6 +344,7 @@ export const en: Dictionary = {
     ],
   },
   about: {
+    education: { eyebrow: "Education & background", title: "Expertise", diploma: "Diploma", certificate: "Certificate", photoAlt: "Portrait of Dilek" },
     hero: {
       eyebrow: "About Dilek",
       title: "A studio with",
@@ -638,6 +639,12 @@ export const en: Dictionary = {
     pause: "Pause",
     play: "Play",
     slide: "{n} of {total}",
+  },
+  products: {
+    title: "Products & care",
+    intro: "These are the products Dilek works with during treatments. This is not a shop: feel free to ask for advice at your appointment.",
+    professional: "For professional use only",
+    empty: "There are no products on this page yet.",
   },
   footer: {
     follow: "Follow Glow by Dilek",

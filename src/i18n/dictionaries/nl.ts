@@ -346,6 +346,7 @@ export const nl = {
     ],
   },
   about: {
+    education: { eyebrow: "Opleiding & achtergrond", title: "Vakkennis", diploma: "Diploma", certificate: "Certificaat", photoAlt: "Portret van Dilek" },
     hero: {
       eyebrow: "Over Dilek",
       title: "Een studio met",
@@ -641,6 +642,12 @@ export const nl = {
     pause: "Pauzeren",
     play: "Afspelen",
     slide: "{n} van {total}",
+  },
+  products: {
+    title: "Producten & verzorging",
+    intro: "Met deze producten werkt Dilek tijdens de behandelingen. Dit is geen webshop: vraag gerust bij je afspraak naar advies.",
+    professional: "Alleen voor professioneel gebruik",
+    empty: "Er staan nog geen producten op deze pagina.",
   },
   footer: {
     follow: "Volg Glow by Dilek",

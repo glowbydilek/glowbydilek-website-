@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { localeLabels, locales, routeKeys, routes, type Locale, type RouteKey } from "@/i18n/config";
 import { groupHref, itemHref, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { ensureContent } from "@/lib/cms/store";
+import { isLegalOnline, LEGAL_KEYS, LEGAL_PATHS } from "@/lib/legal";
 import { absoluteUrl, seoOverride } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -23,6 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...sections.filter((s) => s.id !== "waxing").map((s) => ({ seoKey: `section-${s.id}`, path: (l: Locale) => sectionHref(l, s), priority: 0.8 })),
     ...sections.flatMap((s) => publicGroups(s.id)).map((g) => ({ seoKey: `category-${g.id}`, path: (l: Locale) => groupHref(l, g), priority: 0.8 })),
     ...publicItems().map((i) => ({ seoKey: `treatment-${i.id}`, path: (l: Locale) => itemHref(l, i), priority: 0.7 })),
+    ...LEGAL_KEYS.filter((k) => locales.every((l) => isLegalOnline(l, k))).map((k) => ({ seoKey: `legal-${k}`, path: (l: Locale) => LEGAL_PATHS[k][l], priority: 0.3 })),
   ];
   return entries
     .filter((e) => !locales.some((l) => seoOverride(e.seoKey, l).noindex))

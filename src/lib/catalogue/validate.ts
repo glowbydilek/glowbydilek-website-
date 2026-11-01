@@ -12,6 +12,8 @@ export const RESERVED_ROOTS = new Set<string>([
   ...Object.values(routes).flatMap((r) => [r.nl, r.en]).map((p) => p.replace(/^\/en(?=\/|$)/, "").split("/").filter(Boolean)[0]).filter((x): x is string => Boolean(x)),
   "admin", "agenda", "ajanda", "login", "api", "media", "en", "info", "_next", "brand", "images", "merkidentiteit",
   "sitemap.xml", "robots.txt", "manifest.webmanifest", "icon.svg", "apple-icon.png", "offerte", "quote",
+  "cookiebeleid", "cookie-policy", "algemene-voorwaarden", "terms", "annuleringsbeleid", "cancellation-policy", "beoordelingsbeleid", "review-policy",
+  "producten", "products",
 ]);
 
 export function slugify(input: string): string {

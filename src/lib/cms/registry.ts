@@ -15,6 +15,15 @@ import { treatmentsNl } from "../../content/copy/treatments.nl";
 import { extraSectionsEn, extraTreatmentsEn } from "../../content/copy/extra.en";
 import { extraSectionsNl, extraTreatmentsNl } from "../../content/copy/extra.nl";
 import { BUILTIN_ITEMS, BUILTIN_SECTIONS } from "../catalogue/builtin";
+import { legalEn } from "../../content/copy/legal.en";
+import { legalNl, type LegalKey } from "../../content/copy/legal.nl";
+
+const LEGAL: { key: LegalKey; nl: string; en: string }[] = [
+  { key: "cookies", nl: "/cookiebeleid", en: "/en/cookie-policy" },
+  { key: "terms", nl: "/algemene-voorwaarden", en: "/en/terms" },
+  { key: "cancellation", nl: "/annuleringsbeleid", en: "/en/cancellation-policy" },
+  { key: "reviews", nl: "/beoordelingsbeleid", en: "/en/review-policy" },
+];
 import { en } from "../../i18n/dictionaries/en";
 import { nl } from "../../i18n/dictionaries/nl";
 import { pagePath, routes, type Locale, type PageRef } from "../../i18n/config";
@@ -57,6 +66,7 @@ export const DOCS: DocDef[] = [
   ...Object.keys(extraSectionsNl).map((id) => ({ key: `section:${id}`, label: extraSectionsNl[id].seoTitle, defaults: { nl: extraSectionsNl[id], en: extraSectionsEn[id] } })),
   ...(["process", "preparation", "aftercare"] as const).map((k) => ({ key: `guide:${k}`, label: guidesNl[k].hero.eyebrow, defaults: { nl: guidesNl[k], en: guidesEn[k] } })),
   { key: "faqpage", label: "Veelgestelde vragen (pagina)", defaults: { nl: faqPageNl, en: faqPageEn } },
+  ...LEGAL.map((l) => ({ key: `legal:${l.key}`, label: legalNl[l.key].title, defaults: { nl: legalNl[l.key], en: legalEn[l.key] } })),
 ];
 
 export const DOC_MAP = new Map(DOCS.map((d) => [d.key, d]));
@@ -101,6 +111,7 @@ export const EDITOR_PAGES: EditorPage[] = [
       docs: [{ key: `treatment:${i.id}`, label: "Teksten" }],
     };
   }),
+  ...LEGAL.map((l) => ({ id: `legal-${l.key}`, label: legalNl[l.key].title, group: "Juridisch", paths: { nl: l.nl, en: l.en }, docs: [{ key: `legal:${l.key}`, label: "Tekst" }] })),
   {
     id: "global",
     label: "Algemene teksten (menu, knoppen, footer, formulieren)",
@@ -129,6 +140,7 @@ export const PAGE_SECTIONS: Record<string, { id: string; label: string; locked?:
   about: [
     { id: "hero", label: "Openingsbeeld", locked: true },
     { id: "story", label: "Het verhaal" },
+    { id: "education", label: "Opleiding & achtergrond (alleen na publicatie in Over Dilek)" },
     { id: "approach", label: "Werkwijze" },
     { id: "vision", label: "Vooruitkijken" },
     { id: "closing", label: "Afspraakuitnodiging" },
