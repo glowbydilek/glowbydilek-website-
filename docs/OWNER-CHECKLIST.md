@@ -74,3 +74,16 @@ There is no address, city, district, service area, map or walk-in information. `
 - [ ] **Google Search Console:** verify `https://glowbydilek.nl`, then submit `https://glowbydilek.nl/sitemap.xml`.
 - [ ] **Google Business Profile** (optional): only as a service-area business with the address hidden — consistent with the location policy above.
 - [ ] **Tagline language.** If an all-Dutch tagline is preferred, change `TAGLINE` in `scripts/brand/generate-logos.py` and run `npm run brand:logos`.
+
+## New in the 2026 master release
+
+- [ ] **New treatments (drafts).** Gezichtsbehandelingen (5), Lichaamspakking, Ontspanningsmassage and four example packages are ready as **concept** in Admin → Behandelingen. For each: confirm you offer it, check the texts (Pagina's → "Nieuwe categorieën"), set the price mode (fixed / from / on request), duration and VAT category, tick the confirmation and publish. Publish the category itself too. Nothing is public before that.
+- [ ] **Massage techniques, products and brands** are deliberately not named. Add only what you actually use.
+- [ ] **Over Dilek → opleiding**: enter your diploma title exactly as on the diploma (e.g. your MBO level-3 programme), institution and year; tick "exact gecontroleerd" and publish. Add a real portrait only if you want one.
+- [ ] **Juridische pagina's**: the cookie policy is online. Fill in the `[INVULLEN …]` parts of the terms, cancellation and review policy (your own cancellation window and any fees — only fees you really charge), set the effective date, publish the text, then switch the page online. A legal check is recommended.
+- [ ] **VAT categories**: every treatment defaults to "standard". Only use reduced, 0% or exempt after your accountant confirms it; a skincare treatment or a diploma does not make a treatment VAT-exempt by itself. For KOR choose "Kleineondernemersregeling" and enter the invoice text your accountant gives you.
+- [ ] **Invoice automation** (Agenda → Instellingen) is off. Switch on only what you want: draft, issue, email.
+- [ ] **Aftercare email** (Agenda → Instellingen) is off; the text is editable in Admin → E-mailteksten.
+- [ ] **Products & protocols**: enter the products you use (Admin → Producten & materialen). The public products page stays off unless you switch it on.
+- [ ] **Promotions & slider**: nothing is active. A promotion only works when set to Active within its dates.
+- [ ] **Expenses**: record purchases with receipts in Agenda → Uitgaven; export the CSV for your accountant from Financiën.

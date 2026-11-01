@@ -134,6 +134,35 @@ export function HomePage({ locale }: { locale: Locale }) {
         />
       );
     })(),
+    reviews: (() => {
+      const rv = currentSnapshot().marketing?.reviews;
+      if (!rv?.list.length) return null;
+      const r = dict.reviews;
+      return (
+        <section className="section-tight bg-surface">
+          <Container>
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <SectionHeading eyebrow={r.eyebrow} title={r.title} intro={rv.average != null ? r.average.replace("{avg}", rv.average.toLocaleString(locale === "nl" ? "nl-NL" : "en-GB")).replace("{count}", String(rv.count)) : undefined} size="md" />
+              <ButtonLink href={href(locale, "reviews")} variant="link" arrow>
+                {dict.nav.reviews}
+              </ButtonLink>
+            </div>
+            <ul className="mt-block grid gap-5 md:grid-cols-3">
+              {rv.list.map((x) => (
+                <li key={x.id} className="flex flex-col rounded-[var(--radius-card)] border border-line bg-paper p-6" data-reveal>
+                  <p className="text-accent" aria-label={`${x.rating} / 5`}>{"★".repeat(x.rating)}<span className="text-line">{"★".repeat(5 - x.rating)}</span></p>
+                  <blockquote lang={x.locale} className="mt-3 flex-1 leading-relaxed text-ink-soft">“{x.body.length > 280 ? `${x.body.slice(0, 277)}…` : x.body}”</blockquote>
+                  <p className="mt-4 text-sm text-ink">
+                    {x.name === "—" ? r.anonymous : x.name}
+                    {x.verified && <span className="ml-2 text-xs text-muted">· {r.verified}</span>}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      );
+    })(),
     statement: (
       <>
         {/* 2 ─ Statement: a still life beside the quote (photo editable in Admin → Foto's) */}

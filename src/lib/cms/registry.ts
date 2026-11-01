@@ -131,6 +131,7 @@ export const PAGE_SECTIONS: Record<string, { id: string; label: string; locked?:
     { id: "featured", label: "Uitgelichte behandelingen" },
     { id: "process", label: "Wat gebeurt er na je aanvraag?" },
     { id: "standards", label: "Waar je op kunt rekenen" },
+    { id: "reviews", label: "Beoordelingen (alleen zichtbaar met gepubliceerde beoordelingen)" },
     { id: "dilek", label: "Maak kennis met Dilek" },
     { id: "care", label: "Voorbereiding en nazorg" },
     { id: "faq", label: "Veelgestelde vragen" },

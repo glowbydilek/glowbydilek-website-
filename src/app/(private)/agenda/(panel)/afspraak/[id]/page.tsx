@@ -196,9 +196,9 @@ export default async function AppointmentPage({ params, searchParams }: { params
               ) : (
                 <form action={applyPromotionAction} className="flex flex-wrap items-end gap-3">
                   <input type="hidden" name="appointmentId" value={appt.id} />
-                  <label className="text-sm">
+                  <label className="w-full min-w-0 text-sm sm:w-auto">
                     <span className="mb-1 block text-muted">Lopende actie</span>
-                    <select name="promotionId" className="min-h-11 rounded-xl border border-ink/20 bg-white px-3">
+                    <select name="promotionId" className="min-h-11 w-full max-w-full rounded-xl border border-ink/20 bg-white px-3 sm:w-auto">
                       {running.map((p) => (
                         <option key={p.id} value={p.id}>{p.nameNl}{p.code ? ` (${p.code})` : ""}</option>
                       ))}

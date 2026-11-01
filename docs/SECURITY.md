@@ -90,3 +90,22 @@ Production therefore never silently runs on test keys.
 - **Social and analytics settings:** strict validation (https + the network's own domain; `G-` Measurement IDs only); GA4 loads only after visitor consent; the CSP allows Google Analytics hosts, which are only contacted after consent.
 - **SQL:** all queries go through Drizzle's parameterised builder or tagged `sql` templates (values are bound, never concatenated).
 - **Dependency audit:** `npm audit --omit=dev` reports 0 vulnerabilities (1 November 2026).
+
+## Review of the 2026 master release (1 November 2026)
+
+What was checked, and how:
+
+| Area | Result | Evidence |
+| --- | --- | --- |
+| Server actions | Every exported action in `src/lib/private/*` checks the owner session (`assertOwner`) before doing anything; the only public actions are login/reset (rate-limited, Turnstile) and accepting a price proposal (single-use 256-bit token stored as SHA-256, rate-limited per IP, cross-origin posts rejected by Next.js). **Fixed:** `mediaUsage` was exported from a server-action module without an owner check (low impact: it only listed where a photo was used). | Scripted scan of all `"use server"` modules |
+| Private route handlers | Receipts, CSV export, PDFs and consultation exports all require the owner session; responses are `no-store`, `noindex`, `nosniff`; receipts and media are served with a sandboxing CSP. | Scripted scan + e2e: receipt returns 401 without login |
+| Uploads | Receipts: PDF/JPG/PNG/WebP only, checked by file signature (an SVG/HTML file renamed to `.png` is refused), max 10 MB, stored in the database, never under a public URL. Images: unchanged (EXIF stripped). | `tests/vat-expenses.test.ts` |
+| CSV export | Cells that start with `=`, `+`, `-`, `@` are neutralised (no spreadsheet formula injection). | unit test |
+| Catalogue & slugs | Slugs are lower-case only, unique per level and can never shadow a fixed page or system path; only published items in published categories render; drafts 404 (owner preview only in draft mode). | `tests/catalogue.test.ts`, e2e publish/unpublish |
+| Campaign links | Internal paths only; protocol-relative `//host` and private areas are refused. | regex check |
+| Promotion codes | Checked server-side; the generic form rate limits run before the code check; usage limits are enforced under a row lock. | `tests/promotions.test.ts` |
+| Price proposals | Personal pages are `noindex`, `no-store`, `no-referrer`; tokens expire; a proposal can be answered once; replacing it withdraws the old one. | `tests/catalogue.test.ts`, e2e |
+| Analytics | No change: GA4 only after consent; no names, emails, phone numbers, appointment, invoice or payment data are sent. | `src/lib/analytics/track.ts` whitelist |
+| Dependencies | `npm audit --omit=dev`: 0 vulnerabilities. (Hostinger's install log reports 20 *moderate* findings — those are dev-only build tools, not shipped to the server.) | npm audit |
+
+Still open (owner action): rotate the previously exposed Turnstile secret; set the production secrets only in Hostinger; enable MFA after the first login.

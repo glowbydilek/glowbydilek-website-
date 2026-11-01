@@ -5,6 +5,8 @@ export type MarketingSnapshot = {
   /** Running promotions the owner chose to show on the website. */
   promotions: Promotion[];
   campaigns: { id: number; title: { nl: string; en: string }; text: { nl: string; en: string }; cta: { nl: string; en: string }; href: string; mediaId: number | null }[];
+  /** The latest published reviews (newest first, never filtered by rating) and the overall count/average. */
+  reviews: { list: { id: number; rating: number; body: string; name: string; verified: boolean; locale: string }[]; count: number; average: number | null };
   /** Owner switched on the public "Producten & verzorging" page. */
   productsPage: boolean;
   /** True while at least one running promotion uses a code (the booking forms then show a code field). */

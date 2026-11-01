@@ -96,6 +96,8 @@ export async function updateMediaAction(_: FormState, f: FormData): Promise<Form
 
 /** Where a media item is used (photo slots, social images, treatments). */
 export async function mediaUsage(id: number): Promise<string[]> {
+  // Exported from a "use server" module, so callable from the browser: owner only.
+  await assertOwner();
   const db = getDb();
   const out: string[] = [];
   const photos = ((await editorValue(db, "photos", "all", {})).value ?? {}) as Record<string, number>;

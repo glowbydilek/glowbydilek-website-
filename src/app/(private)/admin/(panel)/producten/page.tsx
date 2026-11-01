@@ -92,9 +92,9 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
         <Card title="Behandelprotocollen (intern)">
           <p className="mb-3 text-sm text-muted">Je eigen werkwijze per behandeling, stap voor stap, met de producten die je daarbij gebruikt. Alleen zichtbaar voor jou.</p>
           <form className="mb-4 flex flex-wrap items-end gap-3">
-            <label className="text-sm">
+            <label className="w-full min-w-0 text-sm sm:w-auto">
               <span className="mb-1 block text-muted">Behandeling</span>
-              <select name="protocol" defaultValue={selected?.id ?? ""} className="min-h-11 rounded-xl border border-ink/20 bg-white px-3">
+              <select name="protocol" defaultValue={selected?.id ?? ""} className="min-h-11 w-full max-w-full rounded-xl border border-ink/20 bg-white px-3 sm:w-auto">
                 <option value="">— kies —</option>
                 {items.map((i) => <option key={i.id} value={i.id}>{i.category} · {i.name}</option>)}
               </select>

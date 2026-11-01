@@ -46,7 +46,10 @@ async function loadMarketing(db: ReturnType<typeof getDb>): Promise<MarketingSna
   for (const r of rows) (history[r.itemId] ??= []).push({ createdAt: r.createdAt, priceCents: r.priceCents, pricingMode: r.pricingMode });
   const { getSetting } = await import("../db/settings");
   const productsPage = (await getSetting(db, "products_public", { enabled: false })).enabled === true;
-  return { promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)), productsPage };
+  const { publishedReviews } = await import("../reviews/service");
+  const rv = await publishedReviews(db, "—", 3);
+  const reviews = { list: rv.list.map((r) => ({ id: r.id, rating: r.rating, body: r.body, name: r.name, verified: r.verified, locale: r.locale })), count: rv.count, average: rv.average };
+  return { reviews, promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)), productsPage };
 }
 
 async function load(status: "published" | "draft"): Promise<Snapshot> {

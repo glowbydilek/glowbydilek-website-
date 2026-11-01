@@ -6,7 +6,7 @@ This guide covers putting the platform (public website + `/admin` + `/agenda`) l
 
 ## 0. Important: merging = deploying
 
-Checked read-only on 1 November 2026: Hostinger **auto-deploys every push to `main`** (Node.js 20, Next.js, `npm run build`, output `.next`). The live site runs commit `23e38dd` (PR #7). Its only environment variable is `NEXT_PUBLIC_SITE_URL`.
+Checked read-only on 1 November 2026: Hostinger **auto-deploys every push to `main`** (Node.js 20, Next.js, `npm run build`, output `.next`). The live site runs commit `6aebc5a` (PR #9, deployed 1 November 2026 08:43 UTC; the build log shows `DB_MIGRATE_ON_BUILD` is not set, so no migration ran). Its only environment variable is `NEXT_PUBLIC_SITE_URL` — production has no database yet, so `/admin` and `/agenda` show "Nog niet gekoppeld".
 
 So **merging the platform pull request deploys it at once.** Configure sections 1 and 2 **before** merging. Without them the public pages keep working on the built-in content, but `/admin` and `/agenda` cannot be used, the forms cannot send email, and the public forms show "temporarily unavailable" (no Turnstile keys).
 
@@ -56,13 +56,19 @@ Notes:
 
 Migration `0001_platform_crm_finance` is **additive only** (new tables and nullable columns: payments, invoices, invoice counters, reviews, review invites, consultations, customer merges, price snapshots, normalised contact fields, outbox attachments). It does not change or delete existing data. Existing customers get their normalised email/phone filled in lazily by the app. Still: **make a database backup before deploying** (section 5).
 
+## 2c. Migration 0002 (catalogue & business modules)
+
+Migration `0002_catalogue_business` is also **additive only**: 13 new tables (service sections and groups, package contents, price history, price quotes, promotions and redemptions, campaign slides, products, protocols, stock movements, expenses, expense receipts) and nullable or defaulted columns on `treatments` and `appointments`. Existing rows keep working: a waxing treatment without the new columns is read with its built-in section, zone and slug. On first use the admin seeds the new categories and treatments **as drafts** (INSERT IGNORE, never overwriting edits). Tested: empty database → 0000–0002, and an existing 0001 database with data upgraded to 0002 with all counts unchanged.
+
+**URL change:** the owner area moved from `/ajanda` to `/agenda`. Old links (including reset emails sent before the release) redirect permanently. Bookmarks on phones can be updated to `https://glowbydilek.nl/login`.
+
 ## 3. First deploy, step by step
 
 1. Approve and merge the platform pull request (owner).
 2. Create the production database and user in hPanel (section 1).
 3. Set all environment variables (section 2).
 4. Start the build/deploy in hPanel. The build runs `db-migrate --on-build`, which creates all tables, then `next build`.
-5. Open `https://glowbydilek.nl/admin/login` → **Wachtwoord vergeten?** → enter `hello@glowbydilek.nl`. The owner account is created automatically **without a password**; the reset email (valid for 15 minutes, single use) sets the first password. There is no default password and no public registration.
+5. Open `https://glowbydilek.nl/login` → **Wachtwoord vergeten?** → enter `hello@glowbydilek.nl`. The owner account is created automatically **without a password**; the reset email (valid for 15 minutes, single use) sets the first password. There is no default password and no public registration.
 6. After signing in: **Admin → Beveiliging** → set up two-step verification (MFA) and store the 10 recovery codes offline.
 7. Add the cron job (section 4) and check the **admin overview** (`/admin`) a few minutes later: "Automatische taak (cron)" should be green with a recent time (also shown in Agenda → Instellingen).
 8. Send one test message through the contact form and one appointment request with your own email address. Check that both appear in Agenda and that the emails arrive.

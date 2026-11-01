@@ -64,7 +64,8 @@ export async function promotionAction(_: FormState, f: FormData): Promise<FormSt
   return { ok: true, message: v.value.status === "active" ? "Opgeslagen. De actie geldt binnen de ingestelde periode." : "Opgeslagen als concept — nog niet actief." };
 }
 
-const SAFE_PATH = /^\/(?!admin|agenda|ajanda|login|api|media|_next)[a-z0-9\-/]*$/;
+// Internal page paths only: no protocol-relative "//host", no private areas.
+const SAFE_PATH = /^\/(?!\/)(?!admin|agenda|ajanda|login|api|media|_next)(?!.*\/\/)[a-z0-9\-/]*$/;
 
 export async function campaignAction(_: FormState, f: FormData): Promise<FormState> {
   const s = await assertOwner();
