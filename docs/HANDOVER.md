@@ -52,7 +52,7 @@ Legend: **PASS** verified here with evidence · **FAIL** checked and not met · 
 
 Lighthouse other categories (mobile, 3 runs each): Performance 88–95, Accessibility 100, SEO 100, Best practices 100 (96 on the booking page only because this sandbox blocks the Cloudflare Turnstile script).
 
-**Cleanup inventory** (tracked files): before this release (`f01ecbe`) 509 files / 8.10 MB → after CLEANUP_AFTER. No unused photos; no `100vh` on public pages; the old "Professional Waxing" social images were replaced.
+**Cleanup inventory** (tracked files): before this release (`f01ecbe`) 509 files / 8.10 MB → after 537 files / 8.52 MB (+28 files: intake module, migration 0003, date picker, tests, fonts, docs; +0.42 MB mostly the migration snapshot, the two self-hosted font files and the new social images). No unused photos; no `100vh` on public pages; the old "Professional Waxing" social images were replaced.
 
 ## 4. Data safety, migrations, rollback
 
