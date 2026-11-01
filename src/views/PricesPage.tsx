@@ -38,12 +38,12 @@ export function PricesPage({ locale }: { locale: Locale }) {
       </PageHero>
 
       <section className="section-tight">
-        <Container className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-14">
+        <Container className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-14 [&>*]:min-w-0">
           <div className="space-y-10">
             {tables.map((g) => (
               <div key={g.id} data-reveal>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-ink pb-4">
-                  <h2 className="display min-w-0 break-words text-[2.2rem] sm:text-5xl">{g.title}</h2>
+                  <h2 lang={locale} className="display min-w-0 text-[1.9rem] [hyphens:auto] [overflow-wrap:anywhere] min-[400px]:text-[2.2rem] sm:text-5xl">{g.title}</h2>
                   <Link
                     href={g.href}
                     className="link-underline shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-accent-deep"
@@ -67,7 +67,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                       const p = price(tr);
                       return (
                         <tr key={tr.id} className="border-b border-ink/10">
-                          <th scope="row" className="py-5 pr-4 align-top font-normal">
+                          <th scope="row" className="py-5 pr-4 align-top font-normal [overflow-wrap:anywhere]">
                             <Link href={itemHref(locale, tr)} className="block font-serif text-2xl text-ink underline-offset-4 hover:text-accent-deep hover:underline">
                               {tr.name[locale]}
                             </Link>
