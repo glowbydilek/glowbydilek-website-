@@ -698,3 +698,36 @@ html.glow-nav main {
   30% { opacity: 1; }
   100% { opacity: 0; transform: rotate(var(--a)) translateY(-2.6rem); }
 }
+
+/* Intake & consent form: A4 sheet on screen, clean pages in print. */
+.intake-sheet {
+  width: 100%;
+  max-width: 210mm;
+  padding: clamp(1rem, 4vw, 14mm);
+  box-shadow: 0 1px 3px rgb(43 32 43 / 0.12);
+}
+.intake-break {
+  height: 1.5rem;
+  border-bottom: 1px dashed #e6d0d6;
+  margin-bottom: 1rem;
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  .intake-sheet {
+    max-width: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  .intake-break {
+    break-after: page;
+    height: 0;
+    border: 0;
+    margin: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

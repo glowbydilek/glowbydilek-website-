@@ -18,6 +18,7 @@ import {
   appointmentTreatments,
   blocks,
   consultations,
+  intakeDocuments,
   customers,
   dateOverrides,
   overrideIntervals,
@@ -718,6 +719,11 @@ export async function anonymizeCustomer(db: DB, id: number, ctx: Ctx) {
   });
   // Special category data is removed completely with the personal data.
   const [del] = (await db.delete(consultations).where(eq(consultations.customerId, id))) as unknown as [{ affectedRows: number }];
+  // Signed intake forms: the files are wiped, only non-health metadata remains.
+  await db
+    .update(intakeDocuments)
+    .set({ status: "deleted", dataEnc: null, note: null, deletedAt: new Date(), deletedBy: ctx.userId ?? null, deleteReason: "Klant geanonimiseerd" })
+    .where(and(eq(intakeDocuments.customerId, id), isNull(intakeDocuments.deletedAt)));
   await audit(db, { userId: ctx.userId, action: "customer.anonymized", entity: "customer", entityId: id, details: { consultationDeleted: del.affectedRows > 0 } });
 }
 
