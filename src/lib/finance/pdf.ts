@@ -3,6 +3,7 @@ import PDFDocument from "pdfkit";
 import type { InvoiceSettings } from "../db/settings";
 import { formatCents } from "./money";
 import { formatRate, type ComputedLine } from "./invoice-core";
+import { logoData } from "../../components/brand/logoData";
 
 /**
  * Server-side PDF generation (pdfkit, pure JavaScript, works on Hostinger
@@ -10,10 +11,10 @@ import { formatRate, type ComputedLine } from "./invoice-core";
  * no font files are needed at runtime.
  */
 
-const INK = "#1f1a17";
-const MUTED = "#6b625b";
-const LINE = "#d9d1c7";
-const ACCENT = "#7a3b2e";
+const INK = "#221A17";
+const MUTED = "#6B5D52";
+const LINE = "#D9CBBA";
+const ACCENT = "#A0461E";
 
 function toBuffer(doc: PDFKit.PDFDocument): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -36,12 +37,23 @@ function newDoc(title: string) {
   });
 }
 
+/** The 2026 logo (vector paths, same data as the website) + optional right-hand block. */
 function brandHeader(doc: PDFKit.PDFDocument, right?: string) {
-  doc.fillColor(INK).font("Helvetica-Bold").fontSize(18).text("Glow by Dilek", 56, 56, { continued: false });
-  doc.fillColor(MUTED).font("Helvetica").fontSize(8.5).text("PROFESSIONAL WAXING", 56, 78, { characterSpacing: 2 });
-  if (right) doc.fillColor(MUTED).fontSize(9).text(right, 300, 60, { width: 239, align: "right" });
-  doc.moveTo(56, 98).lineTo(539, 98).lineWidth(0.6).strokeColor(LINE).stroke();
-  doc.y = 116;
+  const scale = 0.3;
+  const baseline = 56 + 70 * scale; // cap height 70 at size 100
+  doc.save().translate(56, baseline).scale(scale);
+  doc.path(logoData.word).fill(INK);
+  doc.path(logoData.glint).fill(ACCENT);
+  doc.translate(logoData.inline.x, 0).path(logoData.inline.by).fill(INK);
+  doc.restore();
+  let bottom = baseline + 12;
+  if (right) {
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text(right, 300, 52, { width: 239, align: "right" });
+    bottom = Math.max(bottom, doc.y + 6);
+  }
+  doc.moveTo(56, bottom).lineTo(539, bottom).lineWidth(0.6).strokeColor(LINE).stroke();
+  doc.y = bottom + 18;
+  return bottom;
 }
 
 function footer(doc: PDFKit.PDFDocument, text: string) {
@@ -84,10 +96,10 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
   doc.info.CreationDate = new Date(`${inv.issueDate}T12:00:00Z`);
   doc.info.ModDate = doc.info.CreationDate;
   const s = inv.seller;
-  brandHeader(doc, [s.legalName, s.street, `${s.postcode} ${s.city}`.trim(), s.country !== "Nederland" ? s.country : "", s.email, s.phone].filter(Boolean).join("\n"));
+  const top = brandHeader(doc, [s.legalName, s.street, `${s.postcode} ${s.city}`.trim(), s.country !== "Nederland" ? s.country : "", s.email, s.phone].filter(Boolean).join("\n"));
 
-  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(20).text(inv.kind === "credit" ? "Creditfactuur" : "Factuur", 56, 150);
-  const metaTop = 186;
+  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(20).text(inv.kind === "credit" ? "Creditfactuur" : "Factuur", 56, top + 28);
+  const metaTop = top + 64;
   const meta: [string, string][] = [
     [inv.kind === "credit" ? "Creditfactuurnummer" : "Factuurnummer", inv.number],
     ["Factuurdatum", dateNl(inv.issueDate)],
@@ -177,8 +189,8 @@ export type ReportBlock =
 /** Generic, branded A4 report (financial summaries, customer history, activity, price list). */
 export async function renderReportPdf(title: string, subtitle: string, blocks: ReportBlock[]): Promise<Buffer> {
   const doc = newDoc(title);
-  brandHeader(doc, subtitle);
-  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(18).text(title, 56, 124, { width: 483 });
+  const top = brandHeader(doc, subtitle);
+  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(18).text(title, 56, top + 20, { width: 483 });
   doc.moveDown(0.6);
   const ensure = (h: number) => {
     if (doc.y + h > 740) doc.addPage();

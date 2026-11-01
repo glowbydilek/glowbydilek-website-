@@ -1,6 +1,6 @@
 # Photography
 
-**Status: 16 photo slots, all filled** with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
+**Status: 14 photo slots, all filled** with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
 
 **Review for the service-page rebuild (October 2026).** The existing 12 slots and their 48 WebP files were reviewed again: none were weak enough to replace (no watermarks, no bad crops at the current focal points, all on-palette). Instead, **4 slots were added** for the new category, treatment and guide pages so the same image is not repeated on every page. They come from assets that had already been licensed in the same session but were not used yet — no new licences or paid services were needed. Unsplash could not be used (the connected account's email is unconfirmed); Firefly / Figma image generation was not used (no AI people, and paid credits would be required).
 
@@ -17,7 +17,6 @@
 | Slot | Adobe Stock ID | Original title (Adobe) | Used on | Edits |
 | --- | --- | --- | --- | --- |
 | `hero` | 810843299 | Beautiful young woman with flawless skin and elegant pose… | Home hero | 4:5 crop from the top |
-| `editorial-portrait` | 210591319 | Beauty portrait of attractive African American young woman with perfect skin and natural make up | Home: statement | — |
 | `zone-face` | 473675468 | Removing eyebrows with hot wax | Home index (Gezicht), Waxing: face | 4:5 crop around the face |
 | `zone-body` | 461751709 | Beautiful legs of a woman on a couch in a cosmetology salon | Home index (Lichaam), Waxing: body | — |
 | `treatments-hero` | 513816117 | Young Black Woman Touching Her Smooth Skin On Legs With Feather | Waxing hero | — |
@@ -28,14 +27,15 @@
 | `experience` | 475998587 | Interior of new modern beautician's office… | Closing band, Booking hero (labelled "Sfeerbeeld") | — |
 | `contact` | 423935121 | Round stylish ceramic vase with dried flower lagurus casting shadows | Contact hero, About: vision | — |
 | `interior` | 402582095 | Composition of dried flowers and herbs in a glass vase on a beige wall background | About hero, Home: meet Dilek | — |
-| `portrait-soft` | 469983189 | Beauty portrait, woman touching her jawline (model) | Upper lip page | Focal point left |
 | `linen` | 471323214 | Linen towels on a wooden ladder, bathroom still life | Preparation page (labelled "Sfeerbeeld"), Brazilian page | — |
 | `dropper` | 350923403 | Amber dropper bottle with a grass stem on white | Aftercare page | — |
 | `vase` | 468279647 | Ceramic vase with dried flowers on a table | FAQ page, Back page | — |
 
 ### Where each treatment page takes its image
 
-Eyebrows `zone-face` · Upper lip `portrait-soft` · Chin `editorial-portrait` · Full face `hero` · Underarms `aftercare` · Half arms `materials` · Full arms `botanical` · Half legs `zone-body` · Full legs `treatments-hero` · Back `vase` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
+Eyebrows `zone-face` · Upper lip `dropper` · Chin `botanical` · Full face `hero` · Underarms `aftercare` · Half arms `materials` · Full arms `botanical` · Half legs `zone-body` · Full legs `treatments-hero` · Back `vase` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
+
+**Direction (2026 identity):** one portrait (the calm `hero` image) on the homepage; everywhere else still lifes, textures and materials in warm natural light. The two additional model portraits were removed (November 2026) so that no page suggests a person is Dilek or a client, and the image style stays consistent.
 
 Alt text is written per slot in Dutch and English and describes the actual photo content (`src/content/media.ts`).
 

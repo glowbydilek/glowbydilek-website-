@@ -34,6 +34,7 @@ Enter these **only in Hostinger's environment-variable screen**. Never paste the
 | `DB_MIGRATE_ON_BUILD` | `true`, so database migrations run during every build; a failed migration fails the build, so a broken schema is never deployed | no |
 | `AUTH_SECRET` | at least 32 random characters (sessions, MFA encryption, IP hashing) | **yes** |
 | `CRON_SECRET` | at least 24 random characters, different from `AUTH_SECRET` | **yes** |
+| `CONSULTATION_KEY` | *(only if you use the consultation form)* `openssl rand -base64 32` — see `docs/CONSULTATION.md` | **yes** |
 | `OWNER_EMAIL` | `hello@glowbydilek.nl` (default) | no |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | `smtp.hostinger.com` / `465` / `true` | no |
 | `SMTP_USER` | `hello@glowbydilek.nl` | no |
@@ -50,6 +51,10 @@ Notes:
 - **Never** set `TURNSTILE_ALLOW_TEST_KEYS`, `INSECURE_COOKIES`, `ALLOW_INSECURE_DEV_SECRET` or `TURNSTILE_SITEVERIFY_URL` in production. They exist only for local tests.
 - The Turnstile secret that appeared in an earlier screenshot must be **rotated** in Cloudflare (Turnstile → widget → *Rotate secret key*) before it is used in production.
 - Without Turnstile keys in production, the public forms deliberately refuse submissions and show an "unavailable" notice with the email address; test keys are never used silently.
+
+## 2b. Database migrations in this release
+
+Migration `0001_platform_crm_finance` is **additive only** (new tables and nullable columns: payments, invoices, invoice counters, reviews, review invites, consultations, customer merges, price snapshots, normalised contact fields, outbox attachments). It does not change or delete existing data. Existing customers get their normalised email/phone filled in lazily by the app. Still: **make a database backup before deploying** (section 5).
 
 ## 3. First deploy, step by step
 

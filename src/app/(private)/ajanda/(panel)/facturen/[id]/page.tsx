@@ -55,7 +55,7 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
             </Card>
           ) : (
             <Card title="Factuur">
-              <dl className="grid grid-cols-[9rem_1fr] gap-x-3 gap-y-2 text-sm">
+              <dl className="grid grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words gap-x-3 gap-y-2 text-sm">
                 <dt className="text-muted">Nummer</dt>
                 <dd>{inv.number}</dd>
                 <dt className="text-muted">Factuurdatum</dt>

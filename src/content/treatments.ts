@@ -73,7 +73,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "upper-lip",
-        photo: "portrait-soft",
+        photo: "dropper",
         name: { nl: "Bovenlip", en: "Upper lip" },
         description: {
           nl: "Snel en nauwkeurig verwijderen van haartjes op de bovenlip, voor een gladde, verzorgde huid.",
@@ -82,7 +82,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "chin",
-        photo: "editorial-portrait",
+        photo: "botanical",
         name: { nl: "Kin", en: "Chin" },
         description: {
           nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",

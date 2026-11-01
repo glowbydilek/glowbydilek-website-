@@ -42,7 +42,7 @@ export default async function Consultation({ params, searchParams }: { params: P
           <div className="space-y-5">
             <Card title="Status">
               {data ? (
-                <dl className="grid grid-cols-[9rem_1fr] gap-x-3 gap-y-2 text-sm">
+                <dl className="grid grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words gap-x-3 gap-y-2 text-sm">
                   <dt className="text-muted">Toestemming</dt>
                   <dd>{formatLocal(data.row.consentAt, "nl", { dateStyle: "medium" })} ({data.row.consentMethod === "written" ? "schriftelijk" : data.row.consentMethod === "digital" ? "digitaal" : "in persoon"})</dd>
                   <dt className="text-muted">Laatst gecontroleerd</dt>

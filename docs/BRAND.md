@@ -1,62 +1,69 @@
-# Brand identity
+# Glow by Dilek — brand identity (2026)
+
+The previous ivory / nude / champagne-gold identity with the lotus symbol and script signature was retired in November 2026 at the owner's request. This document describes its replacement. The live reference page is `/merkidentiteit` (not indexed).
+
+## Direction
+
+**Warm, editorial, quietly confident.** A small European skin studio rather than a "luxury" template: generous but purposeful white space, a strong typographic voice, one signature colour, one ornament, and photography in a single style.
+
+What to avoid (and why the old site felt assembled): rows of identical rounded cards, decorative lines everywhere, gold as a luxury shorthand, a script signature, several different stock models, and sections that all share the same layout.
 
 ## Logo
 
-This is a vector recreation of the **owner-approved concept**: a champagne-gold "Glow" in a classical serif, a handwritten "by Dilek", a lotus symbol with a sweeping leaf and a drop of light, and the tagline "Professional Waxing".
+| Variant | File (`public/brand/`) | Use |
+| --- | --- | --- |
+| Inline | `glow-by-dilek-logo-inline(.svg / -light.svg)` | Header and small sizes: "by Dilek" in italic, readable on a phone |
+| Horizontal | `glow-by-dilek-logo(-light).svg` | Documents, signatures (BY DILEK in tracked caps) |
+| Stacked | `glow-by-dilek-logo-stacked(-light).svg` | Footer, social cover, print |
+| Monogram | `glow-by-dilek-symbol(-light).svg` | Private areas, small marks |
+| App icon | `glow-by-dilek-app-icon.svg`, `icon-192/512.png`, `src/app/icon.svg`, `src/app/apple-icon.png` | Favicon, iPhone home screen |
+| Social | `profile-icon.png` (1080²), `og-default.png` (1200×630) | Profile picture, link previews |
 
-- **Construction.** The lotus is original vector geometry (`scripts/brand/lotus.py`). All lettering is converted to outlines from SIL Open Font License fonts, which permit logo use: Cormorant Garamond for "Glow", Parisienne for "by Dilek" and Jost for the tagline. The SVGs contain only `<path>` elements, with no embedded raster images and no font dependency.
-- **What was left out of the reference.** The photographic backdrop, lighting, metallic bevels and shadows were presentation effects only. The production logo uses flat brand colours.
-- **Regenerating.** Run `npm run brand:logos` (needs Python `fonttools` + `brotli`, and Playwright for the PNGs).
+- The wordmark "Glow" is set in Newsreader (opsz 72, weight 340) and converted to **vector outlines**: the logo never depends on an installed font.
+- **The glint** (a four-point star of light, long vertical rays) sits at the top right of the "w". It is the only ornament of the brand.
+- Regenerate everything with `npm run brand:logos` (`scripts/brand/build-logos.cjs`, fonts in `scripts/brand/fonts/` under the SIL Open Font License). Never edit the generated files by hand.
+- Clear space: at least the height of the "o" around the logo. Minimum height: 24 px for the inline logo, 40 px for the stacked one.
+- Do not recolour outside the palette, stretch, add effects, or place the dark logo on photos without a calm area.
 
-### Files (`public/brand/`)
+## Colour
 
-| File | Use |
-| --- | --- |
-| `logo-horizontal.svg` | Light backgrounds: documents, email signature, wide placements |
-| `logo-horizontal-dark.svg` | Dark backgrounds: the website footer |
-| `logo-wordmark.svg` | Without tagline; the website header uses this form, because the tagline is not legible at header size |
-| `logo-stacked.svg` / `logo-stacked-dark.svg` | Emblem with arcs: signage, social posts, cards, hero brand art |
-| `logo-symbol.svg` / `logo-symbol-dark.svg` | Symbol alone: decorative accents, watermark |
-| `favicon.svg`, `src/app/icon.svg`, `src/app/apple-icon.png`, `icon-512.png` | Browser and home-screen icons (filled symbol for small sizes) |
-| `profile-icon.svg` / `profile-icon.png` (1080×1080) | Instagram, Google Business Profile, WhatsApp |
+| Name | Hex | Token | Use | Contrast |
+| --- | --- | --- | --- | --- |
+| Porselein | `#F5F0E8` | `paper` | Page background | — |
+| Surface | `#FBF8F3` | `surface` | Fields, raised blocks | — |
+| Zand | `#EAE1D5` | `sand` | Quiet sections | muted text 4.9:1 |
+| Lijn | `#D9CBBA` | `line` | Hairlines | — |
+| Espresso | `#221A17` | `ink` | Text, primary buttons, dark sections | 15.1:1 on paper |
+| Ink soft | `#45392F` | `ink-soft` | Body copy | 9.9:1 |
+| Muted | `#6B5D52` | `muted` | Secondary text | 5.6:1 |
+| Hars (Resin) | `#A0461E` | `accent` | Accent, links, glint, accent buttons | 5.5:1 (both ways) |
+| Donkere hars | `#86391A` | `accent-deep` | Small accent text | 7.1:1 |
+| Gloed (Glow) | `#F0D3B4` | `glow` | Accent on dark backgrounds | 12:1 on ink |
+| Zachte gloed | `#F7E8D8` | `glow-soft` | Tinted blocks | — |
 
-The React components `Logo` and `LogoSymbol` (`src/components/brand/Logo.tsx`) render the same generated path data (`logoData.ts`).
+On dark backgrounds the accent always switches to **Gloed** (`.on-dark` does this automatically): Resin on Espresso is only 2.8:1.
 
-**Minimum sizes:** the horizontal logo 120 px wide without tagline (240 px with tagline); the favicon symbol 16 px. **Clear space:** at least the height of the "G" around the logo.
-
-## Colours
-
-| Token | Hex | Use | Contrast |
-| --- | --- | --- | --- |
-| `ivory` (Warm Ivory) | `#F8F5EF` | Main canvas | — |
-| `ivory-50` | `#FCFAF6` | Raised surfaces, form fields | — |
-| `nude` (Soft Nude) | `#E9D5C7` | Accent surfaces | — |
-| `nude-light` | `#F4E9E1` | Tinted sections | — |
-| `stone` (Stone Beige) | `#DDD2C4` | Rules, dividers | — |
-| `stone-light` | `#ECE5DC` | Quiet sections | — |
-| `gold` (Champagne Gold) | `#C4A16F` | Symbol, rules, accents (not body text) | decorative |
-| `gold-deep` | `#765930` | Small gold text and italic headline accents | 5.9:1 on ivory, ≥ 4.5:1 on nude, stone and nude-light |
-| `charcoal` (Elegant Charcoal) | `#292724` | Headings, buttons, the single dark band | 14.6:1 |
-| `charcoal-soft` | `#4A443F` | Body copy | 8.9:1 |
-| `muted` | `#635B54` | Secondary text | ≥ 4.6:1 on every light surface |
-
-The previous deep-green palette has been removed entirely.
+The owner can adjust every colour in **Admin → Thema & Design**. Changes are validated against these contrast pairs (WCAG AA 4.5:1) and **"Goedgekeurd thema herstellen"** restores this identity in one click.
 
 ## Typography
 
-- **Cormorant Garamond:** display headings, with italic accents in `gold-deep`.
-- **Jost:** body text. Labels and buttons are set in uppercase with wide tracking.
-- **Parisienne:** used only as Dilek's handwritten signature (matching "by Dilek" in the logo).
+- **Newsreader** (variable, optical size) for headings and display text; italic for the single emphasised phrase in a heading.
+- **Instrument Sans** (variable) for text, navigation, buttons and labels.
+- Labels ("eyebrows") are tracked caps preceded by a small glint. Buttons and navigation use **sentence case**, never spaced capitals.
+- Both fonts are self-hosted via `@fontsource-variable` (no request to Google Fonts).
 
-## Design system
+## Components and layout
 
-| Area | Approach |
-| --- | --- |
-| Spacing | CSS variables: `--space-section` (3.5–6.5 rem), `--space-section-tight`, `--space-block`, plus `--header-safe` so content and images never sit under the fixed header |
-| Radii | `--radius-card` (1.5 rem) and `--radius-media` (1.75 rem) |
-| Surfaces | Ivory, then ivory-50 / nude-light / stone-light for rhythm; one charcoal band per page |
-| Motion | Subtle reveals and image unmasking, no parallax on heroes, all disabled under `prefers-reduced-motion` |
+- Buttons: `.btn` + `.btn-primary` (espresso), `.btn-accent` (resin), `.btn-outline`; shape follows the theme setting (pill by default).
+- Radii are small and editorial (`--radius-media` 6 px, `--radius-card` 12 px); photos are not rounded into blobs.
+- Section rhythm via `--space-section` / `--space-section-tight`; owner presets "compact" and "airy".
+- Lists and steps use hairlines and the glint, not boxed card grids.
+- Icons: thin line icons (1.6 stroke) in the private areas; social icons only when the owner configured a profile.
 
-## Voice
+## Motion — the Glow transition
 
-Calm, precise and personal; Dutch first, with independently written English. Use "waxen" and "harsen" in Dutch. No superlatives, no invented claims.
+When a visitor clicks an internal link, a soft amber light blooms from the click point with a small glint, and the next page settles in (≈0.5 s). Navigation is never delayed; new tabs, downloads, hash links, modifier clicks and browser back/forward behave natively; the effect is off for `prefers-reduced-motion` (`src/components/GlowTransition.tsx`).
+
+## Photography
+
+See `docs/PHOTOGRAPHY.md`. One portrait (homepage hero); otherwise still lifes, textures and materials in warm natural light. Never images that suggest Dilek, her workplace, real clients or a home setting.

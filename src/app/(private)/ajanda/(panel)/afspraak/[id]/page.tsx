@@ -93,7 +93,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-5">
           <Card title="Gegevens">
-            <dl className="grid grid-cols-[8rem_1fr] gap-x-3 gap-y-2 text-sm">
+            <dl className="grid grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words gap-x-3 gap-y-2 text-sm">
               <dt className="text-muted">Behandeling</dt>
               <dd>{items.map((i) => i.nameNl).join(", ") || "—"}</dd>
               <dt className="text-muted">Duur</dt>

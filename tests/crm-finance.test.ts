@@ -7,7 +7,7 @@ import { centsToInput, formatCents, parseEuroToCents, vatFromGross } from "../sr
 import { computeTotals, formatInvoiceNumber, invoiceReadiness, lineErrors, validIban, validKvk, validVatNumber } from "../src/lib/finance/invoice-core.ts";
 import { defaultInvoiceSettings, setSetting, type InvoiceSettings } from "../src/lib/db/settings.ts";
 import { BookingError, cancel, createLegacyRequest, createManual, markCompleted, reschedule, searchCustomers } from "../src/lib/booking/service.ts";
-import { customerStats, findDuplicates, findMatches, mergeCustomers } from "../src/lib/crm/service.ts";
+import { backfillNorms, customerStats, findDuplicates, findMatches, mergeCustomers } from "../src/lib/crm/service.ts";
 import { financeReport, recordPayment, voidPayment } from "../src/lib/finance/service.ts";
 import { createCredit, createDraft, emailInvoice, InvoiceError, issueInvoice, updateDraft } from "../src/lib/finance/invoices.ts";
 import { processOutbox } from "../src/lib/notifications/outbox.ts";
@@ -104,6 +104,13 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
 
   const manual = (o: Record<string, unknown> = {}) =>
     createManual(db, { firstName: "Sara", lastName: "de Vries", email: "sara@example.com", phone: "06 12 34 56 78", treatmentIds: ["brazilian"], day: DAY, minute: 600, ...o }, ctx);
+
+  test("customers from before the migration get normalised contact fields (backfill)", async () => {
+    await db.insert(customers).values({ firstName: "Oud", lastName: "Profiel", email: "Oud@Example.com", phone: "06-11 22 33 44" });
+    assert.equal(await backfillNorms(db), 1);
+    assert.equal(await backfillNorms(db), 0, "idempotent");
+    assert.equal((await findMatches(db, { phone: "+31611223344" }))[0]?.customer.emailNorm, "oud@example.com");
+  });
 
   test("a public request never overwrites an existing profile and only attaches on a strong match", async () => {
     const id = await manual();
