@@ -220,7 +220,7 @@ export function AppointmentForm({
           locale={locale}
           resetKey={challenge.resetKey}
           onToken={challenge.setToken}
-          labels={{ title: t.challengeLabel, loading: t.challengeLoading, blocked: t.challengeBlocked, email }}
+          labels={{ title: t.challengeLabel, loading: t.challengeLoading, blocked: t.challengeBlocked, email, unavailable: t.status.unavailable }}
         />
         {challenge.missing && (
           <p id="appt-challenge-error" role="alert" className="mt-2 text-sm text-[#9b3b2f]">

@@ -2,8 +2,13 @@ import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { AppointmentFormBlock } from "@/components/FormSections";
 import { PreselectedNotice } from "@/components/forms/PreselectedNotice";
-import { allTreatments } from "@/content/treatments";
-import { bookingAnchor } from "@/i18n/config";
+import { allTreatments, formatPrice, treatmentGroups } from "@/content/treatments";
+import { BookingJourney } from "@/components/forms/BookingJourney";
+import { siteConfig } from "@/content/site";
+import { onlineBookingStatus } from "@/lib/booking/public";
+import { withDbOrFallback } from "@/lib/db/client";
+import { turnstileSiteKey } from "@/lib/forms/turnstile";
+import { bookingAnchor, href } from "@/i18n/config";
 import { PageHero } from "@/components/PageHero";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -17,9 +22,14 @@ import { getDictionary } from "@/i18n/dictionaries";
  * confirmed automatically and no availability is shown (no scheduling system
  * yet — see docs/ARCHITECTURE.md).
  */
-export function BookingPage({ locale }: { locale: Locale }) {
+export async function BookingPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.booking;
+  // The availability-aware journey only when it is genuinely operational.
+  const online = await withDbOrFallback(async (db) => {
+    const st = await onlineBookingStatus(db);
+    return st.enabled ? st.bookable : null;
+  }, null);
 
   return (
     <>
@@ -46,7 +56,26 @@ export function BookingPage({ locale }: { locale: Locale }) {
           <div className="rounded-[1.75rem] bg-ivory p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <div className="mt-8">
-              <AppointmentFormBlock locale={locale} dict={dict} />
+              {online ? (
+                <BookingJourney
+                  locale={locale}
+                  t={t.journey}
+                  forms={dict.forms}
+                  categories={Object.fromEntries(treatmentGroups.map((g) => [g.id, g.name[locale]]))}
+                  treatments={online.map((b) => ({
+                    id: b.id,
+                    name: locale === "nl" ? b.nameNl : b.nameEn,
+                    category: b.category,
+                    duration: b.duration!,
+                    price: b.priceCents != null ? `${b.priceFrom ? `${t.journey.from} ` : ""}${formatPrice(b.priceCents / 100, locale)}` : null,
+                  }))}
+                  privacyHref={href(locale, "privacy")}
+                  email={siteConfig.contact.email}
+                  turnstileSiteKey={turnstileSiteKey()}
+                />
+              ) : (
+                <AppointmentFormBlock locale={locale} dict={dict} />
+              )}
             </div>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)] lg:grid-cols-1 lg:self-start">

@@ -2,6 +2,8 @@ import "server-only";
 import { NextResponse, type NextRequest } from "next/server";
 import { mailConfigured, ownerAddress, sendMail } from "../mail/send";
 import { fingerprint, forgetSubmission, isDuplicate, LIMITS, markSubmitted, rateLimit } from "./rateLimit";
+import { databaseConfigured, getDb } from "../db/client";
+import { claimOnce, hitLimit, releaseOnce } from "../db/limits";
 import { clientIp } from "./ip";
 import { verifyTurnstile } from "./turnstile";
 import { isLikelySpam, type FieldErrors } from "./validation";
@@ -11,6 +13,8 @@ type Outcome<T> = { ok: true; data: T } | { ok: false; errors: FieldErrors };
 type Handler<T extends { email: string; name: string }> = {
   kind: "contact" | "appointment";
   validate: (raw: Record<string, unknown>) => Outcome<T>;
+  /** Optional: persist the submission (e.g. contact inbox, agenda request). Runs after the owner email was sent. */
+  store?: (data: T) => Promise<void>;
   /** Stable content used to detect duplicate submissions. */
   signature: (data: T) => string;
   ownerMail: (data: T) => { subject: string; text: string; html: string };
@@ -48,6 +52,40 @@ function sameOrigin(req: NextRequest): boolean {
   }
 }
 
+/**
+ * Abuse limits: MySQL-backed (shared by every process, survives restarts)
+ * when a database is configured, otherwise per-process memory.
+ */
+const limiter = {
+  async hit(key: string, limit: number, windowMs: number) {
+    if (!databaseConfigured()) return rateLimit(key, limit, windowMs);
+    try {
+      return await hitLimit(getDb(), `form:${key}`, limit, windowMs);
+    } catch {
+      return rateLimit(key, limit, windowMs);
+    }
+  },
+  async claimDuplicate(key: string) {
+    if (!databaseConfigured()) {
+      if (isDuplicate(key)) return false;
+      markSubmitted(key);
+      return true;
+    }
+    try {
+      return await claimOnce(getDb(), `dup:${key}`, LIMITS.duplicateMs);
+    } catch {
+      if (isDuplicate(key)) return false;
+      markSubmitted(key);
+      return true;
+    }
+  },
+  async release(key: string) {
+    forgetSubmission(key);
+    if (databaseConfigured()) await releaseOnce(getDb(), `dup:${key}`).catch(() => {});
+  },
+  claimToken: databaseConfigured() ? (h: string) => claimOnce(getDb(), `turnstile:${h}`, 10 * 60_000) : undefined,
+};
+
 export async function handleForm<T extends { email: string; name: string }>(req: NextRequest, h: Handler<T>) {
   if (!sameOrigin(req)) return json(403, { ok: false, error: "forbidden" });
   if (!req.headers.get("content-type")?.includes("application/json")) {
@@ -70,14 +108,14 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   if (isLikelySpam(raw)) return json(200, { ok: true });
 
   const ip = clientIp(req);
-  if (!rateLimit(`ip:${h.kind}:${fingerprint(ip)}`, LIMITS.ip.limit, LIMITS.ip.windowMs)) return tooMany();
+  if (!(await limiter.hit(`ip:${h.kind}:${fingerprint(ip)}`, LIMITS.ip.limit, LIMITS.ip.windowMs))) return tooMany();
 
   const result = h.validate(raw);
   if (!result.ok) return json(422, { ok: false, error: "validation", fields: result.errors });
   const data = result.data;
 
   // Human verification (Cloudflare Turnstile, server-side Siteverify).
-  const check = await verifyTurnstile({ token: raw.turnstileToken, action: h.kind, ip });
+  const check = await verifyTurnstile({ token: raw.turnstileToken, action: h.kind, ip, claim: limiter.claimToken });
   if (!check.ok) {
     if (check.reason === "unavailable") {
       console.error(`[${h.kind}] Turnstile verification unavailable`, check.codes ?? "");
@@ -89,10 +127,8 @@ export async function handleForm<T extends { email: string; name: string }>(req:
 
   // Duplicate content (double submits, retries, copy-paste floods).
   const dupKey = `dup:${h.kind}:${fingerprint(data.email, h.signature(data))}`;
-  if (isDuplicate(dupKey)) return json(409, { ok: false, error: "duplicate" });
-
-  if (!rateLimit(`email:${fingerprint(data.email)}`, LIMITS.email.limit, LIMITS.email.windowMs)) return tooMany();
-  if (!rateLimit("global", LIMITS.global.limit, LIMITS.global.windowMs)) {
+  if (!(await limiter.hit(`email:${fingerprint(data.email)}`, LIMITS.email.limit, LIMITS.email.windowMs))) return tooMany();
+  if (!(await limiter.hit("global", LIMITS.global.limit, LIMITS.global.windowMs))) {
     console.warn(`[${h.kind}] Global form limit reached`);
     return tooMany();
   }
@@ -103,14 +139,23 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   }
 
   // Reserve the submission first so a parallel duplicate is rejected too.
-  markSubmitted(dupKey);
+  if (!(await limiter.claimDuplicate(dupKey))) return json(409, { ok: false, error: "duplicate" });
   try {
     const owner = h.ownerMail(data);
     await sendMail({ to: ownerAddress(), replyTo: { name: data.name, address: data.email }, ...owner });
   } catch (err) {
-    forgetSubmission(dupKey);
+    await limiter.release(dupKey);
     console.error(`[${h.kind}] Failed to send notification: ${errorCode(err)}`);
     return json(502, { ok: false, error: "sendFailed" });
+  }
+
+  if (h.store) {
+    try {
+      await h.store(data);
+    } catch (err) {
+      // The owner already has the email; storing is a convenience copy.
+      console.error(`[${h.kind}] could not store submission: ${errorCode(err)}`);
+    }
   }
 
   // The acknowledgement is best-effort: the inquiry itself has been delivered.

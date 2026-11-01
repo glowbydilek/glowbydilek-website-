@@ -157,3 +157,8 @@ test("a live secret with a missing or test site key is reported as misconfigured
   assert.match(st.problem!, /SITE_KEY/);
   assert.equal(turnstileStatus({ TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive" }).mode, "live");
 });
+
+test("without live keys in production the public widget is not rendered with a test key", () => {
+  assert.equal(turnstileSiteKey({ NODE_ENV: "production" }), "");
+  assert.equal(turnstileSiteKey({ NODE_ENV: "production", TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive" }), "0x4AAAAlive");
+});

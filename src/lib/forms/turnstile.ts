@@ -85,6 +85,8 @@ export function turnstileStatus(env: Record<string, string | undefined> = proces
 
 /** Public site key for the widget (test key until the live key is configured). */
 export function turnstileSiteKey(env: Record<string, string | undefined> = process.env): string {
+  // "" = not configured in production: the widget shows "temporarily unavailable" instead of a test widget.
+  if (turnstileConfig(env).mode === "missing") return "";
   return env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || TURNSTILE_TEST_SITE_KEY;
 }
 
@@ -123,6 +125,8 @@ export async function verifyTurnstile(opts: {
   fetchImpl?: typeof fetch;
   now?: number;
   timeoutMs?: number;
+  /** Shared replay store (MySQL); falls back to process memory. */
+  claim?: (tokenHash: string) => Promise<boolean>;
   /**
    * Login and password reset: when Turnstile is not configured in production
    * these still work (protected by lockout and rate limits) instead of
@@ -147,7 +151,10 @@ export async function verifyTurnstile(opts: {
   // duplicates with "timeout-or-duplicate"). The shared test token is exempt
   // so the test keys keep working in development.
   const exempt = config.mode === "test" && token === TURNSTILE_DUMMY_TOKEN;
-  if (!exempt && !remember(token, now)) return { ok: false, reason: "replayed" };
+  if (!exempt) {
+    const fresh = opts.claim ? await opts.claim(hash(token)) : remember(token, now);
+    if (!fresh) return { ok: false, reason: "replayed" };
+  }
 
   const body = new URLSearchParams({ secret: config.secret, response: token });
   if (opts.ip && opts.ip !== "unknown") body.set("remoteip", opts.ip);

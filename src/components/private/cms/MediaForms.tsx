@@ -1,7 +1,7 @@
 "use client";
 
 import { assignSlotAction, deleteMediaAction, updateMediaAction, uploadMediaAction } from "@/lib/private/mediaActions";
-import { FOCUS_PRESETS } from "@/lib/cms/media";
+import { FOCUS_PRESETS } from "@/lib/cms/focus";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton } from "../ui";
 

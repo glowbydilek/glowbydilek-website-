@@ -41,6 +41,7 @@ function latestResetLink(since) {
   assert.ok(MAIL_DIR, "set MAIL_DIR to the local SMTP sink folder");
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+  globalThis.__browser = browser;
   await ctx.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));
   const p = await ctx.newPage();
   try {
@@ -158,6 +159,118 @@ function latestResetLink(since) {
     await step("customer search by phone", async () => {
       await p.goto(`${BASE}/ajanda/klanten?q=0612345678`);
       await p.getByText("Test Klant").waitFor();
+    });
+
+    await step("CMS: edit the homepage title, publish, see it live, restore the original", async () => {
+      await p.goto(`${BASE}/admin/paginas/home`);
+      await p.locator("#f-root-hero-title").fill("Zacht voor je huid — test.");
+      await p.getByRole("button", { name: "Publiceren", exact: true }).click();
+      await p.getByText("Gepubliceerd (versie").waitFor();
+      const html = await (await fetch(`${BASE}/`)).text();
+      assert.ok(html.includes("Zacht voor je huid — test."), "published title is live");
+      p.once("dialog", (d) => d.accept());
+      await p.getByRole("button", { name: "Oorspronkelijke tekst" }).click();
+      await p.getByText("De oorspronkelijke tekst staat weer op de website").waitFor();
+      assert.ok(!(await (await fetch(`${BASE}/`)).text()).includes("— test."));
+    });
+
+    await step("CMS: draft preview is visible to the owner only", async () => {
+      await p.goto(`${BASE}/admin/paginas/about`);
+      await p.locator("#f-root-hero-title").fill("Concepttitel voor voorbeeld");
+      await p.getByRole("button", { name: "Voorbeeld bekijken" }).click();
+      await p.waitForURL(`${BASE}/over-dilek`);
+      await p.getByText("Voorbeeldweergave").waitFor();
+      await p.getByText("Concepttitel voor voorbeeld").first().waitFor();
+      assert.ok(!(await (await fetch(`${BASE}/over-dilek`)).text()).includes("Concepttitel"), "visitors never see drafts");
+      await p.getByRole("link", { name: "Voorbeeld sluiten" }).click();
+      await p.goto(`${BASE}/admin/paginas/about`);
+      p.once("dialog", (d) => d.accept());
+      await p.getByRole("button", { name: "Concept verwijderen" }).click();
+      await p.getByText("Concept verwijderd").waitFor();
+    });
+
+    await step("Theme: publish a preset, then restore the approved theme", async () => {
+      await p.goto(`${BASE}/admin/thema`);
+      await p.getByRole("button", { name: "Luchtiger, met meer witruimte" }).click();
+      await p.getByRole("button", { name: "Publiceren", exact: true }).click();
+      await p.getByText("Gepubliceerd").waitFor();
+      assert.match(await (await fetch(`${BASE}/`)).text(), /id="glow-theme"[^>]*>[^<]*--space-section/);
+      p.once("dialog", (d) => d.accept());
+      await p.getByRole("button", { name: "Goedgekeurd thema herstellen" }).click();
+      await p.getByText("De oorspronkelijke tekst staat weer").waitFor();
+      assert.ok(!(await (await fetch(`${BASE}/`)).text()).includes('id="glow-theme"'));
+    });
+
+    await step("Prices: set price and duration; shown on the prices page", async () => {
+      await p.goto(`${BASE}/admin/behandelingen`);
+      const row = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Brazilian" }) }).first();
+      await row.locator(":scope > summary").click();
+      await row.locator('input[name="price"]').fill("45");
+      await row.locator('input[name="duration"]').fill("45");
+      await row.locator('input[name="buffer"]').fill("15");
+      await row.locator('input[name="bookableOnline"]').check();
+      await row.getByRole("button", { name: "Opslaan" }).click();
+      await row.getByText("Opgeslagen").waitFor();
+      const prices = (await (await fetch(`${BASE}/prijzen`)).text()).replace(/\u00a0|&nbsp;|&#160;/g, " ");
+      assert.match(prices, /€ ?45\b/, "price € 45 not shown on /prijzen");
+    });
+
+    await step("Online booking: enable, customer chooses an exact time, request appears in Ajanda, approve sends confirmation", async () => {
+      await p.goto(`${BASE}/ajanda/instellingen`);
+      await p.locator('input[name="onlineBookingEnabled"]').check();
+      await p.locator('input[name="minNoticeHours"]').fill("0");
+      await p.getByRole("button", { name: "Instellingen opslaan" }).click();
+      await p.getByText("Instellingen opgeslagen").waitFor();
+      const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
+      await c.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));
+      const v = await c.newPage();
+      await v.goto(`${BASE}/afspraak-maken?behandeling=brazilian`);
+      await v.getByText("Kies een dag en tijd").waitFor();
+      await v.locator('[role="listbox"] [role="option"]').first().click();
+      await v.locator('[role="listbox"]').nth(1).locator('[role="option"]').first().click();
+      await v.fill("#bk-first", "Online");
+      await v.fill("#bk-last", "Klant");
+      await v.fill("#bk-email", `online.${Date.now()}@example.com`);
+      await v.fill("#bk-phone", "0611122233");
+      await v.check("#bk-privacy");
+      await v.waitForTimeout(3200);
+      await v.getByRole("button", { name: "Afspraak aanvragen" }).click();
+      await v.getByText("Je aanvraag is ontvangen").waitFor();
+      await c.close();
+      await p.goto(`${BASE}/ajanda/aanvragen`);
+      await p.getByText("Online Klant").first().click();
+      await p.getByRole("button", { name: /Afspraak bevestigen/ }).click();
+      await p.getByText("Afspraak bevestigd. De klant krijgt een bevestiging").waitFor();
+    });
+
+    await step("Contact messages appear in the inbox", async () => {
+      await p.goto(`${BASE}/ajanda/berichten?alle=1`);
+      await p.locator("a[href^='/ajanda/berichten/']").first().waitFor();
+    });
+
+    await step("Media: upload, describe, place on the homepage, restore the original photo", async () => {
+      const sharp = require("sharp");
+      const png = await sharp({ create: { width: 1200, height: 1500, channels: 3, background: "#d8c2ae" } }).png().toBuffer();
+      const file = path.join(require("node:os").tmpdir(), `e2e-${Date.now()}.png`);
+      fs.writeFileSync(file, png);
+      await p.goto(`${BASE}/admin/media`);
+      await p.setInputFiles('input[name="file"]', file);
+      await p.locator('input[name="altNl"]').first().fill("Testfoto in nude tinten");
+      await p.locator('input[name="altEn"]').first().fill("Test photo in nude tones");
+      await p.getByRole("button", { name: "Uploaden" }).click();
+      await p.getByText("Foto geüpload").waitFor();
+      const slot = p.locator("form", { has: p.locator('input[name="slot"][value="hero"]') });
+      const opt = await slot.locator("select option").nth(1).getAttribute("value");
+      await slot.locator("select").selectOption(opt);
+      await slot.getByRole("button", { name: "Toepassen" }).click();
+      await slot.getByText("De foto staat nu op de website").waitFor();
+      assert.match(await (await fetch(`${BASE}/`)).text(), new RegExp(`/media/${opt}/1600`));
+      const img = await fetch(`${BASE}/media/${opt}/640`);
+      assert.equal(img.headers.get("content-type"), "image/webp");
+      assert.equal(img.headers.get("x-content-type-options"), "nosniff");
+      await slot.locator("select").selectOption("");
+      await slot.getByRole("button", { name: "Toepassen" }).click();
+      await slot.getByText("De oorspronkelijke foto staat weer").waitFor();
     });
 
     await step("admin uses the same login; logout ends the session", async () => {

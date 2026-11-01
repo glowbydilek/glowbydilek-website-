@@ -105,3 +105,19 @@ test("spam: honeypot and browser-measured timing", () => {
 test("escapeHtml escapes markup", () => {
   assert.equal(escapeHtml(`<a href="x">'&'</a>`), "&lt;a href=&quot;x&quot;&gt;&#39;&amp;&#39;&lt;/a&gt;");
 });
+
+import { validateBookingRequest } from "../src/lib/forms/validation.ts";
+
+test("booking request: first/last name, email, phone, exact time and consent required", () => {
+  const ok = validateBookingRequest(
+    { treatments: ["brazilian", "nope"], date: "2026-11-10", time: "10:15", firstName: "Sara", lastName: "de Vries", email: "Sara@Example.com", phone: "06 12345678", privacy: true, locale: "en" },
+    ["brazilian"],
+    "2026-11-02",
+  );
+  assert.ok(ok.ok);
+  assert.deepEqual(ok.ok && ok.data.treatments, ["brazilian"]);
+  assert.equal(ok.ok && ok.data.email, "sara@example.com");
+  const bad = validateBookingRequest({ treatments: [], date: "2026-11-01", time: "25:00", firstName: "", lastName: "", email: "x", phone: "", privacy: false }, ["brazilian"], "2026-11-02");
+  assert.ok(!bad.ok);
+  assert.deepEqual(Object.keys(!bad.ok ? bad.errors : {}).sort(), ["date", "email", "firstName", "lastName", "phone", "privacy", "time", "treatments"]);
+});

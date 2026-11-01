@@ -12,24 +12,28 @@ import { EMPTY_SNAPSHOT, setSnapshotResolver, type PhotoOverride, type Snapshot,
  * - Published content is cached per process (60 s) and invalidated on publish.
  * - Draft preview (Next.js draft mode) is only honoured for a signed-in owner.
  */
-let published: { snap: Snapshot; at: number } | null = null;
-let version = 1;
+// Kept on globalThis: Next.js bundles server actions and page rendering in
+// separate module layers, so a module-level variable would be duplicated and
+// invalidateContent() from an action would not reach the render cache.
+type ContentCache = { published: { snap: Snapshot; at: number } | null; version: number };
+const g = globalThis as typeof globalThis & { __glowContent?: ContentCache };
+const cacheState: ContentCache = (g.__glowContent ??= { published: null, version: 1 });
 const TTL = 60_000;
 
 const requestStore = cache(() => ({ snap: null as Snapshot | null }));
 
 setSnapshotResolver(() => {
   try {
-    return requestStore().snap ?? published?.snap ?? null;
+    return requestStore().snap ?? cacheState.published?.snap ?? null;
   } catch {
     // Outside a React request (route handlers, scripts): published cache only.
-    return published?.snap ?? null;
+    return cacheState.published?.snap ?? null;
   }
 });
 
 export function invalidateContent() {
-  published = null;
-  version++;
+  cacheState.published = null;
+  cacheState.version++;
 }
 
 async function load(status: "published" | "draft"): Promise<Snapshot> {
@@ -52,7 +56,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
       if (m) photos.set(slot, { mediaId: m.id, version: m.updatedAt.getTime(), width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
     }
   }
-  return { docs, treatments: tmap, photos, preview: status === "draft", version };
+  return { docs, treatments: tmap, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**
@@ -74,11 +78,14 @@ export async function ensureContent(): Promise<Snapshot> {
       const s = await currentSession();
       if (s && (!s.mfaRequired || s.mfaPassed)) return (store.snap = await load("draft"));
     }
-    if (!published || Date.now() - published.at > TTL) published = { snap: await load("published"), at: Date.now() };
-    return (store.snap = published.snap);
+    const cached = cacheState.published;
+    if (cached && Date.now() - cached.at <= TTL) return (store.snap = cached.snap);
+    const snap = await load("published");
+    cacheState.published = { snap, at: Date.now() };
+    return (store.snap = snap);
   } catch (err) {
     console.error("[cms] content could not be loaded, using built-in content:", err instanceof Error ? err.message.slice(0, 160) : err);
-    return (store.snap = published?.snap ?? EMPTY_SNAPSHOT);
+    return (store.snap = cacheState.published?.snap ?? EMPTY_SNAPSHOT);
   }
 }
 
