@@ -49,19 +49,19 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
           <ul className="max-h-[36rem] space-y-0.5 overflow-y-auto text-sm">
             {items.map((i) => (
               <li key={i.key}>
-                <Link href={`/admin/seo?pagina=${i.key}&taal=${locale}`} aria-current={i.key === item.key ? "page" : undefined} className={`block rounded-lg px-2.5 py-2 ${i.key === item.key ? "bg-charcoal text-ivory" : "hover:bg-charcoal/6"}`}>{i.label}</Link>
+                <Link href={`/admin/seo?pagina=${i.key}&taal=${locale}`} aria-current={i.key === item.key ? "page" : undefined} className={`block rounded-lg px-2.5 py-2 ${i.key === item.key ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>{i.label}</Link>
               </li>
             ))}
           </ul>
         </Card>
         <div className="space-y-5">
-          <Card title={item.label} actions={<span className="inline-flex rounded-full bg-ivory-50 p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/seo?pagina=${item.key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-charcoal text-ivory" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
+          <Card title={item.label} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/seo?pagina=${item.key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
             <SeoForm key={`${item.key}-${locale}`} seoKey={item.key} locale={locale} initial={(ev.value ?? {}) as Seo} defaults={defaultsFor(item, locale)} path={pagePath(locale, item.ref)} media={imgs} />
           </Card>
           <Card title="Doorverwijzingen">
             <RedirectForm targets={targets} />
             {reds.length > 0 && (
-              <ul className="mt-4 divide-y divide-stone text-sm">
+              <ul className="mt-4 divide-y divide-line text-sm">
                 {reds.map((r) => (
                   <li key={r.id} className="flex items-center justify-between gap-2 py-2">
                     <span className="break-all">{r.fromPath} → {r.toPath}</span>

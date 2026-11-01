@@ -78,3 +78,15 @@ Production therefore never silently runs on test keys.
 
 - Rate limits, replay and duplicate memory live in MySQL and are shared by all app processes. If the database is unreachable they fall back to per-process memory until it is back.
 - No protection makes spam disappear completely. Expect it to drop sharply, not to zero.
+
+## Business data added in 2026 (CRM, finance, invoices, reviews, consultation)
+
+- **Authorisation:** every Ajanda/Admin page, server action and file route (PDFs, exports) re-checks the owner session on the server (`assertOwner` / `requireOwner`); private route handlers return 401 without a session. All private responses are `noindex`, `no-store`, `no-referrer`.
+- **Consultation (health) data:** encrypted with AES-256-GCM under `CONSULTATION_KEY`, MFA required, every view/change/export/deletion audited, excluded from exports, emails, PDFs, reports and analytics; off until the owner confirms the legal conditions. See `docs/CONSULTATION.md`.
+- **Invoices:** issued invoices are immutable (status guard + frozen snapshot + PDF SHA-256); corrections only via credit invoices; numbers are allocated under a row lock. Invoice emails only go to the address frozen on the invoice while it still matches the customer.
+- **Payments:** never deleted, only voided with a reason; all changes audited.
+- **Customer identity:** a public form can no longer change an existing profile; matching uses normalised email/phone and the owner decides; merges are manual, snapshotted and audited.
+- **Reviews:** Turnstile, per-IP/email/global limits, duplicate detection, link ban, moderation before publication, report threshold, single-use hashed invitation tokens; owner replies are plain text (React escapes all output).
+- **Social and analytics settings:** strict validation (https + the network's own domain; `G-` Measurement IDs only); GA4 loads only after visitor consent; the CSP allows Google Analytics hosts, which are only contacted after consent.
+- **SQL:** all queries go through Drizzle's parameterised builder or tagged `sql` templates (values are bound, never concatenated).
+- **Dependency audit:** `npm audit --omit=dev` reports 0 vulnerabilities (1 November 2026).

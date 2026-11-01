@@ -12,6 +12,10 @@ import { JsonLd } from "./JsonLd";
 import { Motion } from "./Motion";
 import { navModel } from "./navModel";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { Analytics } from "./analytics/Analytics";
+import { GlowTransition } from "./GlowTransition";
+import { validateAnalytics } from "@/lib/cms/menu";
+import { href, routes } from "@/i18n/config";
 
 /** Shared <html>/<body> shell used by the Dutch and English root layouts. */
 export async function SiteShell({ locale, children }: { locale: Locale; children: ReactNode }) {
@@ -21,6 +25,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
   const themeOverride = override("theme", "all");
   const css = themeOverride ? themeCss(validateTheme(themeOverride).theme) : "";
   const nav = navModel(locale);
+  const analytics = validateAnalytics(override("analytics", "all")).value;
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <body className="flex min-h-dvh flex-col">
@@ -33,6 +38,14 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
         <Footer locale={locale} dict={dict} nav={nav} />
         <WhatsAppButton dict={dict} />
         <Motion />
+        <GlowTransition />
+        <Analytics
+          measurementId={analytics.enabled ? analytics.measurementId : null}
+          locale={locale}
+          labels={{ title: dict.consent.title, body: dict.consent.body, accept: dict.consent.accept, decline: dict.consent.decline, more: dict.consent.more }}
+          privacyHref={href(locale, "privacy")}
+          bookingPaths={[routes.booking.nl, routes.booking.en]}
+        />
         <JsonLd data={businessJsonLd(locale)} />
       </body>
     </html>

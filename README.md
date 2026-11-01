@@ -6,7 +6,10 @@ Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS 4** and *
 
 - **Public website** (NL/EN).
 - **`/admin`** ("Admin Glow by Dilek"): pages and sections, drafts, preview and history, theme, header/footer, media library, treatments and prices, SEO and redirects, email templates, security and audit log, backup.
-- **`/ajanda`** ("Glow by Dilek — Ajanda"): mobile calendar and CRM: today, day/week/month/list, requests, appointments, customers, inbox, working hours, settings. It can be added to the iPhone home screen.
+- **`/ajanda`** ("Glow by Dilek — Ajanda"): mobile calendar and CRM: today, day/week/month/list, overviews (tomorrow, upcoming, completed, cancelled), requests, appointments with returning-customer recognition, customer profiles (visits, treatments, payments, invoices, duplicate merge), **Financiën**, **Facturen & PDF**, optional encrypted consultation form, inbox, working hours, settings. It can be added to the iPhone home screen.
+- **Admin additions**: Bedrijf & facturen, Beoordelingen (moderation), Social media, Analytics & cookies (GA4 with consent), Privacy & consultatie.
+
+More: [`docs/FINANCE.md`](docs/FINANCE.md), [`docs/CONSULTATION.md`](docs/CONSULTATION.md), [`docs/ANALYTICS.md`](docs/ANALYTICS.md), [`docs/BRAND.md`](docs/BRAND.md).
 
 Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Deployment, backups and rollback: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Security: [`docs/SECURITY.md`](docs/SECURITY.md).
 

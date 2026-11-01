@@ -60,7 +60,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
     assert.equal(a.slots[DAY].at(-1), 675); // 11:15 + 45 = 12:00
     // treatment without a confirmed duration is never offered
     assert.deepEqual(await getAvailability(db, ["chin"], DAY, DAY), { duration: null, slots: {} });
-    await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600, notify: false }, ctx);
+    await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
     const b = await getAvailability(db, ["brazilian"], DAY, DAY, new Date("2027-02-01T00:00:00Z"));
     // 10:00–10:45 + 15 buffer occupies until 11:00
     assert.ok(!b.slots[DAY].includes(600) && !b.slots[DAY].includes(570) && b.slots[DAY].includes(660));
@@ -103,15 +103,15 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   test("concurrent manual bookings respect capacity 2", async () => {
     await setSetting(db, "booking", { capacity: 2, minNoticeHours: 0, maxAdvanceDays: 800, slotStepMinutes: 15 });
     const attempts = await Promise.allSettled(
-      [0, 1, 2, 3].map((i) => createManual(db, { ...customer, email: `m${i}@example.com`, treatmentIds: ["eyebrows"], day: DAY, minute: 600, notify: false }, ctx)),
+      [0, 1, 2, 3].map((i) => createManual(db, { ...customer, email: `m${i}@example.com`, phone: null, treatmentIds: ["eyebrows"], day: DAY, minute: 600 }, ctx)),
     );
     assert.equal(attempts.filter((r) => r.status === "fulfilled").length, 2);
   });
 
   test("taken slot → propose another time → confirm; decline sends a polite email", async () => {
-    await createManual(db, { ...customer, email: "x@example.com", treatmentIds: ["brazilian"], day: DAY, minute: 600, notify: false }, ctx);
+    await createManual(db, { ...customer, email: "x@example.com", phone: null, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
     const id = await createTimedRequest(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 660, consent: true }, ctx);
-    await createManual(db, { ...customer, email: "y@example.com", treatmentIds: ["eyebrows"], day: DAY, minute: 660, notify: false }, ctx);
+    await createManual(db, { ...customer, email: "y@example.com", phone: null, treatmentIds: ["eyebrows"], day: DAY, minute: 660 }, ctx);
     await assert.rejects(approve(db, id, ctx), (e: BookingError) => e.code === "conflict");
     await propose(db, id, ctx, { day: DAY, minute: 540, message: "Past 09:00 ook?" });
     let [a] = await db.select().from(appointments).where(eq(appointments.id, id));
@@ -128,13 +128,13 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("reschedule moves the reminder; cancel frees the slot and cancels the reminder", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600, notify: true }, ctx);
-    await reschedule(db, id, ctx, { day: "2027-03-02", minute: 540, notify: true });
+    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
+    await reschedule(db, id, ctx, { day: "2027-03-02", minute: 540 });
     let mails = await db.select().from(outbox).where(eq(outbox.appointmentId, id));
     assert.equal(mails.filter((m) => m.kind === "reminder" && m.status === "pending").length, 1);
     assert.equal(mails.filter((m) => m.kind === "reminder" && m.status === "cancelled").length, 1);
     assert.ok(mails.some((m) => m.kind === "rescheduled" && m.subject.includes("dinsdag 2 maart 2027 om 09:00")));
-    await cancel(db, id, ctx, { notify: true, message: "Sorry!" });
+    await cancel(db, id, ctx, { message: "Sorry!" });
     mails = await db.select().from(outbox).where(eq(outbox.appointmentId, id));
     assert.equal(mails.filter((m) => m.kind === "reminder" && m.status === "pending").length, 0);
     assert.ok(mails.some((m) => m.kind === "cancelled"));
@@ -145,15 +145,15 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("working hours and blocks are enforced; owner may explicitly book outside hours", async () => {
-    await assert.rejects(createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 13 * 60, notify: false }, ctx), (e: BookingError) => e.code === "outsideHours");
-    await createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 13 * 60, notify: false, allowOutsideHours: true }, ctx);
+    await assert.rejects(createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 13 * 60 }, ctx), (e: BookingError) => e.code === "outsideHours");
+    await createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 13 * 60, allowOutsideHours: true }, ctx);
     await db.insert(blocks).values({ startAt: localToUtc("2027-03-03", 0), endAt: localToUtc("2027-03-04", 0), reason: "Vakantie" });
-    await assert.rejects(createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: "2027-03-03", minute: 600, notify: false }, ctx), (e: BookingError) => e.code === "conflict");
+    await assert.rejects(createManual(db, { ...customer, treatmentIds: ["eyebrows"], day: "2027-03-03", minute: 600 }, ctx), (e: BookingError) => e.code === "conflict");
     assert.equal((await getAvailability(db, ["eyebrows"], "2027-03-03", "2027-03-03", new Date("2027-02-01"))).slots["2027-03-03"], undefined);
   });
 
   test("outbox: SMTP failure is retried, never lost, never sent twice; reminders skip stale appointments", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600, notify: true }, ctx);
+    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
     let fail = true;
     const sent: string[] = [];
     const sender = async (m: { subject: string }) => {
@@ -173,15 +173,17 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
     assert.equal(r2[0].sent + r2[1].sent, 1, "parallel runs send once");
     assert.equal(sent.length, 1);
     // the reminder becomes due; but the appointment was moved → stale reminder is not sent
-    await reschedule(db, id, ctx, { day: "2027-03-02", minute: 600, notify: false });
+    await reschedule(db, id, ctx, { day: "2027-03-02", minute: 600 });
     const due = new Date(localToUtc("2027-03-02", 600).getTime() - 3600_000);
     const r3 = await processOutbox(db, sender, { now: due });
-    assert.equal(r3.sent, 1, "only the current reminder");
+    // The move itself is always mailed (material change), then exactly one reminder: the stale one is skipped.
+    assert.equal(r3.sent, 2);
+    assert.equal(sent.filter((s) => s.startsWith("Herinnering")).length, 1, "only the current reminder");
     assert.ok(sent.at(-1)!.startsWith("Herinnering"));
   });
 
   test("customer search, GDPR export and anonymisation", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600, notify: false }, ctx);
+    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
     const [c] = await db.select().from(customers);
     assert.equal((await searchCustomers(db, "sara")).length, 1);
     assert.equal((await searchCustomers(db, "06 1234")).length, 1);

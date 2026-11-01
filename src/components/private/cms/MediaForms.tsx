@@ -9,7 +9,7 @@ export function UploadForm() {
   return (
     <ActionForm action={uploadMediaAction} resetOnSuccess>
       <Field label="Foto (JPG, PNG of WebP, max. 12 MB)">
-        <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required className="block w-full text-sm file:mr-3 file:min-h-11 file:rounded-full file:border-0 file:bg-charcoal file:px-4 file:text-ivory" />
+        <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required className="block w-full text-sm file:mr-3 file:min-h-11 file:rounded-full file:border-0 file:bg-ink file:px-4 file:text-paper" />
       </Field>
       <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Omschrijving (NL)" hint="Wat staat er op de foto?"><Input name="altNl" maxLength={300} /></Field>
@@ -33,14 +33,14 @@ export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
     </Select>
   );
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone bg-white">
+    <div className="overflow-hidden rounded-2xl border border-line bg-white">
       {/* eslint-disable-next-line @next/next/no-img-element -- admin thumbnail */}
       <img src={`/media/${m.id}/640?v=${m.version}`} alt={m.altNl} className="aspect-[4/3] w-full object-cover" style={{ objectPosition: m.focusDesktop }} />
       <div className="p-3 text-sm">
         <p className="truncate font-medium">{m.filename}</p>
         <p className="text-xs text-muted">{m.width}×{m.height}{usage.length ? ` · gebruikt: ${usage.join(", ")}` : " · niet in gebruik"}</p>
         <details className="mt-2">
-          <summary className="cursor-pointer text-gold-deep">Bewerken</summary>
+          <summary className="cursor-pointer text-accent-deep">Bewerken</summary>
           <ActionForm action={updateMediaAction} className="mt-3 space-y-3">
             <input type="hidden" name="id" value={m.id} />
             <Field label="Omschrijving (NL)"><Input name="altNl" defaultValue={m.altNl} maxLength={300} /></Field>
@@ -68,7 +68,7 @@ export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
 
 export function SlotForm({ slot, label, current, options, preview }: { slot: string; label: string; current: number | null; options: { id: number; name: string }[]; preview: string }) {
   return (
-    <ActionForm action={assignSlotAction} className="flex flex-wrap items-end gap-3 rounded-xl border border-stone bg-white p-3">
+    <ActionForm action={assignSlotAction} className="flex flex-wrap items-end gap-3 rounded-xl border border-line bg-white p-3">
       <input type="hidden" name="slot" value={slot} />
       {/* eslint-disable-next-line @next/next/no-img-element -- admin thumbnail */}
       <img src={preview} alt="" className="h-16 w-20 shrink-0 rounded-lg object-cover" />

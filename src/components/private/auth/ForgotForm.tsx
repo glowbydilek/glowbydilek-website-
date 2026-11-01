@@ -14,7 +14,7 @@ export function ForgotForm({ area, siteKey, captcha }: { area: "admin" | "ajanda
     return (
       <div className="space-y-4">
         <Notice tone="success">{state.message}</Notice>
-        <Link href={`/${area}/login`} className="block text-center text-sm text-gold-deep underline underline-offset-4">
+        <Link href={`/${area}/login`} className="block text-center text-sm text-accent-deep underline underline-offset-4">
           Terug naar inloggen
         </Link>
       </div>
@@ -44,7 +44,7 @@ export function ForgotForm({ area, siteKey, captcha }: { area: "admin" | "ajanda
       <SubmitButton className="w-full" pending="Bezig…">
         Stuur mij een link
       </SubmitButton>
-      <Link href={`/${area}/login`} className="block text-center text-sm text-gold-deep underline underline-offset-4">
+      <Link href={`/${area}/login`} className="block text-center text-sm text-accent-deep underline underline-offset-4">
         Terug naar inloggen
       </Link>
     </form>

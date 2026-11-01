@@ -17,7 +17,7 @@ function Rows({ name, suffix = "", rows, setRows, label }: { name: string; suffi
           <Input aria-label={`${label} van`} type="time" step={300} name={`${name}-start${suffix}`} value={r.start} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, start: e.target.value } : x)))} className="min-w-0 max-w-[8.5rem] flex-1 px-2.5" />
           <span aria-hidden="true">–</span>
           <Input aria-label={`${label} tot`} type="time" step={300} name={`${name}-end${suffix}`} value={r.end} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, end: e.target.value } : x)))} className="min-w-0 max-w-[8.5rem] flex-1 px-2.5" />
-          <button type="button" aria-label={`${label} verwijderen`} onClick={() => setRows(rows.filter((_, j) => j !== i))} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-charcoal/6">✕</button>
+          <button type="button" aria-label={`${label} verwijderen`} onClick={() => setRows(rows.filter((_, j) => j !== i))} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-ink/6">✕</button>
         </div>
       ))}
     </div>
@@ -26,12 +26,12 @@ function Rows({ name, suffix = "", rows, setRows, label }: { name: string; suffi
 
 function DayEditor({ d, value, onChange }: { d: number; value: DayHours & { enabled: boolean }; onChange: (v: DayHours & { enabled: boolean }) => void }) {
   return (
-    <div className="rounded-2xl border border-stone p-3 sm:p-4">
+    <div className="rounded-2xl border border-line p-3 sm:p-4">
       <label className="flex min-h-11 items-center justify-between gap-3">
         <span className="font-medium">{DAYS[d]}</span>
         <span className="flex items-center gap-2 text-sm">
           {value.enabled ? "Open" : "Gesloten"}
-          <input type="checkbox" name={`open-${d}`} checked={value.enabled} onChange={(e) => onChange({ ...value, enabled: e.target.checked, open: value.open.length ? value.open : [{ start: "09:00", end: "12:00" }] })} className="h-6 w-6 accent-[var(--color-charcoal)]" />
+          <input type="checkbox" name={`open-${d}`} checked={value.enabled} onChange={(e) => onChange({ ...value, enabled: e.target.checked, open: value.open.length ? value.open : [{ start: "09:00", end: "12:00" }] })} className="h-6 w-6 accent-[var(--color-ink)]" />
         </span>
       </label>
       {value.enabled && (

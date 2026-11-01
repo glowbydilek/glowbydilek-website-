@@ -28,12 +28,12 @@ export function PreselectedNotice({
   }, [names]);
   if (!name) return null;
   return (
-    <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-gold/50 bg-ivory-50 px-4 py-3 text-sm" role="status">
-      <span className="flex items-center gap-2 text-charcoal">
-        <Icon name="check" className="h-4 w-4 text-gold-deep" />
+    <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-accent/50 bg-surface px-4 py-3 text-sm" role="status">
+      <span className="flex items-center gap-2 text-ink">
+        <Icon name="check" className="h-4 w-4 text-accent-deep" />
         {label}: <strong className="font-medium">{name}</strong>
       </span>
-      <a href={`#${anchor}`} className="inline-flex min-h-11 items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-gold-deep hover:text-charcoal">
+      <a href={`#${anchor}`} className="inline-flex min-h-11 items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-accent-deep hover:text-ink">
         {cta}
         <Icon name="arrow" className="h-3.5 w-3.5 rotate-90" />
       </a>

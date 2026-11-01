@@ -3,20 +3,20 @@
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 const control =
-  "mt-2 block w-full rounded-2xl border bg-ivory-50 px-5 py-4 text-base text-charcoal placeholder:text-muted/70 transition-[border-color,box-shadow] duration-300 focus:outline-none focus:ring-4 focus:ring-gold/20";
+  "mt-2 block w-full rounded-2xl border bg-surface px-5 py-4 text-base text-ink placeholder:text-muted/70 transition-[border-color,box-shadow] duration-300 focus:outline-none focus:ring-4 focus:ring-accent/20";
 
 function cls(error?: string) {
-  return `${control} ${error ? "border-[#9b3b2f] focus:border-[#9b3b2f]" : "border-charcoal/15 hover:border-charcoal/30 focus:border-charcoal"}`;
+  return `${control} ${error ? "border-[#9b3b2f] focus:border-[#9b3b2f]" : "border-ink/15 hover:border-ink/30 focus:border-ink"}`;
 }
 
 type Base = { id: string; label: string; error?: string; hint?: string; optionalLabel?: string; required?: boolean };
 
 function Label({ id, label, optionalLabel, required }: Base) {
   return (
-    <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-charcoal">
+    <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
       <span>
         {label}
-        {required && <span aria-hidden="true" className="text-gold-deep"> *</span>}
+        {required && <span aria-hidden="true" className="text-accent-deep"> *</span>}
       </span>
       {optionalLabel && <span className="text-[0.68rem] normal-case tracking-normal text-muted">{optionalLabel}</span>}
     </label>

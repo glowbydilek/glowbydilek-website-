@@ -33,5 +33,12 @@ export async function ensureSeeded(db: DB) {
   if (seeded) return;
   const [{ n }] = (await db.select({ n: sql<number>`count(*)` }).from(treatments)) as { n: number }[];
   if (Number(n) < 13) await seedTreatments(db);
+  // Customers created before migration 0001 get their normalised email/phone (idempotent, batched).
+  try {
+    const { backfillNorms } = await import("../crm/service");
+    while ((await backfillNorms(db)) === 500);
+  } catch (err) {
+    console.error("[seed] could not backfill customer contact fields:", err instanceof Error ? err.message.slice(0, 120) : err);
+  }
   seeded = true;
 }

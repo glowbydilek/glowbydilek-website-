@@ -6,20 +6,20 @@ export type FaqItem = { q: string; a: string };
 export function Faq({ items, tone = "light" }: { items: FaqItem[]; tone?: "light" | "dark" }) {
   const dark = tone === "dark";
   return (
-    <div className={`divide-y border-y ${dark ? "divide-ivory/12 border-ivory/12" : "divide-charcoal/12 border-charcoal/12"}`}>
+    <div className={`divide-y border-y ${dark ? "divide-paper/12 border-paper/12" : "divide-ink/12 border-ink/12"}`}>
       {items.map((item) => (
         <details key={item.q} className="group">
           <summary className="flex cursor-pointer items-center justify-between gap-6 py-6 text-left">
-            <span className={`font-serif text-xl leading-snug sm:text-[1.65rem] ${dark ? "text-ivory" : "text-charcoal"}`}>{item.q}</span>
+            <span className={`font-serif text-xl leading-snug sm:text-[1.65rem] ${dark ? "text-paper" : "text-ink"}`}>{item.q}</span>
             <span
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-500 group-open:rotate-45 ${
-                dark ? "border-ivory/25 text-gold group-open:bg-ivory group-open:text-charcoal" : "border-charcoal/20 text-gold-deep group-open:bg-charcoal group-open:text-ivory"
+                dark ? "border-paper/25 text-accent group-open:bg-paper group-open:text-ink" : "border-ink/20 text-accent-deep group-open:bg-ink group-open:text-paper"
               }`}
             >
               <Icon name="plus" className="h-4 w-4" />
             </span>
           </summary>
-          <p className={`max-w-3xl pb-7 pr-14 leading-relaxed ${dark ? "text-ivory/75" : "text-charcoal-soft"}`}>{item.a}</p>
+          <p className={`max-w-3xl pb-7 pr-14 leading-relaxed ${dark ? "text-paper/75" : "text-ink-soft"}`}>{item.a}</p>
         </details>
       ))}
     </div>

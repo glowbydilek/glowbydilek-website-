@@ -1,13 +1,14 @@
 import "server-only";
 import { desc, eq } from "drizzle-orm";
 import { purgeAuthData } from "../auth/service";
+import { purgeExpiredConsultations } from "../consultation/service";
 import type { DB } from "../db/client";
 import { purgeExpiredLimits } from "../db/limits";
 import { cronRuns } from "../db/schema";
 import { mailConfigured, sendMail } from "../mail/send";
 import { processOutbox, type Sender } from "./outbox";
 
-export const smtpSender: Sender = (m) => sendMail({ to: m.to, replyTo: m.replyTo, subject: m.subject, text: m.text, html: m.html });
+export const smtpSender: Sender = (m) => sendMail({ to: m.to, replyTo: m.replyTo, subject: m.subject, text: m.text, html: m.html, attachments: m.attachments });
 
 /** Inline delivery right after a change (short; anything left is retried by the cron job). */
 export async function deliverSoon(db: DB) {
@@ -26,6 +27,7 @@ export async function cronTick(db: DB) {
     const r = mailConfigured() ? await processOutbox(db, smtpSender, { limit: 40 }) : { sent: 0, failed: 0, skipped: 0 };
     await purgeExpiredLimits(db);
     await purgeAuthData(db);
+    await purgeExpiredConsultations(db);
     await db.update(cronRuns).set({ finishedAt: new Date(), sent: r.sent, failed: r.failed, error: mailConfigured() ? null : "SMTP not configured" }).where(eq(cronRuns.id, res.insertId));
     return r;
   } catch (err) {

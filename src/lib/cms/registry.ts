@@ -43,6 +43,7 @@ const DICT_LABELS: Record<string, string> = {
   service: "Behandelpagina-onderdelen",
   guide: "Informatiepagina-onderdelen",
   hub: "Homepage: behandelingenblok",
+  reviews: "Beoordelingenpagina",
 };
 
 export const DOCS: DocDef[] = [

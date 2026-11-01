@@ -30,7 +30,7 @@ import { createSession } from "../auth/service";
 import { verifyTurnstile } from "../forms/turnstile";
 import { audit } from "../db/audit";
 
-export type FormState = { error?: string; ok?: boolean; message?: string; data?: Record<string, unknown> };
+export type FormState = { error?: string; code?: string; ok?: boolean; message?: string; data?: Record<string, unknown> };
 
 const area = (v: FormDataEntryValue | null): Area => (v === "ajanda" ? "ajanda" : "admin");
 

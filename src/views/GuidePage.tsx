@@ -54,13 +54,13 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
         </ButtonLink>
       </PageHero>
 
-      <section className="section-tight border-t border-stone/70">
+      <section className="section-tight border-t border-line/70">
         <Container className="grid gap-10 lg:grid-cols-[16rem_1fr] lg:gap-16">
           <nav aria-label={g.hero.eyebrow} className="hidden lg:block">
-            <ol className="sticky top-[calc(var(--header-safe)+2rem)] space-y-1 border-l border-stone">
+            <ol className="sticky top-[calc(var(--header-safe)+2rem)] space-y-1 border-l border-line">
               {g.sections.map((sec) => (
                 <li key={sec.title}>
-                  <a href={`#${slug(sec.title)}`} className="-ml-px block border-l border-transparent py-1.5 pl-4 text-sm text-muted transition-colors hover:border-gold-deep hover:text-charcoal">
+                  <a href={`#${slug(sec.title)}`} className="-ml-px block border-l border-transparent py-1.5 pl-4 text-sm text-muted transition-colors hover:border-accent-deep hover:text-ink">
                     {sec.title}
                   </a>
                 </li>
@@ -73,13 +73,13 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
                 key={sec.title}
                 id={slug(sec.title)}
                 aria-labelledby={`${slug(sec.title)}-h`}
-                className={`scroll-mt-[calc(var(--header-safe)+1.5rem)] ${i > 0 ? "mt-10 border-t border-stone pt-10" : ""}`}
+                className={`scroll-mt-[calc(var(--header-safe)+1.5rem)] ${i > 0 ? "mt-10 border-t border-line pt-10" : ""}`}
               >
                 <h2 id={`${slug(sec.title)}-h`} className="display text-[1.9rem] sm:text-[2.4rem]">
                   {sec.title}
                 </h2>
                 {sec.paragraphs?.map((p) => (
-                  <p key={p} className="mt-4 text-[1.05rem] leading-relaxed text-charcoal-soft">
+                  <p key={p} className="mt-4 text-[1.05rem] leading-relaxed text-ink-soft">
                     {p}
                   </p>
                 ))}
@@ -87,11 +87,11 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
               </section>
             ))}
             {g.caveat && (
-              <div className="mt-12 flex gap-4 rounded-[var(--radius-card)] border border-gold/50 bg-nude-light p-6">
-                <Icon name="info" className="mt-0.5 h-6 w-6 shrink-0 text-gold-deep" />
+              <div className="mt-12 flex gap-4 rounded-[var(--radius-card)] border border-accent/50 bg-glow-soft p-6">
+                <Icon name="info" className="mt-0.5 h-6 w-6 shrink-0 text-accent-deep" />
                 <div>
-                  <h2 className="font-serif text-2xl text-charcoal">{dict.guide.caveat}</h2>
-                  <p className="mt-2 leading-relaxed text-charcoal-soft">{g.caveat}</p>
+                  <h2 className="font-serif text-2xl text-ink">{dict.guide.caveat}</h2>
+                  <p className="mt-2 leading-relaxed text-ink-soft">{g.caveat}</p>
                 </div>
               </div>
             )}
@@ -100,7 +100,7 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
       </section>
 
       {g.faqs && (
-        <section className="section-tight bg-ivory-50">
+        <section className="section-tight bg-surface">
           <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <h2 className="display text-[2rem] sm:text-[2.6rem]">{dict.guide.faqTitle}</h2>
             <Faq items={g.faqs} />
@@ -117,10 +117,10 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
               <li key={key}>
                 <Link
                   href={href(locale, key)}
-                  className="group flex h-full items-center justify-between gap-4 rounded-[var(--radius-card)] border border-stone bg-ivory-50 p-5 font-serif text-[1.45rem] leading-tight text-charcoal transition-colors hover:border-charcoal/40"
+                  className="group flex h-full items-center justify-between gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-5 font-serif text-[1.45rem] leading-tight text-ink transition-colors hover:border-ink/40"
                 >
                   {dict.nav[key]}
-                  <Icon name="arrow" className="h-4 w-4 shrink-0 text-gold-deep transition-transform duration-500 group-hover:translate-x-1" />
+                  <Icon name="arrow" className="h-4 w-4 shrink-0 text-accent-deep transition-transform duration-500 group-hover:translate-x-1" />
                 </Link>
               </li>
             ))}

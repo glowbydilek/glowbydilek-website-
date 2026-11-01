@@ -11,7 +11,7 @@ export function RedirectForm({ targets }: { targets: string[] }) {
       <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Oud adres" hint="Bijv. /oude-pagina"><Input name="from" required pattern="/.*" /></Field>
         <Field label="Nieuw adres">
-          <select name="to" required className="block w-full rounded-xl border border-charcoal/20 bg-white px-3 py-2.5">
+          <select name="to" required className="block w-full rounded-xl border border-ink/20 bg-white px-3 py-2.5">
             {targets.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         </Field>

@@ -21,7 +21,7 @@ export default async function TreatmentsAdmin() {
           <Card key={cat} title={label}>
             <div className="space-y-4">
               {rows.filter((r) => r.category === cat).map((t) => (
-                <details key={t.id} className="rounded-2xl border border-stone p-3">
+                <details key={t.id} className="rounded-2xl border border-line p-3">
                   <summary className="flex cursor-pointer flex-wrap items-center justify-between gap-2">
                     <span className="font-medium">{t.nameNl}</span>
                     <span className="text-sm text-muted">
@@ -32,7 +32,7 @@ export default async function TreatmentsAdmin() {
                   </summary>
                   <div className="mt-3">
                     <TreatmentForm t={t} />
-                    <Link href={treatmentHref("nl", t.id as TreatmentId)} target="_blank" className="mt-2 inline-block text-sm text-gold-deep underline">Bekijk pagina ↗</Link>
+                    <Link href={treatmentHref("nl", t.id as TreatmentId)} target="_blank" className="mt-2 inline-block text-sm text-accent-deep underline">Bekijk pagina ↗</Link>
                   </div>
                 </details>
               ))}

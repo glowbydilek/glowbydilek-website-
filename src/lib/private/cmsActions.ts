@@ -12,7 +12,7 @@ import { invalidateContent } from "../cms/store";
 import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, type Loc } from "../cms/service";
 import { PAGE_SECTIONS } from "../cms/registry";
 import { validateTheme } from "../cms/theme";
-import { validateBusiness, validateMenu } from "../cms/menu";
+import { validateAnalytics, validateBusiness, validateSocial, validateMenu } from "../cms/menu";
 import { TEMPLATE_KEYS, validateTemplate, type TemplateKey } from "../notifications/templates";
 import { allPages, matchPage, pagePath } from "@/i18n/config";
 import type { FormState } from "./authActions";
@@ -50,6 +50,16 @@ export async function contentAction(_: FormState, f: FormData): Promise<FormStat
         const b = validateBusiness(data);
         if (b.errors.length) return { error: b.errors.join(" ") };
         data = b.value;
+      }
+      if (docKey === "social") {
+        const v = validateSocial(data);
+        if (v.errors.length) return { error: v.errors.join(" ") };
+        data = v.value;
+      }
+      if (docKey === "analytics") {
+        const v = validateAnalytics(data);
+        if (v.errors.length) return { error: v.errors.join(" ") };
+        data = v.value;
       }
       if (docKey === "theme") {
         const v = validateTheme(data);

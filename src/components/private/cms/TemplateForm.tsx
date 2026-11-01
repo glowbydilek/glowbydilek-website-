@@ -25,16 +25,16 @@ export function TemplateForm({ k, locale, subject, body, custom }: { k: Template
         <ul className="mt-1 space-y-0.5">
           {ALLOWED[k].map((p) => (
             <li key={p} className="break-words">
-              <code className="text-charcoal">{`{{${p}}}`}{REQUIRED[k].includes(p) ? "*" : ""}</code> {PLACEHOLDERS[p].nl.toLowerCase()}
+              <code className="text-ink">{`{{${p}}}`}{REQUIRED[k].includes(p) ? "*" : ""}</code> {PLACEHOLDERS[p].nl.toLowerCase()}
             </li>
           ))}
         </ul>
       </div>
       {errors.length > 0 && <Notice tone="error">{errors.join(" ")}</Notice>}
-      <details className="rounded-xl border border-stone p-3">
+      <details className="rounded-xl border border-line p-3">
         <summary className="cursor-pointer text-sm">Voorbeeld</summary>
         <p className="mt-2 text-sm font-medium">{preview.subject}</p>
-        <div className="mt-2 whitespace-pre-wrap rounded-lg bg-ivory-50 p-3 text-sm">{preview.text}</div>
+        <div className="mt-2 whitespace-pre-wrap rounded-lg bg-surface p-3 text-sm">{preview.text}</div>
       </details>
       <div className="flex flex-wrap gap-2">
         <SubmitButton name="op" value="save" disabled={errors.length > 0}>Opslaan</SubmitButton>

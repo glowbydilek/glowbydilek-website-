@@ -63,7 +63,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <nav aria-label="Weergave" className="inline-flex rounded-full bg-white p-1 shadow-sm">
           {VIEWS.map((x) => (
-            <Link key={x.v} href={link(x.v, d)} aria-current={view === x.v ? "page" : undefined} className={`min-h-10 rounded-full px-4 py-2 text-sm ${view === x.v ? "bg-charcoal text-ivory" : "text-charcoal"}`}>
+            <Link key={x.v} href={link(x.v, d)} aria-current={view === x.v ? "page" : undefined} className={`min-h-10 rounded-full px-4 py-2 text-sm ${view === x.v ? "bg-ink text-paper" : "text-ink"}`}>
               {x.label}
             </Link>
           ))}
@@ -75,7 +75,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
             <Link href={link(view, next)} aria-label="Volgende" className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-sm">›</Link>
             <form action="/ajanda/agenda" className="hidden sm:block">
               <input type="hidden" name="view" value={view} />
-              <input type="date" name="d" defaultValue={d} aria-label="Ga naar datum" className="min-h-11 rounded-full border border-stone bg-white px-3 text-sm" />
+              <input type="date" name="d" defaultValue={d} aria-label="Ga naar datum" className="min-h-11 rounded-full border border-line bg-white px-3 text-sm" />
               <button className="sr-only">Ga</button>
             </form>
           </div>
@@ -98,11 +98,11 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
               const ov = overrides.find((o) => o.day === day);
               const open = list.filter((i) => ["confirmed", "proposed"].includes(i.appt.status)).length;
               return (
-                <Link key={day} href={link("day", day)} className={`min-h-16 rounded-xl border p-1.5 text-left text-xs sm:min-h-24 ${day === today ? "border-charcoal" : "border-stone"} ${ov?.closed ? "bg-stone-light" : "bg-white"}`}>
+                <Link key={day} href={link("day", day)} className={`min-h-16 rounded-xl border p-1.5 text-left text-xs sm:min-h-24 ${day === today ? "border-ink" : "border-line"} ${ov?.closed ? "bg-sand" : "bg-white"}`}>
                   <span className="font-semibold">{Number(day.slice(8))}</span>
                   {open > 0 && <span className="mt-1 block rounded-full bg-[#e3efe1] px-1.5 text-[0.7rem] text-[#2f4b2d]">{open}×</span>}
                   {ov?.closed && <span className="mt-1 block text-[0.65rem] text-muted">gesloten</span>}
-                  <span className="hidden sm:block">{list.slice(0, 3).map((i) => <span key={i.appt.id} className="block truncate text-[0.7rem] text-charcoal-soft">{time(i.appt.startAt)} {i.customer.firstName}</span>)}</span>
+                  <span className="hidden sm:block">{list.slice(0, 3).map((i) => <span key={i.appt.id} className="block truncate text-[0.7rem] text-ink-soft">{time(i.appt.startAt)} {i.customer.firstName}</span>)}</span>
                 </Link>
               );
             })}
@@ -118,9 +118,9 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
             const list = byDay.get(day) ?? [];
             const ov = overrides.find((o) => o.day === day);
             return (
-              <section key={day} aria-label={day} className={`rounded-2xl border bg-white p-3 ${day === today ? "border-charcoal" : "border-stone"}`}>
+              <section key={day} aria-label={day} className={`rounded-2xl border bg-white p-3 ${day === today ? "border-ink" : "border-line"}`}>
                 <Link href={link("day", day)} className="mb-2 flex items-baseline justify-between">
-                  <h2 className="font-medium capitalize text-charcoal">{formatLocal(localToUtc(day, 720), "nl", { weekday: view === "week" ? "short" : "long", day: "numeric", month: "short" })}</h2>
+                  <h2 className="font-medium capitalize text-ink">{formatLocal(localToUtc(day, 720), "nl", { weekday: view === "week" ? "short" : "long", day: "numeric", month: "short" })}</h2>
                   {ov?.closed && <span className="text-xs text-muted">gesloten</span>}
                 </Link>
                 {ov?.note && <p className="mb-2 text-xs text-muted">{ov.note}</p>}
@@ -129,7 +129,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
                 ) : (
                   <p className="text-sm text-muted">—</p>
                 )}
-                <Link href={`/ajanda/afspraak/nieuw?d=${day}`} className="mt-2 flex min-h-11 items-center justify-center rounded-xl border border-dashed border-stone text-sm text-muted hover:border-charcoal/40">
+                <Link href={`/ajanda/afspraak/nieuw?d=${day}`} className="mt-2 flex min-h-11 items-center justify-center rounded-xl border border-dashed border-line text-sm text-muted hover:border-ink/40">
                   ＋ afspraak
                 </Link>
               </section>

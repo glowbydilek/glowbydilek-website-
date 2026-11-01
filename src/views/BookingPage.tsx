@@ -42,18 +42,18 @@ export async function BookingPage({ locale }: { locale: Locale }) {
         />
         <ol className="grid gap-4 sm:grid-cols-3">
           {t.steps.map((s, i) => (
-            <li key={s.title} className="border-t border-charcoal/15 pt-3">
-              <span className="font-serif text-xl italic text-gold-deep">0{i + 1}</span>
-              <p className="mt-1 text-sm font-medium text-charcoal">{s.title}</p>
+            <li key={s.title} className="border-t border-ink/15 pt-3">
+              <span className="font-serif text-xl italic text-accent-deep">0{i + 1}</span>
+              <p className="mt-1 text-sm font-medium text-ink">{s.title}</p>
               <p className="mt-1 text-sm leading-snug text-muted">{s.body}</p>
             </li>
           ))}
         </ol>
       </PageHero>
 
-      <section id={bookingAnchor} className="section-tight scroll-mt-[var(--header-safe)] bg-ivory-50">
+      <section id={bookingAnchor} className="section-tight scroll-mt-[var(--header-safe)] bg-surface">
         <Container className="grid gap-8 lg:grid-cols-[1.45fr_0.55fr] lg:gap-10">
-          <div className="rounded-[1.75rem] bg-ivory p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
+          <div className="rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <div className="mt-8">
               {online ? (
@@ -84,10 +84,10 @@ export async function BookingPage({ locale }: { locale: Locale }) {
                 <Photo id="materials" locale={locale} ratio={4 / 5} sizes="(min-width: 1024px) 28vw, 90vw" />
               </div>
             )}
-            <div className="rounded-[1.75rem] bg-nude-light p-7" data-reveal>
-              <Icon name="calendar" className="h-6 w-6 text-gold-deep" />
-              <h3 className="mt-4 font-serif text-2xl text-charcoal">{t.future.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-charcoal-soft">{t.future.body}</p>
+            <div className="rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
+              <Icon name="calendar" className="h-6 w-6 text-accent-deep" />
+              <h3 className="mt-4 font-serif text-2xl text-ink">{t.future.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{t.future.body}</p>
             </div>
           </div>
         </Container>

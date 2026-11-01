@@ -26,6 +26,8 @@ import { setSetting, type BookingSettings } from "../db/settings";
 import { deliverSoon } from "../notifications/deliver";
 import { resend } from "../notifications/outbox";
 import { hhmmToMinutes, isLocalDate, localToUtc } from "../time";
+import { parseEuroToCents } from "../finance/money";
+import { CrmError, mergeCustomers } from "../crm/service";
 import type { FormState } from "./authActions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
@@ -35,7 +37,8 @@ const num = (f: FormData, k: string) => {
 };
 
 function fail(err: unknown): FormState {
-  if (err instanceof BookingError) return { error: err.message };
+  if (err instanceof BookingError) return { error: err.message, code: err.code };
+  if (err instanceof CrmError) return { error: err.message };
   console.error("[ajanda] action failed:", err instanceof Error ? err.message.slice(0, 200) : err);
   return { error: "Er ging iets mis. Probeer het opnieuw." };
 }
@@ -62,6 +65,9 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
   if (!treatmentIds.length) return { error: "Kies minimaal één behandeling." };
   const email = str(f, "email");
   if (email && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) return { error: "Controleer het e-mailadres." };
+  const priceRaw = str(f, "price");
+  const price = priceRaw ? parseEuroToCents(priceRaw) : undefined;
+  if (price === null || (price != null && price < 0)) return { error: "Controleer het bedrag (bijvoorbeeld 45 of 45,50)." };
   let id: number;
   try {
     id = await createManual(
@@ -76,9 +82,10 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
         treatmentIds,
         day: when.day,
         minute: when.minute,
+        forceNew: f.get("forceNew") === "on",
         durationMinutes: num(f, "duration") ?? undefined,
+        priceCents: price,
         internalNote: str(f, "internalNote"),
-        notify: f.get("notify") === "on" && Boolean(email),
         allowOutsideHours: f.get("allowOutsideHours") === "on",
       },
       { userId: s.user.id },
@@ -98,7 +105,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   const op = str(f, "op");
   const ctx = { userId: s.user.id };
   const message = str(f, "message");
-  const notify = f.get("notify") !== "off";
+  let mail: boolean | null = null;
   try {
     switch (op) {
       case "approve": {
@@ -114,24 +121,28 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
         break;
       }
       case "decline":
-        await decline(db, id, ctx, { message, notify });
+        mail = (await decline(db, id, ctx, { message })).notified ?? false;
         break;
       case "reschedule": {
         const when = dayAndTime(f);
         if (!when) return { error: "Kies een geldige datum en tijd." };
         const treatmentIds = f.getAll("treatments").map(String).filter(Boolean);
-        await reschedule(db, id, ctx, {
+        const priceRaw = str(f, "price");
+        const priceCents = f.has("price") ? (priceRaw ? parseEuroToCents(priceRaw) : null) : undefined;
+        if (priceRaw && priceCents === null) return { error: "Controleer het bedrag (bijvoorbeeld 45 of 45,50)." };
+        const r = await reschedule(db, id, ctx, {
           ...when,
           durationMinutes: num(f, "duration") ?? undefined,
           treatmentIds: treatmentIds.length ? treatmentIds : undefined,
+          priceCents,
           message,
-          notify,
           allowOutsideHours: f.get("allowOutsideHours") === "on",
         });
+        mail = r.material ? (r.notified ?? false) : null;
         break;
       }
       case "cancel":
-        await cancel(db, id, ctx, { message, notify });
+        mail = (await cancel(db, id, ctx, { message })).notified ?? false;
         break;
       case "complete":
         await markCompleted(db, id, ctx);
@@ -158,7 +169,8 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   refresh();
   if (op === "notes") return { ok: true, message: "Notitie opgeslagen." };
   // Status changes re-render the page with other actions; show the result at the top.
-  redirect(`/ajanda/afspraak/${id}?melding=${op}${notify ? "" : "-stil"}`);
+  // mail=0 → the change was material but the customer has no email address: shown prominently.
+  redirect(`/ajanda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}`);
 }
 
 // ─────────────────────────────────────────────────────────── Customers
@@ -363,4 +375,18 @@ export async function bulkInquiryAction(f: FormData) {
   const ids = f.getAll("ids").map(Number).filter(Boolean);
   if (ids.length) await getDb().update(inquiries).set({ status: "closed" }).where(and(inArray(inquiries.id, ids)));
   refresh();
+}
+
+export async function mergeCustomersAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const fromId = Number(f.get("fromId"));
+  const intoId = Number(f.get("intoId"));
+  if (!Number.isInteger(fromId) || !Number.isInteger(intoId)) return { error: "Kies twee klanten." };
+  try {
+    await mergeCustomers(getDb(), fromId, intoId, { userId: s.user.id });
+  } catch (err) {
+    return fail(err);
+  }
+  refresh();
+  redirect(`/ajanda/klanten/${intoId}?samengevoegd=1`);
 }

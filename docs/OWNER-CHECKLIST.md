@@ -52,6 +52,17 @@ There is no address, city, district, service area, map or walk-in information. `
 
 - [ ] **Privacy statement review** (Admin → Pagina's → Privacy, or `privacy` in both dictionaries), including storage at Hostinger, appointment emails and reminders, retention, Cloudflare Turnstile and abuse prevention. A legal review is recommended; the text is written in good faith and does not guarantee legal compliance.
 
+## New in the 2026 platform release
+
+- [ ] **Business & VAT details** for invoices (Admin → Bedrijf & facturen): legal name, address, KVK, VAT situation (rate + VAT-ID, or the exact exemption wording). Have your accountant confirm them; invoices stay blocked until they are complete.
+- [ ] **Consultation form**: decide whether you want to record treatment-safety answers. If yes: set `CONSULTATION_KEY`, read `docs/CONSULTATION.md`, confirm the three conditions in Admin → Privacy & consultatie, add it to your register of processing activities. If no: leave it off (default).
+- [ ] **Social media**: enter your real Instagram, Facebook and/or TikTok profile links in Admin → Social media and switch them on.
+- [ ] **Google review link** (optional): Admin → Beoordelingen → Instellingen.
+- [ ] **Google Analytics** (optional): create a GA4 property, enter the Measurement ID in Admin → Analytics & cookies; accept Google's data processing terms; retention 2 or 14 months (`docs/ANALYTICS.md`).
+- [ ] **Google Search Console**: verify the domain and submit the sitemap (`docs/ANALYTICS.md`).
+- [ ] **New identity**: review the new logo, colours and typography (`/merkidentiteit`, `docs/BRAND.md`); adjust colours/presets in Admin → Thema & Design if wanted.
+- [ ] **Privacy statement**: the texts about analytics, invoices (7-year retention), consultation and reviews were added; have the whole statement reviewed.
+
 ## Optional / when available
 
 - [ ] Confirmed **prices and durations**: Admin → Behandelingen (price, duration, buffer, visible, bookable online). Nothing is invented: until a price is entered the site shows "op aanvraag". Online booking only works for treatments with a confirmed duration.

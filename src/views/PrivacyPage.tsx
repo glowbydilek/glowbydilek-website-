@@ -13,8 +13,8 @@ export function PrivacyPage({ locale }: { locale: Locale }) {
         <div className="mt-10 space-y-8">
           {t.sections.map((s) => (
             <section key={s.h}>
-              <h2 className="font-serif text-[1.75rem] text-charcoal sm:text-3xl">{s.h}</h2>
-              <p className="mt-3 text-lg leading-relaxed text-charcoal-soft">{s.p}</p>
+              <h2 className="font-serif text-[1.75rem] text-ink sm:text-3xl">{s.h}</h2>
+              <p className="mt-3 text-lg leading-relaxed text-ink-soft">{s.p}</p>
             </section>
           ))}
         </div>

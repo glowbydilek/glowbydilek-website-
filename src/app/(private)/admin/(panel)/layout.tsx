@@ -12,19 +12,24 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const s = await requireOwner("admin");
   await ensureSeeded(getDb());
   const nav = [
-    { href: "/admin", label: "Overzicht" },
-    { href: "/admin/paginas", label: "Pagina's" },
-    { href: "/admin/thema", label: "Thema & Design" },
-    { href: "/admin/navigatie", label: "Menu & footer" },
-    { href: "/admin/media", label: "Media" },
-    { href: "/admin/behandelingen", label: "Behandelingen & prijzen" },
-    { href: "/admin/seo", label: "SEO & doorverwijzingen" },
-    { href: "/admin/e-mails", label: "E-mailteksten" },
-    { href: "/admin/beveiliging", label: "Beveiliging" },
-    { href: "/admin/systeem", label: "Systeem & logboek" },
+    { href: "/admin", label: "Overzicht", icon: "overview" },
+    { href: "/admin/paginas", label: "Pagina's", icon: "pages" },
+    { href: "/admin/thema", label: "Thema & Design", icon: "palette" },
+    { href: "/admin/navigatie", label: "Menu & footer", icon: "navigation" },
+    { href: "/admin/media", label: "Media", icon: "image" },
+    { href: "/admin/behandelingen", label: "Behandelingen & prijzen", icon: "tag" },
+    { href: "/admin/beoordelingen", label: "Beoordelingen", icon: "star" },
+    { href: "/admin/social", label: "Social media", icon: "share" },
+    { href: "/admin/seo", label: "SEO & doorverwijzingen", icon: "search" },
+    { href: "/admin/analytics", label: "Analytics & cookies", icon: "chart" },
+    { href: "/admin/e-mails", label: "E-mailteksten", icon: "mail" },
+    { href: "/admin/bedrijf", label: "Bedrijf & facturen", icon: "building" },
+    { href: "/admin/privacy", label: "Privacy & consultatie", icon: "consult" },
+    { href: "/admin/beveiliging", label: "Beveiliging", icon: "shield" },
+    { href: "/admin/systeem", label: "Systeem & logboek", icon: "server" },
   ];
   const banner = !s.user.mfaEnabled ? (
-    <div className="mb-5 rounded-xl border border-gold/60 bg-[#fbf3e4] px-4 py-3 text-sm text-[#5a4320]">
+    <div className="mb-5 rounded-xl border border-accent/60 bg-[#fbf3e4] px-4 py-3 text-sm text-[#5a4320]">
       Beveilig je account met tweestapsverificatie.{" "}
       <Link href="/admin/beveiliging" className="font-medium underline">
         Nu instellen

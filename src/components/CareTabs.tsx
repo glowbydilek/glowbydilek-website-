@@ -19,7 +19,7 @@ export function CareTabs({ care }: { care: Dictionary["care"] }) {
 
   return (
     <div>
-      <div role="tablist" className="inline-flex rounded-full bg-charcoal/6 p-1.5">
+      <div role="tablist" className="inline-flex rounded-full bg-ink/6 p-1.5">
         {tabs.map((t, i) => (
           <button
             key={t.title}
@@ -32,7 +32,7 @@ export function CareTabs({ care }: { care: Dictionary["care"] }) {
             onClick={() => setActive(i)}
             onKeyDown={onKey}
             className={`rounded-full px-5 py-2.5 text-[0.72rem] font-medium uppercase tracking-[0.16em] transition-all duration-500 sm:px-6 ${
-              active === i ? "bg-charcoal text-ivory shadow-soft" : "text-charcoal hover:bg-charcoal/8"
+              active === i ? "bg-ink text-paper shadow-soft" : "text-ink hover:bg-ink/8"
             }`}
           >
             {t.title}
@@ -51,8 +51,8 @@ export function CareTabs({ care }: { care: Dictionary["care"] }) {
           <p className="lead">{t.lead}</p>
           <ol className="mt-6 space-y-4">
             {t.items.map((item, n) => (
-              <li key={item} className="flex gap-4 border-b border-charcoal/10 pb-4 leading-relaxed text-charcoal-soft last:border-0">
-                <span className="font-serif text-xl italic text-gold-deep">{String(n + 1).padStart(2, "0")}</span>
+              <li key={item} className="flex gap-4 border-b border-ink/10 pb-4 leading-relaxed text-ink-soft last:border-0">
+                <span className="font-serif text-xl italic text-accent-deep">{String(n + 1).padStart(2, "0")}</span>
                 <span className="pt-0.5">{item}</span>
               </li>
             ))}

@@ -1,58 +1,62 @@
 /* eslint-disable @next/next/no-img-element -- static SVG brand assets shown as-is */
+import { Glint } from "@/components/brand/Logo";
 import { Container } from "@/components/Container";
 
 const assets = [
-  { file: "logo-horizontal.svg", label: "Horizontaal — lichte achtergrond (header)", bg: "bg-ivory-50", h: "h-16" },
-  { file: "logo-horizontal-dark.svg", label: "Horizontaal — donkere achtergrond (footer)", bg: "bg-charcoal", h: "h-16" },
-  { file: "logo-wordmark.svg", label: "Zonder tagline", bg: "bg-ivory-50", h: "h-14" },
-  { file: "logo-stacked.svg", label: "Embleem — licht", bg: "bg-nude-light", h: "h-56" },
-  { file: "logo-stacked-dark.svg", label: "Embleem — donker", bg: "bg-charcoal", h: "h-56" },
-  { file: "logo-symbol.svg", label: "Symbool — licht", bg: "bg-ivory-50", h: "h-24" },
-  { file: "logo-symbol-dark.svg", label: "Symbool — donker", bg: "bg-charcoal", h: "h-24" },
-  { file: "favicon.svg", label: "Favicon / app-icoon", bg: "bg-stone-light", h: "h-24" },
-  { file: "profile-icon.svg", label: "Social media profielfoto (1080 × 1080)", bg: "bg-stone-light", h: "h-40" },
+  { file: "glow-by-dilek-logo-inline.svg", label: "Inline — header, lichte achtergrond", bg: "bg-surface", h: "h-14" },
+  { file: "glow-by-dilek-logo-inline-light.svg", label: "Inline — donkere achtergrond", bg: "bg-ink", h: "h-14" },
+  { file: "glow-by-dilek-logo.svg", label: "Horizontaal met ‘BY DILEK’", bg: "bg-surface", h: "h-14" },
+  { file: "glow-by-dilek-logo-stacked.svg", label: "Gestapeld — licht", bg: "bg-sand", h: "h-28" },
+  { file: "glow-by-dilek-logo-stacked-light.svg", label: "Gestapeld — donker (footer)", bg: "bg-ink", h: "h-28" },
+  { file: "glow-by-dilek-symbol.svg", label: "Monogram — licht", bg: "bg-surface", h: "h-24" },
+  { file: "glow-by-dilek-symbol-light.svg", label: "Monogram — donker", bg: "bg-ink", h: "h-24" },
+  { file: "glow-by-dilek-app-icon.svg", label: "App-icoon / favicon", bg: "bg-sand", h: "h-24" },
 ];
 
 const palette = [
-  ["Warm Ivory", "#F8F5EF", "bg-ivory", "Hoofdachtergrond"],
-  ["Soft Nude", "#E9D5C7", "bg-nude", "Accentvlakken"],
-  ["Stone Beige", "#DDD2C4", "bg-stone", "Lijnen en rustige vlakken"],
-  ["Champagne Gold", "#C4A16F", "bg-gold", "Symbool, lijnen, accenten"],
-  ["Gold (tekst)", "#85663A", "bg-gold-deep", "Kleine gouden tekst (AA)"],
-  ["Elegant Charcoal", "#292724", "bg-charcoal", "Tekst, knoppen, donkere band"],
+  ["Porselein", "#F5F0E8", "bg-paper", "Achtergrond"],
+  ["Zand", "#EAE1D5", "bg-sand", "Rustige secties"],
+  ["Lijn", "#D9CBBA", "bg-line", "Haarlijnen"],
+  ["Espresso", "#221A17", "bg-ink", "Tekst, knoppen, donkere secties · 15,1:1"],
+  ["Hars", "#A0461E", "bg-accent", "Accent, links, glinstering · 5,5:1"],
+  ["Gloed", "#F0D3B4", "bg-glow", "Accent op donker · 12:1"],
 ];
 
 export function BrandPage() {
   return (
-    <div className="pt-header bg-ivory pb-[var(--space-section)]">
+    <div className="pt-header bg-paper pb-[var(--space-section)]">
       <Container>
         <p className="eyebrow">Intern · niet geïndexeerd</p>
         <h1 className="display mt-4 text-5xl sm:text-7xl">
-          Merkidentiteit <em>Glow by Dilek</em>
+          Merkidentiteit <em>2026</em>
         </h1>
         <p className="lead mt-5 max-w-2xl">
-          Uitgewerkt op basis van het goedgekeurde logoconcept: een champagnegouden ‘Glow’, een handgeschreven ‘by Dilek’,
-          een lotus-symbool met zwierig blad en druppel, en de tagline ‘Professional Waxing’. Alle bestanden zijn zuivere
-          vectorpaden en staan in <code className="rounded bg-ivory-50 px-1.5">/public/brand</code>.
+          Warm, redactioneel en rustig zelfverzekerd. Porselein, espresso en één kenmerkende kleur: hars, de warme amber van wax. De glinstering, een
+          vierpuntige ster van licht, is het enige ornament. Alle logo&apos;s zijn zuivere vectorpaden (geen lettertype nodig) en worden gemaakt met{" "}
+          <code className="rounded bg-surface px-1.5">npm run brand:logos</code>.
         </p>
 
         <h2 className="display mt-16 text-4xl">Logobestanden</h2>
         <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {assets.map((a) => (
             <a key={a.file} href={`/brand/${a.file}`} className="group block">
-              <div className={`flex h-64 items-center justify-center rounded-[var(--radius-card)] p-6 ${a.bg}`}>
+              <div className={`flex h-56 items-center justify-center rounded-[var(--radius-card)] p-6 ${a.bg}`}>
                 <img src={`/brand/${a.file}`} alt={a.label} className={`${a.h} w-auto max-w-full`} />
               </div>
-              <p className="mt-3 text-sm text-charcoal-soft group-hover:text-gold-deep">{a.label} · SVG ↓</p>
+              <p className="mt-3 text-sm text-ink-soft group-hover:text-accent-deep">{a.label} · SVG ↓</p>
             </a>
           ))}
         </div>
+        <p className="mt-4 text-sm text-muted">
+          Ook beschikbaar: <a className="underline" href="/brand/icon-512.png">icon-512.png</a>, <a className="underline" href="/brand/profile-icon.png">profile-icon.png</a> (1080×1080, social media) en{" "}
+          <a className="underline" href="/brand/og-default.png">og-default.png</a> (1200×630).
+        </p>
 
         <h2 className="display mt-16 text-4xl">Kleuren</h2>
         <div className="mt-7 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
           {palette.map(([name, hex, cls, use]) => (
             <div key={hex}>
-              <div className={`h-24 rounded-[var(--radius-card)] border border-charcoal/10 ${cls}`} />
+              <div className={`h-24 rounded-[var(--radius-card)] border border-ink/10 ${cls}`} />
               <p className="mt-3 font-medium">{name}</p>
               <p className="text-sm text-muted">{hex}</p>
               <p className="text-xs text-muted">{use}</p>
@@ -62,23 +66,34 @@ export function BrandPage() {
 
         <h2 className="display mt-16 text-4xl">Typografie</h2>
         <div className="mt-7 grid gap-5 lg:grid-cols-3">
-          <div className="rounded-[var(--radius-card)] bg-ivory-50 p-7">
-            <p className="eyebrow">Display · Cormorant Garamond</p>
+          <div className="rounded-[var(--radius-card)] bg-surface p-7">
+            <p className="eyebrow">Koppen · Newsreader</p>
             <p className="display mt-4 text-5xl">
-              Zacht voor je huid. <em>Rustig voor jou.</em>
+              Gladde huid, <em>rustig gedaan.</em>
             </p>
           </div>
-          <div className="rounded-[var(--radius-card)] bg-ivory-50 p-7">
-            <p className="eyebrow">Tekst · Jost</p>
+          <div className="rounded-[var(--radius-card)] bg-surface p-7">
+            <p className="eyebrow">Tekst · Instrument Sans</p>
             <p className="mt-4 text-lg leading-relaxed">Een kleine, persoonlijke waxstudio voor gezicht, lichaam en bikinizone.</p>
-            <p className="mt-3 text-[0.74rem] font-medium uppercase tracking-[0.2em]">Labels en knoppen</p>
+            <p className="mt-3 text-sm font-medium">Knoppen in gewone zinsvorm, nooit in spatiërende hoofdletters.</p>
           </div>
-          <div className="rounded-[var(--radius-card)] bg-ivory-50 p-7">
-            <p className="eyebrow">Signatuur · Parisienne</p>
-            <p className="script mt-4 text-6xl text-gold-deep">Dilek</p>
-            <p className="mt-2 text-sm text-muted">Alleen als handtekening-accent.</p>
+          <div className="rounded-[var(--radius-card)] bg-surface p-7">
+            <p className="eyebrow">De glinstering</p>
+            <p className="mt-4 flex items-center gap-3 text-accent">
+              <Glint className="h-10 w-auto" />
+              <Glint className="h-6 w-auto" />
+              <Glint className="h-3 w-auto" />
+            </p>
+            <p className="mt-3 text-sm text-muted">Spaarzaam: in het logo, bij labels, als actieve markering en in de paginaovergang. Nooit als patroon.</p>
           </div>
         </div>
+
+        <h2 className="display mt-16 text-4xl">Beeld</h2>
+        <ul className="mt-5 max-w-3xl list-disc space-y-2 pl-5 text-ink-soft">
+          <li>Eén portret in de hero; verder stillevens, texturen en materialen in warm, natuurlijk licht.</li>
+          <li>Geen beelden die suggereren dat het Dilek, haar werkplek of echte klanten zijn, en geen thuissituatie.</li>
+          <li>Alleen gelicentieerde beelden met bron en licentie in het mediabestand.</li>
+        </ul>
       </Container>
     </div>
   );

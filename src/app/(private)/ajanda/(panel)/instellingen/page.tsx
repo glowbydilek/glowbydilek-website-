@@ -35,7 +35,7 @@ export default async function Settings() {
             <p>Geplande herinneringen en wachtende berichten: {problems.filter((m) => m.status === "pending").length}</p>
           </div>
           {failed.length > 0 && (
-            <ul className="mt-4 divide-y divide-stone border-t border-stone text-sm">
+            <ul className="mt-4 divide-y divide-line border-t border-line text-sm">
               {failed.map((m) => (
                 <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                   <span className="min-w-0">

@@ -23,7 +23,7 @@ export default async function Pages() {
       <div className="space-y-5">
         {groups.map((g) => (
           <Card key={g} title={g}>
-            <ul className="divide-y divide-stone">
+            <ul className="divide-y divide-line">
               {EDITOR_PAGES.filter((p) => p.group === g).map((p) => {
                 const st = state(p.docs.map((d) => d.key));
                 return (
@@ -47,7 +47,7 @@ export default async function Pages() {
         ))}
         <Card title="Eigen informatiepagina's">
           {custom.length > 0 && (
-            <ul className="mb-5 divide-y divide-stone">
+            <ul className="mb-5 divide-y divide-line">
               {custom.map((c) => (
                 <li key={c.id}>
                   <Link href={`/admin/paginas/info-${c.id}`} className="flex min-h-12 items-center justify-between gap-3 py-2">

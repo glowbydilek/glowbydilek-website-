@@ -1,23 +1,40 @@
 import Link from "next/link";
-import { Card, Input, LinkButton, PageHeader } from "@/components/private/ui";
+import { Card, Input, LinkButton, Notice, PageHeader, Stat } from "@/components/private/ui";
 import { searchCustomers } from "@/lib/booking/service";
+import { customerMetrics, findDuplicates } from "@/lib/crm/service";
 import { getDb } from "@/lib/db/client";
+import { dayBoundsUtc, todayLocal } from "@/lib/time";
 
 export const metadata = { title: "Klanten" };
 
 export default async function Customers({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const q = ((await searchParams).q ?? "").slice(0, 80);
-  const rows = await searchCustomers(getDb(), q, 50);
+  const db = getDb();
+  const today = todayLocal();
+  const monthStart = dayBoundsUtc(`${today.slice(0, 7)}-01`).start;
+  const [rows, m, dups] = await Promise.all([searchCustomers(db, q, 50), customerMetrics(db, monthStart, dayBoundsUtc(today).end), findDuplicates(db, 20)]);
   return (
     <>
-      <PageHeader title="Klanten" subtitle="Zoek op naam, telefoonnummer of e-mailadres." />
+      <PageHeader title="Klanten" subtitle="Zoek op voornaam, achternaam, telefoonnummer of e-mailadres." />
+      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+        <Stat label="Klanten" value={m.total} />
+        <Stat label="Nieuw deze maand" value={m.newCustomers} hint="Eerste afgeronde behandeling" />
+        <Stat label="Terugkerend deze maand" value={m.returning} hint="Kwamen eerder ook al" />
+      </div>
+      {dups.length > 0 && (
+        <div className="mb-4">
+          <Notice tone="warning">
+            {dups.length} mogelijk dubbel{dups.length === 1 ? " profiel" : "e profielen"} gevonden. <Link href="/ajanda/klanten/dubbel" className="underline">Bekijken</Link>
+          </Notice>
+        </div>
+      )}
       <form action="/ajanda/klanten" role="search" className="mb-4 flex gap-2">
-        <Input name="q" type="search" defaultValue={q} placeholder="Naam of telefoonnummer" aria-label="Zoek klant" autoComplete="off" />
-        <button className="min-h-11 rounded-full bg-charcoal px-5 text-sm text-ivory">Zoeken</button>
+        <Input name="q" type="search" defaultValue={q} placeholder="Naam, telefoon of e-mail" aria-label="Zoek klant" autoComplete="off" />
+        <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">Zoeken</button>
       </form>
       <Card>
         {rows.length ? (
-          <ul className="divide-y divide-stone">
+          <ul className="divide-y divide-line">
             {rows.map((c) => (
               <li key={c.id}>
                 <Link href={`/ajanda/klanten/${c.id}`} className="flex min-h-14 items-center justify-between gap-3 py-2">

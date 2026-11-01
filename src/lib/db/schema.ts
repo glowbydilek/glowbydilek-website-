@@ -268,10 +268,21 @@ export const customers = mysqlTable(
     consentAt: ts("consent_at"),
     privacyVersion: varchar("privacy_version", { length: 20 }),
     anonymizedAt: ts("anonymized_at"),
+    /** Normalised for matching returning customers (lower-case email; E.164-like phone digits). */
+    emailNorm: varchar("email_norm", { length: 190 }),
+    phoneNorm: varchar("phone_norm", { length: 20 }),
+    /** Set when this profile was merged into another one (history moved, row kept for the audit trail). */
+    mergedIntoId: int("merged_into_id"),
     createdAt: created(),
     updatedAt: updated(),
   },
-  (t) => [index("customers_email_idx").on(t.email), index("customers_phone_idx").on(t.phone), index("customers_name_idx").on(t.lastName, t.firstName)],
+  (t) => [
+    index("customers_email_idx").on(t.email),
+    index("customers_phone_idx").on(t.phone),
+    index("customers_name_idx").on(t.lastName, t.firstName),
+    index("customers_email_norm_idx").on(t.emailNorm),
+    index("customers_phone_norm_idx").on(t.phoneNorm),
+  ],
 );
 
 export const appointments = mysqlTable(
@@ -302,6 +313,12 @@ export const appointments = mysqlTable(
     locale: varchar("locale", { length: 5 }).notNull().default("nl"),
     customerNote: text("customer_note"),
     internalNote: text("internal_note"),
+    /**
+     * Agreed price for this appointment in cents, snapshotted from the
+     * treatment list (or entered by the owner). Never changes when list
+     * prices change later. Null = no price known (nothing is invented).
+     */
+    priceCents: int("price_cents"),
     archivedAt: ts("archived_at"),
     version: int("version").notNull().default(1),
     createdAt: created(),
@@ -325,6 +342,8 @@ export const appointmentTreatments = mysqlTable(
     nameNl: varchar("name_nl", { length: 120 }).notNull(),
     nameEn: varchar("name_en", { length: 120 }).notNull(),
     durationMinutes: smallint("duration_minutes"),
+    /** List price at booking time (cents), null when no price was configured. */
+    priceCents: int("price_cents"),
   },
   (t) => [primaryKey({ columns: [t.appointmentId, t.treatmentId] })],
 );
@@ -433,6 +452,10 @@ export const outbox = mysqlTable(
     subject: varchar("subject", { length: 250 }).notNull(),
     html: text("html").notNull(),
     textBody: text("text_body").notNull(),
+    /** Optional attachment, generated at send time from an immutable record (e.g. an issued invoice PDF). */
+    attachmentKind: varchar("attachment_kind", { length: 20 }),
+    attachmentRef: int("attachment_ref"),
+    customerId: int("customer_id"),
     status: varchar("status", { length: 12 }).notNull().default("pending"), // pending | sending | sent | failed | cancelled
     attempts: int("attempts").notNull().default(0),
     sendAfter: ts("send_after").notNull().default(now()),
@@ -471,4 +494,160 @@ export const inquiries = mysqlTable(
     createdAt: created(),
   },
   (t) => [index("inq_status_idx").on(t.status, t.createdAt)],
+);
+
+// ──────────────────────────────────────────────────────────────── CRM
+
+/** Manual merges of duplicate customer profiles (audit trail; never automatic). */
+export const customerMerges = mysqlTable("customer_merges", {
+  id: int("id").autoincrement().primaryKey(),
+  fromCustomerId: int("from_customer_id").notNull(),
+  intoCustomerId: int("into_customer_id").notNull(),
+  snapshot: json("snapshot").notNull(),
+  userId: int("user_id"),
+  createdAt: created(),
+});
+
+// ──────────────────────────────────────────────────────────────── Finance
+
+/**
+ * Money actually received or refunded. Amounts in integer cents
+ * (refunds negative). Treatment list prices, appointment prices, invoiced
+ * amounts and received payments are kept separate on purpose.
+ */
+export const payments = mysqlTable(
+  "payments",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    customerId: int("customer_id")
+      .notNull()
+      .references(() => customers.id),
+    appointmentId: int("appointment_id"),
+    invoiceId: int("invoice_id"),
+    amountCents: int("amount_cents").notNull(),
+    method: varchar("method", { length: 16 }).notNull(), // cash | pin | transfer | tikkie | other
+    kind: varchar("kind", { length: 10 }).notNull().default("payment"), // payment | refund
+    paidOn: date("paid_on", { mode: "string" }).notNull(),
+    note: varchar("note", { length: 300 }),
+    voidedAt: ts("voided_at"),
+    voidReason: varchar("void_reason", { length: 200 }),
+    userId: int("user_id"),
+    createdAt: created(),
+  },
+  (t) => [index("pay_customer_idx").on(t.customerId), index("pay_date_idx").on(t.paidOn), index("pay_invoice_idx").on(t.invoiceId), index("pay_appt_idx").on(t.appointmentId)],
+);
+
+/** Sequential invoice numbers per year, allocated under a row lock. */
+export const invoiceCounters = mysqlTable("invoice_counters", {
+  year: int("year").primaryKey(),
+  last: int("last").notNull(),
+});
+
+/**
+ * Invoices and credit invoices. A draft can be edited; once issued the
+ * number, seller/customer details, lines, totals and the PDF are frozen.
+ * Corrections are made with a credit invoice, never by editing.
+ */
+export const invoices = mysqlTable(
+  "invoices",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    number: varchar("number", { length: 32 }).unique(),
+    kind: varchar("kind", { length: 10 }).notNull().default("invoice"), // invoice | credit
+    status: varchar("status", { length: 10 }).notNull().default("draft"), // draft | issued
+    correctsInvoiceId: int("corrects_invoice_id"),
+    customerId: int("customer_id")
+      .notNull()
+      .references(() => customers.id),
+    appointmentId: int("appointment_id"),
+    issueDate: date("issue_date", { mode: "string" }),
+    dueDate: date("due_date", { mode: "string" }),
+    supplyDate: date("supply_date", { mode: "string" }),
+    seller: json("seller"),
+    buyer: json("buyer").notNull(),
+    lines: json("lines").notNull(),
+    vatMode: varchar("vat_mode", { length: 12 }),
+    subtotalCents: int("subtotal_cents").notNull().default(0),
+    vatCents: int("vat_cents").notNull().default(0),
+    totalCents: int("total_cents").notNull().default(0),
+    note: varchar("note", { length: 500 }),
+    locale: varchar("locale", { length: 5 }).notNull().default("nl"),
+    pdf: longblob("pdf"),
+    pdfSha256: varchar("pdf_sha256", { length: 64 }),
+    issuedAt: ts("issued_at"),
+    userId: int("user_id"),
+    createdAt: created(),
+    updatedAt: updated(),
+  },
+  (t) => [index("inv_customer_idx").on(t.customerId), index("inv_issue_idx").on(t.issueDate), index("inv_status_idx").on(t.status)],
+);
+
+// ──────────────────────────────────────────────────────────────── Reviews
+
+export const reviews = mysqlTable(
+  "reviews",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    rating: tinyint("rating").notNull(),
+    body: text("body").notNull(),
+    displayName: varchar("display_name", { length: 60 }).notNull(),
+    /** name | initials | anonymous — what the public page shows. */
+    displayMode: varchar("display_mode", { length: 12 }).notNull().default("name"),
+    treatmentId: varchar("treatment_id", { length: 60 }),
+    locale: varchar("locale", { length: 5 }).notNull(),
+    /** pending | published | rejected | removed */
+    status: varchar("status", { length: 12 }).notNull().default("pending"),
+    /** True when submitted through an invitation linked to a completed appointment. */
+    verified: boolean("verified").notNull().default(false),
+    customerId: int("customer_id"),
+    appointmentId: int("appointment_id"),
+    ownerReply: text("owner_reply"),
+    moderationNote: varchar("moderation_note", { length: 300 }),
+    reportCount: int("report_count").notNull().default(0),
+    emailHash: varchar("email_hash", { length: 64 }),
+    publishedAt: ts("published_at"),
+    moderatedAt: ts("moderated_at"),
+    createdAt: created(),
+  },
+  (t) => [index("rev_status_idx").on(t.status, t.publishedAt)],
+);
+
+export const reviewInvites = mysqlTable("review_invites", {
+  id: int("id").autoincrement().primaryKey(),
+  tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
+  appointmentId: int("appointment_id").notNull(),
+  customerId: int("customer_id").notNull(),
+  expiresAt: ts("expires_at").notNull(),
+  usedAt: ts("used_at"),
+  createdAt: created(),
+});
+
+// ──────────────────────────────────────────────── Consultation (special category data)
+
+/**
+ * Treatment-safety consultation per customer. The answers are encrypted at
+ * rest (AES-256-GCM, key from CONSULTATION_KEY, separate from AUTH_SECRET)
+ * and never appear in exports, emails, invoices, analytics or reports.
+ * Every view and change is written to the audit log.
+ */
+export const consultations = mysqlTable(
+  "consultations",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    customerId: int("customer_id")
+      .notNull()
+      .references(() => customers.id),
+    dataEnc: text("data_enc").notNull(),
+    formVersion: varchar("form_version", { length: 20 }).notNull(),
+    consentAt: ts("consent_at").notNull(),
+    consentMethod: varchar("consent_method", { length: 20 }).notNull(), // in_person | written | digital
+    consentTextVersion: varchar("consent_text_version", { length: 20 }).notNull(),
+    reviewedAt: ts("reviewed_at").notNull(),
+    nextReviewAt: ts("next_review_at").notNull(),
+    withdrawnAt: ts("withdrawn_at"),
+    userId: int("user_id"),
+    createdAt: created(),
+    updatedAt: updated(),
+  },
+  (t) => [uniqueIndex("consult_customer_idx").on(t.customerId)],
 );

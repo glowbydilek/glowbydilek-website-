@@ -5,8 +5,8 @@ export function CheckList({ items, icon = "check", className = "" }: { items: st
   return (
     <ul className={`space-y-3 ${className}`}>
       {items.map((item) => (
-        <li key={item} className="flex gap-3 leading-relaxed text-charcoal-soft">
-          <Icon name={icon} className="mt-1 h-4 w-4 shrink-0 text-gold-deep" />
+        <li key={item} className="flex gap-3 leading-relaxed text-ink-soft">
+          <Icon name={icon} className="mt-1 h-4 w-4 shrink-0 text-accent-deep" />
           <span>{item}</span>
         </li>
       ))}

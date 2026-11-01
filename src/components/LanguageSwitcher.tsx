@@ -47,12 +47,12 @@ export function LanguageSwitcher({
         return (
           <span key={l} className="flex items-center gap-1">
             {i > 0 && (
-              <span className={dark ? "text-ivory/30" : "text-charcoal/25"} aria-hidden="true">
+              <span className={dark ? "text-paper/30" : "text-ink/25"} aria-hidden="true">
                 /
               </span>
             )}
             {l === locale ? (
-              <span aria-current="true" className={`px-1.5 py-2 ${dark ? "text-ivory" : "text-charcoal"}`}>
+              <span aria-current="true" className={`px-1.5 py-2 ${dark ? "text-paper" : "text-ink"}`}>
                 {localeLabels[l].short}
               </span>
             ) : (
@@ -61,7 +61,7 @@ export function LanguageSwitcher({
                 hrefLang={localeLabels[l].hrefLang}
                 lang={l}
                 onClick={(e) => go(e, target)}
-                className={`px-1.5 py-2 transition-colors ${dark ? "text-ivory/60 hover:text-gold-light" : "text-muted hover:text-gold-deep"}`}
+                className={`px-1.5 py-2 transition-colors ${dark ? "text-paper/60 hover:text-glow" : "text-muted hover:text-accent-deep"}`}
                 title={localeLabels[l].long}
               >
                 {localeLabels[l].short}

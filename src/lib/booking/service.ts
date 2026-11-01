@@ -17,6 +17,7 @@ import {
   appointments,
   appointmentTreatments,
   blocks,
+  consultations,
   customers,
   dateOverrides,
   overrideIntervals,
@@ -28,6 +29,7 @@ import { cancelPending, enqueue } from "../notifications/outbox";
 import { DEFAULT_TEMPLATES, paragraphsToHtml, renderTemplate, type TemplateKey, type TLocale } from "../notifications/templates";
 import { notificationTemplates } from "../db/schema";
 import { addDays, dayBoundsUtc, formatLongDate, formatTime, localToUtc, toLocalParts, type LocalDate } from "../time";
+import { normalizeEmail, normalizeName, normalizePhone } from "../crm/normalize";
 import { availableSlots, dayPlan, peakLoad, type Busy, type BookingRules, type Override, type WeeklyRule } from "./engine";
 
 type Tx = Parameters<Parameters<DB["transaction"]>[0]>[0];
@@ -37,7 +39,7 @@ export type Customer = typeof customers.$inferSelect;
 export const OCCUPYING = ["confirmed", "proposed"] as const;
 export const OPEN_STATUSES = ["requested", "proposed", "confirmed"] as const;
 
-export type BookingErrorCode = "conflict" | "notFound" | "invalidState" | "invalidInput" | "outsideHours" | "noDuration";
+export type BookingErrorCode = "conflict" | "notFound" | "invalidState" | "invalidInput" | "outsideHours" | "noDuration" | "customerMatch";
 
 export class BookingError extends Error {
   code: BookingErrorCode;
@@ -315,29 +317,49 @@ async function event(tx: Tx, appointmentId: number, type: string, from: string |
 
 export type CustomerInput = { firstName: string; lastName: string; email?: string | null; phone?: string | null; locale?: TLocale };
 
-async function findOrCreateCustomer(tx: Tx, c: CustomerInput, consent: boolean): Promise<number> {
-  const email = c.email?.trim().toLowerCase() || null;
-  if (email) {
-    const [existing] = await tx.select().from(customers).where(and(eq(customers.email, email), isNull(customers.anonymizedAt))).limit(1);
+/**
+ * Public requests: attach to an existing profile only when the normalised
+ * email matches AND the surname or phone matches too; otherwise a new
+ * profile is created (the owner can merge it later). A public form never
+ * overwrites what is stored; it only fills empty fields.
+ */
+async function findOrCreatePublicCustomer(tx: Tx, c: CustomerInput): Promise<number> {
+  const emailNorm = normalizeEmail(c.email);
+  const phoneNorm = normalizePhone(c.phone);
+  if (emailNorm) {
+    const candidates = await tx
+      .select()
+      .from(customers)
+      .where(and(eq(customers.emailNorm, emailNorm), isNull(customers.anonymizedAt), isNull(customers.mergedIntoId)))
+      .limit(5);
+    const existing = candidates.find(
+      (x) => (normalizeName(x.lastName) && normalizeName(x.lastName) === normalizeName(c.lastName)) || (phoneNorm && x.phoneNorm === phoneNorm),
+    );
     if (existing) {
       await tx
         .update(customers)
         .set({
-          firstName: c.firstName || existing.firstName,
-          lastName: c.lastName || existing.lastName,
-          phone: c.phone || existing.phone,
-          locale: c.locale ?? existing.locale,
-          ...(consent ? { consentAt: new Date(), privacyVersion: "2026-11" } : {}),
+          lastName: existing.lastName || c.lastName,
+          phone: existing.phone ?? (c.phone?.trim() || null),
+          phoneNorm: existing.phoneNorm ?? phoneNorm,
+          consentAt: new Date(),
+          privacyVersion: "2026-11",
         })
         .where(eq(customers.id, existing.id));
       return existing.id;
     }
   }
+  return insertCustomer(tx, c, true);
+}
+
+async function insertCustomer(tx: Tx, c: CustomerInput, consent: boolean): Promise<number> {
   const [res] = (await tx.insert(customers).values({
-    firstName: c.firstName,
-    lastName: c.lastName,
-    email,
+    firstName: c.firstName.slice(0, 80),
+    lastName: (c.lastName ?? "").slice(0, 80),
+    email: c.email?.trim().toLowerCase() || null,
+    emailNorm: normalizeEmail(c.email),
     phone: c.phone?.trim() || null,
+    phoneNorm: normalizePhone(c.phone),
     locale: c.locale ?? "nl",
     consentAt: consent ? new Date() : null,
     privacyVersion: consent ? "2026-11" : null,
@@ -345,11 +367,46 @@ async function findOrCreateCustomer(tx: Tx, c: CustomerInput, consent: boolean):
   return res.insertId;
 }
 
+/**
+ * Owner-entered appointment: uses the chosen profile, or creates a new one
+ * only when no profile with the same email/phone exists (or the owner
+ * explicitly chose "new customer"). Ambiguous identities are never merged.
+ */
+async function resolveManualCustomer(tx: Tx, c: CustomerInput & { customerId?: number; forceNew?: boolean }): Promise<number> {
+  if (c.customerId) {
+    const [existing] = await tx.select().from(customers).where(eq(customers.id, c.customerId)).limit(1);
+    if (!existing || existing.anonymizedAt) throw new BookingError("notFound", "Klant niet gevonden.");
+    if (existing.mergedIntoId) return existing.mergedIntoId;
+    return existing.id;
+  }
+  if (!c.forceNew) {
+    const emailNorm = normalizeEmail(c.email);
+    const phoneNorm = normalizePhone(c.phone);
+    const conds = [emailNorm ? eq(customers.emailNorm, emailNorm) : undefined, phoneNorm ? eq(customers.phoneNorm, phoneNorm) : undefined].filter(Boolean);
+    if (conds.length) {
+      const hits = await tx
+        .select({ id: customers.id })
+        .from(customers)
+        .where(and(isNull(customers.anonymizedAt), isNull(customers.mergedIntoId), or(...conds)))
+        .limit(1);
+      if (hits.length)
+        throw new BookingError("customerMatch", "Er bestaat al een klant met dit e-mailadres of telefoonnummer. Kies het bestaande profiel of bevestig dat het een nieuwe klant is.");
+    }
+  }
+  return insertCustomer(tx, c, false);
+}
+
+/** Sum of item list prices, or null when any treatment has no confirmed price. */
+function snapshotPrice(rows: TreatmentRow[]): number | null {
+  if (!rows.length || rows.some((r) => r.priceCents == null)) return null;
+  return rows.reduce((sum, r) => sum + (r.priceCents ?? 0), 0);
+}
+
 async function writeItems(tx: Tx, appointmentId: number, rows: TreatmentRow[]) {
   await tx.delete(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, appointmentId));
   if (rows.length)
     await tx.insert(appointmentTreatments).values(
-      rows.map((r) => ({ appointmentId, treatmentId: r.id, nameNl: r.nameNl, nameEn: r.nameEn, durationMinutes: r.durationMinutes })),
+      rows.map((r) => ({ appointmentId, treatmentId: r.id, nameNl: r.nameNl, nameEn: r.nameEn, durationMinutes: r.durationMinutes, priceCents: r.priceCents })),
     );
 }
 
@@ -373,7 +430,7 @@ export async function createTimedRequest(
   const start = localToUtc(input.day, input.minute);
   const end = new Date(start.getTime() + duration * 60_000);
   return bookingTx(db, async (tx) => {
-    const customerId = await findOrCreateCustomer(tx, input, true);
+    const customerId = await findOrCreatePublicCustomer(tx, input);
     const [res] = (await tx.insert(appointments).values({
       customerId,
       status: "requested",
@@ -382,6 +439,7 @@ export async function createTimedRequest(
       blockedUntil: new Date(end.getTime() + buffer * 60_000),
       durationMinutes: duration,
       bufferMinutes: buffer,
+      priceCents: snapshotPrice(rows),
       source: "request",
       locale: input.locale ?? "nl",
       customerNote: input.note?.slice(0, 1500) || null,
@@ -404,13 +462,14 @@ export async function createLegacyRequest(
 ): Promise<number> {
   const rows = await loadTreatments(db, input.treatmentIds);
   return bookingTx(db, async (tx) => {
-    const customerId = await findOrCreateCustomer(tx, input, true);
+    const customerId = await findOrCreatePublicCustomer(tx, input);
     const [res] = (await tx.insert(appointments).values({
       customerId,
       status: "requested",
       requestedDate: input.preferredDate,
       requestedTimeRange: input.timeRange,
       requestedAlternative: input.alternative?.slice(0, 200) || null,
+      priceCents: snapshotPrice(rows),
       source: "request",
       locale: input.locale ?? "nl",
       customerNote: input.note?.slice(0, 1500) || null,
@@ -428,12 +487,15 @@ export async function createManual(
   db: DB,
   input: CustomerInput & {
     customerId?: number;
+    /** Owner confirmed this is a new person despite a matching email/phone. */
+    forceNew?: boolean;
     treatmentIds: string[];
     day: LocalDate;
     minute: number;
     durationMinutes?: number;
+    /** Agreed price in cents; defaults to the sum of confirmed list prices. */
+    priceCents?: number | null;
     internalNote?: string;
-    notify: boolean;
     allowOutsideHours?: boolean;
   },
   ctx: Ctx,
@@ -448,7 +510,7 @@ export async function createManual(
   const blockedUntil = new Date(end.getTime() + totals.buffer * 60_000);
   const id = await bookingTx(db, async (tx) => {
     await lockAndCheck(tx, start, blockedUntil, { enforceHours: !input.allowOutsideHours, durationMinutes: duration });
-    const customerId = input.customerId ?? (await findOrCreateCustomer(tx, input, false));
+    const customerId = await resolveManualCustomer(tx, input);
     const [res] = (await tx.insert(appointments).values({
       customerId,
       status: "confirmed",
@@ -457,15 +519,17 @@ export async function createManual(
       blockedUntil,
       durationMinutes: duration,
       bufferMinutes: totals.buffer,
+      priceCents: input.priceCents !== undefined ? input.priceCents : snapshotPrice(rows),
       source: "manual",
       locale: input.locale ?? "nl",
       internalNote: input.internalNote?.slice(0, 2000) || null,
     })) as unknown as [{ insertId: number }];
     const newId = res.insertId;
     await writeItems(tx, newId, rows);
-    await event(tx, newId, "created_manual", null, "confirmed", ctx.userId ?? null, { notify: input.notify });
     const v = await view(tx, newId);
-    if (input.notify) await queueCustomerEmail(tx, v, "confirmed", `confirmed:${newId}:${start.toISOString()}`);
+    // A confirmed appointment is always confirmed to the customer when an email address is known.
+    const notified = await queueCustomerEmail(tx, v, "confirmed", `confirmed:${newId}:${start.toISOString()}`);
+    await event(tx, newId, "created_manual", null, "confirmed", ctx.userId ?? null, { notified: Boolean(notified) });
     await scheduleReminder(tx, v);
     return newId;
   });
@@ -478,7 +542,7 @@ async function transition(
   id: number,
   ctx: Ctx,
   allowedFrom: string[],
-  fn: (tx: Tx, v: ApptView) => Promise<{ to: string; type: string; data?: Record<string, unknown> }>,
+  fn: (tx: Tx, v: ApptView) => Promise<{ to: string; type: string; notified?: boolean; material?: boolean; data?: Record<string, unknown> }>,
 ) {
   const result = await bookingTx(db, async (tx) => {
     // Lock the appointment row so two clicks cannot both change it.
@@ -528,11 +592,11 @@ export async function propose(db: DB, id: number, ctx: Ctx, opts: { day: LocalDa
   });
 }
 
-export async function decline(db: DB, id: number, ctx: Ctx, opts: { message?: string; notify?: boolean } = {}) {
+export async function decline(db: DB, id: number, ctx: Ctx, opts: { message?: string } = {}) {
   return transition(db, id, ctx, ["requested", "proposed"], async (tx, v) => {
     await cancelPending(tx, id, ["reminder", "confirmed", "proposed"]);
-    if (opts.notify !== false) await queueCustomerEmail(tx, v, "declined", `declined:${id}`, { message: opts.message });
-    return { to: "declined", type: "declined" };
+    const notified = await queueCustomerEmail(tx, v, "declined", `declined:${id}`, { message: opts.message });
+    return { to: "declined", type: "declined", notified: Boolean(notified) };
   });
 }
 
@@ -541,7 +605,7 @@ export async function reschedule(
   db: DB,
   id: number,
   ctx: Ctx,
-  opts: { day: LocalDate; minute: number; durationMinutes?: number; treatmentIds?: string[]; message?: string; notify: boolean; allowOutsideHours?: boolean },
+  opts: { day: LocalDate; minute: number; durationMinutes?: number; treatmentIds?: string[]; priceCents?: number | null; message?: string; allowOutsideHours?: boolean },
 ) {
   return transition(db, id, ctx, ["confirmed"], async (tx, v) => {
     let items = v.items;
@@ -553,9 +617,14 @@ export async function reschedule(
       const t = totalDuration(rows);
       buffer = t.buffer;
       duration = opts.durationMinutes || t.duration || duration;
-      await writeItems(tx, id, rows);
-      items = await tx.select().from(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, id));
+      const before = v.items.map((i) => i.treatmentId).sort().join(",");
+      if (before !== rows.map((r) => r.id).sort().join(",")) {
+        await writeItems(tx, id, rows);
+        items = await tx.select().from(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, id));
+        if (opts.priceCents === undefined) await tx.update(appointments).set({ priceCents: snapshotPrice(rows) }).where(eq(appointments.id, id));
+      }
     }
+    if (opts.priceCents !== undefined) await tx.update(appointments).set({ priceCents: opts.priceCents }).where(eq(appointments.id, id));
     if (!duration) throw new BookingError("noDuration", "Vul de duur in minuten in.");
     const start = localToUtc(opts.day, opts.minute);
     const end = new Date(start.getTime() + duration * 60_000);
@@ -564,18 +633,22 @@ export async function reschedule(
     await tx.update(appointments).set({ startAt: start, endAt: end, blockedUntil, durationMinutes: duration, bufferMinutes: buffer }).where(eq(appointments.id, id));
     const nv = { ...v, items, appt: { ...v.appt, startAt: start, endAt: end, blockedUntil, durationMinutes: duration } };
     const moved = v.appt.startAt?.getTime() !== start.getTime();
-    if (opts.notify && moved) await queueCustomerEmail(tx, nv, "rescheduled", `rescheduled:${id}:${start.toISOString()}`, { message: opts.message });
+    const itemsChanged = items !== v.items;
+    const durationChanged = (v.appt.durationMinutes ?? 0) !== duration;
+    // Material change (time, treatment or length) → the customer is told automatically.
+    const material = moved || itemsChanged || durationChanged;
+    const notified = material ? await queueCustomerEmail(tx, nv, "rescheduled", `rescheduled:${id}:${start.toISOString()}:${items.map((i) => i.treatmentId).join("+")}:${duration}`, { message: opts.message }) : false;
     await scheduleReminder(tx, nv);
-    return { to: "confirmed", type: moved ? "rescheduled" : "updated", data: { from: v.appt.startAt?.toISOString(), to: start.toISOString() } };
+    return { to: "confirmed", type: material ? "rescheduled" : "updated", notified: Boolean(notified), material, data: { from: v.appt.startAt?.toISOString(), to: start.toISOString(), notified: Boolean(notified) } };
   });
 }
 
-export async function cancel(db: DB, id: number, ctx: Ctx, opts: { message?: string; notify: boolean }) {
+export async function cancel(db: DB, id: number, ctx: Ctx, opts: { message?: string } = {}) {
   return transition(db, id, ctx, ["confirmed", "proposed"], async (tx, v) => {
     await cancelPending(tx, id, ["reminder"]);
-    if (opts.notify && v.appt.startAt) await queueCustomerEmail(tx, v, "cancelled", `cancelled:${id}:${v.appt.startAt.toISOString()}`, { message: opts.message });
+    const notified = v.appt.startAt ? await queueCustomerEmail(tx, v, "cancelled", `cancelled:${id}:${v.appt.startAt.toISOString()}`, { message: opts.message }) : false;
     // The slot is freed automatically: only confirmed/proposed rows occupy capacity.
-    return { to: "cancelled", type: "cancelled", data: { notify: opts.notify } };
+    return { to: "cancelled", type: "cancelled", notified: Boolean(notified), data: { notified: Boolean(notified) } };
   });
 }
 
@@ -606,8 +679,8 @@ export async function updateCustomer(db: DB, id: number, c: Partial<CustomerInpu
     .set({
       ...(c.firstName != null && { firstName: c.firstName.slice(0, 80) }),
       ...(c.lastName != null && { lastName: c.lastName.slice(0, 80) }),
-      ...(c.email !== undefined && { email: c.email?.trim().toLowerCase() || null }),
-      ...(c.phone !== undefined && { phone: c.phone?.trim() || null }),
+      ...(c.email !== undefined && { email: c.email?.trim().toLowerCase() || null, emailNorm: normalizeEmail(c.email) }),
+      ...(c.phone !== undefined && { phone: c.phone?.trim() || null, phoneNorm: normalizePhone(c.phone) }),
       ...(c.locale && { locale: c.locale }),
       ...(c.notes !== undefined && { notes: c.notes?.slice(0, 2000) || null }),
     })
@@ -623,7 +696,7 @@ export async function anonymizeCustomer(db: DB, id: number, ctx: Ctx) {
   await bookingTx(db, async (tx) => {
     await tx
       .update(customers)
-      .set({ firstName: "Geanonimiseerd", lastName: "", email: null, phone: null, notes: null, anonymizedAt: new Date() })
+      .set({ firstName: "Geanonimiseerd", lastName: "", email: null, emailNorm: null, phone: null, phoneNorm: null, notes: null, anonymizedAt: new Date() })
       .where(eq(customers.id, id));
     const appts = await tx.select({ id: appointments.id }).from(appointments).where(eq(appointments.customerId, id));
     const ids = appts.map((a) => a.id);
@@ -633,7 +706,9 @@ export async function anonymizeCustomer(db: DB, id: number, ctx: Ctx) {
       for (const a of ids) await cancelPending(tx, a, ["reminder", "confirmed", "proposed", "rescheduled", "request_received"]);
     }
   });
-  await audit(db, { userId: ctx.userId, action: "customer.anonymized", entity: "customer", entityId: id });
+  // Special category data is removed completely with the personal data.
+  const [del] = (await db.delete(consultations).where(eq(consultations.customerId, id))) as unknown as [{ affectedRows: number }];
+  await audit(db, { userId: ctx.userId, action: "customer.anonymized", entity: "customer", entityId: id, details: { consultationDeleted: del.affectedRows > 0 } });
 }
 
 /** All personal data of a customer (GDPR access/export). */
@@ -690,6 +765,18 @@ export async function listUpcoming(db: DB, now = new Date(), limit = 50) {
   return withItems(db, rows);
 }
 
+/** Appointments in one status (completed, cancelled, …), newest first. */
+export async function listByStatus(db: DB, statuses: string[], limit = 100) {
+  const rows = await db
+    .select()
+    .from(appointments)
+    .innerJoin(customers, eq(appointments.customerId, customers.id))
+    .where(inArray(appointments.status, statuses))
+    .orderBy(desc(appointments.startAt), desc(appointments.createdAt))
+    .limit(limit);
+  return withItems(db, rows);
+}
+
 export async function listHistory(db: DB, now = new Date(), limit = 100) {
   const rows = await db
     .select()
@@ -703,7 +790,8 @@ export async function listHistory(db: DB, now = new Date(), limit = 100) {
 
 export async function searchCustomers(db: DB, q: string, limit = 30) {
   const term = q.trim();
-  if (!term) return db.select().from(customers).where(isNull(customers.anonymizedAt)).orderBy(desc(customers.updatedAt)).limit(limit);
+  if (!term) return db.select().from(customers).where(and(isNull(customers.anonymizedAt), isNull(customers.mergedIntoId))).orderBy(desc(customers.updatedAt)).limit(limit);
+  const phoneNorm = normalizePhone(term);
   const like_ = `%${term.replace(/[%_\\]/g, (m) => `\\${m}`)}%`;
   const digits = term.replace(/\D/g, "");
   return db
@@ -712,7 +800,9 @@ export async function searchCustomers(db: DB, q: string, limit = 30) {
     .where(
       and(
         isNull(customers.anonymizedAt),
+        isNull(customers.mergedIntoId),
         or(
+          phoneNorm ? eq(customers.phoneNorm, phoneNorm) : undefined,
           like(customers.firstName, like_),
           like(customers.lastName, like_),
           like(sql`CONCAT(${customers.firstName}, ' ', ${customers.lastName})`, like_),

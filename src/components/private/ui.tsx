@@ -10,11 +10,11 @@ import { useFormStatus } from "react-dom";
 const btnBase =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60";
 const btnVariants = {
-  primary: "bg-charcoal text-ivory hover:bg-charcoal-soft",
-  gold: "bg-gold text-charcoal hover:bg-gold-light",
-  outline: "border border-charcoal/25 text-charcoal hover:border-charcoal hover:bg-charcoal/5",
+  primary: "bg-ink text-paper hover:bg-ink-soft",
+  gold: "bg-accent text-ink hover:bg-glow",
+  outline: "border border-ink/25 text-ink hover:border-ink hover:bg-ink/5",
   danger: "bg-[#8e2f24] text-white hover:bg-[#74261d]",
-  ghost: "text-charcoal hover:bg-charcoal/6",
+  ghost: "text-ink hover:bg-ink/6",
 };
 export type BtnVariant = keyof typeof btnVariants;
 
@@ -63,7 +63,7 @@ export function Field({ label, hint, error, children, htmlFor }: { label: string
   }
   return (
     <div className="min-w-0 space-y-1.5">
-      <label htmlFor={id} className="block text-sm font-medium text-charcoal">
+      <label htmlFor={id} className="block text-sm font-medium text-ink">
         {label}
       </label>
       {control}
@@ -74,7 +74,7 @@ export function Field({ label, hint, error, children, htmlFor }: { label: string
 }
 
 const inputCls =
-  "block w-full rounded-xl border border-charcoal/20 bg-white px-3.5 py-2.5 text-base text-charcoal shadow-sm outline-none transition focus:border-gold-deep focus:ring-2 focus:ring-gold/40 disabled:bg-stone-light";
+  "block w-full rounded-xl border border-ink/20 bg-white px-3.5 py-2.5 text-base text-ink shadow-sm outline-none transition focus:border-accent-deep focus:ring-2 focus:ring-accent/40 disabled:bg-sand";
 
 export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return <input {...props} className={`${inputCls} ${props.className ?? ""}`} />;
@@ -88,10 +88,10 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
 
 export function Card({ children, className = "", title, actions }: { children: ReactNode; className?: string; title?: string; actions?: ReactNode }) {
   return (
-    <section className={`min-w-0 rounded-2xl border border-stone bg-white p-4 shadow-sm sm:p-6 ${className}`}>
+    <section className={`min-w-0 rounded-2xl border border-line bg-white p-4 shadow-sm sm:p-6 ${className}`}>
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          {title && <h2 className="font-serif text-2xl text-charcoal">{title}</h2>}
+          {title && <h2 className="font-serif text-2xl text-ink">{title}</h2>}
           {actions}
         </div>
       )}
@@ -102,10 +102,10 @@ export function Card({ children, className = "", title, actions }: { children: R
 
 export function Notice({ tone = "info", children }: { tone?: "info" | "success" | "error" | "warning"; children: ReactNode }) {
   const tones = {
-    info: "border-stone bg-ivory-50 text-charcoal",
+    info: "border-line bg-surface text-ink",
     success: "border-[#5c7f5a]/40 bg-[#eef4ec] text-[#2f4b2d]",
     error: "border-[#8e2f24]/30 bg-[#fbeeec] text-[#74261d]",
-    warning: "border-gold/60 bg-[#fbf3e4] text-[#5a4320]",
+    warning: "border-accent/60 bg-[#fbf3e4] text-[#5a4320]",
   };
   return (
     <div role={tone === "error" ? "alert" : "status"} className={`rounded-xl border px-4 py-3 text-sm leading-relaxed ${tones[tone]}`}>
@@ -116,7 +116,7 @@ export function Notice({ tone = "info", children }: { tone?: "info" | "success" 
 
 export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "pending" | "confirmed" | "cancelled" | "done" | "warning" }) {
   const tones = {
-    neutral: "bg-stone-light text-charcoal",
+    neutral: "bg-sand text-ink",
     pending: "bg-[#fbf0d9] text-[#6b4b12]",
     confirmed: "bg-[#e3efe1] text-[#2f4b2d]",
     cancelled: "bg-[#f6e1de] text-[#74261d]",
@@ -130,10 +130,21 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="font-serif text-3xl leading-tight text-charcoal sm:text-4xl">{title}</h1>
+        <h1 className="font-serif text-3xl leading-tight text-ink sm:text-4xl">{title}</h1>
         {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted">{subtitle}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    </div>
+  );
+}
+
+/** Key figure (finance, CRM metrics). */
+export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
+  return (
+    <div className="min-w-0 rounded-2xl border border-line bg-white p-4">
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="mt-1 break-words font-serif text-[1.7rem] leading-tight text-ink">{value}</p>
+      {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
     </div>
   );
 }

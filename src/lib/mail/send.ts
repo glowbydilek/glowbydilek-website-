@@ -27,6 +27,7 @@ export type OutgoingMail = {
   subject: string;
   text: string;
   html: string;
+  attachments?: { filename: string; content: Buffer; contentType: string }[];
 };
 
 export function mailConfigured(): boolean {
@@ -44,6 +45,7 @@ export async function sendMail(m: OutgoingMail): Promise<void> {
     subject: m.subject,
     text: m.text,
     html: m.html,
+    ...(m.attachments?.length ? { attachments: m.attachments.map((a) => ({ filename: a.filename, content: a.content, contentType: a.contentType })) } : {}),
   });
 }
 

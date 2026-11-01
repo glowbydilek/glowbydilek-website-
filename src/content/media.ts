@@ -17,7 +17,6 @@ import { currentSnapshot } from "@/lib/cms/current";
  */
 export type PhotoId =
   | "hero"
-  | "editorial-portrait"
   | "zone-face"
   | "zone-body"
   | "zone-intimate"
@@ -28,7 +27,6 @@ export type PhotoId =
   | "contact"
   | "interior"
   | "treatments-hero"
-  | "portrait-soft"
   | "linen"
   | "dropper"
   | "vase";
@@ -64,18 +62,6 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Editorial beauty portrait (model).",
     credit: "Adobe Stock #810843299 — Adobe Stock (free collection), Standard License",
-  },
-  "editorial-portrait": {
-    id: "editorial-portrait",
-    file: "editorial-portrait",
-    aspect: 2356 / 1571,
-    focus: { mobile: "50% 25%", desktop: "50% 25%" },
-    alt: {
-      nl: "Lachende vrouw met een gladde, natuurlijke huid tegen een warme bruine achtergrond",
-      en: "Smiling woman with smooth, natural skin against a warm brown background",
-    },
-    brief: "Second editorial portrait (model), warm tones.",
-    credit: "Adobe Stock #210591319 — Adobe Stock (free collection), Standard License",
   },
   "zone-face": {
     id: "zone-face",
@@ -196,18 +182,6 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Treatments page hero (model).",
     credit: "Adobe Stock #513816117 — Adobe Stock (free collection), Standard License",
-  },
-  "portrait-soft": {
-    id: "portrait-soft",
-    file: "portrait-soft",
-    aspect: 2356 / 1571,
-    focus: { mobile: "22% 35%", desktop: "20% 35%" },
-    alt: {
-      nl: "Vrouw met een gladde, verzorgde huid raakt zacht haar kaaklijn aan",
-      en: "Woman with smooth, well-cared-for skin gently touching her jawline",
-    },
-    brief: "Soft beauty portrait (model) for facial treatment pages. Not Dilek.",
-    credit: "Adobe Stock #469983189 — Adobe Stock (free collection), Standard License",
   },
   linen: {
     id: "linen",

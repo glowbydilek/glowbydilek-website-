@@ -13,7 +13,7 @@
  */
 import { and, eq, inArray, lte, or, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { appointments, outbox } from "../db/schema";
+import { appointments, invoices, outbox } from "../db/schema";
 
 type Tx = Parameters<Parameters<DB["transaction"]>[0]>[0] | DB;
 
@@ -27,7 +27,12 @@ export type OutgoingEmail = {
   html: string;
   text: string;
   sendAfter?: Date;
+  customerId?: number | null;
+  /** Generated at send time from an immutable record ("invoice" → issued invoice PDF). */
+  attachment?: { kind: "invoice"; ref: number };
 };
+
+export type Attachment = { filename: string; content: Buffer; contentType: string };
 
 export async function enqueue(tx: Tx, m: OutgoingEmail): Promise<boolean> {
   const [res] = (await tx
@@ -43,6 +48,9 @@ export async function enqueue(tx: Tx, m: OutgoingEmail): Promise<boolean> {
       html: m.html,
       textBody: m.text,
       sendAfter: m.sendAfter ?? new Date(),
+      customerId: m.customerId ?? null,
+      attachmentKind: m.attachment?.kind ?? null,
+      attachmentRef: m.attachment?.ref ?? null,
     })) as unknown as [{ affectedRows: number }];
   return res.affectedRows === 1;
 }
@@ -55,7 +63,19 @@ export async function cancelPending(tx: Tx, appointmentId: number, kinds: string
     .where(and(eq(outbox.appointmentId, appointmentId), inArray(outbox.kind, kinds), eq(outbox.status, "pending")));
 }
 
-export type Sender = (m: { to: string; replyTo?: string; subject: string; text: string; html: string }) => Promise<void>;
+export type Sender = (m: { to: string; replyTo?: string; subject: string; text: string; html: string; attachments?: Attachment[] }) => Promise<void>;
+
+/** Loads the attachment of an outbox row. Only issued invoices can be attached. */
+async function loadAttachment(db: DB, kind: string | null, ref: number | null): Promise<Attachment[] | null> {
+  if (!kind) return [];
+  if (kind === "invoice" && ref) {
+    const [inv] = await db.select({ number: invoices.number, pdf: invoices.pdf, status: invoices.status, kind: invoices.kind }).from(invoices).where(eq(invoices.id, ref));
+    if (!inv || inv.status !== "issued" || !inv.pdf || !inv.number) return null;
+    const prefix = inv.kind === "credit" ? "creditfactuur" : "factuur";
+    return [{ filename: `${prefix}-${inv.number}.pdf`, content: Buffer.from(inv.pdf), contentType: "application/pdf" }];
+  }
+  return null;
+}
 
 const MAX_ATTEMPTS = 6;
 const backoffMinutes = (attempt: number) => [1, 5, 15, 60, 240, 720][Math.min(attempt, 5)];
@@ -100,8 +120,15 @@ export async function processOutbox(
         continue;
       }
     }
+    const attachments = await loadAttachment(db, m.attachmentKind, m.attachmentRef);
+    if (attachments === null) {
+      // The record behind the attachment is missing or not issued: never send without it.
+      await db.update(outbox).set({ status: "failed", lockedAt: null, lastError: "attachment unavailable" }).where(eq(outbox.id, m.id));
+      failed++;
+      continue;
+    }
     try {
-      await send({ to: m.toEmail, replyTo: m.replyTo ?? undefined, subject: m.subject, text: m.textBody, html: m.html });
+      await send({ to: m.toEmail, replyTo: m.replyTo ?? undefined, subject: m.subject, text: m.textBody, html: m.html, attachments: attachments.length ? attachments : undefined });
       await db.update(outbox).set({ status: "sent", sentAt: new Date(), lockedAt: null, attempts: m.attempts + 1, lastError: null }).where(eq(outbox.id, m.id));
       sent++;
     } catch (err) {

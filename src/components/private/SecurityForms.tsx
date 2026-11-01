@@ -29,7 +29,7 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
         <p className="text-sm">
           <strong>Bewaar deze herstelcodes nu</strong> op een veilige plek (bijvoorbeeld uitgeprint of in een wachtwoordmanager). Elke code werkt één keer als je je telefoon niet bij de hand hebt. Ze worden maar één keer getoond.
         </p>
-        <ul className="grid grid-cols-2 gap-2 rounded-xl bg-ivory-50 p-4 font-mono text-sm">{codes.map((c) => <li key={c}>{c}</li>)}</ul>
+        <ul className="grid grid-cols-2 gap-2 rounded-xl bg-surface p-4 font-mono text-sm">{codes.map((c) => <li key={c}>{c}</li>)}</ul>
         <Button type="button" variant="outline" onClick={() => navigator.clipboard?.writeText(codes.join("\n"))}>Kopiëren</Button>
       </div>
     );
@@ -38,7 +38,7 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
     return (
       <div className="space-y-3">
         <Notice tone="success">Tweestapsverificatie staat aan. Nog {remaining} ongebruikte herstelcodes.</Notice>
-        <details className="rounded-xl border border-stone p-3">
+        <details className="rounded-xl border border-line p-3">
           <summary className="cursor-pointer text-sm">Uitschakelen</summary>
           <ActionForm action={disableMfaAction} className="mt-3 space-y-3">
             <Field label="Bevestig met je wachtwoord"><Input type="password" name="password" required autoComplete="current-password" /></Field>
@@ -72,8 +72,8 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
   return (
     <form action={confirm} className="space-y-4">
       <p className="text-sm">1. Scan deze QR-code met je authenticator-app (of tik op de link op je iPhone).</p>
-      <div className="w-56 rounded-xl border border-stone bg-white p-2" dangerouslySetInnerHTML={{ __html: setup.qr }} />
-      <a href={setup.uri} className="text-sm text-gold-deep underline">Open in authenticator-app</a>
+      <div className="w-56 rounded-xl border border-line bg-white p-2" dangerouslySetInnerHTML={{ __html: setup.qr }} />
+      <a href={setup.uri} className="text-sm text-accent-deep underline">Open in authenticator-app</a>
       <p className="text-sm text-muted">Of voer deze sleutel handmatig in: <code className="break-all">{setup.secret}</code></p>
       <Field label="2. Vul de code van zes cijfers in"><Input name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} required /></Field>
       {state.error && <Notice tone="error">{state.error}</Notice>}

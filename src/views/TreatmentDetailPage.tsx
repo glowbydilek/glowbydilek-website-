@@ -50,19 +50,19 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
               {s.readProcess}
             </ButtonLink>
           </div>
-          <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-stone pt-5 text-sm sm:grid-cols-3">
+          <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-line pt-5 text-sm sm:grid-cols-3">
             <div>
               <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">{s.areaLabel}</dt>
-              <dd className="mt-1 text-charcoal">{cat.label}</dd>
+              <dd className="mt-1 text-ink">{cat.label}</dd>
             </div>
             <div>
               <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">{s.price}</dt>
-              <dd className="mt-1 text-charcoal">{price}</dd>
+              <dd className="mt-1 text-ink">{price}</dd>
             </div>
             <div className="col-span-2 sm:col-span-1">
               <dt className="sr-only">{dict.contact.hoursTitle}</dt>
-              <dd className="flex items-center gap-2 text-charcoal">
-                <Icon name="clock" className="h-4 w-4 text-gold-deep" />
+              <dd className="flex items-center gap-2 text-ink">
+                <Icon name="clock" className="h-4 w-4 text-accent-deep" />
                 {dict.common.byAppointment}
               </dd>
             </div>
@@ -73,7 +73,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
     details: (
       <>
         {/* Area + how the appointment goes */}
-        <section className="section-tight border-t border-stone/70">
+        <section className="section-tight border-t border-line/70">
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <div data-reveal>
               <h2 className="display text-[2rem] sm:text-[2.6rem]">{s.area}</h2>
@@ -82,7 +82,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
             <div data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
               <h2 className="display text-[2rem] sm:text-[2.6rem]">{s.appointment}</h2>
               {t.appointment.map((p) => (
-                <p key={p} className="mt-5 leading-relaxed text-charcoal-soft">
+                <p key={p} className="mt-5 leading-relaxed text-ink-soft">
                   {p}
                 </p>
               ))}
@@ -94,21 +94,21 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
     info: (
       <>
         {/* Before, reactions, aftercare */}
-        <section className="section bg-stone-light">
+        <section className="section bg-sand">
           <Container className="grid gap-5 lg:grid-cols-3">
-            <article className="rounded-[var(--radius-card)] bg-ivory p-6 sm:p-8" data-reveal>
-              <Icon name="info" className="h-6 w-6 text-gold-deep" />
-              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-charcoal">{s.know}</h2>
+            <article className="rounded-[var(--radius-card)] bg-paper p-6 sm:p-8" data-reveal>
+              <Icon name="info" className="h-6 w-6 text-accent-deep" />
+              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-ink">{s.know}</h2>
               <CheckList items={t.know} className="mt-5" />
             </article>
-            <article className="rounded-[var(--radius-card)] border border-gold/50 bg-ivory p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "80ms" }}>
-              <Icon name="privacy" className="h-6 w-6 text-gold-deep" />
-              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-charcoal">{s.reactions}</h2>
+            <article className="rounded-[var(--radius-card)] border border-accent/50 bg-paper p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "80ms" }}>
+              <Icon name="privacy" className="h-6 w-6 text-accent-deep" />
+              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-ink">{s.reactions}</h2>
               <CheckList items={t.reactions} icon="info" className="mt-5" />
             </article>
-            <article className="rounded-[var(--radius-card)] bg-ivory p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "160ms" }}>
-              <Icon name="leaf" className="h-6 w-6 text-gold-deep" />
-              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-charcoal">{s.aftercare}</h2>
+            <article className="rounded-[var(--radius-card)] bg-paper p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "160ms" }}>
+              <Icon name="leaf" className="h-6 w-6 text-accent-deep" />
+              <h2 className="mt-4 font-serif text-[1.8rem] leading-tight text-ink">{s.aftercare}</h2>
               <CheckList items={t.aftercare} className="mt-5" />
               <ButtonLink href={href(locale, "aftercare")} variant="link" arrow className="mt-5">
                 {s.readAftercare}
@@ -126,8 +126,8 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
             <div data-reveal>
               <h2 className="display text-[2rem] sm:text-[2.6rem]">{s.recovery}</h2>
               <p className="lead mt-5">{t.recovery}</p>
-              <p className="mt-6 flex gap-3 rounded-2xl bg-nude-light p-5 text-sm leading-relaxed text-charcoal-soft">
-                <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0 text-gold-deep" />
+              <p className="mt-6 flex gap-3 rounded-2xl bg-glow-soft p-5 text-sm leading-relaxed text-ink-soft">
+                <Icon name="info" className="mt-0.5 h-5 w-5 shrink-0 text-accent-deep" />
                 {s.medical}
               </p>
               <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2">
@@ -139,12 +139,12 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
                 </ButtonLink>
               </div>
             </div>
-            <div className="on-dark rounded-[var(--radius-media)] bg-charcoal p-7 text-ivory sm:p-9" data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
-              <Icon name="calendar" className="h-6 w-6 text-gold" />
-              <h2 className="display mt-4 text-[2rem] text-ivory sm:text-[2.4rem]">{s.request.title}</h2>
-              <p className="mt-3 leading-relaxed text-ivory/80">{s.request.body}</p>
-              <p className="mt-4 flex items-start gap-3 text-sm leading-relaxed text-ivory/70">
-                <Icon name="pin" className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+            <div className="on-dark rounded-[var(--radius-media)] bg-ink p-7 text-paper sm:p-9" data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
+              <Icon name="calendar" className="h-6 w-6 text-accent" />
+              <h2 className="display mt-4 text-[2rem] text-paper sm:text-[2.4rem]">{s.request.title}</h2>
+              <p className="mt-3 leading-relaxed text-paper/80">{s.request.body}</p>
+              <p className="mt-4 flex items-start gap-3 text-sm leading-relaxed text-paper/70">
+                <Icon name="pin" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 {dict.common.location}
               </p>
               <ButtonLink href={bookingHref(locale, id)} variant="gold" arrow className="mt-7 w-full sm:w-auto">
@@ -158,7 +158,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
     faq: (
       <>
         {/* FAQ */}
-        <section className="section-tight bg-ivory-50">
+        <section className="section-tight bg-surface">
           <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <h2 className="display text-[2rem] sm:text-[2.6rem]" data-reveal>
               {s.faq}
