@@ -590,6 +590,7 @@ export const en: Dictionary = {
   },
   footer: {
     follow: "Follow Glow by Dilek",
+    login: "Log in",
     tagline: "Personal waxing treatments for face, body and bikini area, with calm, care and honest advice. By appointment only.",
     treatments: "Treatments",
     studio: "Studio",

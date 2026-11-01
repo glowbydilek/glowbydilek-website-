@@ -39,7 +39,7 @@ const num = (f: FormData, k: string) => {
 function fail(err: unknown): FormState {
   if (err instanceof BookingError) return { error: err.message, code: err.code };
   if (err instanceof CrmError) return { error: err.message };
-  console.error("[ajanda] action failed:", err instanceof Error ? err.message.slice(0, 200) : err);
+  console.error("[agenda] action failed:", err instanceof Error ? err.message.slice(0, 200) : err);
   return { error: "Er ging iets mis. Probeer het opnieuw." };
 }
 
@@ -50,7 +50,7 @@ function dayAndTime(f: FormData): { day: string; minute: number } | null {
 }
 
 function refresh() {
-  revalidatePath("/ajanda", "layout");
+  revalidatePath("/agenda", "layout");
 }
 
 // ───────────────────────────────────────────────────────── Appointments
@@ -95,7 +95,7 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
   }
   await deliverSoon(getDb());
   refresh();
-  redirect(`/ajanda/afspraak/${id}?opgeslagen=1`);
+  redirect(`/agenda/afspraak/${id}?opgeslagen=1`);
 }
 
 export async function appointmentAction(_: FormState, f: FormData): Promise<FormState> {
@@ -170,7 +170,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   if (op === "notes") return { ok: true, message: "Notitie opgeslagen." };
   // Status changes re-render the page with other actions; show the result at the top.
   // mail=0 → the change was material but the customer has no email address: shown prominently.
-  redirect(`/ajanda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}`);
+  redirect(`/agenda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}`);
 }
 
 // ─────────────────────────────────────────────────────────── Customers
@@ -352,7 +352,7 @@ export async function inquiryAction(f: FormData) {
     await db.delete(inquiries).where(eq(inquiries.id, id));
     await audit(db, { userId: s.user.id, action: "inquiry.deleted", entityId: id });
     refresh();
-    redirect("/ajanda/berichten");
+    redirect("/agenda/berichten");
   }
   if (["new", "read", "replied", "closed"].includes(status)) {
     await db.update(inquiries).set({ status, readAt: status === "new" ? null : new Date() }).where(eq(inquiries.id, id));
@@ -388,5 +388,5 @@ export async function mergeCustomersAction(_: FormState, f: FormData): Promise<F
     return fail(err);
   }
   refresh();
-  redirect(`/ajanda/klanten/${intoId}?samengevoegd=1`);
+  redirect(`/agenda/klanten/${intoId}?samengevoegd=1`);
 }

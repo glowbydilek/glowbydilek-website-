@@ -16,9 +16,9 @@ There is no address, city, district, service area, map or walk-in information. `
 - [ ] **Hostinger setup** (`docs/DEPLOYMENT.md`): production database, environment variables (database, `AUTH_SECRET`, `CRON_SECRET`, SMTP), cron job.
 - [ ] **Rotate the Turnstile secret** (it appeared in a screenshot) and set the production keys **before** the build (`docs/SECURITY.md`). Without them the public forms show "temporarily unavailable" in production.
 - [ ] **First login** via "Wachtwoord vergeten?", then enable **two-step verification** and store the recovery codes offline.
-- [ ] **Working hours, breaks and days off** in Ajanda → Werktijden.
-- [ ] **Private location details** for confirmation emails in Ajanda → Instellingen (never shown on the website).
-- [ ] **Retention period** in the privacy statement: the text now proposes "no longer than 24 months after the last appointment or contact". Confirm or change it. Anonymising old customers is a manual action in Ajanda → Klanten.
+- [ ] **Working hours, breaks and days off** in Agenda → Werktijden.
+- [ ] **Private location details** for confirmation emails in Agenda → Instellingen (never shown on the website).
+- [ ] **Retention period** in the privacy statement: the text now proposes "no longer than 24 months after the last appointment or contact". Confirm or change it. Anonymising old customers is a manual action in Agenda → Klanten.
 - [ ] **Approval: statements about Dilek and her way of working.** Written in good faith but **not verified**. Please confirm, edit or remove (files: `src/i18n/dictionaries/*.ts`):
 
   | # | Statement (NL) | Where |
@@ -66,7 +66,7 @@ There is no address, city, district, service area, map or walk-in information. `
 ## Optional / when available
 
 - [ ] Confirmed **prices and durations**: Admin → Behandelingen (price, duration, buffer, visible, bookable online). Nothing is invented: until a price is entered the site shows "op aanvraag". Online booking only works for treatments with a confirmed duration.
-- [ ] Decide whether to switch on **online booking** (Ajanda → Instellingen). Requests always stay "pending" until you approve them.
+- [ ] Decide whether to switch on **online booking** (Agenda → Instellingen). Requests always stay "pending" until you approve them.
 - [ ] Review the **email texts** in Admin → E-mails (NL and EN).
 - [ ] A **real portrait of Dilek** (never a stock or AI person).
 - [ ] **WhatsApp number**: `NEXT_PUBLIC_WHATSAPP_NUMBER`.

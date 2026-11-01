@@ -17,7 +17,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="contact" {...t.hero}>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-wrap items-center gap-3">
           <ButtonLink href="#bericht" arrow>
             {dict.cta.sendMessage}
           </ButtonLink>

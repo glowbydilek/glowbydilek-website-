@@ -63,6 +63,10 @@ const nextConfig = {
       { source: "/en/waxing-treatments/bikini", destination: "/en/waxing-treatments/bikini-intimate", permanent: true },
       { source: "/en/how-it-works", destination: "/en/appointment-process", permanent: true },
       { source: "/en/book", destination: "/en/book-appointment", permanent: true },
+      // The owner's area was renamed from /ajanda to /agenda (old links in emails keep working).
+      { source: "/ajanda/agenda", destination: "/agenda/kalender", permanent: true },
+      { source: "/ajanda/:path*", destination: "/agenda/:path*", permanent: true },
+      { source: "/ajanda", destination: "/agenda", permanent: true },
     ];
   },
   async headers() {
@@ -75,8 +79,9 @@ const nextConfig = {
       { source: "/:path*", headers: securityHeaders },
       { source: "/admin/:path*", headers: privateHeaders },
       { source: "/admin", headers: privateHeaders },
-      { source: "/ajanda/:path*", headers: privateHeaders },
-      { source: "/ajanda", headers: privateHeaders },
+      { source: "/agenda/:path*", headers: privateHeaders },
+      { source: "/agenda", headers: privateHeaders },
+      { source: "/login", headers: privateHeaders },
       { source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }, { key: "Cache-Control", value: "no-store" }] },
     ];
   },

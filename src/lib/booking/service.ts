@@ -276,7 +276,7 @@ async function queueOwnerNotice(tx: Tx, v: ApptView, ownerEmail: string) {
     `Behandeling: ${v.items.map((i) => i.nameNl).join(", ")}`,
     `Moment: ${when}`,
     v.appt.customerNote ? `Opmerking: ${v.appt.customerNote}` : "",
-    "Bekijk en beantwoord de aanvraag in Ajanda: " + `${(process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, "")}/ajanda/afspraak/${v.appt.id}`,
+    "Bekijk en beantwoord de aanvraag in Agenda: " + `${(process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, "")}/agenda/afspraak/${v.appt.id}`,
   ].filter(Boolean);
   await enqueue(tx, {
     dedupeKey: `owner_request:${v.appt.id}`,

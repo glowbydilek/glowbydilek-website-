@@ -593,6 +593,7 @@ export const nl = {
   },
   footer: {
     follow: "Volg Glow by Dilek",
+    login: "Inloggen",
     tagline: "Persoonlijke waxbehandelingen voor gezicht, lichaam en bikinizone, met rust, zorg en eerlijk advies. Uitsluitend op afspraak.",
     treatments: "Behandelingen",
     studio: "Studio",

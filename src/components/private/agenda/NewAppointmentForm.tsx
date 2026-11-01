@@ -50,7 +50,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
     const t = setTimeout(async () => {
       try {
         const q = new URLSearchParams({ phone, email, first: firstName, last: lastName });
-        const r = await fetch(`/ajanda/klanten/zoeken?${q}`, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+        const r = await fetch(`/agenda/klanten/zoeken?${q}`, { signal: ctrl.signal, headers: { Accept: "application/json" } });
         if (r.ok) setSuggestions(((await r.json()) as { matches: Suggestion[] }).matches);
       } catch {
         /* typing on; ignore aborted lookups */

@@ -28,7 +28,7 @@ function fail(err: unknown): FormState {
 }
 
 function refresh() {
-  revalidatePath("/ajanda", "layout");
+  revalidatePath("/agenda", "layout");
 }
 
 export async function recordPaymentAction(_: FormState, f: FormData): Promise<FormState> {
@@ -83,7 +83,7 @@ export async function createInvoiceAction(_: FormState, f: FormData): Promise<Fo
     return fail(err);
   }
   refresh();
-  redirect(`/ajanda/facturen/${id}`);
+  redirect(`/agenda/facturen/${id}`);
 }
 
 export async function saveInvoiceAction(_: FormState, f: FormData): Promise<FormState> {
@@ -125,7 +125,7 @@ export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormSt
       await issueInvoice(db, id, ctx, { paid });
       refresh();
       // The draft form disappears once issued: show the result on the page itself.
-      redirect(`/ajanda/facturen/${id}?melding=uitgegeven`);
+      redirect(`/agenda/facturen/${id}?melding=uitgegeven`);
     }
     if (op === "email") {
       await emailInvoice(db, id, ctx);
@@ -136,12 +136,12 @@ export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormSt
     if (op === "credit") {
       const cid = await createCredit(db, id, ctx);
       refresh();
-      redirect(`/ajanda/facturen/${cid}`);
+      redirect(`/agenda/facturen/${cid}`);
     }
     if (op === "delete") {
       await deleteDraft(db, id, ctx);
       refresh();
-      redirect("/ajanda/facturen?verwijderd=1");
+      redirect("/agenda/facturen?verwijderd=1");
     }
   } catch (err) {
     if (err && typeof err === "object" && "digest" in err) throw err; // redirect()

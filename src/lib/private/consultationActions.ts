@@ -36,7 +36,7 @@ export async function saveConsultationAction(_: FormState, f: FormData): Promise
     if (err instanceof ConsultationError) return { error: err.message };
     throw err;
   }
-  revalidatePath(`/ajanda/klanten/${customerId}/consultatie`);
+  revalidatePath(`/agenda/klanten/${customerId}/consultatie`);
   return { ok: true, message: "Versleuteld opgeslagen." };
 }
 
@@ -44,7 +44,7 @@ export async function deleteConsultationAction(_: FormState, f: FormData): Promi
   const s = await assertOwner();
   const customerId = Number(f.get("customerId"));
   await deleteConsultation(getDb(), customerId, s.user.id, str(f, "reason") === "withdrawn" ? "consent_withdrawn" : "owner");
-  redirect(`/ajanda/klanten/${customerId}/consultatie?verwijderd=1`);
+  redirect(`/agenda/klanten/${customerId}/consultatie?verwijderd=1`);
 }
 
 export async function consultationSettingsAction(_: FormState, f: FormData): Promise<FormState> {

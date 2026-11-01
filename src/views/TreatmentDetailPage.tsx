@@ -42,7 +42,7 @@ export function TreatmentDetailPage({ locale, id }: { locale: Locale; id: Treatm
             { name: treatment.name[locale] },
           ]}
         >
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-wrap items-center gap-3">
             <ButtonLink href={bookingHref(locale, id)} arrow>
               {s.requestThis}
             </ButtonLink>

@@ -28,7 +28,7 @@ export function POST(req: NextRequest) {
   return handleForm(req, {
     kind: "appointment",
     validate: (raw) => validateAppointment(raw, ids),
-    // Also appears in Ajanda → Aanvragen, where Dilek confirms it at an exact time.
+    // Also appears in Agenda → Aanvragen, where Dilek confirms it at an exact time.
     store: async (d) => {
       if (!databaseConfigured()) return;
       const [firstName, ...rest] = d.name.trim().split(/\s+/);

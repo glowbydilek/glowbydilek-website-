@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { mfaAction, type FormState } from "@/lib/private/authActions";
 import { Field, Input, Notice, SubmitButton } from "../ui";
 
-export function MfaForm({ area, next }: { area: "admin" | "ajanda"; next?: string }) {
+export function MfaForm({ area, next }: { area: "admin" | "agenda"; next?: string }) {
   const [state, action] = useActionState<FormState, FormData>(mfaAction, {});
   return (
     <form action={action} className="space-y-4">

@@ -1,6 +1,6 @@
 # Deployment, data safety and rollback (Hostinger)
 
-This guide covers putting the platform (public website + `/admin` + `/ajanda`) live on the existing Hostinger **Node.js Web App** for `glowbydilek.nl`, and keeping the data safe afterwards.
+This guide covers putting the platform (public website + `/admin` + `/agenda`) live on the existing Hostinger **Node.js Web App** for `glowbydilek.nl`, and keeping the data safe afterwards.
 
 > **Nothing here has been done on the live site yet.** The live website is only changed after the owner approves the pull request and starts the deploy. DNS, MX records, nameservers and domain settings do **not** need to change.
 
@@ -8,7 +8,7 @@ This guide covers putting the platform (public website + `/admin` + `/ajanda`) l
 
 Checked read-only on 1 November 2026: Hostinger **auto-deploys every push to `main`** (Node.js 20, Next.js, `npm run build`, output `.next`). The live site runs commit `23e38dd` (PR #7). Its only environment variable is `NEXT_PUBLIC_SITE_URL`.
 
-So **merging the platform pull request deploys it at once.** Configure sections 1 and 2 **before** merging. Without them the public pages keep working on the built-in content, but `/admin` and `/ajanda` cannot be used, the forms cannot send email, and the public forms show "temporarily unavailable" (no Turnstile keys).
+So **merging the platform pull request deploys it at once.** Configure sections 1 and 2 **before** merging. Without them the public pages keep working on the built-in content, but `/admin` and `/agenda` cannot be used, the forms cannot send email, and the public forms show "temporarily unavailable" (no Turnstile keys).
 
 Hostinger also builds a **preview** for open pull requests (a `*.hostingersite.com` address in the PR comments). Give a preview its own test database and test keys, or none. A preview must never receive the production `DATABASE_URL`, `AUTH_SECRET` or SMTP password, so it can never send real customer emails or touch real data.
 
@@ -64,9 +64,9 @@ Migration `0001_platform_crm_finance` is **additive only** (new tables and nulla
 4. Start the build/deploy in hPanel. The build runs `db-migrate --on-build`, which creates all tables, then `next build`.
 5. Open `https://glowbydilek.nl/admin/login` → **Wachtwoord vergeten?** → enter `hello@glowbydilek.nl`. The owner account is created automatically **without a password**; the reset email (valid for 15 minutes, single use) sets the first password. There is no default password and no public registration.
 6. After signing in: **Admin → Beveiliging** → set up two-step verification (MFA) and store the 10 recovery codes offline.
-7. Add the cron job (section 4) and check the **admin overview** (`/admin`) a few minutes later: "Automatische taak (cron)" should be green with a recent time (also shown in Ajanda → Instellingen).
-8. Send one test message through the contact form and one appointment request with your own email address. Check that both appear in Ajanda and that the emails arrive.
-9. Only then: enter real working hours, confirmed prices/durations, and, if wanted, switch on online booking in **Ajanda → Instellingen**.
+7. Add the cron job (section 4) and check the **admin overview** (`/admin`) a few minutes later: "Automatische taak (cron)" should be green with a recent time (also shown in Agenda → Instellingen).
+8. Send one test message through the contact form and one appointment request with your own email address. Check that both appear in Agenda and that the emails arrive.
+9. Only then: enter real working hours, confirmed prices/durations, and, if wanted, switch on online booking in **Agenda → Instellingen**.
 
 Production only ever contains real data: do not create test appointments or test customers there (use your own name if you want a test, then anonymise it).
 
@@ -81,7 +81,7 @@ Hostinger cron runs in **UTC** and does **not** load the app's environment varia
 curl -fsS -m 120 -H "Authorization: Bearer CRON_SECRET_VALUE" https://glowbydilek.nl/api/cron/tick
 ```
 
-Each run sends due emails from the outbox (with retries), queues reminders for appointments 24 hours ahead (setting in Ajanda), and removes expired sessions, reset links and rate-limit entries. Running it twice never sends an email twice. Reminders are re-checked against the appointment's current time and status before sending, so cancelled or moved appointments never get a stale reminder.
+Each run sends due emails from the outbox (with retries), queues reminders for appointments 24 hours ahead (setting in Agenda), and removes expired sessions, reset links and rate-limit entries. Running it twice never sends an email twice. Reminders are re-checked against the appointment's current time and status before sending, so cancelled or moved appointments never get a stale reminder.
 
 **Status:** tested locally (idempotency, retries, reminder timing including DST). A **real scheduled run on Hostinger has not happened yet**; reminders count as operational only after the first real run has been seen on the admin overview.
 

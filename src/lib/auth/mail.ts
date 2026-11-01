@@ -14,7 +14,7 @@ export async function sendResetEmail(to: string, token: string, area: Area): Pro
   const text = [
     "Hallo Dilek,",
     "",
-    "Er is gevraagd om het wachtwoord van Admin Glow by Dilek en Glow by Dilek — Ajanda opnieuw in te stellen.",
+    "Er is gevraagd om het wachtwoord van Admin Glow by Dilek en Glow by Dilek — Agenda opnieuw in te stellen.",
     "Kies een nieuw wachtwoord via deze link. De link is 15 minuten geldig en werkt één keer:",
     url,
     "",
@@ -24,7 +24,7 @@ export async function sendResetEmail(to: string, token: string, area: Area): Pro
   ].join("\n");
   const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#292724;max-width:560px">
 <p>Hallo Dilek,</p>
-<p>Er is gevraagd om het wachtwoord van <strong>Admin Glow by Dilek</strong> en <strong>Glow by Dilek — Ajanda</strong> opnieuw in te stellen.</p>
+<p>Er is gevraagd om het wachtwoord van <strong>Admin Glow by Dilek</strong> en <strong>Glow by Dilek — Agenda</strong> opnieuw in te stellen.</p>
 <p><a href="${escapeHtml(url)}" style="display:inline-block;background:#292724;color:#f8f5ef;padding:12px 22px;border-radius:999px;text-decoration:none">Nieuw wachtwoord kiezen</a></p>
 <p style="color:#635b54;font-size:13px">De link is 15 minuten geldig en werkt één keer. Heb je dit niet zelf gevraagd? Dan kun je deze e-mail negeren; je wachtwoord blijft ongewijzigd.</p>
 </div>`;

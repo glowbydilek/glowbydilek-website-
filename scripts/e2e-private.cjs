@@ -36,7 +36,7 @@ function latestResetLink(since) {
   const files = fs.readdirSync(MAIL_DIR).map((f) => path.join(MAIL_DIR, f)).filter((f) => fs.statSync(f).mtimeMs >= since);
   for (const f of files.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)) {
     const raw = fs.readFileSync(f, "utf8").replace(/=\r?\n/g, "").replace(/=3D/g, "=");
-    const m = raw.match(/https?:\/\/[^\s"<]+\/(admin|ajanda)\/wachtwoord-herstellen\?token=[A-Za-z0-9_-]+/);
+    const m = raw.match(/https?:\/\/[^\s"<]+\/(admin|agenda)\/wachtwoord-herstellen\?token=[A-Za-z0-9_-]+/);
     if (m) return m[0];
   }
   return null;
@@ -72,18 +72,18 @@ function mailsSince(since) {
   globalThis.__page = p;
   try {
     await step("private pages require login and are noindex", async () => {
-      for (const url of ["/admin", "/ajanda", "/ajanda/klanten", "/admin/beveiliging"]) {
+      for (const url of ["/admin", "/agenda", "/agenda/klanten", "/admin/beveiliging"]) {
         const r = await p.goto(BASE + url);
-        assert.match(p.url(), /\/(admin|ajanda)\/login/, url);
+        assert.match(p.url(), /\/(admin|agenda)\/login/, url);
         assert.match(r.headers()["x-robots-tag"] ?? "", /noindex/);
       }
-      const api = await fetch(`${BASE}/ajanda/klanten/1/export`);
+      const api = await fetch(`${BASE}/agenda/klanten/1/export`);
       assert.equal(api.status, 401);
     });
 
     await step("forgot password (neutral message) → email link → new password", async () => {
       const since = Date.now() - 1000;
-      await p.goto(`${BASE}/ajanda/login`);
+      await p.goto(`${BASE}/agenda/login`);
       await p.getByRole("link", { name: "Wachtwoord vergeten?" }).click();
       await p.waitForURL(/wachtwoord-vergeten/);
       await p.fill("#email", "hello@glowbydilek.nl");
@@ -100,14 +100,14 @@ function mailsSince(since) {
       await p.fill("#password", PASSWORD);
       await p.fill("#confirm", PASSWORD);
       await p.getByRole("button", { name: "Wachtwoord opslaan" }).click();
-      await p.waitForURL(/\/ajanda\/login\?reset=1/);
+      await p.waitForURL(/\/agenda\/login\?reset=1/);
       // the link is single-use
       await p.goto(link.replace(/^https?:\/\/[^/]+/, BASE));
       await p.getByText("verlopen of al gebruikt").waitFor();
     });
 
     await step("wrong password is refused with a neutral message", async () => {
-      await p.goto(`${BASE}/ajanda/login`);
+      await p.goto(`${BASE}/agenda/login`);
       await p.fill("#password", "definitely-wrong-123");
       await p.waitForTimeout(400);
       await p.getByRole("button", { name: "Inloggen" }).click();
@@ -118,12 +118,12 @@ function mailsSince(since) {
       await p.fill("#password", PASSWORD);
       await p.waitForTimeout(400);
       await p.getByRole("button", { name: "Inloggen" }).click();
-      await p.waitForURL(`${BASE}/ajanda`);
+      await p.waitForURL(`${BASE}/agenda`);
       await p.getByRole("heading", { name: "Vandaag", exact: true }).waitFor();
     });
 
     await step("set weekly working hours (Mon–Fri 09:00–12:00)", async () => {
-      await p.goto(`${BASE}/ajanda/werktijden`);
+      await p.goto(`${BASE}/agenda/werktijden`);
       for (const day of ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag"]) {
         const box = p.locator("label", { hasText: day }).locator('input[type="checkbox"]');
         if (!(await box.isChecked())) await box.check();
@@ -134,7 +134,7 @@ function mailsSince(since) {
 
     let appointmentUrl = "";
     await step("create an appointment with first/last name, phone, email and time", async () => {
-      await p.goto(`${BASE}/ajanda/afspraak/nieuw`);
+      await p.goto(`${BASE}/agenda/afspraak/nieuw`);
       const day = new Date(Date.now() + 9 * 864e5);
       while ([0, 6].includes(day.getUTCDay())) day.setUTCDate(day.getUTCDate() + 1);
       const iso = day.toISOString().slice(0, 10);
@@ -148,10 +148,10 @@ function mailsSince(since) {
       await p.fill("#phone", "0612345678");
       await p.fill("#email", "test.klant@example.com");
       await p.getByRole("button", { name: "Afspraak opslaan" }).click();
-      await p.waitForURL(/\/ajanda\/afspraak\/\d+\?opgeslagen=1/);
+      await p.waitForURL(/\/agenda\/afspraak\/\d+\?opgeslagen=1/);
       appointmentUrl = p.url().split("?")[0];
       await p.getByText("Bevestigd").first().waitFor();
-      await p.goto(`${BASE}/ajanda/agenda?view=day&d=${iso}`);
+      await p.goto(`${BASE}/agenda/kalender?view=day&d=${iso}`);
       await p.getByText("Test Klant").waitFor();
     });
 
@@ -159,7 +159,7 @@ function mailsSince(since) {
       const day = await p.locator('input[type="date"]').first().inputValue().catch(() => "");
       await p.goto(appointmentUrl);
       const iso = await p.locator('input[name="day"]').first().inputValue();
-      await p.goto(`${BASE}/ajanda/afspraak/nieuw?d=${iso}`);
+      await p.goto(`${BASE}/agenda/afspraak/nieuw?d=${iso}`);
       await p.locator("label", { hasText: "Bovenlip" }).click();
       await p.fill("#time", "10:15");
       await p.fill("#duration", "30");
@@ -188,7 +188,7 @@ function mailsSince(since) {
     });
 
     await step("customer search by phone", async () => {
-      await p.goto(`${BASE}/ajanda/klanten?q=0612345678`);
+      await p.goto(`${BASE}/agenda/klanten?q=0612345678`);
       await p.getByText("Test Klant").waitFor();
     });
 
@@ -246,8 +246,8 @@ function mailsSince(since) {
       assert.match(prices, /€ ?45\b/, "price € 45 not shown on /prijzen");
     });
 
-    await step("Online booking: enable, customer chooses an exact time, request appears in Ajanda, approve sends confirmation", async () => {
-      await p.goto(`${BASE}/ajanda/instellingen`);
+    await step("Online booking: enable, customer chooses an exact time, request appears in Agenda, approve sends confirmation", async () => {
+      await p.goto(`${BASE}/agenda/instellingen`);
       await p.locator('input[name="onlineBookingEnabled"]').check();
       await p.locator('input[name="minNoticeHours"]').fill("0");
       await p.getByRole("button", { name: "Instellingen opslaan" }).click();
@@ -268,7 +268,7 @@ function mailsSince(since) {
       await v.getByRole("button", { name: "Afspraak aanvragen" }).click();
       await v.getByText("Je aanvraag is ontvangen").waitFor();
       await c.close();
-      await p.goto(`${BASE}/ajanda/aanvragen`);
+      await p.goto(`${BASE}/agenda/aanvragen`);
       await p.getByText("Online Klant").first().click();
       await p.getByRole("button", { name: /Afspraak bevestigen/ }).click();
       await p.getByText("Afspraak bevestigd. De klant krijgt een bevestiging").waitFor();
@@ -279,10 +279,10 @@ function mailsSince(since) {
       const r = await fetch(`${BASE}/api/contact`, {
         method: "POST",
         headers: { "content-type": "application/json", origin: BASE, "x-real-ip": `198.51.100.${(Date.now() % 200) + 20}` },
-        body: JSON.stringify({ name: "Inbox Test", email: `inbox.${Date.now()}@example.com`, topic: "question", message: `${marker}: komt dit bericht in Ajanda aan?`, privacy: true, locale: "nl", company: "", elapsedMs: 5000, turnstileToken: `e2e-inbox-${Date.now()}` }),
+        body: JSON.stringify({ name: "Inbox Test", email: `inbox.${Date.now()}@example.com`, topic: "question", message: `${marker}: komt dit bericht in Agenda aan?`, privacy: true, locale: "nl", company: "", elapsedMs: 5000, turnstileToken: `e2e-inbox-${Date.now()}` }),
       });
       assert.equal(r.status, 200, `contact form → ${r.status}`);
-      await p.goto(`${BASE}/ajanda/berichten`);
+      await p.goto(`${BASE}/agenda/berichten`);
       await p.getByText("Inbox Test").first().click();
       await p.getByText(marker).waitFor();
     });
@@ -314,10 +314,10 @@ function mailsSince(since) {
 
     let repeatUrl;
     await step("CRM: a returning customer is recognised by phone in another notation and reused", async () => {
-      const before = (await (await p.request.get(`${BASE}/ajanda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
+      const before = (await (await p.request.get(`${BASE}/agenda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
       const day = new Date(Date.now() + 10 * 864e5);
       while ([0, 6].includes(day.getUTCDay())) day.setUTCDate(day.getUTCDate() + 1);
-      await p.goto(`${BASE}/ajanda/afspraak/nieuw?d=${day.toISOString().slice(0, 10)}`);
+      await p.goto(`${BASE}/agenda/afspraak/nieuw?d=${day.toISOString().slice(0, 10)}`);
       await p.fill("#phone", "+31 6 1234 5678");
       await p.getByText("Bestaande klant gevonden").waitFor();
       await p.getByText("zelfde telefoonnummer").waitFor();
@@ -328,10 +328,10 @@ function mailsSince(since) {
       await p.fill("#duration", "30");
       await p.fill("#price", "45,00");
       await p.getByRole("button", { name: "Afspraak opslaan" }).click();
-      await p.waitForURL(/\/ajanda\/afspraak\/\d+\?opgeslagen=1/);
+      await p.waitForURL(/\/agenda\/afspraak\/\d+\?opgeslagen=1/);
       repeatUrl = p.url().split("?")[0];
       await p.getByText("€ 45,00").first().waitFor();
-      const after = (await (await p.request.get(`${BASE}/ajanda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
+      const after = (await (await p.request.get(`${BASE}/agenda/klanten`)).text()).match(/Test Klant/g)?.length ?? 0;
       assert.equal(after, before, "no duplicate customer profile");
     });
 
@@ -341,7 +341,7 @@ function mailsSince(since) {
       await p.getByRole("button", { name: "✓ Afgerond" }).click();
       await p.waitForURL(/melding=complete/);
       await p.getByRole("button", { name: "＋ Factuur maken" }).first().click();
-      await p.waitForURL(/\/ajanda\/facturen\/\d+$/);
+      await p.waitForURL(/\/agenda\/facturen\/\d+$/);
       const invoiceUrl = p.url();
       await p.getByText("Nog niet mogelijk").waitFor();
       // Business details (test values in the development database only).
@@ -386,12 +386,12 @@ function mailsSince(since) {
     });
 
     await step("Finance shows recorded revenue only; customer profile shows visits and payments", async () => {
-      await p.goto(`${BASE}/ajanda/financien?p=year`);
+      await p.goto(`${BASE}/agenda/financien?p=year`);
       await p.getByText("Omzet (ontvangen)").waitFor();
       assert.match(await p.locator("main").innerText(), /€ 45,00/);
-      const pdf = await p.request.get(`${BASE}/ajanda/financien/rapport?p=year`);
+      const pdf = await p.request.get(`${BASE}/agenda/financien/rapport?p=year`);
       assert.equal((await pdf.body()).subarray(0, 5).toString(), "%PDF-");
-      await p.goto(`${BASE}/ajanda/klanten?q=Test`);
+      await p.goto(`${BASE}/agenda/klanten?q=Test`);
       await p.getByRole("link", { name: /Test Klant/ }).first().click();
       await p.getByText("Betaald (vastgelegd)").waitFor();
       await p.getByText("Wenkbrauwen × 1").waitFor();
@@ -462,8 +462,8 @@ function mailsSince(since) {
       await p.getByRole("button", { name: "Menu" }).click();
       await p.getByRole("button", { name: "Uitloggen", exact: true }).click();
       await p.waitForURL(/\/admin\/login\?uitgelogd=1/);
-      await p.goto(`${BASE}/ajanda`);
-      assert.match(p.url(), /\/ajanda\/login/);
+      await p.goto(`${BASE}/agenda`);
+      assert.match(p.url(), /\/agenda\/login/);
     });
   } catch {
     /* reported below */

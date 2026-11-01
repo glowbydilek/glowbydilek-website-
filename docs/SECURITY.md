@@ -59,7 +59,7 @@ Production therefore never silently runs on test keys.
 - Logs contain codes only — no personal data, tokens or message content.
 - Security headers incl. a Content-Security-Policy that only allows `challenges.cloudflare.com` as an external script/frame source.
 
-## Private areas (`/admin`, `/ajanda`)
+## Private areas (`/admin`, `/agenda`)
 
 - One owner account (`OWNER_EMAIL`, default hello@glowbydilek.nl), created automatically **without a password**. There is no registration and no default password; the first password is set through "Wachtwoord vergeten?".
 - Passwords: scrypt (N=32768, r=8, p=1) with a per-user salt; minimum 12 characters; obviously weak passwords (e.g. containing "wachtwoord", the business name or the email name) are refused.
@@ -81,7 +81,7 @@ Production therefore never silently runs on test keys.
 
 ## Business data added in 2026 (CRM, finance, invoices, reviews, consultation)
 
-- **Authorisation:** every Ajanda/Admin page, server action and file route (PDFs, exports) re-checks the owner session on the server (`assertOwner` / `requireOwner`); private route handlers return 401 without a session. All private responses are `noindex`, `no-store`, `no-referrer`.
+- **Authorisation:** every Agenda/Admin page, server action and file route (PDFs, exports) re-checks the owner session on the server (`assertOwner` / `requireOwner`); private route handlers return 401 without a session. All private responses are `noindex`, `no-store`, `no-referrer`.
 - **Consultation (health) data:** encrypted with AES-256-GCM under `CONSULTATION_KEY`, MFA required, every view/change/export/deletion audited, excluded from exports, emails, PDFs, reports and analytics; off until the owner confirms the legal conditions. See `docs/CONSULTATION.md`.
 - **Invoices:** issued invoices are immutable (status guard + frozen snapshot + PDF SHA-256); corrections only via credit invoices; numbers are allocated under a row lock. Invoice emails only go to the address frozen on the invoice while it still matches the customer.
 - **Payments:** never deleted, only voided with a reason; all changes audited.

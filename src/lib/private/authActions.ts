@@ -32,7 +32,7 @@ import { audit } from "../db/audit";
 
 export type FormState = { error?: string; code?: string; ok?: boolean; message?: string; data?: Record<string, unknown> };
 
-const area = (v: FormDataEntryValue | null): Area => (v === "ajanda" ? "ajanda" : "admin");
+const area = (v: FormDataEntryValue | null): Area => (v === "agenda" ? "agenda" : "admin");
 
 export async function loginAction(_: FormState, form: FormData): Promise<FormState> {
   const a = area(form.get("area"));

@@ -91,7 +91,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
           <Container className={`grid items-center gap-10 lg:gap-16 ${hasPhoto("contact") ? "md:grid-cols-[1.1fr_0.9fr]" : ""}`}>
             <div className={hasPhoto("contact") ? "" : "mx-auto max-w-3xl text-center"}>
               <SectionHeading eyebrow={t.vision.eyebrow} title={t.vision.title} intro={t.vision.body} align={hasPhoto("contact") ? "left" : "center"} />
-              <div className={`mt-8 flex flex-col gap-3 sm:flex-row ${hasPhoto("contact") ? "" : "sm:justify-center"}`} data-reveal>
+              <div className={`mt-8 flex flex-wrap items-center gap-3 ${hasPhoto("contact") ? "" : "sm:justify-center"}`} data-reveal>
                 <ButtonLink href={href(locale, "treatments")} arrow>
                   {dict.cta.viewTreatments}
                 </ButtonLink>

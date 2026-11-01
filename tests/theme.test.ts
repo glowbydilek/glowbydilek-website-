@@ -30,7 +30,7 @@ import { DEFAULT_MENU, validateBusiness, validateMenu } from "../src/lib/cms/men
 
 test("menu edits can only link existing public pages, never private ones", () => {
   assert.deepEqual(validateMenu(undefined), DEFAULT_MENU);
-  const m = validateMenu({ header: ["about", "admin", "ajanda", "../x", "faq", "faq"], footerInfo: ["https://evil.example", "privacy"] });
+  const m = validateMenu({ header: ["about", "admin", "agenda", "../x", "faq", "faq"], footerInfo: ["https://evil.example", "privacy"] });
   assert.deepEqual(m.header, ["treatments", "about", "faq"]);
   assert.deepEqual(m.footerInfo, ["privacy"]);
   assert.deepEqual(validateBusiness({ phone: "+31 6 1234 5678", instagram: "@glow.by_dilek" }), { value: { phone: "+31 6 1234 5678", instagram: "glow.by_dilek" }, errors: [] });

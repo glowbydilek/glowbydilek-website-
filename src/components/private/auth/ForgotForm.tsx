@@ -6,7 +6,7 @@ import { Turnstile } from "@/components/forms/Turnstile";
 import { forgotAction, type FormState } from "@/lib/private/authActions";
 import { Field, Input, Notice, SubmitButton } from "../ui";
 
-export function ForgotForm({ area, siteKey, captcha }: { area: "admin" | "ajanda"; siteKey: string; captcha: boolean }) {
+export function ForgotForm({ area, siteKey, captcha }: { area: "admin" | "agenda"; siteKey: string; captcha: boolean }) {
   const [state, action] = useActionState<FormState, FormData>(forgotAction, {});
   const [token, setToken] = useState<string | null>(null);
   const [reset, setReset] = useState(0);

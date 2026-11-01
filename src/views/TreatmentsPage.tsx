@@ -24,7 +24,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="treatments-hero" ratio={5 / 4} {...t.hero}>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-wrap items-center gap-3">
           <ButtonLink href={href(locale, "booking")} arrow>
             {dict.cta.request}
           </ButtonLink>

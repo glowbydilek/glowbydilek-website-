@@ -15,7 +15,7 @@ export const BLANK_CUSTOM: CustomPageContent = {
   seoDescription: "",
 };
 
-const RESERVED = new Set(["admin", "ajanda", "api", "media", "en", "info", "_next"]);
+const RESERVED = new Set(["admin", "agenda", "ajanda", "login", "api", "media", "en", "info", "_next"]);
 
 export function validSlug(s: string): boolean {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s) && s.length <= 80 && !RESERVED.has(s);

@@ -17,7 +17,7 @@
 | `review_submitted` | Review submitted |
 | `cta_booking_click` | Click on any "make an appointment" link (with the page it was on) |
 
-Never sent: names, email addresses, phone numbers, appointment details, health information, invoice data, or anything from `/admin` and `/ajanda`.
+Never sent: names, email addresses, phone numbers, appointment details, health information, invoice data, or anything from `/admin` and `/agenda`.
 
 **Owner to do in Google Analytics:** accept the data processing terms, set data retention to 2 or 14 months, keep Google Signals off. The privacy statement already describes analytics-with-consent.
 
@@ -25,7 +25,7 @@ Never sent: names, email addresses, phone numbers, appointment details, health i
 
 1. Go to search.google.com/search-console and add the **domain property** `glowbydilek.nl` (DNS verification: Google gives a TXT record; adding it is a DNS change the owner makes — nothing in this project changes DNS), or the **URL-prefix property** `https://glowbydilek.nl/` with the HTML-tag method (ask a developer to add the meta tag; it can be added without other changes).
 2. Submit the sitemap: `https://glowbydilek.nl/sitemap.xml`.
-3. Check "Pages" after a few days: private routes (`/admin`, `/ajanda`, `/api`) are excluded by robots.txt, `noindex` headers and the sitemap.
+3. Check "Pages" after a few days: private routes (`/admin`, `/agenda`, `/api`) are excluded by robots.txt, `noindex` headers and the sitemap.
 
 ## SEO notes
 

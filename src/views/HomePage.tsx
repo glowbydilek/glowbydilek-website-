@@ -42,7 +42,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <em>{t.hero.titleEm}</em>
               </h1>
               <p className="lead rise mt-6 max-w-lg [--rise-delay:160ms]">{t.hero.subtitle}</p>
-              <div className="rise mt-8 flex flex-col gap-3 [--rise-delay:240ms] sm:flex-row">
+              <div className="rise mt-8 flex flex-wrap items-center gap-3 [--rise-delay:240ms]">
                 <ButtonLink href={href(locale, "booking")} arrow>
                   {dict.cta.request}
                 </ButtonLink>
@@ -70,14 +70,17 @@ export function HomePage({ locale }: { locale: Locale }) {
     ),
     statement: (
       <>
-        {/* 2 ─ Statement: one quiet, typographic moment */}
+        {/* 2 ─ Statement: a still life beside the quote (photo editable in Admin → Foto's) */}
         <section className="section bg-sand">
-          <Container className="mx-auto max-w-4xl text-center">
-            <div data-reveal>
+          <Container className="grid items-center gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div data-reveal className="mx-auto w-full max-w-[22rem] md:max-w-none">
+              <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 90vw" className="rounded-[var(--radius-card)]" />
+            </div>
+            <div data-reveal className="text-center md:text-left">
               <p className="eyebrow">{t.statement.eyebrow}</p>
-              <blockquote className="display mt-6 text-[2.15rem] text-ink sm:text-5xl lg:text-[3.75rem]">“{t.statement.quote}”</blockquote>
-              <div className="mt-8"><Ornament className="h-4 w-auto" /></div>
-              <p className="lead mx-auto mt-8 max-w-2xl">{t.statement.body}</p>
+              <blockquote className="display mt-6 text-[2.15rem] text-ink sm:text-5xl lg:text-[3.4rem]">“{t.statement.quote}”</blockquote>
+              <div className="mt-8 flex justify-center md:justify-start"><Ornament className="h-4 w-auto" /></div>
+              <p className="lead mt-8 max-w-2xl md:mx-0">{t.statement.body}</p>
               <p className="script mt-5 text-3xl text-accent-deep" aria-label={`— ${t.statement.signature}`}>
                 — {t.statement.signature}
               </p>
@@ -308,7 +311,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               <h2 className="display text-[2rem] sm:text-4xl">{t.contact.eyebrow}</h2>
               <p className="mt-3 leading-relaxed text-ink-soft">{t.contact.body}</p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row" data-reveal>
+            <div className="flex flex-wrap items-center gap-3" data-reveal>
               <ButtonLink href={href(locale, "contact")} variant="outline" arrow>
                 {dict.cta.sendMessage}
               </ButtonLink>

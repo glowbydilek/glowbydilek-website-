@@ -39,7 +39,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
           crumbs={[{ name: dict.nav.treatments, href: href(locale, "treatments") }, { name: c.label }]}
           {...c.hero}
         >
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-wrap items-center gap-3">
             <ButtonLink href="#behandelingen" arrow>
               {s.inThisArea}
             </ButtonLink>
