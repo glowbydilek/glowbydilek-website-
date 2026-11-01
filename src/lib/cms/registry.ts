@@ -12,6 +12,9 @@ import { faqPageEn, guidesEn } from "../../content/copy/guides.en";
 import { faqPageNl, guidesNl } from "../../content/copy/guides.nl";
 import { treatmentsEn } from "../../content/copy/treatments.en";
 import { treatmentsNl } from "../../content/copy/treatments.nl";
+import { extraSectionsEn, extraTreatmentsEn } from "../../content/copy/extra.en";
+import { extraSectionsNl, extraTreatmentsNl } from "../../content/copy/extra.nl";
+import { BUILTIN_ITEMS, BUILTIN_SECTIONS } from "../catalogue/builtin";
 import { en } from "../../i18n/dictionaries/en";
 import { nl } from "../../i18n/dictionaries/nl";
 import { pagePath, routes, type Locale, type PageRef } from "../../i18n/config";
@@ -50,14 +53,19 @@ export const DOCS: DocDef[] = [
   ...dictSections.map((k) => ({ key: `dict:${k}`, label: DICT_LABELS[k] ?? k, defaults: { nl: nl[k], en: en[k] } })),
   ...categoryIds.map((id) => ({ key: `category:${id}`, label: categoriesNl[id].label, defaults: { nl: categoriesNl[id], en: categoriesEn[id] } })),
   ...treatmentIds.map((id) => ({ key: `treatment:${id}`, label: treatmentsNl[id].title, defaults: { nl: treatmentsNl[id], en: treatmentsEn[id] } })),
+  ...Object.keys(extraTreatmentsNl).map((id) => ({ key: `treatment:${id}`, label: extraTreatmentsNl[id].title, defaults: { nl: extraTreatmentsNl[id], en: extraTreatmentsEn[id] } })),
+  ...Object.keys(extraSectionsNl).map((id) => ({ key: `section:${id}`, label: extraSectionsNl[id].seoTitle, defaults: { nl: extraSectionsNl[id], en: extraSectionsEn[id] } })),
   ...(["process", "preparation", "aftercare"] as const).map((k) => ({ key: `guide:${k}`, label: guidesNl[k].hero.eyebrow, defaults: { nl: guidesNl[k], en: guidesEn[k] } })),
   { key: "faqpage", label: "Veelgestelde vragen (pagina)", defaults: { nl: faqPageNl, en: faqPageEn } },
 ];
 
 export const DOC_MAP = new Map(DOCS.map((d) => [d.key, d]));
 
+/** Copy documents of owner-created catalogue entries (no built-in default). */
+export const CATALOGUE_DOC = /^(treatment|section|category):[a-z0-9][a-z0-9-]{0,59}$/;
+
 export function isDocKey(key: string): boolean {
-  return DOC_MAP.has(key) || /^custom:\d+$/.test(key);
+  return DOC_MAP.has(key) || /^custom:\d+$/.test(key) || CATALOGUE_DOC.test(key);
 }
 
 const p = (page: PageRef) => ({ nl: pagePath("nl", page), en: pagePath("en", page) });
@@ -75,6 +83,24 @@ export const EDITOR_PAGES: EditorPage[] = [
   ...(["process", "preparation", "aftercare"] as const).map((k) => ({ id: k, label: guidesNl[k].hero.eyebrow, group: "Informatie", paths: { ...routes[k] }, docs: [{ key: `guide:${k}`, label: "Teksten" }] })),
   ...categoryIds.map((id) => ({ id: `category-${id}`, label: categoriesNl[id].label, group: "Behandelzones", paths: p({ type: "category", id }), sectionsPage: "category", docs: [{ key: `category:${id}`, label: "Teksten" }] })),
   ...treatmentIds.map((id) => ({ id: `treatment-${id}`, label: treatmentsNl[id].title, group: "Behandelingen", paths: p({ type: "treatment", id }), sectionsPage: "treatment", docs: [{ key: `treatment:${id}`, label: "Teksten" }] })),
+  ...BUILTIN_SECTIONS.filter((x) => x.id !== "waxing").map((sec) => ({
+    id: `section-${sec.id}`,
+    label: sec.name.nl,
+    group: "Nieuwe categorieën (concept tot publicatie)",
+    paths: { nl: `/${sec.slug.nl}`, en: `/en/${sec.slug.en}` },
+    docs: [{ key: `section:${sec.id}`, label: "Teksten" }],
+  })),
+  ...BUILTIN_ITEMS.filter((i) => i.sectionId !== "waxing").map((i) => {
+    const sec = BUILTIN_SECTIONS.find((x) => x.id === i.sectionId)!;
+    return {
+      id: `treatment-${i.id}`,
+      label: i.name.nl,
+      group: "Nieuwe categorieën (concept tot publicatie)",
+      paths: { nl: `/${sec.slug.nl}/${i.slug.nl}`, en: `/en/${sec.slug.en}/${i.slug.en}` },
+      sectionsPage: "treatment",
+      docs: [{ key: `treatment:${i.id}`, label: "Teksten" }],
+    };
+  }),
   {
     id: "global",
     label: "Algemene teksten (menu, knoppen, footer, formulieren)",

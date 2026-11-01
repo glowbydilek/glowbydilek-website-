@@ -1,3 +1,5 @@
+import type { CatalogueRows } from "../catalogue/types";
+
 /**
  * The content snapshot used while rendering. Pure module: the server-only
  * store registers a resolver (per request, published or draft preview);
@@ -18,6 +20,19 @@ export type TreatmentLive = {
   descriptionNl: string;
   descriptionEn: string;
   mediaId: number | null;
+  category: string;
+  sort: number;
+  bufferMinutes: number;
+  /** Catalogue columns (migration 0002; optional so pre-0002 snapshots still type-check). */
+  kind?: string;
+  sectionId?: string | null;
+  groupId?: string | null;
+  slugNl?: string | null;
+  slugEn?: string | null;
+  status?: string;
+  pricingMode?: string | null;
+  vatCategory?: string;
+  related?: unknown;
 };
 
 export type PhotoOverride = { mediaId: number; version: number; width: number; height: number; altNl: string; altEn: string; focusMobile: string; focusDesktop: string };
@@ -26,12 +41,14 @@ export type Snapshot = {
   /** `${docKey}|${locale}` → owner override */
   docs: Map<string, unknown>;
   treatments: Map<string, TreatmentLive>;
+  /** Sections, groups and package contents (null without a database). */
+  catalogue: CatalogueRows | null;
   photos: Map<string, PhotoOverride>;
   preview: boolean;
   version: number;
 };
 
-export const EMPTY_SNAPSHOT: Snapshot = { docs: new Map(), treatments: new Map(), photos: new Map(), preview: false, version: 0 };
+export const EMPTY_SNAPSHOT: Snapshot = { docs: new Map(), treatments: new Map(), catalogue: null, photos: new Map(), preview: false, version: 0 };
 
 let resolver: () => Snapshot | null = () => null;
 

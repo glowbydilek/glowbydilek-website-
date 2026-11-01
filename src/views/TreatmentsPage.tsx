@@ -11,14 +11,32 @@ import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { treatmentGroups } from "@/content/treatments";
-import { categoryCopy } from "@/content/copy";
-import { bookingHref, categoryHref, href, treatmentHref, type Locale } from "@/i18n/config";
+import { groupCopy } from "@/content/copy";
+import { bookingHref, href, type Locale } from "@/i18n/config";
+import { groupHref, itemHref, publicGroups, publicItems } from "@/lib/catalogue";
 import { getDictionary } from "@/i18n/dictionaries";
 import { serviceJsonLd } from "@/lib/seo";
 
 export function TreatmentsPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.treatments;
+  // Published waxing zones (built-in or added by the owner) with their published treatments.
+  const zones = publicGroups("waxing").map((g) => {
+    const b = treatmentGroups.find((x) => x.id === g.id);
+    const c = groupCopy(locale, g.id, g.name[locale]);
+    return {
+      id: g.id,
+      photo: g.photo,
+      label: c.label,
+      teaser: c.teaser,
+      name: g.name,
+      intro: b?.intro[locale] ?? c.hero.subtitle,
+      suitable: b?.suitable[locale] ?? "",
+      note: b?.note[locale] ?? "",
+      href: groupHref(locale, g),
+      items: publicItems({ sectionId: "waxing", groupId: g.id }),
+    };
+  });
   const faqs = [dict.faq.treatments[0], dict.faq.treatments[3], dict.faq.general[1], dict.faq.general[2]];
 
   return (
@@ -41,10 +59,10 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
             {dict.hub.title}
           </h2>
           <ul className="mt-6 grid gap-4 md:grid-cols-3">
-            {treatmentGroups.map((g) => (
+            {zones.map((g) => (
               <li key={g.id}>
                 <Link
-                  href={categoryHref(locale, g.id)}
+                  href={g.href}
                   className="group grid h-full grid-cols-[5.5rem_1fr] items-center gap-4 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-4 transition-shadow duration-500 hover:shadow-card md:grid-cols-1 md:p-4"
                 >
                   {hasPhoto(g.photo) && (
@@ -54,10 +72,10 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                   )}
                   <span className="md:px-1 md:pb-1">
                     <span className="flex items-center justify-between gap-3 font-serif text-[1.6rem] leading-tight text-ink">
-                      {categoryCopy(locale, g.id).label}
+                      {g.label}
                       <Icon name="arrow" className="h-4 w-4 shrink-0 text-accent-deep transition-transform duration-500 group-hover:translate-x-1" />
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-ink-soft">{categoryCopy(locale, g.id).teaser}</span>
+                    <span className="mt-1 block text-sm leading-relaxed text-ink-soft">{g.teaser}</span>
                   </span>
                 </Link>
               </li>
@@ -89,7 +107,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       </section>
 
       {/* Zones */}
-      {treatmentGroups.map((g, idx) => {
+      {zones.map((g, idx) => {
         const photo = hasPhoto(g.photo);
         const tint = idx % 2 === 0 ? "bg-surface" : "";
         return (
@@ -110,12 +128,14 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                       {g.name[locale]}
                     </h2>
                     <p className="lead mt-4" data-reveal>
-                      {g.intro[locale]}
+                      {g.intro}
                     </p>
-                    <div className="mt-6 rounded-[var(--radius-card)] bg-glow-soft p-5" data-reveal>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent-deep">{dict.common.suitableFor}</p>
-                      <p className="mt-2 leading-relaxed text-ink-soft">{g.suitable[locale]}</p>
-                    </div>
+                    {g.suitable && (
+                      <div className="mt-6 rounded-[var(--radius-card)] bg-glow-soft p-5" data-reveal>
+                        <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent-deep">{dict.common.suitableFor}</p>
+                        <p className="mt-2 leading-relaxed text-ink-soft">{g.suitable}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -129,20 +149,22 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                       {g.name[locale]}
                     </h2>
                     <p className="lead mt-4" data-reveal>
-                      {g.intro[locale]}
+                      {g.intro}
                     </p>
-                    <div className="mt-6 rounded-[var(--radius-card)] bg-glow-soft p-5" data-reveal>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent-deep">{dict.common.suitableFor}</p>
-                      <p className="mt-2 leading-relaxed text-ink-soft">{g.suitable[locale]}</p>
-                    </div>
+                    {g.suitable && (
+                      <div className="mt-6 rounded-[var(--radius-card)] bg-glow-soft p-5" data-reveal>
+                        <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent-deep">{dict.common.suitableFor}</p>
+                        <p className="mt-2 leading-relaxed text-ink-soft">{g.suitable}</p>
+                      </div>
+                    )}
                   </>
                 )}
                 <ul className={`${photo ? "mt-7" : ""} divide-y divide-line border-y border-line`}>
-                  {g.treatments.map((tr) => (
+                  {g.items.map((tr) => (
                     <li key={tr.id} className="group relative grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
                       <div>
                         <h3 className="font-serif text-[1.65rem] leading-tight text-ink">
-                          <Link href={treatmentHref(locale, tr.id)} className="underline-offset-4 hover:text-accent-deep hover:underline">
+                          <Link href={itemHref(locale, tr)} className="underline-offset-4 hover:text-accent-deep hover:underline">
                             {tr.name[locale]}
                           </Link>
                         </h3>
@@ -159,15 +181,17 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 flex gap-3 leading-relaxed text-ink-soft" data-reveal>
-                  <Icon name="leaf" className="mt-1 h-5 w-5 shrink-0 text-accent-deep" />
-                  <span>
-                    <strong className="font-medium text-ink">{dict.common.goodToKnow}: </strong>
-                    {g.note[locale]}
-                  </span>
-                </p>
+                {g.note && (
+                  <p className="mt-6 flex gap-3 leading-relaxed text-ink-soft" data-reveal>
+                    <Icon name="leaf" className="mt-1 h-5 w-5 shrink-0 text-accent-deep" />
+                    <span>
+                      <strong className="font-medium text-ink">{dict.common.goodToKnow}: </strong>
+                      {g.note}
+                    </span>
+                  </p>
+                )}
                 <div className="mt-6" data-reveal>
-                  <ButtonLink href={categoryHref(locale, g.id)} variant="outline" arrow>
+                  <ButtonLink href={g.href} variant="outline" arrow>
                     {dict.service.categoryPage}
                   </ButtonLink>
                 </div>

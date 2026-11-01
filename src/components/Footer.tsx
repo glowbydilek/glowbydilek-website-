@@ -48,7 +48,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                   </li>
                 ))}
                 <li>
-                  <Link href={href(locale, "treatments")} className={linkCls}>
+                  <Link href={nav.allHref} className={linkCls}>
                     {dict.nav.allTreatments}
                   </Link>
                 </li>

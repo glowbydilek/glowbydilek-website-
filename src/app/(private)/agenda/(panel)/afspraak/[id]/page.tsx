@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { AppointmentActions } from "@/components/private/agenda/AppointmentActions";
 import { STATUS, TIME_RANGE_NL, time } from "@/components/private/agenda/format";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { appointmentHistory, BookingError, getAppointment } from "@/lib/booking/service";
 import { getDb } from "@/lib/db/client";
-import { invoices, outbox, payments, treatments } from "@/lib/db/schema";
+import { invoices, outbox, payments } from "@/lib/db/schema";
 import { NewInvoiceButton, PaymentForm } from "@/components/private/finance/FinanceForms";
 import { InviteButton } from "@/components/private/cms/ReviewForms";
+import { QuoteForm } from "@/components/private/agenda/QuoteForm";
+import { ownerTreatments } from "@/lib/catalogue/owner";
+import { quotesForAppointment } from "@/lib/booking/quotes";
+import { withdrawQuoteAction } from "@/lib/private/agendaActions";
 import { getReviewSettings } from "@/lib/reviews/service";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
@@ -40,6 +44,15 @@ const DONE: Record<string, string> = {
   noshow: "Gemarkeerd als niet verschenen.",
   archive: "Gearchiveerd.",
   unarchive: "Uit het archief gehaald.",
+  offerte: "Prijsvoorstel verstuurd. Zodra de klant accepteert, wordt het bedrag de afgesproken prijs.",
+  ingetrokken: "Openstaand prijsvoorstel ingetrokken.",
+};
+const QUOTE_STATUS: Record<string, { label: string; tone: "pending" | "done" | "cancelled" | "neutral" }> = {
+  sent: { label: "Wacht op klant", tone: "pending" },
+  accepted: { label: "Geaccepteerd", tone: "done" },
+  declined: { label: "Afgewezen", tone: "cancelled" },
+  withdrawn: { label: "Ingetrokken", tone: "neutral" },
+  expired: { label: "Verlopen", tone: "neutral" },
 };
 
 export default async function AppointmentPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
@@ -56,7 +69,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
   const [events, mails, allTreatments] = await Promise.all([
     appointmentHistory(db, id),
     db.select().from(outbox).where(eq(outbox.appointmentId, id)).orderBy(desc(outbox.createdAt)),
-    db.select({ id: treatments.id, nameNl: treatments.nameNl }).from(treatments).where(eq(treatments.active, true)).orderBy(asc(treatments.sort)),
+    ownerTreatments(db),
   ]);
   const { appt, customer, items } = v;
   const [apptPayments, apptInvoices] = await Promise.all([
@@ -65,6 +78,8 @@ export default async function AppointmentPage({ params, searchParams }: { params
   ]);
   const paidHere = apptPayments.reduce((s, p) => s + p.amountCents, 0);
   const reviewSettings = await getReviewSettings(db);
+  const quotes = await quotesForAppointment(db, id);
+  const openQuote = quotes.find((q) => q.status === "sent");
   const st = STATUS[appt.status];
   const local = appt.startAt ? toLocalParts(appt.startAt) : null;
   return (
@@ -123,6 +138,34 @@ export default async function AppointmentPage({ params, searchParams }: { params
             </dl>
             <Link href={`/agenda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-accent-deep underline">Klantkaart openen</Link>
           </Card>
+          {["requested", "proposed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (appt.priceCents == null || quotes.length > 0) && (
+            <Card title="Prijsvoorstel">
+              {quotes.length > 0 && (
+                <ul className="mb-4 divide-y divide-line text-sm">
+                  {quotes.map((q) => (
+                    <li key={q.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                      <span>
+                        <strong>{formatCents(q.amountCents)}</strong> · verstuurd {formatLocal(q.createdAt, "nl", { dateStyle: "medium" })}
+                        {q.status === "sent" && ` · geldig t/m ${formatLocal(q.expiresAt, "nl", { dateStyle: "medium" })}`}
+                      </span>
+                      <Badge tone={QUOTE_STATUS[q.status]?.tone}>{QUOTE_STATUS[q.status]?.label ?? q.status}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {openQuote && (
+                <form action={withdrawQuoteAction} className="mb-4">
+                  <input type="hidden" name="appointmentId" value={appt.id} />
+                  <button className="min-h-11 text-sm text-[#8e2f24] underline">Openstaand voorstel intrekken</button>
+                </form>
+              )}
+              {customer.email ? (
+                <QuoteForm appointmentId={appt.id} hasOpen={Boolean(openQuote)} />
+              ) : (
+                <Notice tone="warning">Deze klant heeft geen e-mailadres. Bespreek de prijs persoonlijk en leg hem vast bij de afspraak (Wijzigen → Afgesproken prijs).</Notice>
+              )}
+            </Card>
+          )}
           {["completed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (
             <Card title="Betaling & factuur">
               <p className="mb-3 text-sm">
@@ -195,7 +238,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
           internalNote={appt.internalNote ?? ""}
           hasExactTime={Boolean(appt.startAt)}
           priceInput={centsToInput(appt.priceCents)}
-          treatments={allTreatments.map((t) => ({ id: t.id, name: t.nameNl }))}
+          treatments={allTreatments.map((t) => ({ id: t.id, name: t.name }))}
           currentTreatments={items.map((i) => i.treatmentId)}
         />
       </div>

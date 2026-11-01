@@ -2,8 +2,26 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { MouseEvent } from "react";
-import { alternatePath, localeLabels, locales, type Locale } from "@/i18n/config";
+import { useSyncExternalStore, type MouseEvent } from "react";
+import { alternatePath, localeLabels, locales, matchPage, type Locale } from "@/i18n/config";
+
+/** Re-read when Next.js swaps the head metadata after a client navigation. */
+const subscribeHead = (cb: () => void) => {
+  const mo = new MutationObserver(cb);
+  mo.observe(document.head, { childList: true, subtree: true, attributes: true });
+  return () => mo.disconnect();
+};
+
+/** hreflang alternate from the page head (catalogue pages defined in the database). */
+function headAlternate(target: Locale): string | null {
+  const el = document.head.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${localeLabels[target].hrefLang}"]`);
+  if (!el) return null;
+  try {
+    return new URL(el.href, window.location.href).pathname;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * NL / EN switch that always lands on the equivalent page (including
@@ -25,6 +43,13 @@ export function LanguageSwitcher({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const other = locales.find((l) => l !== locale)!;
+  const known = matchPage(pathname) !== null;
+  const fromHead = useSyncExternalStore(
+    subscribeHead,
+    () => (known ? null : headAlternate(other)),
+    () => null,
+  );
   const dark = tone === "dark";
 
   const go = (e: MouseEvent<HTMLAnchorElement>, target: string) => {
@@ -43,7 +68,7 @@ export function LanguageSwitcher({
   return (
     <nav aria-label={label} className={`flex items-center gap-1 text-[0.72rem] font-medium tracking-[0.2em] ${className}`}>
       {locales.map((l, i) => {
-        const target = alternatePath(pathname, l);
+        const target = l === other && fromHead ? fromHead : alternatePath(pathname, l);
         return (
           <span key={l} className="flex items-center gap-1">
             {i > 0 && (

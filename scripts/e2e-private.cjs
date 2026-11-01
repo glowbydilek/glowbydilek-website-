@@ -236,6 +236,7 @@ function mailsSince(since) {
       await p.goto(`${BASE}/admin/behandelingen`);
       const row = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Brazilian" }) }).first();
       await row.locator(":scope > summary").click();
+      await row.locator('select[name="pricingMode"]').selectOption("fixed");
       await row.locator('input[name="price"]').fill("45");
       await row.locator('input[name="duration"]').fill("45");
       await row.locator('input[name="buffer"]').fill("15");
@@ -426,6 +427,99 @@ function mailsSince(since) {
       await ig.locator('input[type="checkbox"]').uncheck();
       await p.getByRole("button", { name: "Publiceren", exact: true }).click();
       await p.getByText("Gepubliceerd (versie").waitFor();
+    });
+
+    await step("central /login: a signed-in owner chooses Websitebeheer or Agenda; /ajanda redirects", async () => {
+      await p.goto(`${BASE}/login`);
+      await p.getByRole("heading", { name: "Waar wil je naartoe?" }).waitFor();
+      await p.getByRole("link", { name: /Agenda/ }).first().click();
+      await p.waitForURL(/\/agenda$/);
+      const r = await fetch(`${BASE}/ajanda/klanten`, { redirect: "manual" });
+      assert.equal(r.status, 308);
+      assert.match(r.headers.get("location") || "", /\/agenda\/klanten$/);
+      const home = await (await fetch(`${BASE}/`)).text();
+      assert.match(home, /href="\/login"[^>]*>Inloggen</, "discreet footer login link");
+    });
+
+    await step("catalogue: a draft is published only after confirmation, and unpublishing hides it again", async () => {
+      await p.goto(`${BASE}/admin/behandelingen`);
+      const sec = p
+        .locator("details", { has: p.locator('input[name="id"][value="facial"]') })
+        .filter({ has: p.locator(":scope > summary", { hasText: "Categorie-instellingen" }) })
+        .first();
+      await sec.locator(":scope > summary").click();
+      await sec.locator('select[name="status"]').selectOption("published");
+      await sec.locator('input[name="confirm"]').check();
+      await sec.getByRole("button", { name: "Categorie opslaan" }).click();
+      await sec.getByText("Gepubliceerde behandelingen in deze categorie").waitFor();
+      const item = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Gezichtspeeling" }) }).first();
+      await item.locator(":scope > summary").click();
+      await item.locator('select[name="pricingMode"]').selectOption("fixed");
+      await item.locator('input[name="price"]').fill("55");
+      await item.locator('input[name="duration"]').fill("50");
+      await item.locator('select[name="status"]').selectOption("published");
+      await item.getByRole("button", { name: "Opslaan" }).click();
+      await item.getByText("Bevestig dat je deze behandeling echt aanbiedt").waitFor();
+      await item.locator('input[name="confirm"]').check();
+      await item.getByRole("button", { name: "Opslaan" }).click();
+      await item.getByText("Opgeslagen en gepubliceerd").waitFor();
+      const page = await fetch(`${BASE}/gezichtsbehandelingen/gezichtspeeling`);
+      assert.equal(page.status, 200);
+      const html = (await page.text()).replace(/\u00a0|&nbsp;|&#160;/g, " ");
+      assert.match(html, /€ ?55/);
+      assert.equal((await fetch(`${BASE}/gezichtsbehandelingen/gezichtsmasker`)).status, 404, "other drafts stay hidden");
+      await p.reload();
+      const again = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Gezichtspeeling" }) }).first();
+      await again.locator(":scope > summary").click();
+      await again.locator('select[name="status"]').selectOption("draft");
+      await again.getByRole("button", { name: "Opslaan" }).click();
+      await again.getByText("Opgeslagen.").waitFor();
+      assert.equal((await fetch(`${BASE}/gezichtsbehandelingen/gezichtspeeling`)).status, 404);
+    });
+
+    await step("price on request: proposal email, customer accepts via the personal link, agreed price recorded", async () => {
+      const email = `offerte.${Date.now()}@example.com`;
+      await p.goto(`${BASE}/agenda/afspraak/nieuw`);
+      const day = new Date(Date.now() + 12 * 864e5);
+      while ([0, 6].includes(day.getUTCDay())) day.setUTCDate(day.getUTCDate() + 1);
+      await p.locator("label", { hasText: "Complete gezichtsbehandeling" }).click();
+      await p.fill("#day", day.toISOString().slice(0, 10));
+      await p.fill("#time", "11:00");
+      await p.fill("#duration", "60");
+      await p.fill("#firstName", "Offerte");
+      await p.fill("#lastName", `Klant${Date.now() % 10000}`);
+      await p.fill("#email", email);
+      await p.getByRole("button", { name: "Afspraak opslaan" }).click();
+      await p.waitForURL(/\/agenda\/afspraak\/\d+\?opgeslagen=1/);
+      const apptUrl = p.url().split("?")[0];
+      const since = Date.now() - 1000;
+      await p.fill('input[name="amount"]', "65");
+      await p.getByRole("button", { name: "Prijsvoorstel versturen" }).click();
+      await p.getByText("Prijsvoorstel verstuurd").waitFor();
+      let link = null;
+      for (let i = 0; i < 40 && !link; i++) {
+        const m = mailsSince(since).find((x) => /prijsvoorstel/i.test(x.subject) && x.to.includes(email));
+        if (m) {
+          const body = m.raw.replace(/=\r?\n/g, "").replace(/=([0-9A-F]{2})/g, (_x, h) => String.fromCharCode(parseInt(h, 16)));
+          link = (body.match(/\/offerte\/([A-Za-z0-9_-]{40,60})/) || [])[0] || null;
+        }
+        if (!link) await new Promise((r) => setTimeout(r, 500));
+      }
+      assert.ok(link, "proposal email with personal link received");
+      const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
+      const v = await c.newPage();
+      const res = await v.goto(`${BASE}${link}`);
+      assert.match(res.headers()["x-robots-tag"] || "", /noindex/);
+      await v.getByText("€ 65,00").first().waitFor();
+      await v.getByRole("button", { name: "Ik ga akkoord" }).click();
+      await v.getByText("Je hebt het voorstel geaccepteerd").waitFor();
+      await v.reload();
+      await v.getByText("Dit voorstel is al geaccepteerd.").waitFor();
+      await c.close();
+      await p.goto(apptUrl);
+      await p.getByText("Geaccepteerd").first().waitFor();
+      const txt = (await p.locator("main").innerText()).replace(/\u00a0/g, " ");
+      assert.match(txt, /Prijs\s*€ 65,00/);
     });
 
     await step("Overal uitloggen ends the sessions on every device", async () => {

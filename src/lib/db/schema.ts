@@ -249,9 +249,88 @@ export const treatments = mysqlTable("treatments", {
   bookableOnline: boolean("bookable_online").notNull().default(false),
   mediaId: int("media_id"),
   sort: int("sort").notNull().default(0),
+  /**
+   * Catalogue (migration 0002). `kind` = treatment | package. A null section
+   * means "waxing" and a null group falls back to `category` (rows created
+   * before 0002). Status: draft | published | archived — only published,
+   * active and visible items appear on the website.
+   */
+  kind: varchar("kind", { length: 12 }).notNull().default("treatment"),
+  sectionId: varchar("section_id", { length: 60 }),
+  groupId: varchar("group_id", { length: 60 }),
+  slugNl: varchar("slug_nl", { length: 120 }),
+  slugEn: varchar("slug_en", { length: 120 }),
+  status: varchar("status", { length: 12 }).notNull().default("published"),
+  /** fixed | from | on_request. Null (pre-0002) = derived from priceCents/priceFrom. */
+  pricingMode: varchar("pricing_mode", { length: 12 }),
+  /** VAT category chosen by the owner/accountant: standard | reduced | zero | exempt. */
+  vatCategory: varchar("vat_category", { length: 12 }).notNull().default("standard"),
+  /** Related item ids, gallery media ids. */
+  related: json("related"),
+  gallery: json("gallery"),
   createdAt: created(),
   updatedAt: updated(),
 });
+
+/** Top-level service sections (Waxbehandelingen, Gezichtsbehandelingen, …). */
+export const serviceSections = mysqlTable("service_sections", {
+  id: varchar("id", { length: 60 }).primaryKey(),
+  kind: varchar("kind", { length: 12 }).notNull().default("treatments"), // treatments | packages
+  slugNl: varchar("slug_nl", { length: 80 }).notNull().unique(),
+  slugEn: varchar("slug_en", { length: 80 }).notNull().unique(),
+  nameNl: varchar("name_nl", { length: 120 }).notNull(),
+  nameEn: varchar("name_en", { length: 120 }).notNull(),
+  status: varchar("status", { length: 12 }).notNull().default("draft"),
+  mediaId: int("media_id"),
+  sort: int("sort").notNull().default(0),
+  createdAt: created(),
+  updatedAt: updated(),
+});
+
+/** Optional sub-categories within a section (e.g. waxing: face, body, bikini). */
+export const serviceGroups = mysqlTable(
+  "service_groups",
+  {
+    id: varchar("id", { length: 60 }).primaryKey(),
+    sectionId: varchar("section_id", { length: 60 }).notNull(),
+    slugNl: varchar("slug_nl", { length: 80 }).notNull(),
+    slugEn: varchar("slug_en", { length: 80 }).notNull(),
+    nameNl: varchar("name_nl", { length: 120 }).notNull(),
+    nameEn: varchar("name_en", { length: 120 }).notNull(),
+    status: varchar("status", { length: 12 }).notNull().default("draft"),
+    mediaId: int("media_id"),
+    sort: int("sort").notNull().default(0),
+    createdAt: created(),
+    updatedAt: updated(),
+  },
+  (t) => [uniqueIndex("group_slug_nl_idx").on(t.sectionId, t.slugNl), uniqueIndex("group_slug_en_idx").on(t.sectionId, t.slugEn)],
+);
+
+/** Contents of a package (a `treatments` row with kind = package). */
+export const packageItems = mysqlTable(
+  "package_items",
+  {
+    packageId: varchar("package_id", { length: 60 }).notNull(),
+    treatmentId: varchar("treatment_id", { length: 60 }).notNull(),
+    quantity: smallint("quantity").notNull().default(1),
+    sort: int("sort").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.packageId, t.treatmentId] })],
+);
+
+/** Honest price history: every change of a list price is recorded (no invented "was" prices). */
+export const priceHistory = mysqlTable(
+  "price_history",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    itemId: varchar("item_id", { length: 60 }).notNull(),
+    pricingMode: varchar("pricing_mode", { length: 12 }).notNull(),
+    priceCents: int("price_cents"),
+    userId: int("user_id"),
+    createdAt: created(),
+  },
+  (t) => [index("ph_item_idx").on(t.itemId, t.createdAt)],
+);
 
 // ─────────────────────────────────────────────────────── Customers & bookings
 
@@ -319,6 +398,11 @@ export const appointments = mysqlTable(
      * prices change later. Null = no price known (nothing is invented).
      */
     priceCents: int("price_cents"),
+    /** Discount applied to the agreed price (0002), and the promotion it came from. */
+    discountCents: int("discount_cents"),
+    promotionId: int("promotion_id"),
+    /** Per-appointment invoice behaviour: null = follow settings | manual | none. */
+    invoiceMode: varchar("invoice_mode", { length: 12 }),
     archivedAt: ts("archived_at"),
     version: int("version").notNull().default(1),
     createdAt: created(),
@@ -650,4 +734,179 @@ export const consultations = mysqlTable(
     updatedAt: updated(),
   },
   (t) => [uniqueIndex("consult_customer_idx").on(t.customerId)],
+);
+
+// ─────────────────────────────────────────────── Quotes ("prijs op aanvraag")
+
+/**
+ * A price proposal for an appointment whose treatment has no fixed price.
+ * The customer accepts through a single-use link (token stored hashed); the
+ * accepted amount becomes the appointment's agreed price.
+ */
+export const priceQuotes = mysqlTable(
+  "price_quotes",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    appointmentId: int("appointment_id").notNull(),
+    amountCents: int("amount_cents").notNull(),
+    message: text("message"),
+    tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
+    status: varchar("status", { length: 12 }).notNull().default("sent"), // sent | accepted | declined | withdrawn | expired
+    expiresAt: ts("expires_at").notNull(),
+    respondedAt: ts("responded_at"),
+    responseIpHash: varchar("response_ip_hash", { length: 64 }),
+    userId: int("user_id"),
+    createdAt: created(),
+  },
+  (t) => [index("quote_appt_idx").on(t.appointmentId)],
+);
+
+// ───────────────────────────────────────────── Promotions & campaign slider
+
+export const promotions = mysqlTable("promotions", {
+  id: int("id").autoincrement().primaryKey(),
+  nameNl: varchar("name_nl", { length: 120 }).notNull(),
+  nameEn: varchar("name_en", { length: 120 }).notNull(),
+  /** percent (value in basis points) | fixed (value in cents). */
+  kind: varchar("kind", { length: 10 }).notNull(),
+  value: int("value").notNull(),
+  /** all | section | items */
+  scope: varchar("scope", { length: 10 }).notNull().default("all"),
+  scopeIds: json("scope_ids"),
+  /** Optional promo code (stored upper-case). Null = applied automatically. */
+  code: varchar("code", { length: 40 }).unique(),
+  startsAt: ts("starts_at"),
+  endsAt: ts("ends_at"),
+  maxUses: int("max_uses"),
+  usedCount: int("used_count").notNull().default(0),
+  minSpendCents: int("min_spend_cents"),
+  status: varchar("status", { length: 10 }).notNull().default("draft"), // draft | active | archived
+  /** Show the promotion's text on the public site (prices, service pages). */
+  showPublic: boolean("show_public").notNull().default(false),
+  noteNl: varchar("note_nl", { length: 300 }),
+  noteEn: varchar("note_en", { length: 300 }),
+  createdAt: created(),
+  updatedAt: updated(),
+});
+
+export const promotionRedemptions = mysqlTable(
+  "promotion_redemptions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    promotionId: int("promotion_id").notNull(),
+    appointmentId: int("appointment_id").notNull(),
+    discountCents: int("discount_cents").notNull(),
+    createdAt: created(),
+  },
+  (t) => [uniqueIndex("redeem_appt_idx").on(t.appointmentId), index("redeem_promo_idx").on(t.promotionId)],
+);
+
+/** Homepage campaign slider. Hidden when there is no active slide. */
+export const campaigns = mysqlTable("campaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  titleNl: varchar("title_nl", { length: 140 }).notNull(),
+  titleEn: varchar("title_en", { length: 140 }).notNull(),
+  textNl: varchar("text_nl", { length: 400 }).notNull().default(""),
+  textEn: varchar("text_en", { length: 400 }).notNull().default(""),
+  ctaNl: varchar("cta_nl", { length: 60 }).notNull().default(""),
+  ctaEn: varchar("cta_en", { length: 60 }).notNull().default(""),
+  /** Internal path only (validated). */
+  href: varchar("href", { length: 200 }).notNull().default(""),
+  mediaId: int("media_id"),
+  startsAt: ts("starts_at"),
+  endsAt: ts("ends_at"),
+  status: varchar("status", { length: 10 }).notNull().default("draft"), // draft | active | archived
+  sort: int("sort").notNull().default(0),
+  createdAt: created(),
+  updatedAt: updated(),
+});
+
+// ───────────────────────────────────────────── Products, protocols, stock
+
+export const products = mysqlTable("products", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 160 }).notNull(),
+  brand: varchar("brand", { length: 80 }).notNull().default(""),
+  variant: varchar("variant", { length: 120 }).notNull().default(""),
+  category: varchar("category", { length: 40 }).notNull().default("other"),
+  mediaId: int("media_id"),
+  description: text("description"),
+  /** How the owner actually uses it (only what was verified). */
+  usage: text("usage"),
+  notes: text("notes"),
+  professionalOnly: boolean("professional_only").notNull().default(false),
+  supplier: varchar("supplier", { length: 160 }).notNull().default(""),
+  costCents: int("cost_cents"),
+  stockQty: int("stock_qty"),
+  reorderLevel: int("reorder_level"),
+  batch: varchar("batch", { length: 60 }).notNull().default(""),
+  expiresOn: date("expires_on", { mode: "string" }),
+  status: varchar("status", { length: 10 }).notNull().default("active"), // active | archived
+  /** Optional public "Producten & verzorging" listing (off by default). */
+  showPublic: boolean("show_public").notNull().default(false),
+  createdAt: created(),
+  updatedAt: updated(),
+});
+
+/** Internal treatment protocol: ordered steps, optionally with products. */
+export const protocols = mysqlTable("protocols", {
+  treatmentId: varchar("treatment_id", { length: 60 }).primaryKey(),
+  steps: json("steps").notNull(),
+  notes: text("notes"),
+  userId: int("user_id"),
+  updatedAt: updated(),
+});
+
+export const stockMovements = mysqlTable(
+  "stock_movements",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    productId: int("product_id").notNull(),
+    quantity: int("quantity").notNull(),
+    reason: varchar("reason", { length: 20 }).notNull(), // purchase | used | correction | expired
+    appointmentId: int("appointment_id"),
+    note: varchar("note", { length: 300 }),
+    userId: int("user_id"),
+    createdAt: created(),
+  },
+  (t) => [index("stock_product_idx").on(t.productId, t.createdAt)],
+);
+
+// ───────────────────────────────────────────────────────────── Expenses
+
+export const expenses = mysqlTable(
+  "expenses",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    spentOn: date("spent_on", { mode: "string" }).notNull(),
+    category: varchar("category", { length: 40 }).notNull(),
+    vendor: varchar("vendor", { length: 160 }).notNull().default(""),
+    description: varchar("description", { length: 300 }).notNull().default(""),
+    /** Gross amount (incl. VAT) in cents. */
+    amountCents: int("amount_cents").notNull(),
+    vatRateBp: int("vat_rate_bp"),
+    vatCents: int("vat_cents"),
+    status: varchar("status", { length: 10 }).notNull().default("paid"), // paid | open | void
+    notes: text("notes"),
+    userId: int("user_id"),
+    createdAt: created(),
+    updatedAt: updated(),
+  },
+  (t) => [index("exp_date_idx").on(t.spentOn)],
+);
+
+/** Receipts are private files: stored in the database, never under /media. */
+export const expenseReceipts = mysqlTable(
+  "expense_receipts",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    expenseId: int("expense_id").notNull(),
+    filename: varchar("filename", { length: 160 }).notNull(),
+    mime: varchar("mime", { length: 60 }).notNull(),
+    size: int("size").notNull(),
+    sha256: varchar("sha256", { length: 64 }).notNull(),
+    data: longblob("data").notNull(),
+    createdAt: created(),
+  },
+  (t) => [index("receipt_exp_idx").on(t.expenseId)],
 );

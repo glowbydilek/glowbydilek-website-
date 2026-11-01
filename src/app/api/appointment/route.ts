@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
-import { allTreatments } from "@/content/treatments";
+import { getCatalogue, publicItems } from "@/lib/catalogue";
+import { ensureContent } from "@/lib/cms/store";
 import { handleForm } from "@/lib/forms/handler";
 import { validateAppointment, type AppointmentInput } from "@/lib/forms/validation";
 import { appointmentCustomerMail, appointmentOwnerMail } from "@/lib/mail/templates";
@@ -9,14 +10,9 @@ import { databaseConfigured, getDb } from "@/lib/db/client";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const treatments = allTreatments();
-const ids = treatments.map((t) => t.id);
-
 function names(d: AppointmentInput, locale: "nl" | "en" = d.locale): string[] {
-  return d.treatments.map((id) => {
-    const t = treatments.find((x) => x.id === id);
-    return t ? t.name[locale] : id;
-  });
+  const items = getCatalogue().items;
+  return d.treatments.map((id) => items.find((x) => x.id === id)?.name[locale] ?? id);
 }
 
 /**
@@ -24,7 +20,10 @@ function names(d: AppointmentInput, locale: "nl" | "en" = d.locale): string[] {
  * customer. It does not reserve or confirm anything — there is no scheduling
  * system yet (see docs/ARCHITECTURE.md).
  */
-export function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
+  await ensureContent();
+  // Only published treatments and packages can be requested.
+  const ids = publicItems().map((t) => t.id);
   return handleForm(req, {
     kind: "appointment",
     validate: (raw) => validateAppointment(raw, ids),

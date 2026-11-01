@@ -34,6 +34,7 @@ export const localeLabels: Record<Locale, { short: string; long: string; hrefLan
 
 export const routeKeys = [
   "home",
+  "services",
   "treatments",
   "prices",
   "about",
@@ -50,6 +51,7 @@ export type RouteKey = (typeof routeKeys)[number];
 
 export const routes: Record<RouteKey, Record<Locale, string>> = {
   home: { nl: "/", en: "/en" },
+  services: { nl: "/behandelingen", en: "/en/treatments" },
   treatments: { nl: "/waxbehandelingen", en: "/en/waxing-treatments" },
   prices: { nl: "/prijzen", en: "/en/prices" },
   about: { nl: "/over-dilek", en: "/en/about-dilek" },
@@ -87,7 +89,7 @@ export function treatmentHref(locale: Locale, id: TreatmentId): string {
  * Booking page with the treatment preselected in the request form. No hash:
  * the page opens at the top and the selection is shown in the hero.
  */
-export function bookingHref(locale: Locale, treatment?: TreatmentId): string {
+export function bookingHref(locale: Locale, treatment?: TreatmentId | string): string {
   const base = routes.booking[locale];
   return treatment ? `${base}?${bookingParam[locale]}=${encodeURIComponent(treatment)}` : base;
 }

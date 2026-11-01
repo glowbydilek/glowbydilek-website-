@@ -390,3 +390,32 @@ export async function mergeCustomersAction(_: FormState, f: FormData): Promise<F
   refresh();
   redirect(`/agenda/klanten/${intoId}?samengevoegd=1`);
 }
+
+// ───────────────────────────────────────────── Price proposals ("op aanvraag")
+
+export async function sendQuoteAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const amountCents = parseEuroToCents(str(f, "amount"));
+  if (amountCents === null || amountCents <= 0) return { error: "Vul een geldig bedrag in (bijv. 65 of 72,50)." };
+  const { QuoteError, sendQuote } = await import("../booking/quotes");
+  try {
+    await sendQuote(getDb(), id, { amountCents, message: str(f, "message"), validDays: Number(str(f, "days") || 7) }, { userId: s.user.id });
+  } catch (err) {
+    if (err instanceof QuoteError) return { error: err.message };
+    return fail(err);
+  }
+  await audit(getDb(), { userId: s.user.id, action: "quote.sent", entity: "appointment", entityId: String(id), details: { amountCents } });
+  await deliverSoon(getDb());
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=offerte`);
+}
+
+export async function withdrawQuoteAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const { withdrawQuote } = await import("../booking/quotes");
+  await withdrawQuote(getDb(), id, s.user.id);
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=ingetrokken`);
+}

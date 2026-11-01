@@ -4,7 +4,7 @@ import { draftMode } from "next/headers";
 import { cache } from "react";
 import { currentSession } from "../auth/session";
 import { databaseConfigured, getDb } from "../db/client";
-import { contentEntries, media, treatments } from "../db/schema";
+import { contentEntries, media, packageItems, serviceGroups, serviceSections, treatments } from "../db/schema";
 import { EMPTY_SNAPSHOT, setSnapshotResolver, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
 
 /**
@@ -46,6 +46,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
   }
   const trows = await db.select().from(treatments);
   const tmap = new Map<string, TreatmentLive>(trows.map((t) => [t.id, { ...t }]));
+  const [sections, groups, parts] = await Promise.all([db.select().from(serviceSections), db.select().from(serviceGroups), db.select().from(packageItems)]);
   const photoMap = (docs.get("photos|all") ?? {}) as Record<string, number>;
   const ids = Object.values(photoMap).filter((n) => Number.isInteger(n));
   const photos = new Map<string, PhotoOverride>();
@@ -56,7 +57,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
       if (m) photos.set(slot, { mediaId: m.id, version: m.updatedAt.getTime(), width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
     }
   }
-  return { docs, treatments: tmap, photos, preview: status === "draft", version: cacheState.version };
+  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**

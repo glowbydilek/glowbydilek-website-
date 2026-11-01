@@ -10,6 +10,11 @@ export const nl = {
   meta: {
     tagline: "Professional waxing",
     pages: {
+      services: {
+        title: "Alle behandelingen",
+        description:
+          "Alle behandelingen van Glow by Dilek op één plek: waxen en — zodra beschikbaar — gezichts- en lichaamsbehandelingen, massages en pakketten. Uitsluitend op afspraak.",
+      },
       home: {
         title: "Glow by Dilek — Waxstudio op afspraak",
         description:
@@ -51,6 +56,8 @@ export const nl = {
     },
   },
   nav: {
+    services: "Alle behandelingen",
+    waxingTeaser: "Gezicht, lichaam en bikinizone",
     home: "Home",
     treatments: "Behandelingen",
     prices: "Tarieven",
@@ -271,6 +278,7 @@ export const nl = {
     ],
   },
   treatments: {
+    count: "{n} behandeling(en)",
     hero: {
       eyebrow: "Behandelingen",
       title: "Waxen met aandacht,",
@@ -591,6 +599,32 @@ export const nl = {
       },
     ],
   },
+  quote: {
+    eyebrow: "Prijsvoorstel",
+    title: "Je persoonlijke prijsvoorstel",
+    hello: "Hoi {name}, hieronder staat het prijsvoorstel voor je aanvraag.",
+    treatment: "Behandeling",
+    moment: "Moment",
+    price: "Prijs",
+    inclVat: "incl. btw",
+    validUntil: "Geldig t/m",
+    explain: "Ga je akkoord, dan wordt dit de afgesproken prijs voor je afspraak. Er wordt online niets afgeschreven; je betaalt bij de afspraak.",
+    accept: "Ik ga akkoord",
+    decline: "Nee, liever niet",
+    pending: "Bezig…",
+    accepted: "Dank je wel! Je hebt het voorstel geaccepteerd. Je ontvangt een bevestiging per e-mail.",
+    declined: "Je hebt het voorstel afgewezen. Dilek neemt eventueel persoonlijk contact met je op.",
+    notFound: "Deze link is niet (meer) geldig. Neem gerust contact op als je vragen hebt.",
+    questions: "Vragen over dit voorstel?",
+    state: { accepted: "Dit voorstel is al geaccepteerd.", declined: "Dit voorstel is afgewezen.", withdrawn: "Dit voorstel is ingetrokken of vervangen door een nieuw voorstel.", expired: "Dit voorstel is verlopen. Neem contact op voor een nieuw voorstel." },
+    errors: {
+      expired: "Dit voorstel is inmiddels verlopen.",
+      answered: "Op dit voorstel is al gereageerd, of het is vervangen.",
+      notFound: "Deze link is niet (meer) geldig.",
+      rateLimited: "Te veel pogingen. Probeer het over een paar minuten opnieuw.",
+      unavailable: "Er ging iets mis. Probeer het later opnieuw of mail ons.",
+    },
+  },
   footer: {
     follow: "Volg Glow by Dilek",
     login: "Inloggen",
@@ -623,6 +657,9 @@ export const nl = {
     otherAreas: "Andere zones",
     price: "Tarief",
     priceOnRequest: "Op aanvraag",
+    duration: "Duur",
+    minutes: "{n} minuten",
+    included: "Inbegrepen in dit pakket",
     readPreparation: "Volledige voorbereiding",
     readAftercare: "Alle nazorgtips",
     readProcess: "Hoe werkt een afspraak?",

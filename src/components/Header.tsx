@@ -87,9 +87,10 @@ export function Header({
     setMega(false);
   };
   const treatmentsBase = href(locale, "treatments");
+  const catalogueRoots = [treatmentsBase, nav.allHref, ...nav.categories.map((c) => c.href)];
   const isActive = (target: string) =>
     target === treatmentsBase
-      ? pathname === target || pathname.startsWith(`${target}/`)
+      ? catalogueRoots.some((r) => pathname === r || pathname.startsWith(`${r}/`))
       : pathname === target;
   const navLinkCls = (active: boolean) =>
     `relative inline-flex min-h-11 items-center gap-1.5 px-3 text-[0.95rem] transition-colors duration-300 ${
@@ -214,7 +215,10 @@ export function Header({
           id="mega-menu"
           className="absolute inset-x-0 top-full hidden border-b border-line bg-paper shadow-[var(--shadow-soft)] lg:block"
         >
-          <div className="mx-auto grid max-w-[88rem] grid-cols-[repeat(3,1fr)_0.9fr] gap-10 px-12 py-10">
+          <div
+            className="mx-auto grid max-w-[88rem] gap-10 px-12 py-10"
+            style={{ gridTemplateColumns: `repeat(${Math.max(1, nav.categories.length)}, minmax(0, 1fr)) 0.9fr` }}
+          >
             {nav.categories.map((c) => (
               <div key={c.href}>
                 <Link
@@ -263,7 +267,7 @@ export function Header({
                 ))}
               </ul>
               <Link
-                href={treatmentsBase}
+                href={nav.allHref}
                 onClick={close}
                 className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-deep hover:text-ink"
               >

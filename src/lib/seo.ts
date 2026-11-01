@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { publishedCategories } from "@/content/services";
 import { siteConfig } from "@/content/site";
-import { liveTreatment, treatmentGroups } from "@/content/treatments";
+import { publicItems, publicSections } from "@/lib/catalogue";
 import { categoryCopy, faqPageCopy, guideCopy, treatmentCopy } from "@/content/copy";
 import { override } from "@/lib/cms/current";
 import type { CategoryId, TreatmentId } from "@/content/slugs";
@@ -168,22 +167,22 @@ export function businessJsonLd(locale: Locale) {
 
 /** Service + catalogue of published treatments (prices only when confirmed). */
 export function serviceJsonLd(locale: Locale) {
-  const categories = publishedCategories();
+  const sections = publicSections();
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    serviceType: categories.map((c) => c.name[locale]).join(", "),
+    serviceType: sections.map((c) => c.name[locale]).join(", "),
     provider: { "@id": `${siteConfig.url}/#business` },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
-      name: categories.map((c) => c.name[locale]).join(", "),
-      itemListElement: treatmentGroups.map((g) => ({
+      name: sections.map((c) => c.name[locale]).join(", "),
+      itemListElement: sections.map((sec) => ({
         "@type": "OfferCatalog",
-        name: g.name[locale],
-        itemListElement: g.treatments.map((t) => ({
+        name: sec.name[locale],
+        itemListElement: publicItems({ sectionId: sec.id }).map((t) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: t.name[locale], description: t.description[locale] },
-          ...(liveTreatment(t.id).price ? { price: liveTreatment(t.id).price!.amount, priceCurrency: "EUR" } : {}),
+          ...(t.pricing.mode === "fixed" && t.pricing.cents != null ? { price: (t.pricing.cents / 100).toFixed(2), priceCurrency: "EUR" } : {}),
         })),
       })),
     },

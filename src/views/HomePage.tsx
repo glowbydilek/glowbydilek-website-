@@ -14,19 +14,67 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { mailto, siteConfig } from "@/content/site";
 import { treatmentGroups } from "@/content/treatments";
+import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
-import { categoryCopy } from "@/content/copy";
-import type { TreatmentId } from "@/content/slugs";
-import { categoryHref, href, type Locale } from "@/i18n/config";
+import { groupCopy, sectionCopy } from "@/content/copy";
+import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
 
-const featured: TreatmentId[] = ["eyebrows", "underarms", "full-legs", "brazilian"];
+const defaultFeatured = ["eyebrows", "underarms", "full-legs", "brazilian"];
+
+/**
+ * Service discovery rows: the published sections once there are several
+ * (waxing, facial, body, massage, packages); with waxing alone, its zones.
+ */
+function discovery(locale: Locale) {
+  const sections = publicSections();
+  if (sections.length > 1) {
+    return sections.map((sec) => {
+      const items = publicItems({ sectionId: sec.id });
+      const c = sec.id === "waxing" ? null : sectionCopy(locale, sec.id, sec.name[locale]);
+      return {
+        id: sec.id,
+        photo: sec.photo,
+        label: sec.name[locale],
+        intro: c ? c.hero.subtitle : getDictionary(locale).nav.waxingTeaser,
+        href: sec.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, sec),
+        names: items.map((i) => i.name[locale]),
+      };
+    });
+  }
+  return sections.flatMap((sec) =>
+    publicGroups(sec.id).map((g) => {
+      const b = treatmentGroups.find((x) => x.id === g.id);
+      const c = groupCopy(locale, g.id, g.name[locale]);
+      return {
+        id: g.id,
+        photo: g.photo,
+        label: c.label,
+        intro: b?.intro[locale] ?? c.teaser,
+        href: groupHref(locale, g),
+        names: publicItems({ sectionId: sec.id, groupId: g.id }).map((i) => i.name[locale]),
+      };
+    }),
+  );
+}
+
+/** Owner-featured items (Admin → Behandelingen), else a calm default selection. */
+function featuredIds(): string[] {
+  const owner = publicItems().filter((i) => i.featured).map((i) => i.id);
+  const list = owner.length ? owner : defaultFeatured.filter((id) => {
+    const i = itemById(id);
+    return i && isPublicItem(i);
+  });
+  return list.slice(0, 4);
+}
 
 export function HomePage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.home;
   const faqs = dict.faq.general.slice(0, 6);
+  const rows = discovery(locale);
+  const featured = featuredIds();
 
   const sections: Record<string, ReactNode> = {
     hero: (
@@ -103,10 +151,10 @@ export function HomePage({ locale }: { locale: Locale }) {
               </div>
             </div>
             <ol className="mt-block border-t border-line">
-              {treatmentGroups.map((g, i) => (
+              {rows.map((g, i) => (
                 <li key={g.id} className="border-b border-line" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
                   <Link
-                    href={categoryHref(locale, g.id)}
+                    href={g.href}
                     className="group grid gap-4 py-7 transition-colors duration-500 hover:bg-surface sm:px-4 md:grid-cols-[4rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-8"
                   >
                     {hasPhoto(g.photo) ? (
@@ -117,18 +165,18 @@ export function HomePage({ locale }: { locale: Locale }) {
                       <span className="font-serif text-4xl italic text-accent-deep">0{i + 1}</span>
                     )}
                     <div>
-                      <h3 className="font-serif text-[2rem] leading-none text-ink sm:text-[2.4rem]">{categoryCopy(locale, g.id).label}</h3>
+                      <h3 className="font-serif text-[2rem] leading-none text-ink sm:text-[2.4rem]">{g.label}</h3>
                       <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted">
-                        {g.treatments.length} {t.treatments.count}
+                        {g.names.length} {t.treatments.count}
                       </p>
                     </div>
                     <div>
-                      <p className="leading-relaxed text-ink-soft">{g.intro[locale]}</p>
-                      <p className="mt-3 text-sm text-muted">{g.treatments.map((tr) => tr.name[locale]).join(" · ")}</p>
+                      <p className="leading-relaxed text-ink-soft">{g.intro}</p>
+                      <p className="mt-3 text-sm text-muted">{g.names.join(" · ")}</p>
                     </div>
                     <span className="flex h-12 w-12 items-center justify-center justify-self-start rounded-full border border-ink/20 text-ink transition-all duration-500 group-hover:border-ink group-hover:bg-ink group-hover:text-paper md:justify-self-end">
                       <span className="sr-only">
-                        {t.treatments.more}: {categoryCopy(locale, g.id).label}
+                        {t.treatments.more}: {g.label}
                       </span>
                       <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:-rotate-45" />
                     </span>
