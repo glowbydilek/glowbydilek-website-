@@ -134,7 +134,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
             {/* Discreet owner entrance; the private areas are noindex and login-protected.
                 A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/login" rel="nofollow" className="inline-flex min-h-10 items-center text-paper/45 hover:text-glow sm:min-h-0">
+            <a href="/login" rel="nofollow" className="inline-flex min-h-10 items-center text-paper/60 hover:text-glow sm:min-h-0">
               {dict.footer.login}
             </a>
           </div>

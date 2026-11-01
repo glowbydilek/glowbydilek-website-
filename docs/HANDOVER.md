@@ -56,9 +56,20 @@ Legend: ✅ yes · — not applicable · ❌ not yet
 
 "Tested in preview": the Hostinger PR preview host cannot be reached from this environment, so preview checks are for the owner.
 
-## 4. Test results (actual)
+## 4. Test results (actual, 1 November 2026)
 
-See the PR description for the final numbers of this run: unit/integration tests with MariaDB, the owner journey (e2e-private), navigation e2e, site crawl, accessibility (axe) and overflow checks at 320–1920 px, migration upgrade and fresh-install tests, and Lighthouse.
+| Check | Result |
+| --- | --- |
+| `npm run lint`, `npm run typecheck` | clean |
+| `npm test` with MariaDB | **147/147** (catalogue visibility & slugs, pricing rules, packages, quotes, promotions, VAT per line, discount allocation, expenses, receipts, CSV, automation, products, profile, legal + all earlier suites) |
+| Owner journey in the browser (`e2e-private`) | **28/28** — incl. `/login` chooser, `/ajanda` redirect, publish/unpublish a draft, price proposal accepted via the emailed link, promotion + slider, expense with receipt + CSV |
+| Navigation (`e2e-navigation`) | 11/11 (pages open at the top on mobile and desktop) |
+| Site crawl (`check-site`) | 58 pages / 85 links (default) · 90 pages / 139 links with every draft published locally — all passed |
+| Accessibility (axe, WCAG 2.1 AA) | Private: 0 violations on 48 screens at 9 widths. Public: footer "Inloggen" contrast found and fixed; recheck 0 violations |
+| Horizontal overflow, 320–1920 px | Two issues found (long select in Producten, Tarieven heading at 320–375 px) and fixed; recheck clean |
+| Lighthouse (mobile emulation, local server) | Accessibility, Best practices, SEO **100** on home, tarieven, gezichtsbehandelingen, afspraak-maken. Performance **73–98** (LCP 2.2–4.9 s, CLS ≤ 0.001); runs vary strongly in this shared container — measure again on Hostinger |
+| Migration 0002 | Upgrade of a 0001 database with data: counts, amounts and invoice PDF hash identical. Fresh database: 47 tables |
+| `npm audit --omit=dev` | 0 vulnerabilities |
 
 ## 5. Data safety
 
