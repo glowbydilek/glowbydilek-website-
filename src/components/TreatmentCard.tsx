@@ -2,7 +2,7 @@ import Link from "next/link";
 import { treatmentCopy } from "@/content/copy";
 import { hasPhoto } from "@/content/media";
 import type { TreatmentId } from "@/content/slugs";
-import { findTreatmentById, formatPrice, pricesPublished } from "@/content/treatments";
+import { findTreatmentById, formatPrice, liveTreatment } from "@/content/treatments";
 import { bookingHref, treatmentHref, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Icon } from "./ui/Icon";
@@ -16,7 +16,8 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
   const dict = getDictionary(locale);
   const { treatment } = findTreatmentById(id);
   const copy = treatmentCopy(locale, id);
-  const price = pricesPublished && treatment.price ? formatPrice(treatment.price.amount, locale) : null;
+  const live = liveTreatment(id);
+  const price = live.price ? `${live.price.from ? `${dict.prices.from} ` : ""}${formatPrice(live.price.amount, locale)}` : null;
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-stone bg-ivory-50 transition-shadow duration-500 hover:shadow-card">
       {withPhoto && hasPhoto(treatment.photo) && (
@@ -27,7 +28,7 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <h3 className="font-serif text-[1.6rem] leading-tight text-charcoal">
           <Link href={treatmentHref(locale, id)} className="after:absolute after:inset-0 after:content-['']">
-            {treatment.name[locale]}
+            {live.name[locale]}
           </Link>
         </h3>
         <p className="mt-2 flex-1 leading-relaxed text-charcoal-soft">{copy.teaser}</p>

@@ -42,6 +42,8 @@ const securityHeaders = [
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Media uploads in the admin (images up to 12 MB) are sent through Server Actions.
+  experimental: { serverActions: { bodySizeLimit: "14mb" } },
   poweredByHeader: false,
   /**
    * Convenience redirects for short or guessable URLs. No existing page URL
@@ -61,7 +63,19 @@ const nextConfig = {
     ];
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    const privateHeaders = [
+      { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+      { key: "Cache-Control", value: "private, no-store, max-age=0" },
+      { key: "Referrer-Policy", value: "no-referrer" },
+    ];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/admin/:path*", headers: privateHeaders },
+      { source: "/admin", headers: privateHeaders },
+      { source: "/ajanda/:path*", headers: privateHeaders },
+      { source: "/ajanda", headers: privateHeaders },
+      { source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }, { key: "Cache-Control", value: "no-store" }] },
+    ];
   },
 };
 

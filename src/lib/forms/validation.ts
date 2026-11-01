@@ -183,3 +183,45 @@ export function isLikelySpam(raw: Record<string, unknown>): boolean {
 export function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
+
+export type BookingRequestInput = {
+  locale: Locale;
+  treatments: string[];
+  date: string;
+  time: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  note?: string;
+};
+
+/** Availability-aware booking request (exact time). First/last name, email and phone are required. */
+export function validateBookingRequest(raw: Record<string, unknown>, allowedTreatments: readonly string[], today: string = amsterdamToday()): Result<BookingRequestInput> {
+  const errors: FieldErrors = {};
+  const treatments = Array.isArray(raw.treatments)
+    ? [...new Set(raw.treatments.filter((t): t is string => typeof t === "string" && allowedTreatments.includes(t)))]
+    : [];
+  const date = text(raw.date, 10);
+  const time = text(raw.time, 5);
+  const firstName = text(raw.firstName, 60);
+  const lastName = text(raw.lastName, 80);
+  const email = text(raw.email, 160).toLowerCase();
+  const phone = text(raw.phone, 20);
+  const note = text(raw.note, 1000, false);
+  if (!treatments.length) errors.treatments = "required";
+  if (!DATE.test(date) || addDays(date, 0) !== date) errors.date = "invalid";
+  else if (date < today) errors.date = "pastDate";
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) errors.time = "invalid";
+  if (!firstName) errors.firstName = "required";
+  else if (firstName.length > 60) errors.firstName = "tooLong";
+  if (!lastName) errors.lastName = "required";
+  else if (lastName.length > 80) errors.lastName = "tooLong";
+  checkEmail(email, errors);
+  if (!phone) errors.phone = "required";
+  else checkPhone(phone, errors);
+  if (note.length > 1000) errors.note = "tooLong";
+  if (raw.privacy !== true) errors.privacy = "consent";
+  if (Object.keys(errors).length) return { ok: false, errors };
+  return { ok: true, data: { locale: locale(raw.locale), treatments, date, time, firstName, lastName, email, phone, note: note || undefined } };
+}

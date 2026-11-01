@@ -2,6 +2,7 @@ import type { Locale } from "@/i18n/config";
 import type { PhotoId } from "./media";
 import type { ServiceCategoryId } from "./services";
 import type { CategoryId, TreatmentId } from "./slugs";
+import { currentSnapshot } from "../lib/cms/current";
 
 /**
  * Treatment catalogue (currently: waxing).
@@ -226,7 +227,8 @@ export function formatPrice(amount: number, locale: Locale): string {
   return new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 
@@ -244,4 +246,47 @@ export function findTreatmentById(id: TreatmentId): { treatment: Treatment; grou
     if (treatment) return { treatment, group };
   }
   throw new Error(`Unknown treatment ${id}`);
+}
+
+/**
+ * Treatment data as the owner manages it in the admin (prices, durations,
+ * visibility, names), falling back to the built-in catalogue. Prices and
+ * durations only appear once the owner has entered them.
+ */
+export function liveTreatment(id: TreatmentId): {
+  name: Localised;
+  description: Localised;
+  price: { amount: number; from: boolean } | null;
+  durationMinutes: number | null;
+  visible: boolean;
+  featured: boolean;
+} {
+  const base = findTreatmentById(id).treatment;
+  const t = currentSnapshot().treatments.get(id);
+  if (!t) {
+    return {
+      name: base.name,
+      description: base.description,
+      price: pricesPublished && base.price ? { amount: base.price.amount, from: Boolean(base.price.from) } : null,
+      durationMinutes: pricesPublished ? (base.durationMinutes ?? null) : null,
+      visible: true,
+      featured: false,
+    };
+  }
+  return {
+    name: { nl: t.nameNl || base.name.nl, en: t.nameEn || base.name.en },
+    description: { nl: t.descriptionNl || base.description.nl, en: t.descriptionEn || base.description.en },
+    price: t.priceCents != null ? { amount: t.priceCents / 100, from: t.priceFrom } : null,
+    durationMinutes: t.durationMinutes,
+    visible: t.visible && t.active,
+    featured: t.featured,
+  };
+}
+
+/** True when at least one visible treatment has a confirmed price. */
+export function anyPricePublished(): boolean {
+  return allTreatments().some((t) => {
+    const l = liveTreatment(t.id);
+    return l.visible && l.price !== null;
+  });
 }

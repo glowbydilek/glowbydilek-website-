@@ -66,12 +66,12 @@ test("language switch lands on the equivalent page for every page", () => {
   assert.equal(alternatePath("/afspraak-maken?behandeling=brazilian", "en"), "/en/book-appointment");
 });
 
-test("booking links preselect the treatment and jump to the form", () => {
+test("booking links preselect the treatment and never carry a hash (page opens at the top)", () => {
   for (const id of treatmentIds) {
-    assert.equal(bookingHref("nl", id), `/afspraak-maken?${bookingParam.nl}=${id}#aanvraag`);
-    assert.equal(bookingHref("en", id), `/en/book-appointment?${bookingParam.en}=${id}#aanvraag`);
+    assert.equal(bookingHref("nl", id), `/afspraak-maken?${bookingParam.nl}=${id}`);
+    assert.equal(bookingHref("en", id), `/en/book-appointment?${bookingParam.en}=${id}`);
   }
-  assert.equal(bookingHref("nl"), "/afspraak-maken#aanvraag");
+  assert.equal(bookingHref("nl"), "/afspraak-maken");
 });
 
 test("educational pages exist in both languages", () => {
@@ -82,8 +82,8 @@ test("educational pages exist in both languages", () => {
   assert.equal(routes.process.en, "/en/appointment-process");
 });
 
-test("sitemap lists every page in both languages with hreflang alternates", () => {
-  const entries = sitemap();
+test("sitemap lists every page in both languages with hreflang alternates", async () => {
+  const entries = await sitemap();
   assert.equal(entries.length, allPages().length * 2);
   for (const e of entries) {
     assert.ok(e.url.startsWith("https://"), e.url);

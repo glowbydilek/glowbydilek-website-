@@ -1,0 +1,139 @@
+"use client";
+
+import Link from "next/link";
+import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { cloneElement, isValidElement, useId } from "react";
+import { useFormStatus } from "react-dom";
+
+/** Small UI kit for the private areas (admin and agenda): clear, calm, large touch targets. */
+
+const btnBase =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+const btnVariants = {
+  primary: "bg-charcoal text-ivory hover:bg-charcoal-soft",
+  gold: "bg-gold text-charcoal hover:bg-gold-light",
+  outline: "border border-charcoal/25 text-charcoal hover:border-charcoal hover:bg-charcoal/5",
+  danger: "bg-[#8e2f24] text-white hover:bg-[#74261d]",
+  ghost: "text-charcoal hover:bg-charcoal/6",
+};
+export type BtnVariant = keyof typeof btnVariants;
+
+export function btnClass(variant: BtnVariant = "primary", extra = "") {
+  return `${btnBase} ${btnVariants[variant]} ${extra}`;
+}
+
+export function Button({ variant = "primary", className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: BtnVariant }) {
+  return <button {...rest} className={btnClass(variant, className)} />;
+}
+
+export function SubmitButton({ children, pending, variant = "primary", className = "", confirm, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { pending?: string; variant?: BtnVariant; confirm?: string }) {
+  const { pending: busy } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      {...rest}
+      disabled={busy || rest.disabled}
+      onClick={(e) => {
+        if (confirm && !window.confirm(confirm)) e.preventDefault();
+        rest.onClick?.(e);
+      }}
+      className={btnClass(variant, className)}
+    >
+      {busy ? (pending ?? "Bezig…") : children}
+    </button>
+  );
+}
+
+export function LinkButton({ href, variant = "outline", children, className = "" }: { href: string; variant?: BtnVariant; children: ReactNode; className?: string }) {
+  return (
+    <Link href={href} className={btnClass(variant, className)}>
+      {children}
+    </Link>
+  );
+}
+
+export function Field({ label, hint, error, children, htmlFor }: { label: string; hint?: string; error?: string; children: ReactNode; htmlFor?: string }) {
+  // Links the label to its control automatically (accessible name), unless the caller passes htmlFor.
+  const auto = useId();
+  let id = htmlFor;
+  let control = children;
+  if (!id && isValidElement<{ id?: string }>(children)) {
+    id = children.props.id ?? auto;
+    if (!children.props.id) control = cloneElement(children, { id });
+  }
+  return (
+    <div className="min-w-0 space-y-1.5">
+      <label htmlFor={id} className="block text-sm font-medium text-charcoal">
+        {label}
+      </label>
+      {control}
+      {hint && !error && <p className="text-xs text-muted">{hint}</p>}
+      {error && <p className="text-sm text-[#8e2f24]">{error}</p>}
+    </div>
+  );
+}
+
+const inputCls =
+  "block w-full rounded-xl border border-charcoal/20 bg-white px-3.5 py-2.5 text-base text-charcoal shadow-sm outline-none transition focus:border-gold-deep focus:ring-2 focus:ring-gold/40 disabled:bg-stone-light";
+
+export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
+  return <input {...props} className={`${inputCls} ${props.className ?? ""}`} />;
+}
+export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return <textarea {...props} className={`${inputCls} ${props.className ?? ""}`} />;
+}
+export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
+  return <select {...props} className={`${inputCls} ${props.className ?? ""}`} />;
+}
+
+export function Card({ children, className = "", title, actions }: { children: ReactNode; className?: string; title?: string; actions?: ReactNode }) {
+  return (
+    <section className={`min-w-0 rounded-2xl border border-stone bg-white p-4 shadow-sm sm:p-6 ${className}`}>
+      {(title || actions) && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          {title && <h2 className="font-serif text-2xl text-charcoal">{title}</h2>}
+          {actions}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+export function Notice({ tone = "info", children }: { tone?: "info" | "success" | "error" | "warning"; children: ReactNode }) {
+  const tones = {
+    info: "border-stone bg-ivory-50 text-charcoal",
+    success: "border-[#5c7f5a]/40 bg-[#eef4ec] text-[#2f4b2d]",
+    error: "border-[#8e2f24]/30 bg-[#fbeeec] text-[#74261d]",
+    warning: "border-gold/60 bg-[#fbf3e4] text-[#5a4320]",
+  };
+  return (
+    <div role={tone === "error" ? "alert" : "status"} className={`rounded-xl border px-4 py-3 text-sm leading-relaxed ${tones[tone]}`}>
+      {children}
+    </div>
+  );
+}
+
+export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "pending" | "confirmed" | "cancelled" | "done" | "warning" }) {
+  const tones = {
+    neutral: "bg-stone-light text-charcoal",
+    pending: "bg-[#fbf0d9] text-[#6b4b12]",
+    confirmed: "bg-[#e3efe1] text-[#2f4b2d]",
+    cancelled: "bg-[#f6e1de] text-[#74261d]",
+    done: "bg-[#e6e9f2] text-[#2f3a5a]",
+    warning: "bg-[#fbe8d3] text-[#6b3a12]",
+  };
+  return <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>;
+}
+
+export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
+  return (
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 className="font-serif text-3xl leading-tight text-charcoal sm:text-4xl">{title}</h1>
+        {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted">{subtitle}</p>}
+      </div>
+      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    </div>
+  );
+}

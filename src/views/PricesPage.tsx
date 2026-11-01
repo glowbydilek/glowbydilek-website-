@@ -5,7 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { mailto } from "@/content/site";
-import { formatPrice, pricesPublished, treatmentGroups } from "@/content/treatments";
+import { anyPricePublished, formatPrice, liveTreatment, treatmentGroups } from "@/content/treatments";
 import { categoryHref, treatmentHref, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
@@ -46,22 +46,22 @@ export function PricesPage({ locale }: { locale: Locale }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {g.treatments.map((tr) => (
+                    {g.treatments.filter((tr) => liveTreatment(tr.id).visible).map((tr) => (
                       <tr key={tr.id} className="border-b border-charcoal/10">
                         <th scope="row" className="py-5 pr-4 align-top font-normal">
                           <Link href={treatmentHref(locale, tr.id)} className="block font-serif text-2xl text-charcoal underline-offset-4 hover:text-gold-deep hover:underline">
-                            {tr.name[locale]}
+                            {liveTreatment(tr.id).name[locale]}
                           </Link>
-                          <span className="mt-1 block text-sm leading-relaxed text-muted">{tr.description[locale]}</span>
+                          <span className="mt-1 block text-sm leading-relaxed text-muted">{liveTreatment(tr.id).description[locale]}</span>
                         </th>
                         <td className="whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted">
-                          {pricesPublished && tr.durationMinutes ? `${tr.durationMinutes} ${t.minutes}` : ""}
+                          {liveTreatment(tr.id).durationMinutes ? `${liveTreatment(tr.id).durationMinutes} ${t.minutes}` : ""}
                         </td>
                         <td className="whitespace-nowrap py-5 text-right align-top">
-                          {pricesPublished && tr.price ? (
+                          {liveTreatment(tr.id).price ? (
                             <span className="font-serif text-2xl text-charcoal">
-                              {tr.price.from && <span className="mr-1 font-sans text-sm text-muted">{t.from}</span>}
-                              {formatPrice(tr.price.amount, locale)}
+                              {liveTreatment(tr.id).price!.from && <span className="mr-1 font-sans text-sm text-muted">{t.from}</span>}
+                              {formatPrice(liveTreatment(tr.id).price!.amount, locale)}
                             </span>
                           ) : (
                             <span className="inline-block rounded-full bg-nude-light px-3 py-1 text-xs uppercase tracking-[0.14em] text-charcoal-soft">
@@ -78,7 +78,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
           </div>
 
           <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
-            {!pricesPublished && (
+            {!anyPricePublished() && (
               <div className="on-dark rounded-[1.75rem] bg-charcoal p-7 text-ivory sm:p-9" data-reveal>
                 <Icon name="mail" className="h-6 w-6 text-gold" />
                 <h2 className="mt-5 font-serif text-3xl text-ivory">{t.notice.title}</h2>

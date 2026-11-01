@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { ensureContent } from "@/lib/cms/store";
 import { PageFrame } from "@/components/PageFrame";
 import { pageMetadata } from "@/lib/seo";
 import { BookingPage } from "@/views/BookingPage";
 
-export const metadata: Metadata = pageMetadata("en", "booking");
+export async function generateMetadata(): Promise<Metadata> {
+  await ensureContent();
+  return pageMetadata("en", "booking");
+}
 
 export default function Page() {
   return (

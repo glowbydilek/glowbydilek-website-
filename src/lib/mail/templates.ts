@@ -10,14 +10,14 @@ const topicLabels: Record<ContactTopic, { nl: string; en: string }> = {
   other: { nl: "Overig", en: "Other" },
 };
 
-const timeLabels: Record<TimeRange, { nl: string; en: string }> = {
+export const timeLabels: Record<TimeRange, { nl: string; en: string }> = {
   morning: { nl: "Ochtend", en: "Morning" },
   afternoon: { nl: "Middag", en: "Afternoon" },
   evening: { nl: "Avond", en: "Evening" },
   flexible: { nl: "Flexibel", en: "Flexible" },
 };
 
-function formatDate(iso: string, locale: "nl" | "en"): string {
+export function formatDate(iso: string, locale: "nl" | "en"): string {
   const d = new Date(`${iso}T12:00:00Z`);
   return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", {
     weekday: "long",
@@ -29,7 +29,7 @@ function formatDate(iso: string, locale: "nl" | "en"): string {
 }
 
 /** Simple, robust HTML layout that renders well in all mail clients. */
-function layout(title: string, rows: [string, string][], intro?: string, outro?: string): string {
+export function layout(title: string, rows: [string, string][], intro?: string, outro?: string): string {
   const body = rows
     .map(
       ([k, v]) =>
@@ -50,13 +50,13 @@ ${outro ? `<p style="margin:24px 0 0;color:#292724;font-size:15px;line-height:1.
 </div></body></html>`;
 }
 
-function textBlock(title: string, rows: [string, string][], intro?: string, outro?: string): string {
+export function textBlock(title: string, rows: [string, string][], intro?: string, outro?: string): string {
   return [title, "", intro, intro ? "" : null, ...rows.map(([k, v]) => `${k}: ${v}`), outro ? "" : null, outro]
     .filter((l) => l !== null && l !== undefined)
     .join("\n");
 }
 
-function mail(subject: string, title: string, rows: [string, string][], intro?: string, outro?: string): Mail {
+export function mail(subject: string, title: string, rows: [string, string][], intro?: string, outro?: string): Mail {
   return { subject, text: textBlock(title, rows, intro, outro), html: layout(title, rows, intro, outro) };
 }
 

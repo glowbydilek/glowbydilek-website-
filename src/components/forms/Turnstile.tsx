@@ -51,11 +51,11 @@ export function Turnstile({
   labels,
 }: {
   siteKey: string;
-  action: "contact" | "appointment";
+  action: string;
   locale: "nl" | "en";
   resetKey: number;
   onToken: (token: string | null) => void;
-  labels: { title: string; loading: string; blocked: string; email: string };
+  labels: { title: string; loading: string; blocked: string; email: string; unavailable?: string };
 }) {
   const box = useRef<HTMLDivElement>(null);
   const widget = useRef<string | null>(null);
@@ -67,6 +67,7 @@ export function Turnstile({
   }, [onToken]);
 
   useEffect(() => {
+    if (!siteKey) return;
     let cancelled = false;
     loadTurnstile()
       .then((api) => {
@@ -103,6 +104,15 @@ export function Turnstile({
     }
   }, [resetKey]);
 
+  if (!siteKey) {
+    // Not configured on the server (production without live keys): be honest, offer email.
+    return (
+      <p role="alert" className="text-sm text-[#9b3b2f]">
+        {labels.unavailable ?? labels.blocked}{" "}
+        <a className="underline" href={`mailto:${labels.email}`}>{labels.email}</a>.
+      </p>
+    );
+  }
   return (
     <div role="group" aria-label={labels.title} className="min-h-[65px]">
       <div ref={box} />

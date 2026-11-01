@@ -37,7 +37,7 @@ export function LanguageSwitcher({
     if (!treatment) return;
     e.preventDefault();
     const key = target.startsWith("/en") ? "treatment" : "behandeling";
-    router.push(`${target}?${key}=${encodeURIComponent(treatment)}${window.location.hash}`);
+    router.push(`${target}?${key}=${encodeURIComponent(treatment)}`);
   };
 
   return (

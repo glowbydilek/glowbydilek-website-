@@ -2,10 +2,11 @@ import type { ReactNode } from "react";
 import { href, type Locale, type RouteKey } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { breadcrumbJsonLd, staticPageMeta, type Crumb } from "@/lib/seo";
+import { ensureContent } from "@/lib/cms/store";
 import { JsonLd } from "./JsonLd";
 
 /** Wraps a page with its breadcrumb structured data. */
-export function PageFrame({
+export async function PageFrame({
   locale,
   route,
   crumbs,
@@ -17,6 +18,7 @@ export function PageFrame({
   crumbs?: Crumb[];
   children: ReactNode;
 }) {
+  await ensureContent();
   const dict = getDictionary(locale);
   const trail: Crumb[] | null =
     crumbs ?? (route && route !== "home" ? [{ name: navLabel(locale, route), path: href(locale, route) }] : null);

@@ -21,7 +21,12 @@ export const TURNSTILE_TEST_SECRET = "1x0000000000000000000000000000000AA";
 export const TURNSTILE_DUMMY_TOKEN = "XXXX.DUMMY.TOKEN.XXXX";
 export const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
-export type TurnstileMode = "live" | "test";
+/**
+ * live    = real keys configured
+ * test    = Cloudflare test keys (development, CI, or explicitly allowed previews)
+ * missing = production without live keys: public forms refuse submissions
+ */
+export type TurnstileMode = "live" | "test" | "missing";
 export type TurnstileConfig = { secret: string; mode: TurnstileMode; hostnames: string[]; verifyUrl: string };
 
 export type TurnstileFailure = "missing" | "invalid" | "expired" | "replayed" | "hostname" | "action" | "unavailable";
@@ -44,15 +49,44 @@ export function turnstileConfig(env: Record<string, string | undefined> = proces
   const fromEnv = env.TURNSTILE_ALLOWED_HOSTNAMES?.split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
   const bare = host.replace(/^www\./, "");
   const hostnames = fromEnv?.length ? fromEnv : [bare, `www.${bare}`];
-  if (secret) return { secret, mode: "live", hostnames, verifyUrl: SITEVERIFY_URL };
+  const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+  if (secret) {
+    // A live secret with the public TEST site key (or no site key) can never verify.
+    if (!siteKey || siteKey === TURNSTILE_TEST_SITE_KEY) return { secret, mode: "missing", hostnames, verifyUrl: SITEVERIFY_URL };
+    return { secret, mode: "live", hostnames, verifyUrl: SITEVERIFY_URL };
+  }
+  // Production must never silently fall back to the always-passing test keys.
+  const production = env.NODE_ENV === "production" && env.TURNSTILE_ALLOW_TEST_KEYS !== "true";
+  if (production) return { secret: "", mode: "missing", hostnames, verifyUrl: SITEVERIFY_URL };
   // Test mode only: allow a local mock endpoint for offline end-to-end tests.
   // Never honoured once a real secret is configured.
   const verifyUrl = env.TURNSTILE_SITEVERIFY_URL?.trim() || SITEVERIFY_URL;
   return { secret: TURNSTILE_TEST_SECRET, mode: "test", hostnames, verifyUrl };
 }
 
+/** Human-readable configuration status for the admin dashboard (no secrets). */
+export function turnstileStatus(env: Record<string, string | undefined> = process.env): {
+  mode: TurnstileMode;
+  siteKeySet: boolean;
+  secretSet: boolean;
+  problem?: string;
+} {
+  const cfg = turnstileConfig(env);
+  const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+  const secretSet = Boolean(env.TURNSTILE_SECRET_KEY?.trim());
+  let problem: string | undefined;
+  if (cfg.mode === "missing") {
+    problem = secretSet
+      ? "TURNSTILE_SECRET_KEY is set, but NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing or is the Cloudflare test key."
+      : "Live Turnstile keys are missing: public forms refuse submissions until they are set.";
+  }
+  return { mode: cfg.mode, siteKeySet: Boolean(siteKey && siteKey !== TURNSTILE_TEST_SITE_KEY), secretSet, problem };
+}
+
 /** Public site key for the widget (test key until the live key is configured). */
 export function turnstileSiteKey(env: Record<string, string | undefined> = process.env): string {
+  // "" = not configured in production: the widget shows "temporarily unavailable" instead of a test widget.
+  if (turnstileConfig(env).mode === "missing") return "";
   return env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || TURNSTILE_TEST_SITE_KEY;
 }
 
@@ -91,10 +125,24 @@ export async function verifyTurnstile(opts: {
   fetchImpl?: typeof fetch;
   now?: number;
   timeoutMs?: number;
+  /** Shared replay store (MySQL); falls back to process memory. */
+  claim?: (tokenHash: string) => Promise<boolean>;
+  /**
+   * Login and password reset: when Turnstile is not configured in production
+   * these still work (protected by lockout and rate limits) instead of
+   * locking the owner out. Public forms never pass this.
+   */
+  optional?: boolean;
 }): Promise<TurnstileResult> {
   const config = opts.config ?? turnstileConfig();
   const now = opts.now ?? Date.now();
   const token = opts.token;
+
+  if (config.mode === "missing") {
+    if (opts.optional) return { ok: true };
+    console.error("[turnstile] live keys missing or mismatched — submission refused");
+    return { ok: false, reason: "unavailable", codes: ["config-missing"] };
+  }
 
   if (typeof token !== "string" || token.trim() === "") return { ok: false, reason: "missing" };
   if (token.length > MAX_TOKEN_LENGTH || /\s/.test(token)) return { ok: false, reason: "invalid" };
@@ -103,7 +151,10 @@ export async function verifyTurnstile(opts: {
   // duplicates with "timeout-or-duplicate"). The shared test token is exempt
   // so the test keys keep working in development.
   const exempt = config.mode === "test" && token === TURNSTILE_DUMMY_TOKEN;
-  if (!exempt && !remember(token, now)) return { ok: false, reason: "replayed" };
+  if (!exempt) {
+    const fresh = opts.claim ? await opts.claim(hash(token)) : remember(token, now);
+    if (!fresh) return { ok: false, reason: "replayed" };
+  }
 
   const body = new URLSearchParams({ secret: config.secret, response: token });
   if (opts.ip && opts.ip !== "unknown") body.set("remoteip", opts.ip);

@@ -2,19 +2,41 @@
 
 ## Current state
 
-- A Next.js App Router website, statically prerendered and served with `next start` on Hostinger Node.js Web Apps.
-- No database, no cookies, no analytics. The only third-party script is Cloudflare Turnstile on the two form pages (spam protection).
-- **Forms:** `/api/contact` and `/api/appointment` are server-side route handlers that validate input (`src/lib/forms/validation.ts`, shared with the browser and unit-tested), apply spam protection and rate limiting, and send email over SMTP with nodemailer (`src/lib/mail/`). Nothing is stored in a database. See `docs/EMAIL.md`.
-- **Appointments are requests.** They are emailed to the studio and acknowledged to the customer as *not yet confirmed*. No availability is shown and nothing is confirmed automatically. Online booking stays off via `src/lib/booking/config.ts`.
-- **WhatsApp:** one setting (`NEXT_PUBLIC_WHATSAPP_NUMBER`, or `whatsappNumberFallback` in `src/content/site.ts`). While it is empty or invalid, no WhatsApp link is rendered.
-- **Hostinger compatibility:** the build uses the WebAssembly SWC compiler with webpack (see README). Keep `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` on the same exact version.
+- A Next.js App Router application served with `next start` on Hostinger Node.js Web Apps, backed by **MySQL/MariaDB** (Hostinger) through Drizzle ORM.
+- Three areas share one codebase and one owner identity:
+  - **Public website** (NL/EN): pages are rendered from built-in content plus owner edits published in the admin. Root layouts revalidate every 5 minutes, and publishing invalidates the cache immediately.
+  - **`/admin`** ("Admin Glow by Dilek"): content management (pages and sections, theme, header/footer, media, treatments and prices, SEO and redirects, email templates, security, audit log, backup).
+  - **`/ajanda`** ("Glow by Dilek — Ajanda"): mobile-first calendar and CRM (today, agenda day/week/month/list, requests, appointments, customers, inbox, working hours, settings), installable on the iPhone home screen.
+- No analytics and no tracking cookies. The only cookie is the owner's session cookie in the private areas. The only third-party script is Cloudflare Turnstile on form pages.
+- **Hostinger compatibility:** the build uses the WebAssembly SWC compiler with webpack (see README). Keep `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` on the same exact version. `sharp` (image processing) is the only native module and is optional at build time.
+
+### Code map
+
+| Path | Purpose |
+| --- | --- |
+| `src/lib/db/` | Schema (`schema.ts`), connection pool, settings, audit log, database-backed rate limits, seed. Migrations live in `drizzle/` and run with `npm run db:migrate` or during the build (`DB_MIGRATE_ON_BUILD=true`). |
+| `src/lib/auth/` | Password hashing, sessions, password reset, MFA (TOTP + recovery codes), lockout. See `docs/SECURITY.md`. |
+| `src/lib/booking/` | `engine.ts`: pure availability calculation (weekly intervals, breaks, date overrides, blocks, capacity, max per day, notice, advance window, buffers). `service.ts`: every appointment mutation inside a transaction. `public.ts`: whether online booking is actually operational. |
+| `src/lib/time.ts` | Europe/Amsterdam conversions. Stored times are UTC. A local time in the spring DST gap moves forward; an ambiguous autumn time resolves to its first occurrence. |
+| `src/lib/notifications/` | Templates (NL/EN, placeholder validation), transactional outbox, SMTP delivery and the cron tick. See `docs/EMAIL.md`. |
+| `src/lib/cms/` | Content registry, draft/publish/versions, theme tokens, menu, media processing, custom pages, section ordering, and the per-request snapshot used while rendering. |
+| `src/lib/private/` | Server actions for the admin and Ajanda. Every action re-checks the owner session. |
+| `src/lib/forms/` | Public form handling: validation, Turnstile, rate limits, duplicate detection. |
+
+### Double-booking prevention
+
+Every booking mutation runs in a transaction (READ COMMITTED) that first takes an exclusive per-day row lock in `schedule_locks` (`INSERT … ON DUPLICATE KEY UPDATE`), then re-reads the existing appointments and blocks for that day and re-checks availability, including capacity, buffers and max per day. Concurrent requests for the same day are therefore serialised in the database, not only in the UI; deadlocks and lock timeouts are retried. A concurrency test fires parallel requests for the same slot and asserts that exactly one succeeds.
+
+### Content model
+
+Built-in content (`src/content/`, `src/i18n/dictionaries/`) is the default. Owner edits are stored per document and language in `content_entries` (draft and published rows) and deep-merged over the defaults, so an empty or missing field always falls back to the approved text. Every publish stores a version in `content_versions` (restorable). Drafts are visible only to the signed-in owner through preview mode.
 
 ## Content and service architecture
 
 | File | Purpose |
 | --- | --- |
 | `src/content/services.ts` | Service categories. Waxing is `published`; laser, skin care and other beauty treatments are planned and **unpublished**. |
-| `src/content/treatments.ts` | Treatment groups and treatments with stable ids. Prices and durations stay empty until confirmed (`pricesPublished`). |
+| `src/content/treatments.ts` | Treatment groups and treatments with stable ids. Built-in prices and durations stay empty; the owner enters confirmed ones in Admin → Behandelingen (stored in the `treatments` table). |
 | `src/content/media.ts` | Photo registry: files, NL/EN alt text, focal points and licence credits (Adobe Stock). Layouts fall back to photo-free compositions if a slot is ever emptied. |
 | `src/content/site.ts` | Business details: email, and optional phone, socials and address. |
 | `src/content/slugs.ts` | Category and treatment ids, localised URL slugs, related treatments. Small on purpose: the client-side language switcher uses it. |
@@ -34,7 +56,7 @@
 
 Category and treatment pages are generated from data (`generateStaticParams`, `dynamicParams = false`), so an unknown slug is a 404. To add a treatment: add it to `treatments.ts`, `slugs.ts` (slug + related) and both `copy/treatments.*.ts` files — the type checker and `tests/content.test.ts` flag anything missing.
 
-Appointment links from treatment pages use `bookingHref(locale, id)` → `/afspraak-maken?behandeling=<id>#aanvraag` (`?treatment=` in English). The form preselects that treatment after hydration, so the page stays static.
+Appointment links from treatment pages use `bookingHref(locale, id)` → `/afspraak-maken?behandeling=<id>` (no hash, so the page always opens at the top) (`?treatment=` in English). The form preselects that treatment after hydration, so the page stays static.
 
 ### Adding a new service category later (for example laser hair removal)
 
@@ -46,54 +68,23 @@ Only once the owner has confirmed availability, qualifications, equipment and pr
 
 The footer, structured data and sitemap use the route map and the published categories, so no redesign is needed.
 
-## Approvals and reminders today (honest status)
+## Appointments: how they flow
 
-There is **no** admin dashboard, calendar or automatic reminder yet, and the website never claims otherwise. The current, working process is email-based:
-
-| Step | How it works now |
+| Step | How it works |
 | --- | --- |
-| Request | Form → notification email to Dilek + acknowledgement to the customer ("not yet confirmed") |
-| Review | Dilek checks her own calendar |
-| Approve / reschedule / decline | Dilek replies to the notification (Reply-To = customer) |
-| Location details | Shared only in that personal confirmation |
-| Reminder | Manual for now (for example a calendar reminder on Dilek's phone to send a short message the day before) |
+| Request | Website form (preferred moment) or, when online booking is enabled **and** working hours plus at least one bookable treatment with a confirmed duration exist, an exact free time. Stored as `requested`; the customer is told it is **not yet confirmed** |
+| Review | Ajanda → Aanvragen: approve, propose another time, or decline |
+| Manual appointments | Ajanda → Nieuwe afspraak (phone or Instagram bookings), with the same collision checks |
+| Changes | Reschedule, cancel, completed, no-show, archive; every change is recorded in the appointment history |
+| Emails | Queued in the outbox with the change; retried by the cron job |
+| Reminder | Queued by the cron job before each confirmed appointment (default 24 h) |
+| Location details | Stored privately in Ajanda → Instellingen and inserted only into confirmation, reschedule and reminder emails |
+| Privacy | Customer export (JSON) and anonymisation in Ajanda → Klanten |
 
-## Planned: secure appointment system
+No payments are taken online.
 
-### Functional requirements
+## Possible next steps (not built)
 
-1. The customer chooses one or more treatments; the total duration comes from confirmed treatment durations.
-2. The customer picks a date and time from **live availability**.
-3. The customer enters contact details: name, email, optional phone, and consent.
-4. The appointment is created as a **request** (`requested`).
-5. The owner **approves or rejects** it in the admin dashboard.
-6. **Emails** go out for request received, approved, rejected and cancelled.
-7. A **reminder** is sent **24 hours** before each approved appointment.
-8. An **admin calendar** offers day, week and list views, blocked periods, availability rules and manual appointments.
-9. **No double bookings**, enforced in the database and not only in the UI.
-10. **GDPR (AVG):** consent, minimal data, retention limits, export and deletion.
-
-### Proposed technical design
-
-| Concern | Direction |
-| --- | --- |
-| Database | Managed PostgreSQL in the EU (for example Supabase EU or Neon EU) with Drizzle or Prisma migrations. |
-| Double-booking prevention | Postgres `EXCLUDE USING gist (tstzrange(start, end) WITH &&) WHERE status IN ('requested','approved')`, so overlapping rows are rejected even under concurrent requests. Slots are re-validated inside the same transaction. |
-| API | Next.js route handlers or server actions under `/api/booking/*`, with zod validation, CSRF-safe POSTs and rate limiting. |
-| Abuse protection | Already in place for the request forms: Cloudflare Turnstile + server-side Siteverify, rate limits per IP, email and globally, duplicate detection (see `docs/SECURITY.md`). Move the in-memory limits to the database or Redis once there is one. |
-| Email | Transactional email from an EU provider, sent from `hello@glowbydilek.nl` with SPF, DKIM and DMARC, using the templates listed in `EmailTemplate`. **The current mailbox/DNS setup must not be changed without the owner.** |
-| Reminders | A scheduled job every 15 minutes calls `sendDueReminders()`. `reminderSentAt` makes it idempotent. |
-| Admin auth | Owner account (plus optional staff) with strong passwords and 2FA. Sessions in HTTP-only, secure, SameSite cookies. Every request is authorised on the server. |
-| Admin UI | `/admin` (already disallowed in `robots.txt`), its own layout and `noindex`. |
-| Privacy | A privacy statement page (NL/EN), consent checkbox, retention policy (for example deleting inactive customers after 24 months), and data export and deletion in the admin. No medical details in free text. |
-| Hosting | Hostinger Node.js (current) works if a cron/scheduler is available. Otherwise use a managed scheduler that calls a signed endpoint. |
-
-The domain model and service contract are sketched in `src/lib/booking/types.ts`.
-
-### Rollout steps
-
-1. Owner confirms treatments, durations, prices, availability rules and the privacy statement.
-2. Build the database schema, `BookingService` and email templates behind `onlineBookingEnabled`.
-3. Build the admin dashboard (auth, calendar, approve/reject).
-4. Security review, end-to-end tests (including concurrent double-booking tests) and a soft launch.
-5. Switch the flag on. The appointment-request form on `/afspraak-maken` is then replaced by the booking flow. Its fields already match `BookingService.requestAppointment`, and the email templates in `src/lib/mail/templates.ts` can be reused.
+- Optional customer self-service links (cancel/reschedule from the email).
+- Automatic retention clean-up (for example anonymising customers without appointments for 24 months) once the owner has decided on the retention period; today this is a manual action.
+- Calendar feed (iCal) for Dilek's phone calendar.

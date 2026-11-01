@@ -1,11 +1,22 @@
 import type { MetadataRoute } from "next";
-import { allPages, localeLabels, locales, pagePath } from "@/i18n/config";
-import { absoluteUrl } from "@/lib/seo";
+import { liveTreatment } from "@/content/treatments";
+import { allPages, localeLabels, locales, pagePath, type PageRef } from "@/i18n/config";
+import { ensureContent } from "@/lib/cms/store";
+import { absoluteUrl, seoOverride } from "@/lib/seo";
 
-/** Every public page in both languages, with hreflang alternates. */
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+const seoKey = (p: PageRef) => (p.type === "static" ? p.key : p.type === "category" ? `category-${p.id}` : `treatment-${p.id}`);
+
+/** Every public page in both languages, with hreflang alternates. Pages set to noindex or hidden treatments are left out. */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await ensureContent();
   const lastModified = new Date();
-  return allPages().flatMap((page) =>
+  const pages = allPages().filter((page) => {
+    if (page.type === "treatment" && !liveTreatment(page.id).visible) return false;
+    return !locales.some((l) => seoOverride(seoKey(page), l).noindex);
+  });
+  return pages.flatMap((page) =>
     locales.map((locale) => ({
       url: absoluteUrl(pagePath(locale, page)),
       lastModified,
