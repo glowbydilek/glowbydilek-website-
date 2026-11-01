@@ -99,6 +99,9 @@
     font-variation-settings: "opsz" 60;
     letter-spacing: -0.02em;
     text-wrap: balance;
+    /* Long Dutch compounds ("Privacyverklaring") must never widen a 320 px screen. */
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   p {
@@ -155,6 +158,8 @@
 
   /* Editorial display type */
   .display {
+    overflow-wrap: break-word;
+    hyphens: auto;
     font-family: var(--font-serif);
     font-weight: var(--heading-weight);
     font-variation-settings: "opsz" 72;
