@@ -8,6 +8,13 @@
       "when": 1793482098434,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1793513747931,
+      "tag": "0001_platform_crm_finance",
+      "breakpoints": true
     }
   ]
 }

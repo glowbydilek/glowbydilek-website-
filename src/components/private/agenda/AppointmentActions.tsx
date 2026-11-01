@@ -15,6 +15,9 @@ type Props = {
   archived: boolean;
   internalNote: string;
   hasExactTime: boolean;
+  priceInput: string;
+  treatments: { id: string; name: string }[];
+  currentTreatments: string[];
 };
 
 function Panel({ title, children, open = false, tone = "default" }: { title: string; children: ReactNode; open?: boolean; tone?: "default" | "danger" }) {
@@ -53,15 +56,15 @@ function Message({ label = "Persoonlijke toelichting in de e-mail (optioneel)" }
   );
 }
 
+/** Material changes always notify the customer; without an email address that is shown clearly. */
 function Notify({ hasEmail, label }: { hasEmail: boolean; label: string }) {
-  if (!hasEmail) return <p className="text-sm text-muted">Geen e-mailadres bekend: de klant krijgt geen automatisch bericht.</p>;
-  return (
-    <label className="flex min-h-11 items-center gap-3">
-      <input type="checkbox" name="notify" value="on" defaultChecked className="h-5 w-5 accent-[var(--color-charcoal)]" onChange={(e) => { const h = e.currentTarget.form?.querySelector<HTMLInputElement>("input[name=notify][type=hidden]"); if (h) h.disabled = e.currentTarget.checked; }} />
-      <input type="hidden" name="notify" value="off" disabled />
-      {label}
-    </label>
-  );
+  if (!hasEmail)
+    return (
+      <p role="note" className="rounded-xl border border-[#8e2f24]/30 bg-[#fbeeec] px-3 py-2 text-sm text-[#74261d]">
+        Geen e-mailadres bekend: de klant krijgt hier <strong>geen</strong> bericht van. Laat het de klant zelf weten.
+      </p>
+    );
+  return <p className="rounded-xl bg-ivory-50 px-3 py-2 text-sm text-charcoal-soft">✉ {label}</p>;
 }
 
 function Hidden({ id, op }: { id: number; op: string }) {
@@ -107,7 +110,7 @@ export function AppointmentActions(p: Props) {
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="decline" />
               <Message label="Toelichting voor de klant (optioneel)" />
-              <Notify hasEmail={p.hasEmail} label="Stuur de klant een vriendelijk bericht" />
+              <Notify hasEmail={p.hasEmail} label="De klant krijgt automatisch een vriendelijk bericht." />
               <SubmitButton variant="danger" confirm="Weet je zeker dat je deze aanvraag wilt afwijzen?">Aanvraag afwijzen</SubmitButton>
             </ActionForm>
           </Panel>
@@ -120,8 +123,22 @@ export function AppointmentActions(p: Props) {
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="reschedule" />
               <WhenFields day={p.day} time={p.time} duration={p.duration} />
+              <fieldset>
+                <legend className="mb-1.5 text-sm font-medium">Behandeling(en)</legend>
+                <div className="flex flex-wrap gap-2">
+                  {p.treatments.map((t) => (
+                    <label key={t.id} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stone bg-white px-3 text-sm has-[:checked]:border-charcoal has-[:checked]:bg-charcoal has-[:checked]:text-ivory">
+                      <input type="checkbox" name="treatments" value={t.id} defaultChecked={p.currentTreatments.includes(t.id)} className="sr-only" />
+                      {t.name}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <Field label="Afgesproken prijs" hint="Leeg = geen prijs vastgelegd. Een gewijzigde prijs stuurt geen e-mail.">
+                <Input name="price" inputMode="decimal" defaultValue={p.priceInput} placeholder="bijv. 45,00" />
+              </Field>
               <Message />
-              <Notify hasEmail={p.hasEmail} label="Stuur de klant het nieuwe tijdstip (alleen als het tijdstip verandert)" />
+              <Notify hasEmail={p.hasEmail} label="Verandert het tijdstip, de duur of de behandeling, dan krijgt de klant automatisch een e-mail met de nieuwe gegevens." />
               <label className="flex min-h-11 items-center gap-3 text-sm">
                 <input type="checkbox" name="allowOutsideHours" className="h-5 w-5" /> Toestaan buiten mijn werktijden
               </label>
@@ -144,7 +161,7 @@ export function AppointmentActions(p: Props) {
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="cancel" />
               <Message />
-              <Notify hasEmail={p.hasEmail} label="Stuur de klant een annuleringsbericht" />
+              <Notify hasEmail={p.hasEmail} label="De klant krijgt automatisch een annuleringsbericht." />
               <p className="text-xs text-muted">De afspraak blijft in de geschiedenis staan; het tijdstip komt weer vrij.</p>
               <SubmitButton variant="danger" confirm="Weet je zeker dat je deze afspraak wilt annuleren?">Afspraak annuleren</SubmitButton>
             </ActionForm>

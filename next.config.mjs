@@ -44,6 +44,8 @@ const nextConfig = {
   reactStrictMode: true,
   // Media uploads in the admin (images up to 12 MB) are sent through Server Actions.
   experimental: { serverActions: { bodySizeLimit: "14mb" } },
+  // pdfkit reads its font metrics from node_modules at runtime; keep it unbundled.
+  serverExternalPackages: ["pdfkit"],
   poweredByHeader: false,
   /**
    * Convenience redirects for short or guessable URLs. No existing page URL

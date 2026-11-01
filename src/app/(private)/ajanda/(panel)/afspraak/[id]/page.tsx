@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { AppointmentActions } from "@/components/private/agenda/AppointmentActions";
 import { STATUS, TIME_RANGE_NL, time } from "@/components/private/agenda/format";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { appointmentHistory, BookingError, getAppointment } from "@/lib/booking/service";
 import { getDb } from "@/lib/db/client";
-import { outbox } from "@/lib/db/schema";
+import { outbox, treatments } from "@/lib/db/schema";
+import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
 
 export const metadata = { title: "Afspraak" };
@@ -29,12 +30,9 @@ const MAIL_NL: Record<string, string> = { pending: "wacht", sending: "bezig", se
 const DONE: Record<string, string> = {
   approve: "Afspraak bevestigd. De klant krijgt een bevestiging per e-mail.",
   propose: "Voorstel verstuurd. Het tijdstip is voorlopig voor deze klant vastgehouden.",
-  decline: "Aanvraag afgewezen. De klant krijgt een bericht.",
-  "decline-stil": "Aanvraag afgewezen (zonder e-mail).",
-  reschedule: "Afspraak opgeslagen. Is het tijdstip veranderd, dan krijgt de klant een bericht.",
-  "reschedule-stil": "Afspraak opgeslagen (zonder e-mail).",
-  cancel: "Afspraak geannuleerd. De klant krijgt een bericht en het tijdstip is weer vrij.",
-  "cancel-stil": "Afspraak geannuleerd (zonder e-mail). Het tijdstip is weer vrij.",
+  decline: "Aanvraag afgewezen.",
+  reschedule: "Wijziging opgeslagen.",
+  cancel: "Afspraak geannuleerd. Het tijdstip is weer vrij.",
   complete: "Gemarkeerd als afgerond.",
   noshow: "Gemarkeerd als niet verschenen.",
   archive: "Gearchiveerd.",
@@ -52,7 +50,11 @@ export default async function AppointmentPage({ params, searchParams }: { params
     if (e instanceof BookingError) notFound();
     throw e;
   }
-  const [events, mails] = await Promise.all([appointmentHistory(db, id), db.select().from(outbox).where(eq(outbox.appointmentId, id)).orderBy(desc(outbox.createdAt))]);
+  const [events, mails, allTreatments] = await Promise.all([
+    appointmentHistory(db, id),
+    db.select().from(outbox).where(eq(outbox.appointmentId, id)).orderBy(desc(outbox.createdAt)),
+    db.select({ id: treatments.id, nameNl: treatments.nameNl }).from(treatments).where(eq(treatments.active, true)).orderBy(asc(treatments.sort)),
+  ]);
   const { appt, customer, items } = v;
   const st = STATUS[appt.status];
   const local = appt.startAt ? toLocalParts(appt.startAt) : null;
@@ -65,6 +67,20 @@ export default async function AppointmentPage({ params, searchParams }: { params
       />
       {sp.opgeslagen && <div className="mb-4"><Notice tone="success">✓ Afspraak opgeslagen.</Notice></div>}
       {sp.melding && DONE[sp.melding] && <div className="mb-4"><Notice tone="success">✓ {DONE[sp.melding]}</Notice></div>}
+      {sp.mail === "0" && (
+        <div className="mb-4">
+          <Notice tone="warning">
+            <strong>De klant is niet gemaild:</strong> er is geen e-mailadres bekend. Laat de wijziging de klant zelf weten
+            {customer.phone ? (
+              <>
+                {" "}
+                (<a className="underline" href={`tel:${customer.phone.replace(/\s/g, "")}`}>{customer.phone}</a>)
+              </>
+            ) : null}
+            .
+          </Notice>
+        </div>
+      )}
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-5">
           <Card title="Gegevens">
@@ -73,6 +89,8 @@ export default async function AppointmentPage({ params, searchParams }: { params
               <dd>{items.map((i) => i.nameNl).join(", ") || "—"}</dd>
               <dt className="text-muted">Duur</dt>
               <dd>{appt.durationMinutes ? `${appt.durationMinutes} min${appt.bufferMinutes ? ` (+${appt.bufferMinutes} min opruimen)` : ""}` : "nog niet vastgesteld"}</dd>
+              <dt className="text-muted">Prijs</dt>
+              <dd>{appt.priceCents != null ? formatCents(appt.priceCents) : "niet vastgelegd"}</dd>
               <dt className="text-muted">Telefoon</dt>
               <dd>{customer.phone ? <a className="underline" href={`tel:${customer.phone.replace(/\s/g, "")}`}>{customer.phone}</a> : "—"}</dd>
               <dt className="text-muted">E-mail</dt>
@@ -135,6 +153,9 @@ export default async function AppointmentPage({ params, searchParams }: { params
           archived={Boolean(appt.archivedAt)}
           internalNote={appt.internalNote ?? ""}
           hasExactTime={Boolean(appt.startAt)}
+          priceInput={centsToInput(appt.priceCents)}
+          treatments={allTreatments.map((t) => ({ id: t.id, name: t.nameNl }))}
+          currentTreatments={items.map((i) => i.treatmentId)}
         />
       </div>
     </>

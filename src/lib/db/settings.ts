@@ -50,3 +50,53 @@ export const defaultBookingSettings: BookingSettings = {
   remindersEnabled: true,
   reminderHoursBefore: 24,
 };
+
+/**
+ * Seller details for invoices. Entered and verified by the owner in Admin →
+ * Bedrijf & facturen; nothing is pre-filled or guessed (no KVK, VAT number,
+ * VAT rate or exemption is assumed). Never shown on public pages.
+ */
+export type InvoiceSettings = {
+  legalName: string;
+  tradeName: string;
+  street: string;
+  postcode: string;
+  city: string;
+  country: string;
+  kvk: string;
+  /** "standard": VAT charged at vatRateBp · "exempt": no VAT, with the legal exemption text. */
+  vatMode: "" | "standard" | "exempt";
+  vatNumber: string;
+  /** Basis points (2100 = 21%); only used with vatMode "standard". Entered by the owner. */
+  vatRateBp: number | null;
+  /** Exact exemption wording the owner's accountant confirmed (vatMode "exempt"). */
+  exemptionText: string;
+  iban: string;
+  accountHolder: string;
+  email: string;
+  phone: string;
+  prefix: string;
+  paymentTermDays: number;
+  footer: string;
+};
+
+export const defaultInvoiceSettings: InvoiceSettings = {
+  legalName: "",
+  tradeName: "Glow by Dilek",
+  street: "",
+  postcode: "",
+  city: "",
+  country: "Nederland",
+  kvk: "",
+  vatMode: "",
+  vatNumber: "",
+  vatRateBp: null,
+  exemptionText: "",
+  iban: "",
+  accountHolder: "",
+  email: "hello@glowbydilek.nl",
+  phone: "",
+  prefix: "GBD",
+  paymentTermDays: 14,
+  footer: "",
+};

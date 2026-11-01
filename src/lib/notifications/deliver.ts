@@ -7,7 +7,7 @@ import { cronRuns } from "../db/schema";
 import { mailConfigured, sendMail } from "../mail/send";
 import { processOutbox, type Sender } from "./outbox";
 
-export const smtpSender: Sender = (m) => sendMail({ to: m.to, replyTo: m.replyTo, subject: m.subject, text: m.text, html: m.html });
+export const smtpSender: Sender = (m) => sendMail({ to: m.to, replyTo: m.replyTo, subject: m.subject, text: m.text, html: m.html, attachments: m.attachments });
 
 /** Inline delivery right after a change (short; anything left is retried by the cron job). */
 export async function deliverSoon(db: DB) {

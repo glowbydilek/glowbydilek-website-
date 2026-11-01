@@ -18,7 +18,7 @@ export default async function NewAppointment({ searchParams }: { searchParams: P
       <PageHeader title="Nieuwe afspraak" subtitle="Wordt direct als bevestigde afspraak in je agenda gezet." />
       <Card>
         <NewAppointmentForm
-          treatments={rows.map((t) => ({ id: t.id, name: t.nameNl, category: t.category, duration: t.durationMinutes, buffer: t.bufferMinutes }))}
+          treatments={rows.map((t) => ({ id: t.id, name: t.nameNl, category: t.category, duration: t.durationMinutes, buffer: t.bufferMinutes, priceCents: t.priceCents }))}
           day={sp.d && isLocalDate(sp.d) ? sp.d : todayLocal()}
           timeValue={sp.t && hhmmToMinutes(sp.t) != null ? sp.t : undefined}
           customer={customer && !customer.anonymizedAt ? { id: customer.id, firstName: customer.firstName, lastName: customer.lastName, email: customer.email, phone: customer.phone, locale: customer.locale } : undefined}
