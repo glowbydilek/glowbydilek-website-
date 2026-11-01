@@ -64,11 +64,17 @@ export type InvoiceSettings = {
   city: string;
   country: string;
   kvk: string;
-  /** "standard": VAT charged at vatRateBp · "exempt": no VAT, with the legal exemption text. */
-  vatMode: "" | "standard" | "exempt";
+  /**
+   * "standard": VAT charged per line (category standard/reduced/zero/exempt) ·
+   * "exempt": no VAT, with the legal exemption text · "kor": small-business
+   * scheme (kleineondernemersregeling), no VAT, with the KOR text.
+   */
+  vatMode: "" | "standard" | "exempt" | "kor";
   vatNumber: string;
   /** Basis points (2100 = 21%); only used with vatMode "standard". Entered by the owner. */
   vatRateBp: number | null;
+  /** Reduced rate in basis points (900 = 9%) — only for lines the accountant confirmed as eligible. */
+  reducedRateBp: number | null;
   /** Exact exemption wording the owner's accountant confirmed (vatMode "exempt"). */
   exemptionText: string;
   iban: string;
@@ -91,6 +97,7 @@ export const defaultInvoiceSettings: InvoiceSettings = {
   vatMode: "",
   vatNumber: "",
   vatRateBp: null,
+  reducedRateBp: null,
   exemptionText: "",
   iban: "",
   accountHolder: "",
@@ -100,3 +107,15 @@ export const defaultInvoiceSettings: InvoiceSettings = {
   paymentTermDays: 14,
   footer: "",
 };
+
+/**
+ * Invoice automation after an appointment is marked completed. Conservative
+ * defaults: everything OFF. Issuing still requires complete business details;
+ * per appointment the owner can choose "manual" or "no invoice".
+ */
+export type InvoiceAutomation = { autoDraft: boolean; autoIssue: boolean; autoEmail: boolean };
+export const defaultInvoiceAutomation: InvoiceAutomation = { autoDraft: false, autoIssue: false, autoEmail: false };
+
+/** Optional aftercare email some hours after a completed appointment (off by default). */
+export type AftercareSettings = { enabled: boolean; delayHours: number };
+export const defaultAftercare: AftercareSettings = { enabled: false, delayHours: 3 };

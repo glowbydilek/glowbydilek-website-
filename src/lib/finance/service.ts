@@ -1,8 +1,10 @@
 import "server-only";
+import { BUILTIN_ITEMS } from "../catalogue/builtin";
+import { expenseSummary } from "../expenses/service";
 import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { audit } from "../db/audit";
-import { appointments, appointmentTreatments, customers, invoices, payments } from "../db/schema";
+import { appointments, appointmentTreatments, customers, invoices, payments, treatments, serviceSections } from "../db/schema";
 import { dayBoundsUtc, isLocalDate, toLocalParts, type LocalDate } from "../time";
 
 /**
@@ -141,6 +143,15 @@ export type FinanceReport = {
   /** Completed appointments in the period with an agreed price but no payment recorded. */
   unpaidAppointments: { id: number; customer: string; day: string; agreedCents: number }[];
   completedWithoutPrice: number;
+  /** Received money per service section (exact only when an appointment stays within one section). */
+  bySection: { name: string; cents: number }[];
+  /** Discounts granted on completed appointments in the period (promotions). */
+  discountsCents: number;
+  /** VAT on invoices issued in the period, per rate (from the frozen invoice lines). */
+  vatSummary: { label: string; baseCents: number; vatCents: number }[];
+  expenses: { totalCents: number; vatCents: number; openCents: number; withoutVat: number; byCategory: { category: string; label: string; cents: number; vatCents: number; count: number }[] };
+  /** Net received minus expenses: a cash balance, NOT a profit calculation. */
+  balanceCents: number;
 };
 
 export async function financeReport(db: DB, period: Period): Promise<FinanceReport> {
@@ -218,8 +229,41 @@ export async function financeReport(db: DB, period: Period): Promise<FinanceRepo
     .map((i) => ({ id: i.id, number: i.number ?? "", customer: `${i.first} ${i.last}`.trim(), totalCents: i.totalCents + (credited.get(i.id) ?? 0), paidCents: paidMap.get(i.id) ?? 0, issueDate: i.issueDate }))
     .filter((i) => i.totalCents > 0 && i.paidCents < i.totalCents);
 
+  // Received per section (catalogue), from the treatment rows of each paid appointment.
+  const tRows = apptIds.length ? await db.select({ id: treatments.id, sectionId: treatments.sectionId }).from(treatments) : [];
+  const sections = apptIds.length ? await db.select({ id: serviceSections.id, name: serviceSections.nameNl }).from(serviceSections) : [];
+  const secOf = (tid: string) => tRows.find((t) => t.id === tid)?.sectionId ?? BUILTIN_ITEMS.find((b) => b.id === tid)?.sectionId ?? "waxing";
+  const apptSec = new Map<number, Set<string>>();
+  for (const i of items) apptSec.set(i.appointmentId, (apptSec.get(i.appointmentId) ?? new Set()).add(secOf(i.treatmentId)));
+  const secMap = new Map<string, number>();
+  for (const p of pays) {
+    if (!p.appointmentId) continue;
+    const set = apptSec.get(p.appointmentId);
+    const key = !set || !set.size ? "Onbekend" : set.size === 1 ? (sections.find((x) => x.id === [...set][0])?.name ?? [...set][0]) : "Combinatie van categorieën";
+    secMap.set(key, (secMap.get(key) ?? 0) + p.amountCents);
+  }
+  const discounts = completed.length ? await db.select({ d: appointments.discountCents }).from(appointments).where(inArray(appointments.id, completed.map((a) => a.id))) : [];
+  const discountsCents = discounts.reduce((sum, r) => sum + (r.d ?? 0), 0);
+  const inPeriod = await db.select({ lines: invoices.lines }).from(invoices).where(and(eq(invoices.status, "issued"), gte(invoices.issueDate, period.from), lte(invoices.issueDate, period.to)));
+  const vatMap = new Map<string, { baseCents: number; vatCents: number }>();
+  for (const inv of inPeriod) {
+    for (const l of inv.lines as { vat?: string; vatRateBp?: number; vatCents?: number; totalCents?: number }[]) {
+      const label = l.vat === "exempt" ? "Vrijgesteld" : `Btw ${((l.vatRateBp ?? 0) / 100).toLocaleString("nl-NL")}%`;
+      const r = vatMap.get(label) ?? { baseCents: 0, vatCents: 0 };
+      r.baseCents += (l.totalCents ?? 0) - (l.vatCents ?? 0);
+      r.vatCents += l.vatCents ?? 0;
+      vatMap.set(label, r);
+    }
+  }
+  const exp = await expenseSummary(db, period.from, period.to);
+
   return {
     period,
+    bySection: [...secMap.entries()].map(([name, cents]) => ({ name, cents })).sort((a, b) => b.cents - a.cents),
+    discountsCents,
+    vatSummary: [...vatMap.entries()].map(([label, v]) => ({ label, ...v })),
+    expenses: exp,
+    balanceCents: netCents - exp.totalCents,
     receivedCents,
     refundedCents,
     netCents,

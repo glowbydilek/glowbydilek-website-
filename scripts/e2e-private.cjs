@@ -558,6 +558,30 @@ function mailsSince(since) {
       assert.doesNotMatch(home2, /aria-roledescription="carousel"/, "slider hidden without active slides");
     });
 
+    await step("expenses: add an expense with a receipt; finance shows it; CSV export lists it; the receipt is private", async () => {
+      await p.goto(`${BASE}/agenda/uitgaven`);
+      await p.fill('input[name="vendor"]', "E2E Groothandel");
+      await p.fill('input[name="amount"]', "60,50");
+      await p.fill('input[name="vatRate"]', "21");
+      await p.locator('input[name="receipt"]').setInputFiles({ name: "bon.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n%e2e\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF") });
+      await p.getByRole("button", { name: "Uitgave toevoegen" }).click();
+      await p.getByText("Uitgave opgeslagen.").waitFor();
+      await p.reload();
+      await p.getByText("E2E Groothandel").first().waitFor();
+      const href = await p.locator('a[href^="/agenda/uitgaven/bon/"]').first().getAttribute("href");
+      assert.ok(href, "receipt link");
+      const anon = await fetch(`${BASE}${href}`);
+      assert.equal(anon.status, 401, "receipt not reachable without login");
+      const r = await p.request.get(`${BASE}${href}`);
+      assert.equal(r.status(), 200);
+      assert.match(r.headers()["content-type"] || "", /application\/pdf/);
+      await p.goto(`${BASE}/agenda/financien`);
+      await p.getByText("Saldo ontvangen − uitgaven").waitFor();
+      const csv = await p.request.get(`${BASE}/agenda/financien/export?p=month`);
+      assert.equal(csv.status(), 200);
+      assert.match(await csv.text(), /E2E Groothandel/);
+    });
+
     await step("Overal uitloggen ends the sessions on every device", async () => {
       const c2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
       await c2.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));

@@ -2,7 +2,7 @@ import "server-only";
 import PDFDocument from "pdfkit";
 import type { InvoiceSettings } from "../db/settings";
 import { formatCents } from "./money";
-import { formatRate, type ComputedLine } from "./invoice-core";
+import { formatRate, type ComputedLine, type VatRow } from "./invoice-core";
 import { logoData } from "../../components/brand/logoData";
 
 /**
@@ -84,6 +84,8 @@ export type InvoiceSnapshot = {
   totalCents: number;
   vatRateBp: number;
   vatMode: InvoiceSettings["vatMode"];
+  /** VAT per rate (multi-rate invoices). Absent on snapshots made before multi-rate support. */
+  breakdown?: VatRow[];
   note?: string | null;
   paid?: { cents: number; date?: string | null; method?: string | null } | null;
 };
@@ -137,7 +139,7 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
     doc.text(l.description, cols.desc, y, { width: 260 });
     doc.text(String(l.quantity), cols.qty, y, { width: 40, align: "right" });
     doc.text(formatCents(l.unitCents), cols.unit, y, { width: 60, align: "right" });
-    if (inv.vatMode === "standard") doc.text(formatRate(l.vatRateBp), cols.vat - 20, y, { width: 40, align: "right" });
+    if (inv.vatMode === "standard") doc.text(l.vatLabel ?? formatRate(l.vatRateBp), cols.vat - 20, y, { width: 40, align: "right" });
     doc.text(formatCents(l.totalCents), cols.total, y, { width: 59, align: "right" });
     y += Math.max(h, 12) + 8;
   }
@@ -148,20 +150,22 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
     inv.vatMode === "standard"
       ? [
           ["Subtotaal excl. btw", formatCents(inv.subtotalCents), false],
-          [`Btw ${formatRate(inv.vatRateBp)}`, formatCents(inv.vatCents), false],
+          ...(inv.breakdown?.length
+            ? inv.breakdown.map((r): [string, string, boolean] => [r.label === "Vrijgesteld" ? `Vrijgesteld van btw (grondslag ${formatCents(r.baseCents)})` : `${r.label} over ${formatCents(r.baseCents)}`, r.label === "Vrijgesteld" ? formatCents(0) : formatCents(r.vatCents), false])
+            : [[`Btw ${formatRate(inv.vatRateBp)}`, formatCents(inv.vatCents), false] as [string, string, boolean]]),
           ["Totaal incl. btw", formatCents(inv.totalCents), true],
         ]
       : [["Totaal", formatCents(inv.totalCents), true]];
   for (const [k, v, strong] of totals) {
     doc.fillColor(strong ? INK : MUTED).font(strong ? "Helvetica-Bold" : "Helvetica").fontSize(strong ? 11 : 9.5);
-    doc.text(k, 330, y, { width: 140, align: "right" });
+    doc.text(k, 230, y, { width: 240, align: "right" });
     doc.text(v, 480, y, { width: 59, align: "right" });
     y += strong ? 18 : 15;
   }
   y += 10;
   doc.fillColor(INK).font("Helvetica").fontSize(9);
   const notes: string[] = [];
-  if (inv.vatMode === "exempt" && s.exemptionText) notes.push(s.exemptionText);
+  if ((inv.vatMode === "exempt" || inv.vatMode === "kor") && s.exemptionText) notes.push(s.exemptionText);
   if (inv.paid && inv.paid.cents > 0) {
     const full = inv.paid.cents >= inv.totalCents;
     notes.push(`${full ? "Voldaan" : `Betaald: ${formatCents(inv.paid.cents)}`}${inv.paid.date ? ` op ${dateNl(inv.paid.date)}` : ""}${inv.paid.method ? ` (${inv.paid.method})` : ""}.`);

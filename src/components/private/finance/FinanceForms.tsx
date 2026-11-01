@@ -124,7 +124,13 @@ export function NewInvoiceButton({ customerId, appointmentId, label = "＋ Factu
   );
 }
 
-type Line = { description: string; quantity: number; amount: string };
+type Line = { description: string; quantity: number; amount: string; vat: string };
+const VAT_OPTS: [string, string][] = [
+  ["standard", "Standaard"],
+  ["reduced", "Verlaagd"],
+  ["zero", "0%"],
+  ["exempt", "Vrijgesteld"],
+];
 
 /** Draft editor: lines (amounts incl. VAT), buyer details, treatment date and a note. */
 export function InvoiceEditor({
@@ -134,18 +140,22 @@ export function InvoiceEditor({
   buyer,
   supplyDate,
   note,
+  vatPerLine = false,
 }: {
   id: number;
   kind: "invoice" | "credit";
-  lines: { description: string; quantity: number; unitCents: number }[];
+  lines: { description: string; quantity: number; unitCents: number; vat?: string }[];
   buyer: { name: string; email: string | null; address: string | null };
+  /** Show the per-line VAT category (only with vatMode "standard"). */
+  vatPerLine?: boolean;
   supplyDate: string | null;
   note: string | null;
 }) {
   const [lines, setLines] = useState<Line[]>(
-    initial.length ? initial.map((l) => ({ description: l.description, quantity: l.quantity, amount: l.unitCents ? centsToInput(Math.abs(l.unitCents)) : "" })) : [{ description: "", quantity: 1, amount: "" }],
+    initial.length ? initial.map((l) => ({ description: l.description, quantity: l.quantity, amount: l.unitCents ? (kind === "invoice" && l.unitCents < 0 ? "-" : "") + centsToInput(Math.abs(l.unitCents)) : "", vat: l.vat ?? "standard" })) : [{ description: "", quantity: 1, amount: "", vat: "standard" }],
   );
-  const total = lines.reduce((s, l) => s + (parseEuroToCents(l.amount) ?? 0) * (l.quantity || 1), 0);
+  const cents = (a: string) => (a.trim().startsWith("-") ? -(parseEuroToCents(a.trim().slice(1)) ?? 0) : (parseEuroToCents(a) ?? 0));
+  const total = lines.reduce((s, l) => s + cents(l.amount) * (l.quantity || 1), 0);
   const upd = (i: number, patch: Partial<Line>) => setLines((ls) => ls.map((l, j) => (j === i ? { ...l, ...patch } : l)));
   return (
     <ActionForm action={saveInvoiceAction} className="space-y-5">
@@ -166,9 +176,10 @@ export function InvoiceEditor({
         </Field>
       </div>
       <fieldset className="space-y-3">
-        <legend className="text-sm font-medium">Regels {kind === "credit" ? "(worden als negatief bedrag gecrediteerd)" : "(bedragen inclusief eventuele btw)"}</legend>
+        <legend className="text-sm font-medium">Regels {kind === "credit" ? "(worden als negatief bedrag gecrediteerd)" : "(bedragen inclusief eventuele btw; een kortingsregel mag negatief zijn, bijv. −5)"}</legend>
+        {vatPerLine && <p className="text-xs text-muted">Kies per regel de btw-categorie. Een ander tarief dan standaard alleen na akkoord van je boekhouder.</p>}
         {lines.map((l, i) => (
-          <div key={i} className="grid [&>*]:min-w-0 grid-cols-[1fr_4.5rem_7rem_2.75rem] items-end gap-2">
+          <div key={i} className={`grid [&>*]:min-w-0 items-end gap-2 ${vatPerLine ? "grid-cols-[1fr_4rem_6.5rem] sm:grid-cols-[1fr_4.5rem_7rem_8rem_2.75rem]" : "grid-cols-[1fr_4.5rem_7rem_2.75rem]"}`}>
             <Field label={i === 0 ? "Omschrijving" : ""}>
               <Input name="lineDescription" value={l.description} onChange={(e) => upd(i, { description: e.target.value })} aria-label={`Omschrijving regel ${i + 1}`} />
             </Field>
@@ -178,12 +189,21 @@ export function InvoiceEditor({
             <Field label={i === 0 ? "Prijs" : ""}>
               <Input name="lineAmount" inputMode="decimal" value={l.amount} onChange={(e) => upd(i, { amount: e.target.value })} aria-label={`Prijs regel ${i + 1}`} placeholder="0,00" />
             </Field>
+            {vatPerLine ? (
+              <Field label={i === 0 ? "Btw" : ""}>
+                <Select name="lineVat" value={l.vat} onChange={(e) => upd(i, { vat: e.target.value })} aria-label={`Btw regel ${i + 1}`}>
+                  {VAT_OPTS.map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </Select>
+              </Field>
+            ) : (
+              <input type="hidden" name="lineVat" value={l.vat} />
+            )}
             <button type="button" aria-label={`Regel ${i + 1} verwijderen`} disabled={lines.length === 1} onClick={() => setLines((ls) => ls.filter((_, j) => j !== i))} className="mb-0.5 h-11 w-11 rounded-full text-[#8e2f24] hover:bg-[#8e2f24]/10 disabled:opacity-30">
               ✕
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => setLines((ls) => [...ls, { description: "", quantity: 1, amount: "" }])} className="min-h-11 rounded-full border border-dashed border-ink/30 px-4 text-sm">
+        <button type="button" onClick={() => setLines((ls) => [...ls, { description: "", quantity: 1, amount: "", vat: "standard" }])} className="min-h-11 rounded-full border border-dashed border-ink/30 px-4 text-sm">
           ＋ Regel toevoegen
         </button>
         <p className="text-sm">

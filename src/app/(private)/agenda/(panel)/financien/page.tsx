@@ -32,9 +32,14 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         title="Financiën"
         subtitle="Alleen bedragen die je echt hebt vastgelegd. Er wordt nooit een omzet geschat of verzonnen."
         actions={
-          <a href={`/agenda/financien/rapport?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
-            PDF-rapport
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a href={`/agenda/financien/export?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
+              CSV
+            </a>
+            <a href={`/agenda/financien/rapport?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
+              PDF-rapport
+            </a>
+          </div>
         }
       />
       <nav aria-label="Periode" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
@@ -97,6 +102,34 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
             <p className="text-sm text-muted">Geen betalingen in deze periode.</p>
           )}
           <p className="mt-3 text-xs text-muted">Een betaling telt bij één behandeling als de afspraak één behandeling had; anders staat hij onder &quot;Combinatie&quot;. Er wordt niets verdeeld of geschat.</p>
+        </Card>
+        <Card title="Per categorie">
+          {r.bySection.length ? (
+            <ul className="divide-y divide-line text-sm">
+              {r.bySection.map((x) => (
+                <li key={x.name} className="flex justify-between gap-3 py-2"><span>{x.name}</span><strong>{formatCents(x.cents)}</strong></li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted">Nog geen betalingen in deze periode.</p>
+          )}
+          {r.discountsCents > 0 && <p className="mt-3 text-sm text-muted">Verleende kortingen (acties): {formatCents(r.discountsCents)}</p>}
+        </Card>
+        <Card title="Uitgaven & btw">
+          <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-2 text-sm">
+            <dt className="text-muted">Uitgaven (incl. btw)</dt>
+            <dd className="text-right font-medium">{formatCents(r.expenses.totalCents)}</dd>
+            <dt className="text-muted">Btw op uitgaven (volgens bonnen)</dt>
+            <dd className="text-right">{formatCents(r.expenses.vatCents)}</dd>
+            {r.vatSummary.flatMap((v) => [
+              <dt key={`${v.label}-t`} className="text-muted">{v.label} op facturen (grondslag {formatCents(v.baseCents)})</dt>,
+              <dd key={`${v.label}-d`} className="text-right">{formatCents(v.vatCents)}</dd>,
+            ])}
+            <dt className="text-muted">Saldo ontvangen − uitgaven</dt>
+            <dd className="text-right font-medium">{formatCents(r.balanceCents)}</dd>
+          </dl>
+          <p className="mt-3 text-xs text-muted">Geen winstberekening en geen aangifte: laat btw en resultaat controleren door je boekhouder.{r.expenses.withoutVat ? ` ${r.expenses.withoutVat} uitgave(n) zonder btw-bedrag.` : ""}</p>
+          <Link href={`/agenda/uitgaven?${q}`} className="mt-3 inline-block text-sm text-accent-deep underline">Uitgaven bekijken en toevoegen</Link>
         </Card>
         <Card title="Per betaalmethode">
           {r.byMethod.length ? (

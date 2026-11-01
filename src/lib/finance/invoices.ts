@@ -3,11 +3,11 @@ import { createHash } from "node:crypto";
 import { and, desc, eq, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { audit } from "../db/audit";
-import { appointments, appointmentTreatments, customers, invoiceCounters, invoices, payments } from "../db/schema";
+import { appointments, appointmentTreatments, customers, invoiceCounters, invoices, payments, treatments } from "../db/schema";
 import { defaultInvoiceSettings, getSetting, type InvoiceSettings } from "../db/settings";
 import { enqueue } from "../notifications/outbox";
 import { todayLocal, toLocalParts } from "../time";
-import { computeTotals, formatInvoiceNumber, invoiceReadiness, lineErrors, type ComputedLine, type InvoiceLine } from "./invoice-core";
+import { allocateDiscount, computeTotals, formatInvoiceNumber, invoiceReadiness, lineErrors, VAT_CATS, vatLineErrors, type ComputedLine, type InvoiceLine, type VatCat } from "./invoice-core";
 import { formatCents } from "./money";
 import { renderInvoicePdf, type InvoiceSnapshot } from "./pdf";
 import { METHODS } from "./service";
@@ -50,12 +50,19 @@ export async function createDraft(db: DB, input: { customerId: number; appointme
     if (!a || a.customerId !== c.id) throw new InvoiceError("Deze afspraak hoort niet bij deze klant.");
     const items = await db.select().from(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, a.id));
     supplyDate = a.startAt ? toLocalParts(a.startAt).date : null;
+    // VAT category per treatment as set in the catalogue (default: standard).
+    const cats = items.length ? await db.select({ id: treatments.id, vat: treatments.vatCategory }).from(treatments) : [];
+    const vatOf = (id: string): VatCat => (VAT_CATS.find((c) => c === cats.find((x) => x.id === id)?.vat) ?? "standard");
     const allPriced = items.length > 0 && items.every((i) => i.priceCents != null);
     const itemSum = items.reduce((s, i) => s + (i.priceCents ?? 0), 0);
-    if (allPriced && (a.priceCents == null || a.priceCents === itemSum)) {
-      lines = items.map((i) => ({ description: i.nameNl, quantity: 1, unitCents: i.priceCents! }));
+    const discount = a.discountCents ?? 0;
+    if (allPriced && (a.priceCents == null || a.priceCents === itemSum || a.priceCents === itemSum - discount)) {
+      lines = items.map((i) => ({ description: i.nameNl, quantity: 1, unitCents: i.priceCents!, vat: vatOf(i.treatmentId) }));
+      // A promotion is shown as discount line(s), split over the VAT rates in proportion.
+      if (discount > 0 && a.priceCents === itemSum - discount) lines.push(...allocateDiscount(lines, discount));
     } else {
-      lines = [{ description: items.map((i) => i.nameNl).join(" + ") || "Behandeling", quantity: 1, unitCents: a.priceCents ?? 0 }];
+      const cat = new Set(items.map((i) => vatOf(i.treatmentId))).size === 1 && items.length ? vatOf(items[0].treatmentId) : "standard";
+      lines = [{ description: items.map((i) => i.nameNl).join(" + ") || "Behandeling", quantity: 1, unitCents: a.priceCents ?? 0, vat: cat }];
     }
   }
   const buyer: Buyer = { name: `${c.firstName} ${c.lastName}`.trim(), email: c.email, address: null };
@@ -100,7 +107,7 @@ export async function deleteDraft(db: DB, id: number, ctx: Ctx) {
 /** Snapshot used for the PDF (and for re-rendering a preview of a draft). */
 async function snapshotOf(db: DB, inv: Invoice, settings: InvoiceSettings, number: string, issueDate: string): Promise<InvoiceSnapshot> {
   const lines = inv.lines as InvoiceLine[];
-  const totals = computeTotals(lines, settings.vatMode, settings.vatRateBp);
+  const totals = computeTotals(lines, settings.vatMode, settings.vatRateBp, settings.reducedRateBp ?? null);
   let correctsNumber: string | null = null;
   if (inv.correctsInvoiceId) {
     const [o] = await db.select({ number: invoices.number }).from(invoices).where(eq(invoices.id, inv.correctsInvoiceId));
@@ -121,6 +128,7 @@ async function snapshotOf(db: DB, inv: Invoice, settings: InvoiceSettings, numbe
     totalCents: totals.totalCents,
     vatRateBp: totals.vatRateBp,
     vatMode: settings.vatMode,
+    breakdown: totals.breakdown,
     note: inv.note,
   };
 }
@@ -148,7 +156,7 @@ export async function issueInvoice(db: DB, id: number, ctx: Ctx, opts: { paid?: 
     const [inv] = await tx.select().from(invoices).where(eq(invoices.id, id)).for("update");
     if (!inv) throw new InvoiceError("Factuur niet gevonden.");
     if (inv.status !== "draft") throw new InvoiceError("Deze factuur is al uitgegeven.");
-    const errs = lineErrors(inv.lines as InvoiceLine[], inv.kind === "credit" ? "credit" : "invoice");
+    const errs = [...lineErrors(inv.lines as InvoiceLine[], inv.kind === "credit" ? "credit" : "invoice"), ...vatLineErrors(inv.lines as InvoiceLine[], settings)];
     if (errs.length) throw new InvoiceError("Controleer de factuurregels.", errs);
     const issueDate = todayLocal();
     const year = Number(issueDate.slice(0, 4));
@@ -202,7 +210,8 @@ export async function issueInvoice(db: DB, id: number, ctx: Ctx, opts: { paid?: 
 export async function createCredit(db: DB, invoiceId: number, ctx: Ctx): Promise<number> {
   const [orig] = await db.select().from(invoices).where(eq(invoices.id, invoiceId));
   if (!orig || orig.status !== "issued" || orig.kind !== "invoice") throw new InvoiceError("Alleen een uitgegeven factuur kan worden gecrediteerd.");
-  const lines = (orig.lines as ComputedLine[]).map((l) => ({ description: l.description, quantity: l.quantity, unitCents: -Math.abs(l.unitCents) }));
+  // Credit lines mirror the original (discount lines flip to positive), keeping each VAT category.
+  const lines = (orig.lines as ComputedLine[]).map((l) => ({ description: l.description, quantity: l.quantity, unitCents: -l.unitCents, vat: l.vat ?? "standard" }));
   const [res] = (await db.insert(invoices).values({
     kind: "credit",
     correctsInvoiceId: orig.id,

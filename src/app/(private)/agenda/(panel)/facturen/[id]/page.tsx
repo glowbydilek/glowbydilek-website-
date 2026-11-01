@@ -51,7 +51,7 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
         <div className="space-y-5">
           {draft ? (
             <Card title="Concept bewerken">
-              <InvoiceEditor id={id} kind={credit ? "credit" : "invoice"} lines={inv.lines as InvoiceLine[]} buyer={buyer} supplyDate={inv.supplyDate} note={inv.note} />
+              <InvoiceEditor id={id} kind={credit ? "credit" : "invoice"} lines={inv.lines as InvoiceLine[]} buyer={buyer} supplyDate={inv.supplyDate} note={inv.note} vatPerLine={settings.vatMode === "standard"} />
             </Card>
           ) : (
             <Card title="Factuur">

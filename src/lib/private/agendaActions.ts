@@ -106,6 +106,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   const ctx = { userId: s.user.id };
   const message = str(f, "message");
   let mail: boolean | null = null;
+  let extra = "";
   try {
     switch (op) {
       case "approve": {
@@ -144,9 +145,16 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
       case "cancel":
         mail = (await cancel(db, id, ctx, { message })).notified ?? false;
         break;
-      case "complete":
+      case "complete": {
         await markCompleted(db, id, ctx);
+        const { afterCompletion } = await import("../finance/automation");
+        const r = await afterCompletion(db, id, ctx).catch((err) => {
+          console.error("[agenda] after-completion automation failed:", err instanceof Error ? err.message.slice(0, 160) : err);
+          return null;
+        });
+        extra = r ? `&factuur=${r.invoice}${r.aftercare ? "&nazorg=1" : ""}` : "&factuur=fout";
         break;
+      }
       case "noshow":
         await markNoShow(db, id, ctx);
         break;
@@ -170,7 +178,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   if (op === "notes") return { ok: true, message: "Notitie opgeslagen." };
   // Status changes re-render the page with other actions; show the result at the top.
   // mail=0 → the change was material but the customer has no email address: shown prominently.
-  redirect(`/agenda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}`);
+  redirect(`/agenda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}${extra}`);
 }
 
 // ─────────────────────────────────────────────────────────── Customers
@@ -441,4 +449,31 @@ export async function removePromotionAction(f: FormData) {
   await audit(getDb(), { userId: s.user.id, action: "promotion.removed", entity: "appointment", entityId: String(id) });
   refresh();
   redirect(`/agenda/afspraak/${id}?melding=actie-weg`);
+}
+
+// ─────────────────────────────────────── Invoice automation & aftercare
+
+export async function automationSettingsAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const { setSetting } = await import("../db/settings");
+  const autoDraft = f.get("autoDraft") === "on";
+  const autoIssue = autoDraft && f.get("autoIssue") === "on";
+  const autoEmail = autoIssue && f.get("autoEmail") === "on";
+  const delay = Math.min(72, Math.max(0, Number(str(f, "delayHours") || 3)));
+  await setSetting(getDb(), "invoice_automation", { autoDraft, autoIssue, autoEmail }, s.user.id);
+  await setSetting(getDb(), "aftercare", { enabled: f.get("aftercare") === "on", delayHours: Number.isFinite(delay) ? delay : 3 }, s.user.id);
+  await audit(getDb(), { userId: s.user.id, action: "settings.automation", entity: "settings", details: { autoDraft, autoIssue, autoEmail, aftercare: f.get("aftercare") === "on" } });
+  refresh();
+  return { ok: true, message: "Opgeslagen. Wijzigings- en annuleringsmails worden altijd verstuurd, ongeacht deze instellingen." };
+}
+
+export async function invoiceModeAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const mode = str(f, "invoiceMode");
+  const { appointments } = await import("../db/schema");
+  await getDb().update(appointments).set({ invoiceMode: mode === "manual" || mode === "none" ? mode : null }).where(eq(appointments.id, id));
+  await audit(getDb(), { userId: s.user.id, action: "appointment.invoice_mode", entity: "appointment", entityId: String(id), details: { mode } });
+  refresh();
+  redirect(`/agenda/afspraak/${id}`);
 }

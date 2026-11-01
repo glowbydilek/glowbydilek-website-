@@ -48,7 +48,8 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
           <Select name="vatMode" value={mode} onChange={(e) => setMode(e.target.value as InvoiceSettings["vatMode"])}>
             <option value="">— nog niet gekozen —</option>
             <option value="standard">Ik reken btw</option>
-            <option value="exempt">Ik ben vrijgesteld (bijv. kleineondernemersregeling)</option>
+            <option value="kor">Kleineondernemersregeling (KOR) — geen btw</option>
+            <option value="exempt">Vrijgesteld van btw (andere vrijstelling)</option>
           </Select>
         </Field>
         {mode === "standard" && (
@@ -56,13 +57,16 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
             <Field label="Btw-identificatienummer" hint="NL…B.., zie je brief van de Belastingdienst.">
               <Input name="vatNumber" defaultValue={v.vatNumber} />
             </Field>
-            <Field label="Btw-tarief (%)" hint="Het tarief dat op jouw behandelingen van toepassing is.">
+            <Field label="Standaard btw-tarief (%)" hint="Het algemene tarief, zoals je boekhouder het opgaf.">
               <Input name="vatRate" inputMode="decimal" defaultValue={v.vatRateBp ? String(v.vatRateBp / 100).replace(".", ",") : ""} />
+            </Field>
+            <Field label="Verlaagd btw-tarief (%) — optioneel" hint="Alleen invullen als je boekhouder bevestigt dat bepaalde behandelingen hieronder vallen. Een huidbehandeling of diploma maakt een behandeling niet automatisch ‘verlaagd’ of ‘vrijgesteld’.">
+              <Input name="reducedRate" inputMode="decimal" defaultValue={v.reducedRateBp ? String(v.reducedRateBp / 100).replace(".", ",") : ""} />
             </Field>
           </div>
         )}
-        {mode === "exempt" && (
-          <Field label="Tekst op de factuur" hint="De exacte vermelding die je boekhouder heeft bevestigd.">
+        {(mode === "exempt" || mode === "kor") && (
+          <Field label="Tekst op de factuur" hint={mode === "kor" ? "Bijv. de KOR-vermelding zoals je boekhouder die heeft bevestigd." : "De exacte vermelding die je boekhouder heeft bevestigd."}>
             <Textarea name="exemptionText" rows={2} defaultValue={v.exemptionText} />
           </Field>
         )}

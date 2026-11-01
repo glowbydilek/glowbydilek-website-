@@ -12,7 +12,7 @@ import { InviteButton } from "@/components/private/cms/ReviewForms";
 import { QuoteForm } from "@/components/private/agenda/QuoteForm";
 import { ownerTreatments } from "@/lib/catalogue/owner";
 import { quotesForAppointment } from "@/lib/booking/quotes";
-import { applyPromotionAction, removePromotionAction, withdrawQuoteAction } from "@/lib/private/agendaActions";
+import { applyPromotionAction, invoiceModeAction, removePromotionAction, withdrawQuoteAction } from "@/lib/private/agendaActions";
 import { runningPromotions } from "@/lib/promotions/service";
 import { promotions } from "@/lib/db/schema";
 import { getReviewSettings } from "@/lib/reviews/service";
@@ -51,6 +51,13 @@ const DONE: Record<string, string> = {
   actie: "Actie toegepast: de afgesproken prijs is aangepast.",
   "actie-niet": "Deze actie kon niet worden toegepast (geen vaste prijs, buiten de periode, minimumbedrag of limiet bereikt).",
   "actie-weg": "Actie verwijderd: de oorspronkelijke prijs geldt weer.",
+};
+const INVOICE_RESULT: Record<string, string> = {
+  draft: "Er is automatisch een factuurconcept gemaakt.",
+  issued: "Er is automatisch een factuur uitgegeven.",
+  emailed: "Er is automatisch een factuur uitgegeven en gemaild.",
+  blocked: "Er is geen factuur gemaakt: deze afspraak heeft geen afgesproken prijs.",
+  fout: "De automatische factuur kon niet worden gemaakt. Maak hem handmatig.",
 };
 const QUOTE_STATUS: Record<string, { label: string; tone: "pending" | "done" | "cancelled" | "neutral" }> = {
   sent: { label: "Wacht op klant", tone: "pending" },
@@ -100,6 +107,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
       />
       {sp.opgeslagen && <div className="mb-4"><Notice tone="success">✓ Afspraak opgeslagen.</Notice></div>}
       {sp.melding && DONE[sp.melding] && <div className="mb-4"><Notice tone="success">✓ {DONE[sp.melding]}</Notice></div>}
+      {sp.factuur && INVOICE_RESULT[sp.factuur] && <div className="mb-4"><Notice tone={sp.factuur === "blocked" || sp.factuur === "fout" ? "warning" : "info"}>{INVOICE_RESULT[sp.factuur]}{sp.nazorg ? " Het nazorgbericht staat klaar." : ""}</Notice></div>}
       {sp.mail === "0" && (
         <div className="mb-4">
           <Notice tone="warning">
@@ -218,6 +226,16 @@ export default async function AppointmentPage({ params, searchParams }: { params
                   ))}
                 </ul>
               )}
+              <form action={invoiceModeAction} className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+                <input type="hidden" name="appointmentId" value={appt.id} />
+                <label htmlFor="invoiceMode" className="text-muted">Factuur bij afronden:</label>
+                <select id="invoiceMode" name="invoiceMode" defaultValue={appt.invoiceMode ?? ""} className="min-h-11 rounded-xl border border-ink/20 bg-white px-3">
+                  <option value="">Volg instellingen</option>
+                  <option value="manual">Handmatig</option>
+                  <option value="none">Geen factuur</option>
+                </select>
+                <button className="min-h-11 rounded-full border border-ink/25 px-4">Opslaan</button>
+              </form>
               <div className="mb-4 flex flex-wrap gap-2">
                 <NewInvoiceButton customerId={customer.id} appointmentId={appt.id} />
                 {appt.status === "completed" && customer.email && reviewSettings.invitesEnabled && <InviteButton appointmentId={appt.id} />}

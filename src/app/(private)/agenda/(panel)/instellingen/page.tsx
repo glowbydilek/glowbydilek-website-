@@ -3,7 +3,10 @@ import { SettingsForm } from "@/components/private/agenda/SettingsForm";
 import { Card, PageHeader, SubmitButton } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
 import { outbox, treatments } from "@/lib/db/schema";
-import { defaultBookingSettings, defaultPrivateSettings, getSetting } from "@/lib/db/settings";
+import { defaultAftercare, defaultBookingSettings, defaultInvoiceAutomation, defaultPrivateSettings, getSetting } from "@/lib/db/settings";
+import { AutomationForm } from "@/components/private/agenda/AutomationForm";
+import { getInvoiceSettings } from "@/lib/finance/invoices";
+import { invoiceReadiness } from "@/lib/finance/invoice-core";
 import { mailConfigured } from "@/lib/mail/send";
 import { lastCronRun } from "@/lib/notifications/deliver";
 import { resendEmailAction } from "@/lib/private/agendaActions";
@@ -20,6 +23,7 @@ export default async function Settings() {
     db.select().from(outbox).where(inArray(outbox.status, ["failed", "pending"])).orderBy(desc(outbox.createdAt)).limit(50),
     lastCronRun(db),
   ]);
+  const [auto, care, inv] = await Promise.all([getSetting(db, "invoice_automation", defaultInvoiceAutomation), getSetting(db, "aftercare", defaultAftercare), getInvoiceSettings(db)]);
   const failed = problems.filter((m) => m.status === "failed" || (m.status === "pending" && m.attempts > 0));
   return (
     <>
@@ -27,6 +31,9 @@ export default async function Settings() {
       <div className="space-y-5">
         <Card title="Boekingsregels">
           <SettingsForm b={b} p={p} bookableCount={bookable.length} />
+        </Card>
+        <Card title="Facturen & nazorg (automatisch)">
+          <AutomationForm a={auto} c={care} ready={invoiceReadiness(inv).length === 0} />
         </Card>
         <Card title="E-mails" >
           <div id="emails" className="space-y-2 text-sm">
