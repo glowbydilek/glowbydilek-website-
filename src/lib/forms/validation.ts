@@ -36,7 +36,17 @@ export type AppointmentInput = {
   email: string;
   phone?: string;
   notes?: string;
+  /** Optional promotion code (normalised upper case); checked against the database on the server. */
+  promoCode?: string;
 };
+
+/** Optional promotion code: letters, digits and dashes (3–30), case-insensitive. */
+function promo(raw: unknown, errors: FieldErrors): string | undefined {
+  const v = text(raw, 40).toUpperCase().replace(/\s+/g, "");
+  if (!v) return undefined;
+  if (!/^[A-Z0-9-]{3,30}$/.test(v)) errors.promoCode = "invalid";
+  return v;
+}
 
 const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/i;
 const PHONE = /^\+?[0-9][0-9 ()-]{5,19}$/;
@@ -126,6 +136,7 @@ export function validateAppointment(
   const email = text(raw.email, 160).toLowerCase();
   const phone = text(raw.phone, 20);
   const notes = text(raw.notes, 1500, false);
+  const promoCode = promo(raw.promoCode, errors);
 
   if (treatments.length === 0) errors.treatments = "required";
   if (!preferredDate) errors.preferredDate = "required";
@@ -158,6 +169,7 @@ export function validateAppointment(
       email,
       phone: phone || undefined,
       notes: notes || undefined,
+      promoCode,
     },
   };
 }
@@ -194,6 +206,7 @@ export type BookingRequestInput = {
   email: string;
   phone: string;
   note?: string;
+  promoCode?: string;
 };
 
 /** Availability-aware booking request (exact time). First/last name, email and phone are required. */
@@ -209,6 +222,7 @@ export function validateBookingRequest(raw: Record<string, unknown>, allowedTrea
   const email = text(raw.email, 160).toLowerCase();
   const phone = text(raw.phone, 20);
   const note = text(raw.note, 1000, false);
+  const promoCode = promo(raw.promoCode, errors);
   if (!treatments.length) errors.treatments = "required";
   if (!DATE.test(date) || addDays(date, 0) !== date) errors.date = "invalid";
   else if (date < today) errors.date = "pastDate";
@@ -223,5 +237,5 @@ export function validateBookingRequest(raw: Record<string, unknown>, allowedTrea
   if (note.length > 1000) errors.note = "tooLong";
   if (raw.privacy !== true) errors.privacy = "consent";
   if (Object.keys(errors).length) return { ok: false, errors };
-  return { ok: true, data: { locale: locale(raw.locale), treatments, date, time, firstName, lastName, email, phone, note: note || undefined } };
+  return { ok: true, data: { locale: locale(raw.locale), treatments, date, time, firstName, lastName, email, phone, note: note || undefined, promoCode } };
 }

@@ -26,6 +26,7 @@ export function AppointmentForm({
   email,
   notConfirmed,
   turnstileSiteKey,
+  promoField = false,
 }: {
   locale: "nl" | "en";
   t: Dictionary["forms"];
@@ -34,6 +35,8 @@ export function AppointmentForm({
   email: string;
   notConfirmed: string;
   turnstileSiteKey: string;
+  /** Show the optional promotion-code field (only while a code promotion runs). */
+  promoField?: boolean;
 }) {
   const challenge = useTurnstileToken();
   const { state, submit, reset } = useFormSubmit("/api/appointment");
@@ -41,7 +44,7 @@ export function AppointmentForm({
   const ids = useMemo(() => groups.flatMap((g) => g.treatments.map((x) => x.id)), [groups]);
   // Earliest selectable date = today in Amsterdam (not UTC, not the device zone).
   const [today] = useState(() => amsterdamToday());
-  const empty = { preferredDate: "", alternative: "", name: "", email: "", phone: "", notes: "" };
+  const empty = { preferredDate: "", alternative: "", name: "", email: "", phone: "", notes: "", promoCode: "" };
   const [values, setValues] = useState(empty);
   const [treatments, setTreatments] = useState<string[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange | "">("");
@@ -106,7 +109,8 @@ export function AppointmentForm({
   }
 
   const serverFields = state.status === "error" ? state.fields : undefined;
-  const fe = (k: string) => (errors[k] ? t.errors[errors[k]] : serverFields?.[k] ? t.errors[serverFields[k] as ErrorCode] : undefined);
+  const fe = (k: string) =>
+    k === "promoCode" && (errors[k] || serverFields?.[k]) ? t.errors.promoCode : errors[k] ? t.errors[errors[k]] : serverFields?.[k] ? t.errors[serverFields[k] as ErrorCode] : undefined;
 
   const chip = (on: boolean) =>
     `inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent-deep ${
@@ -195,6 +199,10 @@ export function AppointmentForm({
         <TextField id="appt-email" label={t.email} required type="email" inputMode="email" autoComplete="email" value={values.email} onChange={set("email")} error={fe("email")} />
         <TextField id="appt-phone" label={t.phone} optionalLabel={t.optional} type="tel" inputMode="tel" autoComplete="tel" value={values.phone} onChange={set("phone")} error={fe("phone")} />
       </div>
+
+      {promoField && (
+        <TextField id="appt-promo" label={t.promoCode} optionalLabel={t.optional} value={values.promoCode} onChange={set("promoCode")} error={fe("promoCode")} maxLength={30} autoComplete="off" />
+      )}
 
       <TextArea id="appt-notes" label={t.notes} optionalLabel={t.optional} placeholder={t.notesPlaceholder} value={values.notes} onChange={set("notes")} error={fe("notes")} maxLength={1500} rows={4} />
 

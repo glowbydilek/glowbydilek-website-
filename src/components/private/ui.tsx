@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { cloneElement, isValidElement, useId } from "react";
+import { cloneElement, isValidElement, useContext, useId } from "react";
+import { ActionPending } from "./pending";
 import { useFormStatus } from "react-dom";
 
 /** Small UI kit for the private areas (admin and agenda): clear, calm, large touch targets. */
@@ -27,7 +28,9 @@ export function Button({ variant = "primary", className = "", ...rest }: ButtonH
 }
 
 export function SubmitButton({ children, pending, variant = "primary", className = "", confirm, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { pending?: string; variant?: BtnVariant; confirm?: string }) {
-  const { pending: busy } = useFormStatus();
+  const { pending: formBusy } = useFormStatus();
+  const actionBusy = useContext(ActionPending);
+  const busy = formBusy || actionBusy;
   return (
     <button
       type="submit"

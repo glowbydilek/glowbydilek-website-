@@ -20,11 +20,11 @@ export default async function AdminHome() {
   const { checks, counts } = await systemStatus(getDb());
   return (
     <>
-      <PageHeader title={`Welkom, ${s.user.name || "Dilek"}`} subtitle="Beheer hier de website. Afspraken en klanten vind je in Ajanda." />
+      <PageHeader title={`Welkom, ${s.user.name || "Dilek"}`} subtitle="Beheer hier de website. Afspraken en klanten vind je in Agenda." />
       <div className="mb-5 grid gap-3 sm:grid-cols-3">
-        <Link href="/ajanda/aanvragen" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.pending}</span><span className="text-sm text-muted">open aanvragen</span></Link>
-        <Link href="/ajanda/berichten" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
-        <Link href="/ajanda/instellingen#emails" className="rounded-2xl border border-line bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
+        <Link href="/agenda/aanvragen" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.pending}</span><span className="text-sm text-muted">open aanvragen</span></Link>
+        <Link href="/agenda/berichten" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
+        <Link href="/agenda/instellingen#emails" className="rounded-2xl border border-line bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
       </div>
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">

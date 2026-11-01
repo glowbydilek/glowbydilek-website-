@@ -59,7 +59,7 @@ Production therefore never silently runs on test keys.
 - Logs contain codes only — no personal data, tokens or message content.
 - Security headers incl. a Content-Security-Policy that only allows `challenges.cloudflare.com` as an external script/frame source.
 
-## Private areas (`/admin`, `/ajanda`)
+## Private areas (`/admin`, `/agenda`)
 
 - One owner account (`OWNER_EMAIL`, default hello@glowbydilek.nl), created automatically **without a password**. There is no registration and no default password; the first password is set through "Wachtwoord vergeten?".
 - Passwords: scrypt (N=32768, r=8, p=1) with a per-user salt; minimum 12 characters; obviously weak passwords (e.g. containing "wachtwoord", the business name or the email name) are refused.
@@ -81,7 +81,7 @@ Production therefore never silently runs on test keys.
 
 ## Business data added in 2026 (CRM, finance, invoices, reviews, consultation)
 
-- **Authorisation:** every Ajanda/Admin page, server action and file route (PDFs, exports) re-checks the owner session on the server (`assertOwner` / `requireOwner`); private route handlers return 401 without a session. All private responses are `noindex`, `no-store`, `no-referrer`.
+- **Authorisation:** every Agenda/Admin page, server action and file route (PDFs, exports) re-checks the owner session on the server (`assertOwner` / `requireOwner`); private route handlers return 401 without a session. All private responses are `noindex`, `no-store`, `no-referrer`.
 - **Consultation (health) data:** encrypted with AES-256-GCM under `CONSULTATION_KEY`, MFA required, every view/change/export/deletion audited, excluded from exports, emails, PDFs, reports and analytics; off until the owner confirms the legal conditions. See `docs/CONSULTATION.md`.
 - **Invoices:** issued invoices are immutable (status guard + frozen snapshot + PDF SHA-256); corrections only via credit invoices; numbers are allocated under a row lock. Invoice emails only go to the address frozen on the invoice while it still matches the customer.
 - **Payments:** never deleted, only voided with a reason; all changes audited.
@@ -90,3 +90,22 @@ Production therefore never silently runs on test keys.
 - **Social and analytics settings:** strict validation (https + the network's own domain; `G-` Measurement IDs only); GA4 loads only after visitor consent; the CSP allows Google Analytics hosts, which are only contacted after consent.
 - **SQL:** all queries go through Drizzle's parameterised builder or tagged `sql` templates (values are bound, never concatenated).
 - **Dependency audit:** `npm audit --omit=dev` reports 0 vulnerabilities (1 November 2026).
+
+## Review of the 2026 master release (1 November 2026)
+
+What was checked, and how:
+
+| Area | Result | Evidence |
+| --- | --- | --- |
+| Server actions | Every exported action in `src/lib/private/*` checks the owner session (`assertOwner`) before doing anything; the only public actions are login/reset (rate-limited, Turnstile) and accepting a price proposal (single-use 256-bit token stored as SHA-256, rate-limited per IP, cross-origin posts rejected by Next.js). **Fixed:** `mediaUsage` was exported from a server-action module without an owner check (low impact: it only listed where a photo was used). | Scripted scan of all `"use server"` modules |
+| Private route handlers | Receipts, CSV export, PDFs and consultation exports all require the owner session; responses are `no-store`, `noindex`, `nosniff`; receipts and media are served with a sandboxing CSP. | Scripted scan + e2e: receipt returns 401 without login |
+| Uploads | Receipts: PDF/JPG/PNG/WebP only, checked by file signature (an SVG/HTML file renamed to `.png` is refused), max 10 MB, stored in the database, never under a public URL. Images: unchanged (EXIF stripped). | `tests/vat-expenses.test.ts` |
+| CSV export | Cells that start with `=`, `+`, `-`, `@` are neutralised (no spreadsheet formula injection). | unit test |
+| Catalogue & slugs | Slugs are lower-case only, unique per level and can never shadow a fixed page or system path; only published items in published categories render; drafts 404 (owner preview only in draft mode). | `tests/catalogue.test.ts`, e2e publish/unpublish |
+| Campaign links | Internal paths only; protocol-relative `//host` and private areas are refused. | regex check |
+| Promotion codes | Checked server-side; the generic form rate limits run before the code check; usage limits are enforced under a row lock. | `tests/promotions.test.ts` |
+| Price proposals | Personal pages are `noindex`, `no-store`, `no-referrer`; tokens expire; a proposal can be answered once; replacing it withdraws the old one. | `tests/catalogue.test.ts`, e2e |
+| Analytics | No change: GA4 only after consent; no names, emails, phone numbers, appointment, invoice or payment data are sent. | `src/lib/analytics/track.ts` whitelist |
+| Dependencies | `npm audit --omit=dev`: 0 vulnerabilities. (Hostinger's install log reports 20 *moderate* findings — those are dev-only build tools, not shipped to the server.) | npm audit |
+
+Still open (owner action): rotate the previously exposed Turnstile secret; set the production secrets only in Hostinger; enable MFA after the first login.

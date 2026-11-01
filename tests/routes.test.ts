@@ -18,7 +18,7 @@ test("every page has a unique path per language", () => {
     }
   }
   // static pages + categories + treatments, in two languages
-  assert.equal(seen.size, (12 + 3 + 13) * 2); // 12 static (incl. reviews) + 3 categories + 13 treatments
+  assert.equal(seen.size, (13 + 3 + 13) * 2); // 13 static (incl. reviews, services overview) + 3 categories + 13 treatments
 });
 
 test("category routes match the agreed URLs", () => {
@@ -84,7 +84,12 @@ test("educational pages exist in both languages", () => {
 
 test("sitemap lists every page in both languages with hreflang alternates", async () => {
   const entries = await sitemap();
-  assert.equal(entries.length, allPages().length * 2);
+  // The "all treatments" overview is left out while waxing is the only published section;
+  // of the legal pages only the cookie policy is online by default.
+  assert.equal(entries.length, (allPages().length - 1 + 1) * 2);
+  assert.ok(entries.some((e) => e.url.endsWith("/cookiebeleid")));
+  assert.ok(!entries.some((e) => e.url.endsWith("/algemene-voorwaarden")));
+  assert.ok(!entries.some((e) => e.url.endsWith("/behandelingen")));
   for (const e of entries) {
     assert.ok(e.url.startsWith("https://"), e.url);
     const langs = e.alternates?.languages as Record<string, string>;

@@ -47,6 +47,15 @@ export async function financePdf(db: DB, period: Period) {
     { type: "table", columns: [{ label: "Methode", width: 6 }, { label: "Aantal", width: 2, align: "right" }, { label: "Bedrag", width: 2, align: "right" }], rows: r.byMethod.map((m) => [METHODS[m.method as keyof typeof METHODS] ?? m.method, String(m.count), formatCents(m.cents)]) },
     { type: "heading", text: "Openstaande facturen" },
     { type: "table", columns: [{ label: "Factuur", width: 3 }, { label: "Klant", width: 4 }, { label: "Open", width: 2, align: "right" }], rows: r.openInvoices.map((i) => [i.number, i.customer, formatCents(i.totalCents - i.paidCents)]) },
+    { type: "heading", text: "Per categorie" },
+    { type: "table", columns: [{ label: "Categorie", width: 7 }, { label: "Ontvangen", width: 3, align: "right" }], rows: r.bySection.map((x) => [x.name, formatCents(x.cents)]) },
+    { type: "pairs", rows: [["Verleende kortingen (acties)", formatCents(r.discountsCents)]] },
+    { type: "heading", text: "Btw op uitgegeven facturen" },
+    { type: "table", columns: [{ label: "Tarief", width: 4 }, { label: "Grondslag", width: 3, align: "right" }, { label: "Btw", width: 3, align: "right" }], rows: r.vatSummary.map((v) => [v.label, formatCents(v.baseCents), formatCents(v.vatCents)]) },
+    { type: "heading", text: "Uitgaven" },
+    { type: "table", columns: [{ label: "Categorie", width: 5 }, { label: "Aantal", width: 1, align: "right" }, { label: "Btw", width: 2, align: "right" }, { label: "Bedrag", width: 2, align: "right" }], rows: r.expenses.byCategory.map((c) => [c.label, String(c.count), formatCents(c.vatCents), formatCents(c.cents)]), total: ["Totaal", "", formatCents(r.expenses.vatCents), formatCents(r.expenses.totalCents)] },
+    { type: "pairs", rows: [["Saldo ontvangen − uitgaven (geen winstberekening)", formatCents(r.balanceCents)]] },
+    { type: "text", text: "Dit overzicht is geen aangifte en geen jaarrekening. Laat btw en resultaat controleren door je boekhouder." },
   ];
   return renderReportPdf("Financieel overzicht", `${dateNl(period.from)} – ${dateNl(period.to)}`, blocks);
 }

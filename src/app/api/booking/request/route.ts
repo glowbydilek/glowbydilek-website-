@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { BookingError, createTimedRequest } from "@/lib/booking/service";
 import { onlineBookingStatus } from "@/lib/booking/public";
+import { applyPromotion, checkCode } from "@/lib/promotions/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { claimOnce, hitLimit, releaseOnce } from "@/lib/db/limits";
 import { defaultPrivateSettings, getSetting } from "@/lib/db/settings";
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
   const v = validateBookingRequest(raw, status.bookable.map((b) => b.id));
   if (!v.ok) return json(422, { ok: false, error: "validation", fields: v.errors });
   const d = v.data;
+  if (d.promoCode && (await checkCode(db, d.promoCode))) return json(422, { ok: false, error: "validation", fields: { promoCode: "invalid" } });
 
   const check = await verifyTurnstile({ token: raw.turnstileToken, action: "booking", ip, claim: (h) => claimOnce(db, `turnstile:${h}`, 10 * 60_000) });
   if (!check.ok) return json(check.reason === "unavailable" ? 503 : 403, { ok: false, error: check.reason === "unavailable" ? "unavailable" : "challenge" });
@@ -58,11 +60,12 @@ export async function POST(req: NextRequest) {
 
   const priv = await getSetting(db, "private", defaultPrivateSettings);
   try {
-    await createTimedRequest(
+    const id = await createTimedRequest(
       db,
       { firstName: d.firstName, lastName: d.lastName, email: d.email, phone: d.phone, locale: d.locale, treatmentIds: d.treatments, day: d.date, minute: hhmmToMinutes(d.time)!, note: d.note, consent: true },
       { ownerEmail: priv.ownerNotifyEmail || process.env.MAIL_TO || process.env.SMTP_USER || "" },
     );
+    await applyPromotion(db, id, d.promoCode ?? null).catch((err) => console.error("[booking] promotion not applied:", err instanceof Error ? err.message.slice(0, 120) : err));
   } catch (err) {
     await releaseOnce(db, dupKey);
     if (err instanceof BookingError && (err.code === "conflict" || err.code === "noDuration")) return json(409, { ok: false, error: "slotTaken" });

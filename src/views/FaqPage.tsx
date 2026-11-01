@@ -16,7 +16,7 @@ export function FaqPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="vase" ratio={5 / 4} crumbs={[{ name: dict.nav.faq }]} {...f.hero}>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-wrap items-center gap-3">
           <ButtonLink href={href(locale, "contact")} arrow>
             {dict.cta.contact}
           </ButtonLink>

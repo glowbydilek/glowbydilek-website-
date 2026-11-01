@@ -39,7 +39,7 @@ export async function editorValue(db: DB, docKey: string, locale: Loc, fallback?
 }
 
 export async function saveDraft(db: DB, docKey: string, locale: Loc, data: unknown, userId: number) {
-  if (!isDocKey(docKey) && !/^(theme|menu|photos|business|social|analytics|sections:\w+|seo:[\w-]+)$/.test(docKey)) throw new ContentError("Onbekend document.");
+  if (!isDocKey(docKey) && !/^(theme|menu|photos|business|social|analytics|profile|legal-status|sections:\w+|seo:[\w-]+)$/.test(docKey)) throw new ContentError("Onbekend document.");
   const clean = sanitizeContent(data);
   const def = locale === "all" ? undefined : DOC_MAP.get(docKey)?.defaults[locale];
   const value = def !== undefined ? mergeContent(def, clean) : clean;

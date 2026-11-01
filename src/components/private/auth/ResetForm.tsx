@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { resetAction, type FormState } from "@/lib/private/authActions";
 import { Field, Input, Notice, SubmitButton } from "../ui";
 
-export function ResetForm({ area, token }: { area: "admin" | "ajanda"; token: string }) {
+export function ResetForm({ area, token }: { area: "admin" | "agenda"; token: string }) {
   const [state, action] = useActionState<FormState, FormData>(resetAction, {});
   return (
     <form action={action} className="space-y-4">

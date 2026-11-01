@@ -25,6 +25,7 @@ export function BookingJourney({
   privacyHref,
   email,
   turnstileSiteKey,
+  promoField = false,
 }: {
   locale: "nl" | "en";
   t: Dictionary["booking"]["journey"];
@@ -34,6 +35,7 @@ export function BookingJourney({
   privacyHref: string;
   email: string;
   turnstileSiteKey: string;
+  promoField?: boolean;
 }) {
   const [picked, setPicked] = useState<string[]>([]);
   const [from, setFrom] = useState(() => new Date().toISOString().slice(0, 10));
@@ -41,7 +43,7 @@ export function BookingJourney({
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
-  const [values, setValues] = useState({ firstName: "", lastName: "", email: "", phone: "", note: "" });
+  const [values, setValues] = useState({ firstName: "", lastName: "", email: "", phone: "", note: "", promoCode: "" });
   const [privacy, setPrivacy] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -115,7 +117,7 @@ export function BookingJourney({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...values, treatments: picked, date, time, privacy, locale, company: honeypot, elapsedMs: Date.now() - started.current, turnstileToken: challenge.token }),
       });
-      const data = (await r.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const data = (await r.json().catch(() => ({}))) as { ok?: boolean; error?: string; fields?: Record<string, string> };
       if (r.ok && data.ok) {
         setStatus("done");
         track("booking_submitted", { form: "online" });
@@ -127,6 +129,7 @@ export function BookingJourney({
         setTime(null);
         load();
       } else {
+        if (data.fields?.promoCode) setFieldErrors({ promoCode: forms.errors.promoCode });
         const map: Record<string, string> = { rateLimited: forms.status.rateLimited, challenge: forms.status.challenge, duplicate: forms.status.duplicate, validation: forms.errors.summary };
         setError(map[data.error ?? ""] ?? `${forms.status.generic} ${email}.`);
       }
@@ -233,6 +236,9 @@ export function BookingJourney({
             <TextField id="bk-email" label={t.email} required type="email" inputMode="email" autoComplete="email" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} error={fieldErrors.email} />
             <TextField id="bk-phone" label={t.phone} required type="tel" inputMode="tel" autoComplete="tel" value={values.phone} onChange={(e) => setValues({ ...values, phone: e.target.value })} error={fieldErrors.phone} />
           </div>
+          {promoField && (
+            <TextField id="bk-promo" label={forms.promoCode} value={values.promoCode} onChange={(e) => setValues({ ...values, promoCode: e.target.value })} error={fieldErrors.promoCode} maxLength={30} autoComplete="off" />
+          )}
           <TextArea id="bk-note" label={t.note} placeholder={t.notePlaceholder} value={values.note} onChange={(e) => setValues({ ...values, note: e.target.value })} maxLength={1000} rows={3} />
           <Consent id="bk-privacy" checked={privacy} onChange={setPrivacy} t={forms} privacyHref={privacyHref} error={fieldErrors.privacy} />
           <div>

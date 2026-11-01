@@ -1,8 +1,8 @@
 # Email: forms, appointment emails and reminders
 
-The public forms post to server-side endpoints (`/api/contact`, `/api/appointment` and, when online booking is switched on, `/api/booking/request`). These validate the input, **store** the message or request in the database (visible in Ajanda → Berichten / Aanvragen), send a notification to the studio mailbox with the customer as **Reply-To**, and send the customer an acknowledgement in their language.
+The public forms post to server-side endpoints (`/api/contact`, `/api/appointment` and, when online booking is switched on, `/api/booking/request`). These validate the input, **store** the message or request in the database (visible in Agenda → Berichten / Aanvragen), send a notification to the studio mailbox with the customer as **Reply-To**, and send the customer an acknowledgement in their language.
 
-Appointment emails sent from Ajanda (confirmation, proposal, decline, reschedule, cancellation, reminder) go through a **transactional outbox** (`outbox` table): the email is queued in the same database transaction as the appointment change, then delivered immediately and, if that fails, retried by the cron job. Production setup: `docs/DEPLOYMENT.md`.
+Appointment emails sent from Agenda (confirmation, proposal, decline, reschedule, cancellation, reminder) go through a **transactional outbox** (`outbox` table): the email is queued in the same database transaction as the appointment change, then delivered immediately and, if that fails, retried by the cron job. Production setup: `docs/DEPLOYMENT.md`.
 
 ## Hostinger environment variables (set by the owner, never committed)
 
@@ -52,9 +52,9 @@ Full details and Hostinger settings: `docs/SECURITY.md`.
 ## The request workflow (no automatic confirmation)
 
 1. The visitor sends a request (preferred date/time, or an exact free time when online booking is on). It is stored as **"aanvraag" (pending approval)**; the visitor's acknowledgement clearly says it is **not yet confirmed**. Dilek also gets an email.
-2. In **Ajanda → Aanvragen**, Dilek approves, proposes another time, or declines, optionally with a personal note.
-3. The customer receives the matching email. Practical location details (Ajanda → Instellingen, private) are only inserted in **confirmation, reschedule and reminder** emails, never on the website or in the request acknowledgement.
-4. Before an approved appointment, a **reminder** is sent (default 24 hours before; setting in Ajanda). Cancelled or moved appointments never receive a stale reminder.
+2. In **Agenda → Aanvragen**, Dilek approves, proposes another time, or declines, optionally with a personal note.
+3. The customer receives the matching email. Practical location details (Agenda → Instellingen, private) are only inserted in **confirmation, reschedule and reminder** emails, never on the website or in the request acknowledgement.
+4. Before an approved appointment, a **reminder** is sent (default 24 hours before; setting in Agenda). Cancelled or moved appointments never receive a stale reminder.
 
 ### Outbox behaviour
 
@@ -78,5 +78,5 @@ Password-reset emails are deliberately **not** editable and **not** queued: they
 
 - **Mailbox:** `hello@glowbydilek.nl` exists and is active. This was confirmed read-only through the connected Hostinger Mail integration on 31 October 2026. That integration can also be used to confirm that a live test message has arrived.
 
-- Tested end to end against a local SMTP server that requires authentication: notifications, acknowledgements, Reply-To, Dutch/English content, appointment emails from Ajanda, outbox retries and deduplication, reminders, the password-reset email, the failure paths and the spam protections all behave as described.
+- Tested end to end against a local SMTP server that requires authentication: notifications, acknowledgements, Reply-To, Dutch/English content, appointment emails from Agenda, outbox retries and deduplication, reminders, the password-reset email, the failure paths and the spam protections all behave as described.
 - **Not yet tested against the real Hostinger SMTP server.** This needs `SMTP_PASS` and the other variables to be configured in Hostinger. Until then, **live email delivery, password recovery and reminders are unverified.** After deploying: request a password reset for hello@glowbydilek.nl, send one test message through each form with your own address, and check that everything arrives.

@@ -16,7 +16,7 @@ import { getSession, SESSION_ABSOLUTE_MS, type SessionInfo } from "./service";
 const secure = process.env.NODE_ENV === "production" && process.env.INSECURE_COOKIES !== "true";
 export const SESSION_COOKIE = secure ? "__Host-glow_session" : "glow_session";
 
-export type Area = "admin" | "ajanda";
+export type Area = "admin" | "agenda";
 
 export async function requestContext() {
   const h = await headers();
@@ -76,7 +76,9 @@ export class UnauthorizedError extends Error {
 
 /** Only allow redirects to our own private areas after login. */
 export function safeNext(next: string | undefined | null, area: Area): string {
-  if (!next || !/^\/(admin|ajanda)(\/[\w\-/?=&%.]*)?$/.test(next) || next.includes("//")) return `/${area}`;
+  // The central /login page doubles as the "choose an area" page once signed in.
+  if (next === "/login") return next;
+  if (!next || !/^\/(admin|agenda)(\/[\w\-/?=&%.]*)?$/.test(next) || next.includes("//")) return `/${area}`;
   if (/\/login|wachtwoord-/.test(next)) return `/${area}`;
   return next;
 }

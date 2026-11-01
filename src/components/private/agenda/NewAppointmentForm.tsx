@@ -9,7 +9,6 @@ import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
 export type PickTreatment = { id: string; name: string; category: string; duration: number | null; buffer: number; priceCents: number | null };
 type Known = { id: number; firstName: string; lastName: string; email: string | null; phone: string | null; locale: string };
 type Suggestion = Known & { strong: boolean; reason: string };
-const CAT: Record<string, string> = { face: "Gezicht", body: "Lichaam", intimate: "Bikini & intiem" };
 
 function addMinutes(t: string, m: number) {
   const [h, mi] = t.split(":").map(Number);
@@ -38,7 +37,8 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
   const auto = useMemo(() => (!rows.length || rows.some((r) => !r.duration) ? null : rows.reduce((s, r) => s + (r.duration ?? 0), 0)), [rows]);
   const listPrice = !rows.length || rows.some((r) => r.priceCents == null) ? null : rows.reduce((s, r) => s + (r.priceCents ?? 0), 0);
   const duration = Number(manualDuration) || auto || 0;
-  const groups = Object.entries(CAT).map(([id, label]) => ({ id, label, items: treatments.filter((t) => t.category === id) }));
+  // `category` is the display group label (waxing zone or service section), in catalogue order.
+  const groups = [...new Set(treatments.map((t) => t.category))].map((label) => ({ id: label, label, items: treatments.filter((t) => t.category === label) }));
 
   // Returning-customer recognition (debounced, owner-only endpoint).
   useEffect(() => {
@@ -50,7 +50,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
     const t = setTimeout(async () => {
       try {
         const q = new URLSearchParams({ phone, email, first: firstName, last: lastName });
-        const r = await fetch(`/ajanda/klanten/zoeken?${q}`, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+        const r = await fetch(`/agenda/klanten/zoeken?${q}`, { signal: ctrl.signal, headers: { Accept: "application/json" } });
         if (r.ok) setSuggestions(((await r.json()) as { matches: Suggestion[] }).matches);
       } catch {
         /* typing on; ignore aborted lookups */

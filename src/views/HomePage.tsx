@@ -3,6 +3,8 @@ import Link from "next/link";
 import { HeroVisual, Ornament } from "@/components/BrandVisual";
 import { Glint } from "@/components/brand/Logo";
 import { CareTabs } from "@/components/CareTabs";
+import { CampaignSlider } from "@/components/CampaignSlider";
+import { currentSnapshot } from "@/lib/cms/current";
 import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
@@ -14,19 +16,73 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { mailto, siteConfig } from "@/content/site";
 import { treatmentGroups } from "@/content/treatments";
+import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
-import { categoryCopy } from "@/content/copy";
-import type { TreatmentId } from "@/content/slugs";
-import { categoryHref, href, type Locale } from "@/i18n/config";
+import { groupCopy, sectionCopy } from "@/content/copy";
+import { alternatePath, href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
 
-const featured: TreatmentId[] = ["eyebrows", "underarms", "full-legs", "brazilian"];
+/** Campaign links are stored as Dutch paths; on the English site they map to the English page when known. */
+function localiseHref(path: string, locale: Locale): string {
+  if (locale === "nl" || path.startsWith("/en")) return path;
+  return alternatePath(path, "en") !== "/en" || path === "/" ? alternatePath(path, "en") : path;
+}
+
+const defaultFeatured = ["eyebrows", "underarms", "full-legs", "brazilian"];
+
+/**
+ * Service discovery rows: the published sections once there are several
+ * (waxing, facial, body, massage, packages); with waxing alone, its zones.
+ */
+function discovery(locale: Locale) {
+  const sections = publicSections();
+  if (sections.length > 1) {
+    return sections.map((sec) => {
+      const items = publicItems({ sectionId: sec.id });
+      const c = sec.id === "waxing" ? null : sectionCopy(locale, sec.id, sec.name[locale]);
+      return {
+        id: sec.id,
+        photo: sec.photo,
+        label: sec.name[locale],
+        intro: c ? c.hero.subtitle : getDictionary(locale).nav.waxingTeaser,
+        href: sec.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, sec),
+        names: items.map((i) => i.name[locale]),
+      };
+    });
+  }
+  return sections.flatMap((sec) =>
+    publicGroups(sec.id).map((g) => {
+      const b = treatmentGroups.find((x) => x.id === g.id);
+      const c = groupCopy(locale, g.id, g.name[locale]);
+      return {
+        id: g.id,
+        photo: g.photo,
+        label: c.label,
+        intro: b?.intro[locale] ?? c.teaser,
+        href: groupHref(locale, g),
+        names: publicItems({ sectionId: sec.id, groupId: g.id }).map((i) => i.name[locale]),
+      };
+    }),
+  );
+}
+
+/** Owner-featured items (Admin → Behandelingen), else a calm default selection. */
+function featuredIds(): string[] {
+  const owner = publicItems().filter((i) => i.featured).map((i) => i.id);
+  const list = owner.length ? owner : defaultFeatured.filter((id) => {
+    const i = itemById(id);
+    return i && isPublicItem(i);
+  });
+  return list.slice(0, 4);
+}
 
 export function HomePage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.home;
   const faqs = dict.faq.general.slice(0, 6);
+  const rows = discovery(locale);
+  const featured = featuredIds();
 
   const sections: Record<string, ReactNode> = {
     hero: (
@@ -42,7 +98,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <em>{t.hero.titleEm}</em>
               </h1>
               <p className="lead rise mt-6 max-w-lg [--rise-delay:160ms]">{t.hero.subtitle}</p>
-              <div className="rise mt-8 flex flex-col gap-3 [--rise-delay:240ms] sm:flex-row">
+              <div className="rise mt-8 flex flex-wrap items-center gap-3 [--rise-delay:240ms]">
                 <ButtonLink href={href(locale, "booking")} arrow>
                   {dict.cta.request}
                 </ButtonLink>
@@ -68,16 +124,58 @@ export function HomePage({ locale }: { locale: Locale }) {
         </section>
       </>
     ),
+    campaigns: (() => {
+      const camp = currentSnapshot().marketing?.campaigns ?? [];
+      if (!camp.length) return null;
+      return (
+        <CampaignSlider
+          slides={camp.map((c) => ({ id: c.id, title: c.title[locale], text: c.text[locale], cta: c.cta[locale], href: localiseHref(c.href, locale), image: c.mediaId ? `/media/${c.mediaId}/1024` : null }))}
+          labels={dict.campaign}
+        />
+      );
+    })(),
+    reviews: (() => {
+      const rv = currentSnapshot().marketing?.reviews;
+      if (!rv?.list.length) return null;
+      const r = dict.reviews;
+      return (
+        <section className="section-tight bg-surface">
+          <Container>
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <SectionHeading eyebrow={r.eyebrow} title={r.title} intro={rv.average != null ? r.average.replace("{avg}", rv.average.toLocaleString(locale === "nl" ? "nl-NL" : "en-GB")).replace("{count}", String(rv.count)) : undefined} size="md" />
+              <ButtonLink href={href(locale, "reviews")} variant="link" arrow>
+                {dict.nav.reviews}
+              </ButtonLink>
+            </div>
+            <ul className="mt-block grid gap-5 md:grid-cols-3">
+              {rv.list.map((x) => (
+                <li key={x.id} className="flex flex-col rounded-[var(--radius-card)] border border-line bg-paper p-6" data-reveal>
+                  <p className="text-accent" aria-label={`${x.rating} / 5`}>{"★".repeat(x.rating)}<span className="text-line">{"★".repeat(5 - x.rating)}</span></p>
+                  <blockquote lang={x.locale} className="mt-3 flex-1 leading-relaxed text-ink-soft">“{x.body.length > 280 ? `${x.body.slice(0, 277)}…` : x.body}”</blockquote>
+                  <p className="mt-4 text-sm text-ink">
+                    {x.name === "—" ? r.anonymous : x.name}
+                    {x.verified && <span className="ml-2 text-xs text-muted">· {r.verified}</span>}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      );
+    })(),
     statement: (
       <>
-        {/* 2 ─ Statement: one quiet, typographic moment */}
+        {/* 2 ─ Statement: a still life beside the quote (photo editable in Admin → Foto's) */}
         <section className="section bg-sand">
-          <Container className="mx-auto max-w-4xl text-center">
-            <div data-reveal>
+          <Container className="grid items-center gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div data-reveal className="mx-auto w-full max-w-[22rem] md:max-w-none">
+              <Photo id="botanical" locale={locale} ratio={4 / 5} sizes="(min-width: 768px) 38vw, 90vw" className="rounded-[var(--radius-card)]" />
+            </div>
+            <div data-reveal className="text-center md:text-left">
               <p className="eyebrow">{t.statement.eyebrow}</p>
-              <blockquote className="display mt-6 text-[2.15rem] text-ink sm:text-5xl lg:text-[3.75rem]">“{t.statement.quote}”</blockquote>
-              <div className="mt-8"><Ornament className="h-4 w-auto" /></div>
-              <p className="lead mx-auto mt-8 max-w-2xl">{t.statement.body}</p>
+              <blockquote className="display mt-6 text-[2.15rem] text-ink sm:text-5xl lg:text-[3.4rem]">“{t.statement.quote}”</blockquote>
+              <div className="mt-8 flex justify-center md:justify-start"><Ornament className="h-4 w-auto" /></div>
+              <p className="lead mt-8 max-w-2xl md:mx-0">{t.statement.body}</p>
               <p className="script mt-5 text-3xl text-accent-deep" aria-label={`— ${t.statement.signature}`}>
                 — {t.statement.signature}
               </p>
@@ -100,10 +198,10 @@ export function HomePage({ locale }: { locale: Locale }) {
               </div>
             </div>
             <ol className="mt-block border-t border-line">
-              {treatmentGroups.map((g, i) => (
+              {rows.map((g, i) => (
                 <li key={g.id} className="border-b border-line" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
                   <Link
-                    href={categoryHref(locale, g.id)}
+                    href={g.href}
                     className="group grid gap-4 py-7 transition-colors duration-500 hover:bg-surface sm:px-4 md:grid-cols-[4rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-8"
                   >
                     {hasPhoto(g.photo) ? (
@@ -114,18 +212,18 @@ export function HomePage({ locale }: { locale: Locale }) {
                       <span className="font-serif text-4xl italic text-accent-deep">0{i + 1}</span>
                     )}
                     <div>
-                      <h3 className="font-serif text-[2rem] leading-none text-ink sm:text-[2.4rem]">{categoryCopy(locale, g.id).label}</h3>
+                      <h3 className="font-serif text-[2rem] leading-none text-ink sm:text-[2.4rem]">{g.label}</h3>
                       <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted">
-                        {g.treatments.length} {t.treatments.count}
+                        {g.names.length} {t.treatments.count}
                       </p>
                     </div>
                     <div>
-                      <p className="leading-relaxed text-ink-soft">{g.intro[locale]}</p>
-                      <p className="mt-3 text-sm text-muted">{g.treatments.map((tr) => tr.name[locale]).join(" · ")}</p>
+                      <p className="leading-relaxed text-ink-soft">{g.intro}</p>
+                      <p className="mt-3 text-sm text-muted">{g.names.join(" · ")}</p>
                     </div>
                     <span className="flex h-12 w-12 items-center justify-center justify-self-start rounded-full border border-ink/20 text-ink transition-all duration-500 group-hover:border-ink group-hover:bg-ink group-hover:text-paper md:justify-self-end">
                       <span className="sr-only">
-                        {t.treatments.more}: {categoryCopy(locale, g.id).label}
+                        {t.treatments.more}: {g.label}
                       </span>
                       <Icon name="arrow" className="h-4 w-4 transition-transform duration-500 group-hover:-rotate-45" />
                     </span>
@@ -308,7 +406,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               <h2 className="display text-[2rem] sm:text-4xl">{t.contact.eyebrow}</h2>
               <p className="mt-3 leading-relaxed text-ink-soft">{t.contact.body}</p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row" data-reveal>
+            <div className="flex flex-wrap items-center gap-3" data-reveal>
               <ButtonLink href={href(locale, "contact")} variant="outline" arrow>
                 {dict.cta.sendMessage}
               </ButtonLink>

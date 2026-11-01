@@ -39,7 +39,7 @@ const num = (f: FormData, k: string) => {
 function fail(err: unknown): FormState {
   if (err instanceof BookingError) return { error: err.message, code: err.code };
   if (err instanceof CrmError) return { error: err.message };
-  console.error("[ajanda] action failed:", err instanceof Error ? err.message.slice(0, 200) : err);
+  console.error("[agenda] action failed:", err instanceof Error ? err.message.slice(0, 200) : err);
   return { error: "Er ging iets mis. Probeer het opnieuw." };
 }
 
@@ -50,7 +50,7 @@ function dayAndTime(f: FormData): { day: string; minute: number } | null {
 }
 
 function refresh() {
-  revalidatePath("/ajanda", "layout");
+  revalidatePath("/agenda", "layout");
 }
 
 // ───────────────────────────────────────────────────────── Appointments
@@ -95,7 +95,7 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
   }
   await deliverSoon(getDb());
   refresh();
-  redirect(`/ajanda/afspraak/${id}?opgeslagen=1`);
+  redirect(`/agenda/afspraak/${id}?opgeslagen=1`);
 }
 
 export async function appointmentAction(_: FormState, f: FormData): Promise<FormState> {
@@ -106,6 +106,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   const ctx = { userId: s.user.id };
   const message = str(f, "message");
   let mail: boolean | null = null;
+  let extra = "";
   try {
     switch (op) {
       case "approve": {
@@ -144,9 +145,16 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
       case "cancel":
         mail = (await cancel(db, id, ctx, { message })).notified ?? false;
         break;
-      case "complete":
+      case "complete": {
         await markCompleted(db, id, ctx);
+        const { afterCompletion } = await import("../finance/automation");
+        const r = await afterCompletion(db, id, ctx).catch((err) => {
+          console.error("[agenda] after-completion automation failed:", err instanceof Error ? err.message.slice(0, 160) : err);
+          return null;
+        });
+        extra = r ? `&factuur=${r.invoice}${r.aftercare ? "&nazorg=1" : ""}` : "&factuur=fout";
         break;
+      }
       case "noshow":
         await markNoShow(db, id, ctx);
         break;
@@ -170,7 +178,7 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
   if (op === "notes") return { ok: true, message: "Notitie opgeslagen." };
   // Status changes re-render the page with other actions; show the result at the top.
   // mail=0 → the change was material but the customer has no email address: shown prominently.
-  redirect(`/ajanda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}`);
+  redirect(`/agenda/afspraak/${id}?melding=${op}${mail === false ? "&mail=0" : ""}${extra}`);
 }
 
 // ─────────────────────────────────────────────────────────── Customers
@@ -352,7 +360,7 @@ export async function inquiryAction(f: FormData) {
     await db.delete(inquiries).where(eq(inquiries.id, id));
     await audit(db, { userId: s.user.id, action: "inquiry.deleted", entityId: id });
     refresh();
-    redirect("/ajanda/berichten");
+    redirect("/agenda/berichten");
   }
   if (["new", "read", "replied", "closed"].includes(status)) {
     await db.update(inquiries).set({ status, readAt: status === "new" ? null : new Date() }).where(eq(inquiries.id, id));
@@ -388,5 +396,84 @@ export async function mergeCustomersAction(_: FormState, f: FormData): Promise<F
     return fail(err);
   }
   refresh();
-  redirect(`/ajanda/klanten/${intoId}?samengevoegd=1`);
+  redirect(`/agenda/klanten/${intoId}?samengevoegd=1`);
+}
+
+// ───────────────────────────────────────────── Price proposals ("op aanvraag")
+
+export async function sendQuoteAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const amountCents = parseEuroToCents(str(f, "amount"));
+  if (amountCents === null || amountCents <= 0) return { error: "Vul een geldig bedrag in (bijv. 65 of 72,50)." };
+  const { QuoteError, sendQuote } = await import("../booking/quotes");
+  try {
+    await sendQuote(getDb(), id, { amountCents, message: str(f, "message"), validDays: Number(str(f, "days") || 7) }, { userId: s.user.id });
+  } catch (err) {
+    if (err instanceof QuoteError) return { error: err.message };
+    return fail(err);
+  }
+  await audit(getDb(), { userId: s.user.id, action: "quote.sent", entity: "appointment", entityId: String(id), details: { amountCents } });
+  await deliverSoon(getDb());
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=offerte`);
+}
+
+export async function withdrawQuoteAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const { withdrawQuote } = await import("../booking/quotes");
+  await withdrawQuote(getDb(), id, s.user.id);
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=ingetrokken`);
+}
+
+// ───────────────────────────────────────────────────────── Promotions
+
+export async function applyPromotionAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const promotionId = Number(str(f, "promotionId"));
+  const { applyPromotion } = await import("../promotions/service");
+  const r = await applyPromotion(getDb(), id, null, { promotionId });
+  await audit(getDb(), { userId: s.user.id, action: "promotion.applied", entity: "appointment", entityId: String(id), details: { promotionId, applied: Boolean(r) } });
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=${r ? "actie" : "actie-niet"}`);
+}
+
+export async function removePromotionAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const { removePromotion } = await import("../promotions/service");
+  await removePromotion(getDb(), id);
+  await audit(getDb(), { userId: s.user.id, action: "promotion.removed", entity: "appointment", entityId: String(id) });
+  refresh();
+  redirect(`/agenda/afspraak/${id}?melding=actie-weg`);
+}
+
+// ─────────────────────────────────────── Invoice automation & aftercare
+
+export async function automationSettingsAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const { setSetting } = await import("../db/settings");
+  const autoDraft = f.get("autoDraft") === "on";
+  const autoIssue = autoDraft && f.get("autoIssue") === "on";
+  const autoEmail = autoIssue && f.get("autoEmail") === "on";
+  const delay = Math.min(72, Math.max(0, Number(str(f, "delayHours") || 3)));
+  await setSetting(getDb(), "invoice_automation", { autoDraft, autoIssue, autoEmail }, s.user.id);
+  await setSetting(getDb(), "aftercare", { enabled: f.get("aftercare") === "on", delayHours: Number.isFinite(delay) ? delay : 3 }, s.user.id);
+  await audit(getDb(), { userId: s.user.id, action: "settings.automation", entity: "settings", details: { autoDraft, autoIssue, autoEmail, aftercare: f.get("aftercare") === "on" } });
+  refresh();
+  return { ok: true, message: "Opgeslagen. Wijzigings- en annuleringsmails worden altijd verstuurd, ongeacht deze instellingen." };
+}
+
+export async function invoiceModeAction(f: FormData) {
+  const s = await assertOwner();
+  const id = Number(str(f, "appointmentId"));
+  const mode = str(f, "invoiceMode");
+  const { appointments } = await import("../db/schema");
+  await getDb().update(appointments).set({ invoiceMode: mode === "manual" || mode === "none" ? mode : null }).where(eq(appointments.id, id));
+  await audit(getDb(), { userId: s.user.id, action: "appointment.invoice_mode", entity: "appointment", entityId: String(id), details: { mode } });
+  refresh();
+  redirect(`/agenda/afspraak/${id}`);
 }

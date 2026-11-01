@@ -32,7 +32,7 @@ import { addDays, dayBoundsUtc, formatLongDate, formatTime, localToUtc, toLocalP
 import { normalizeEmail, normalizeName, normalizePhone } from "../crm/normalize";
 import { availableSlots, dayPlan, peakLoad, type Busy, type BookingRules, type Override, type WeeklyRule } from "./engine";
 
-type Tx = Parameters<Parameters<DB["transaction"]>[0]>[0];
+export type Tx = Parameters<Parameters<DB["transaction"]>[0]>[0];
 export type Appointment = typeof appointments.$inferSelect;
 export type Customer = typeof customers.$inferSelect;
 
@@ -244,12 +244,12 @@ async function emailVars(tx: Tx, v: ApptView, message?: string, withLocation = f
   };
 }
 
-async function queueCustomerEmail(tx: Tx, v: ApptView, key: TemplateKey, dedupe: string, opts: { message?: string; sendAfter?: Date; kind?: string } = {}) {
+async function queueCustomerEmail(tx: Tx, v: ApptView, key: TemplateKey, dedupe: string, opts: { message?: string; sendAfter?: Date; kind?: string; vars?: Record<string, string> } = {}) {
   if (!v.customer.email) return false;
   const locale = (v.appt.locale === "en" ? "en" : "nl") as TLocale;
   const tpl = await loadTemplate(tx, key, locale);
   const withLocation = key === "confirmed" || key === "rescheduled" || key === "reminder";
-  const r = renderTemplate(tpl, await emailVars(tx, v, opts.message, withLocation));
+  const r = renderTemplate(tpl, { ...(await emailVars(tx, v, opts.message, withLocation)), ...(opts.vars ?? {}) });
   return enqueue(tx, {
     dedupeKey: dedupe,
     kind: opts.kind ?? key,
@@ -276,7 +276,7 @@ async function queueOwnerNotice(tx: Tx, v: ApptView, ownerEmail: string) {
     `Behandeling: ${v.items.map((i) => i.nameNl).join(", ")}`,
     `Moment: ${when}`,
     v.appt.customerNote ? `Opmerking: ${v.appt.customerNote}` : "",
-    "Bekijk en beantwoord de aanvraag in Ajanda: " + `${(process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, "")}/ajanda/afspraak/${v.appt.id}`,
+    "Bekijk en beantwoord de aanvraag in Agenda: " + `${(process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, "")}/agenda/afspraak/${v.appt.id}`,
   ].filter(Boolean);
   await enqueue(tx, {
     dedupeKey: `owner_request:${v.appt.id}`,
@@ -308,6 +308,16 @@ async function view(tx: Tx | DB, id: number): Promise<ApptView> {
 }
 
 export const getAppointment = (db: DB, id: number) => view(db, id);
+
+/** For sibling modules (quotes, aftercare): queue a templated email to the appointment's customer. */
+export async function queueAppointmentEmail(tx: Tx, id: number, key: TemplateKey, dedupe: string, opts: { message?: string; vars?: Record<string, string>; kind?: string; sendAfter?: Date } = {}) {
+  return queueCustomerEmail(tx, await view(tx, id), key, dedupe, opts);
+}
+
+/** For sibling modules: record an appointment history event. */
+export async function recordAppointmentEvent(tx: Tx, appointmentId: number, type: string, userId: number | null, data?: Record<string, unknown>) {
+  await event(tx, appointmentId, type, null, null, userId, data);
+}
 
 async function event(tx: Tx, appointmentId: number, type: string, from: string | null, to: string | null, userId: number | null, data?: Record<string, unknown>) {
   await tx.insert(appointmentEvents).values({ appointmentId, type, fromStatus: from, toStatus: to, userId, data: data ?? null });

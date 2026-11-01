@@ -218,6 +218,13 @@
       border-color 0.35s var(--ease-soft),
       transform 0.35s var(--ease-soft);
   }
+  @media (max-width: 639px) {
+    .btn {
+      min-height: 2.875rem;
+      padding: 0.65rem 1.2rem;
+      font-size: 0.9rem;
+    }
+  }
   .btn:active {
     transform: translateY(1px);
   }
@@ -352,57 +359,104 @@
   position: fixed;
   inset: 0;
   z-index: 60;
+  display: grid;
+  place-items: center;
   pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 40%), rgb(240 211 180 / 0.55) 0, rgb(245 240 232 / 0.35) 22%, transparent 55%);
+  background: rgb(245 240 232 / 0);
 }
 .glow-veil[data-state="in"] {
-  animation: veil-in 0.42s var(--ease-soft) forwards;
+  animation: veil-in 0.36s var(--ease-soft) forwards;
 }
 .glow-veil[data-state="out"] {
-  animation: veil-out 0.55s var(--ease-soft) forwards;
+  animation: veil-out 0.5s var(--ease-soft) forwards;
 }
-.glow-spark {
-  position: fixed;
-  z-index: 61;
-  pointer-events: none;
-  width: 22px;
-  height: 30px;
-  margin: -15px 0 0 -11px;
-  color: var(--color-accent);
-  opacity: 0;
+.glow-diamond {
+  width: min(46vmin, 300px);
+  height: auto;
+  overflow: visible;
 }
-.glow-spark[data-state="in"] {
-  animation: spark 0.75s var(--ease-luxe) forwards;
+.glow-diamond .glow-star {
+  fill: var(--color-accent);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.glow-diamond .glow-star-inner {
+  fill: var(--color-glow-soft);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.glow-diamond .glow-bloom,
+.glow-diamond .glow-rays {
+  transform-origin: 0 0;
+}
+.glow-veil[data-state="in"] .glow-star,
+.glow-veil[data-state="in"] .glow-star-inner {
+  animation: star-in 0.46s var(--ease-luxe) both;
+}
+.glow-veil[data-state="in"] .glow-rays {
+  animation: rays-in 0.5s var(--ease-luxe) 0.06s both;
+}
+.glow-veil[data-state="in"] .glow-bloom {
+  animation: bloom-in 0.5s var(--ease-soft) both;
+}
+.glow-veil[data-state="out"] .glow-diamond {
+  animation: diamond-out 0.45s var(--ease-soft) forwards;
 }
 @keyframes veil-in {
-  from {
-    opacity: 0;
-  }
   to {
-    opacity: 1;
+    background: rgb(245 240 232 / 0.62);
   }
 }
 @keyframes veil-out {
   from {
+    background: rgb(245 240 232 / 0.62);
+  }
+  to {
+    background: rgb(245 240 232 / 0);
+  }
+}
+@keyframes star-in {
+  from {
+    opacity: 0;
+    transform: scale(0.15) rotate(-35deg);
+  }
+  60% {
     opacity: 1;
+    transform: scale(1.08) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes rays-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+@keyframes bloom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes diamond-out {
+  from {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
   to {
     opacity: 0;
-  }
-}
-@keyframes spark {
-  0% {
-    opacity: 0;
-    transform: scale(0.2) rotate(-20deg);
-  }
-  35% {
-    opacity: 1;
-    transform: scale(1.1) rotate(0deg);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.6) rotate(10deg);
+    transform: scale(1.25) rotate(18deg);
   }
 }
 /* New page content settles in softly (only after a client-side navigation). */
@@ -457,8 +511,44 @@ html.glow-nav main {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .glow-veil,
-  .glow-spark {
+  .glow-veil {
     display: none;
+  }
+}
+
+/* FAQ accordion: smooth open where supported (progressive enhancement). */
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary {
+  list-style: none;
+}
+.faq summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .faq {
+      interpolate-size: allow-keywords;
+    }
+    .faq details::details-content {
+      height: 0;
+      overflow: clip;
+      transition:
+        height 0.45s var(--ease-soft),
+        content-visibility 0.45s allow-discrete;
+    }
+    .faq details[open]::details-content {
+      height: auto;
+    }
+  }
+}
+
+/* Campaign slider: gentle crossfade, none with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .campaign-slide {
+    animation: page-in 0.6s var(--ease-luxe) both;
   }
 }

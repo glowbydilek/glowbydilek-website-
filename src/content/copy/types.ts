@@ -36,7 +36,9 @@ export type TreatmentCopy = {
   /** H1 */
   title: string;
   lead: string;
-  /** Which area is treated. */
+  /** Heading above `area` (default: "Om welke zone gaat het?"). */
+  areaTitle?: string;
+  /** Which area is treated / what the treatment consists of. */
   area: string;
   /** How the appointment goes. */
   appointment: string[];
@@ -76,4 +78,19 @@ export type FaqPageCopy = {
   seoDescription: string;
   hero: { eyebrow: string; title: string; titleEm: string; subtitle: string };
   groups: FaqGroup[];
+};
+
+/** Copy for a top-level service section (Gezichtsbehandelingen, Pakketten, …). */
+export type SectionCopy = {
+  seoTitle: string;
+  seoDescription: string;
+  hero: { eyebrow: string; title: string; titleEm: string; subtitle: string };
+  intro: { title: string; paragraphs: string[] };
+  listTitle: string;
+  listIntro: string;
+  /** Short line shown in menus and section cards. */
+  teaser: string;
+  faqs: QA[];
+  /** Highlighted note (e.g. "no medical claims"); optional. */
+  note?: string;
 };

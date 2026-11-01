@@ -1,5 +1,7 @@
 import { siteConfig } from "@/content/site";
-import { treatmentGroups } from "@/content/treatments";
+import { groupCopy } from "@/content/copy";
+import { publicGroups, publicItems, publicSections } from "@/lib/catalogue";
+import { currentSnapshot } from "@/lib/cms/current";
 import { href, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { AppointmentForm } from "./forms/AppointmentForm";
@@ -12,11 +14,16 @@ export function ContactFormBlock({ locale, dict }: { locale: Locale; dict: Dicti
 }
 
 export function AppointmentFormBlock({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const groups = treatmentGroups.map((g) => ({
-    id: g.id,
-    name: g.name[locale],
-    treatments: g.treatments.map((t) => ({ id: t.id, name: t.name[locale] })),
-  }));
+  // Every published treatment and package, grouped by zone (waxing) or section.
+  const groups = publicSections().flatMap((s) => {
+    const zones = publicGroups(s.id).map((g) => ({
+      id: g.id,
+      name: s.id === "waxing" ? groupCopy(locale, g.id, g.name[locale]).label : `${s.name[locale]} · ${g.name[locale]}`,
+      treatments: publicItems({ sectionId: s.id, groupId: g.id }).map((t) => ({ id: t.id, name: t.name[locale] })),
+    }));
+    const loose = publicItems({ sectionId: s.id, groupId: null });
+    return loose.length ? [...zones, { id: s.id, name: s.name[locale], treatments: loose.map((t) => ({ id: t.id, name: t.name[locale] })) }] : zones;
+  });
   return (
     <AppointmentForm
       locale={locale}
@@ -26,6 +33,7 @@ export function AppointmentFormBlock({ locale, dict }: { locale: Locale; dict: D
       email={siteConfig.contact.email}
       notConfirmed={dict.booking.notConfirmed}
       turnstileSiteKey={turnstileSiteKey()}
+      promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
     />
   );
 }

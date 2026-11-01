@@ -2,7 +2,8 @@ import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { AppointmentFormBlock } from "@/components/FormSections";
 import { PreselectedNotice } from "@/components/forms/PreselectedNotice";
-import { allTreatments, formatPrice, treatmentGroups } from "@/content/treatments";
+import { currentSnapshot } from "@/lib/cms/current";
+import { getCatalogue, groupById, itemById, priceLabel, publicItems, sectionById } from "@/lib/catalogue";
 import { BookingJourney } from "@/components/forms/BookingJourney";
 import { siteConfig } from "@/content/site";
 import { onlineBookingStatus } from "@/lib/booking/public";
@@ -35,7 +36,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
     <>
       <PageHero locale={locale} photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
         <PreselectedNotice
-          names={Object.fromEntries(allTreatments().map((x) => [x.id, x.name[locale]]))}
+          names={Object.fromEntries(publicItems().map((x) => [x.id, x.name[locale]]))}
           label={t.preselected}
           cta={t.toForm}
           anchor={bookingAnchor}
@@ -61,17 +62,25 @@ export async function BookingPage({ locale }: { locale: Locale }) {
                   locale={locale}
                   t={t.journey}
                   forms={dict.forms}
-                  categories={Object.fromEntries(treatmentGroups.map((g) => [g.id, g.name[locale]]))}
-                  treatments={online.map((b) => ({
-                    id: b.id,
-                    name: locale === "nl" ? b.nameNl : b.nameEn,
-                    category: b.category,
-                    duration: b.duration!,
-                    price: b.priceCents != null ? `${b.priceFrom ? `${t.journey.from} ` : ""}${formatPrice(b.priceCents / 100, locale)}` : null,
-                  }))}
+                  categories={Object.fromEntries([
+                    ...getCatalogue().groups.map((g) => [g.id, g.name[locale]]),
+                    ...getCatalogue().sections.map((s) => [s.id, s.name[locale]]),
+                  ])}
+                  treatments={online.map((b) => {
+                    const item = itemById(b.id)!;
+                    const cat = item.groupId && groupById(item.groupId) ? item.groupId : (sectionById(item.sectionId)?.id ?? b.category);
+                    return {
+                      id: b.id,
+                      name: item.name[locale],
+                      category: cat,
+                      duration: b.duration!,
+                      price: priceLabel(item, locale, { from: t.journey.from, onRequest: "" }) || null,
+                    };
+                  })}
                   privacyHref={href(locale, "privacy")}
                   email={siteConfig.contact.email}
                   turnstileSiteKey={turnstileSiteKey()}
+                  promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
                 />
               ) : (
                 <AppointmentFormBlock locale={locale} dict={dict} />

@@ -8,7 +8,7 @@
  */
 import { escapeHtml } from "../forms/validation";
 
-export const TEMPLATE_KEYS = ["request_received", "confirmed", "proposed", "declined", "rescheduled", "cancelled", "reminder"] as const;
+export const TEMPLATE_KEYS = ["request_received", "confirmed", "proposed", "declined", "rescheduled", "cancelled", "reminder", "price_proposal", "price_accepted", "aftercare"] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 export type TLocale = "nl" | "en";
 
@@ -23,6 +23,9 @@ export const PLACEHOLDERS: Record<string, { nl: string }> = {
   request: { nl: "Samenvatting van de aanvraag (datum/tijd of voorkeur)" },
   location: { nl: "Praktische locatiegegevens (alleen na bevestiging, uit Instellingen)" },
   message: { nl: "Persoonlijke toelichting van Dilek (optioneel)" },
+  amount: { nl: "Voorgestelde of afgesproken prijs" },
+  link: { nl: "Persoonlijke link om het prijsvoorstel te bekijken en te accepteren" },
+  validUntil: { nl: "Datum tot wanneer het voorstel geldig is" },
 };
 
 export const REQUIRED: Record<TemplateKey, string[]> = {
@@ -33,6 +36,9 @@ export const REQUIRED: Record<TemplateKey, string[]> = {
   rescheduled: ["firstName", "date", "time"],
   cancelled: ["firstName", "date", "time"],
   reminder: ["firstName", "treatments", "date", "time"],
+  price_proposal: ["firstName", "treatments", "amount", "link"],
+  price_accepted: ["firstName", "treatments", "amount"],
+  aftercare: ["firstName"],
 };
 
 /** Placeholders that may appear in each template (others are rejected). */
@@ -44,6 +50,9 @@ export const ALLOWED: Record<TemplateKey, string[]> = {
   rescheduled: ["firstName", "treatments", "date", "time", "endTime", "location", "message"],
   cancelled: ["firstName", "treatments", "date", "time", "message"],
   reminder: ["firstName", "treatments", "date", "time", "endTime", "location"],
+  price_proposal: ["firstName", "treatments", "amount", "link", "validUntil", "request", "message"],
+  price_accepted: ["firstName", "treatments", "amount", "request"],
+  aftercare: ["firstName", "treatments", "message"],
 };
 
 export const TEMPLATE_LABELS: Record<TemplateKey, string> = {
@@ -54,6 +63,9 @@ export const TEMPLATE_LABELS: Record<TemplateKey, string> = {
   rescheduled: "Afspraak verplaatst",
   cancelled: "Afspraak geannuleerd",
   reminder: "Herinnering (24 uur vooraf)",
+  price_proposal: "Prijsvoorstel (bij ‘prijs op aanvraag’)",
+  price_accepted: "Prijsvoorstel geaccepteerd (bevestiging)",
+  aftercare: "Nazorgbericht na de behandeling (optioneel)",
 };
 
 export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>> = {
@@ -120,13 +132,43 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
   reminder: {
     nl: {
       subject: "Herinnering: je afspraak morgen om {{time}}",
-      body: "Hoi {{firstName}},\n\nEen vriendelijke herinnering aan je afspraak:\n\nBehandeling: {{treatments}}\nDatum: {{date}}\nTijd: {{time}} – {{endTime}}\n\n{{location}}\n\nTip: laat het haar minimaal 0,5 cm lang zijn en gebruik vandaag geen bodylotion of olie op de te behandelen zone.\n\nKun je onverhoopt niet? Laat het dan zo snel mogelijk weten door op deze e-mail te antwoorden.\n\nTot morgen!\nDilek — Glow by Dilek",
+      body: "Hoi {{firstName}},\n\nEen vriendelijke herinnering aan je afspraak:\n\nBehandeling: {{treatments}}\nDatum: {{date}}\nTijd: {{time}} – {{endTime}}\n\n{{location}}\n\nTip: op de pagina van je behandeling staat hoe je je het beste voorbereidt.\n\nKun je onverhoopt niet? Laat het dan zo snel mogelijk weten door op deze e-mail te antwoorden.\n\nTot morgen!\nDilek — Glow by Dilek",
     },
     en: {
       subject: "Reminder: your appointment tomorrow at {{time}}",
-      body: "Hi {{firstName}},\n\nA friendly reminder of your appointment:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{location}}\n\nTip: make sure the hair is at least 0.5 cm long and skip body lotion or oil on the area today.\n\nIf you can't make it after all, please let us know as soon as possible by replying to this email.\n\nSee you tomorrow!\nDilek — Glow by Dilek",
+      body: "Hi {{firstName}},\n\nA friendly reminder of your appointment:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{location}}\n\nTip: the page of your treatment explains how best to prepare.\n\nIf you can't make it after all, please let us know as soon as possible by replying to this email.\n\nSee you tomorrow!\nDilek — Glow by Dilek",
     },
   },
+  price_proposal: {
+    nl: {
+      subject: "Je prijsvoorstel — Glow by Dilek",
+      body: "Hoi {{firstName}},\n\nDank je wel voor je aanvraag voor: {{treatments}}.\n\n{{request}}\n\nHet prijsvoorstel is: {{amount}} (inclusief btw).\n\n{{message}}\n\nBekijk het voorstel en laat weten of je akkoord gaat via deze persoonlijke link:\n{{link}}\n\nHet voorstel is geldig tot en met {{validUntil}}. Je zit nergens aan vast zolang je niet akkoord gaat.\n\nHartelijke groet,\nDilek — Glow by Dilek",
+    },
+    en: {
+      subject: "Your price proposal — Glow by Dilek",
+      body: "Hi {{firstName}},\n\nThank you for your request for: {{treatments}}.\n\n{{request}}\n\nThe proposed price is: {{amount}} (including VAT).\n\n{{message}}\n\nView the proposal and let us know whether you agree via this personal link:\n{{link}}\n\nThe proposal is valid until {{validUntil}}. You are not committed to anything until you accept.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+  },
+  price_accepted: {
+    nl: {
+      subject: "Je hebt het prijsvoorstel geaccepteerd — Glow by Dilek",
+      body: "Hoi {{firstName}},\n\nDank je wel! Je hebt het prijsvoorstel geaccepteerd.\n\nBehandeling: {{treatments}}\nAfgesproken prijs: {{amount}} (inclusief btw)\n\n{{request}}\n\nAls het tijdstip nog niet vaststaat, laat Dilek je persoonlijk weten wanneer de afspraak is bevestigd.\n\nHartelijke groet,\nDilek — Glow by Dilek",
+    },
+    en: {
+      subject: "You accepted the price proposal — Glow by Dilek",
+      body: "Hi {{firstName}},\n\nThank you! You have accepted the price proposal.\n\nTreatment: {{treatments}}\nAgreed price: {{amount}} (including VAT)\n\n{{request}}\n\nIf the time is not fixed yet, Dilek will let you know personally once the appointment is confirmed.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+  },
+  aftercare: {
+    nl: {
+      subject: "Fijn dat je er was — Glow by Dilek",
+      body: "Hoi {{firstName}},\n\nDank je wel voor je bezoek. Hopelijk heb je ervan genoten.\n\n{{message}}\n\nOp de website vind je nog eens alle nazorgtips op een rij. Heb je vragen of reageert je huid anders dan verwacht? Antwoord dan gerust op deze e-mail.\n\nHartelijke groet,\nDilek — Glow by Dilek",
+    },
+    en: {
+      subject: "Lovely to see you — Glow by Dilek",
+      body: "Hi {{firstName}},\n\nThank you for your visit. We hope you enjoyed it.\n\n{{message}}\n\nYou can find all aftercare tips on the website. Any questions, or is your skin reacting differently than expected? Just reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+  }
 };
 
 const TAG = /\{\{\s*([a-zA-Z]+)\s*\}\}/g;

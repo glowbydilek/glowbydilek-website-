@@ -10,7 +10,7 @@ import { PanelIcon } from "./PanelIcon";
 export type NavItem = { href: string; label: string; icon?: string; badge?: number };
 
 /**
- * Shared shell for /admin and /ajanda. Desktop: sidebar. Mobile: compact top
+ * Shared shell for /admin and /agenda. Desktop: sidebar. Mobile: compact top
  * bar; the agenda additionally shows a bottom tab bar for one-tap access.
  */
 export function PanelShell({
@@ -20,7 +20,7 @@ export function PanelShell({
   children,
   banner,
 }: {
-  area: "admin" | "ajanda";
+  area: "admin" | "agenda";
   nav: NavItem[];
   tabs?: NavItem[];
   children: ReactNode;
@@ -29,8 +29,8 @@ export function PanelShell({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const active = (href: string) => (href === `/${area}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
-  const title = area === "admin" ? "Admin Glow by Dilek" : "Glow by Dilek — Ajanda";
-  const other = area === "admin" ? { href: "/ajanda", label: "Naar Ajanda" } : { href: "/admin", label: "Naar Admin" };
+  const title = area === "admin" ? "Admin Glow by Dilek" : "Glow by Dilek — Agenda";
+  const other = area === "admin" ? { href: "/agenda", label: "Naar Agenda" } : { href: "/admin", label: "Naar Admin" };
 
   const links = (
     <ul className="space-y-0.5">
@@ -87,7 +87,7 @@ export function PanelShell({
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-white/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur lg:hidden">
           <Link href={`/${area}`} className="flex min-h-14 items-center gap-2">
             <LogoSymbol className="h-8 w-auto" />
-            <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : "Ajanda"}</span>
+            <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : "Agenda"}</span>
           </Link>
           <button
             type="button"

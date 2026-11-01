@@ -175,7 +175,7 @@ export async function redirectAction(_: FormState, f: FormData): Promise<FormSta
   const to = str(f, "to").trim();
   if (!PATH.test(from) || from === "/") return { error: "Het oude adres moet beginnen met / (bijv. /oude-pagina)." };
   if (matchPage(from)) return { error: "Dit adres is een bestaande pagina en kan niet worden doorverwezen." };
-  if (/^\/(admin|ajanda|api|_next|media)(\/|$)/.test(from)) return { error: "Dit adres is gereserveerd." };
+  if (/^\/(admin|agenda|ajanda|login|api|_next|media)(\/|$)/.test(from)) return { error: "Dit adres is gereserveerd." };
   const validTargets = new Set(allPages().flatMap((p) => [pagePath("nl", p), pagePath("en", p)]));
   if (!validTargets.has(to) && !/^\/(en\/)?info\/[a-z0-9-]+$/.test(to)) return { error: "Kies een bestaande pagina als nieuw adres." };
   await db.insert(redirects).values({ fromPath: from, toPath: to, permanent: f.get("permanent") !== "off" }).onDuplicateKeyUpdate({ set: { toPath: to } });

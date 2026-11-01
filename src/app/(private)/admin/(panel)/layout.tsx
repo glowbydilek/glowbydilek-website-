@@ -18,6 +18,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/navigatie", label: "Menu & footer", icon: "navigation" },
     { href: "/admin/media", label: "Media", icon: "image" },
     { href: "/admin/behandelingen", label: "Behandelingen & prijzen", icon: "tag" },
+    { href: "/admin/over-dilek", label: "Over Dilek (opleiding)", icon: "users" },
+    { href: "/admin/producten", label: "Producten & materialen", icon: "invoice" },
+    { href: "/admin/acties", label: "Acties & kortingen", icon: "percent" },
     { href: "/admin/beoordelingen", label: "Beoordelingen", icon: "star" },
     { href: "/admin/social", label: "Social media", icon: "share" },
     { href: "/admin/seo", label: "SEO & doorverwijzingen", icon: "search" },
@@ -25,6 +28,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/e-mails", label: "E-mailteksten", icon: "mail" },
     { href: "/admin/bedrijf", label: "Bedrijf & facturen", icon: "building" },
     { href: "/admin/privacy", label: "Privacy & consultatie", icon: "consult" },
+    { href: "/admin/juridisch", label: "Juridische pagina's", icon: "pages" },
     { href: "/admin/beveiliging", label: "Beveiliging", icon: "shield" },
     { href: "/admin/systeem", label: "Systeem & logboek", icon: "server" },
   ];

@@ -12,7 +12,7 @@ export function POST(req: NextRequest) {
   return handleForm(req, {
     kind: "contact",
     validate: validateContact,
-    // Copy in the Ajanda inbox (Berichten), in addition to the owner email.
+    // Copy in the Agenda inbox (Berichten), in addition to the owner email.
     store: async (d) => {
       if (!databaseConfigured()) return;
       await getDb().insert(inquiries).values({ name: d.name, email: d.email, phone: d.phone ?? null, topic: d.topic, message: d.message, locale: d.locale, consentAt: new Date() });

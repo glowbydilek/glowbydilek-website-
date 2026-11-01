@@ -6,7 +6,7 @@ import { Turnstile } from "@/components/forms/Turnstile";
 import { loginAction, type FormState } from "@/lib/private/authActions";
 import { Field, Input, Notice, SubmitButton } from "../ui";
 
-export function LoginForm({ area, next, siteKey, captcha, notice }: { area: "admin" | "ajanda"; next?: string; siteKey: string; captcha: boolean; notice?: string }) {
+export function LoginForm({ area, next, siteKey, captcha, notice }: { area: "admin" | "agenda"; next?: string; siteKey: string; captcha: boolean; notice?: string }) {
   const [state, action] = useActionState<FormState, FormData>(loginAction, {});
   const [token, setToken] = useState<string | null>(null);
   const [reset, setReset] = useState(0);

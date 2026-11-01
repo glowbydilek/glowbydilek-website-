@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // Private areas (also login-protected and sent with X-Robots-Tag: noindex).
-        disallow: ["/admin", "/ajanda", "/api/"],
+        disallow: ["/admin", "/agenda", "/ajanda", "/login", "/api/"],
       },
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,

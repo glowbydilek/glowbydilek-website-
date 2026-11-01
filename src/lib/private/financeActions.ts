@@ -28,7 +28,7 @@ function fail(err: unknown): FormState {
 }
 
 function refresh() {
-  revalidatePath("/ajanda", "layout");
+  revalidatePath("/agenda", "layout");
 }
 
 export async function recordPaymentAction(_: FormState, f: FormData): Promise<FormState> {
@@ -83,7 +83,7 @@ export async function createInvoiceAction(_: FormState, f: FormData): Promise<Fo
     return fail(err);
   }
   refresh();
-  redirect(`/ajanda/facturen/${id}`);
+  redirect(`/agenda/facturen/${id}`);
 }
 
 export async function saveInvoiceAction(_: FormState, f: FormData): Promise<FormState> {
@@ -92,14 +92,20 @@ export async function saveInvoiceAction(_: FormState, f: FormData): Promise<Form
   if (!id) return { error: "Factuur ontbreekt." };
   const desc = f.getAll("lineDescription").map(String);
   const qty = f.getAll("lineQuantity").map((v) => Number(v));
-  const amt = f.getAll("lineAmount").map((v) => parseEuroToCents(String(v)));
+  const amt = f.getAll("lineAmount").map((v) => {
+    const t = String(v).trim();
+    const neg = t.startsWith("-") || t.startsWith("−");
+    const c = parseEuroToCents(neg ? t.slice(1) : t);
+    return c == null ? null : neg ? -c : c;
+  });
+  const vats = f.getAll("lineVat").map(String);
   const credit = str(f, "kind") === "credit";
   const lines: InvoiceLine[] = [];
   for (let i = 0; i < desc.length; i++) {
     if (!desc[i].trim() && amt[i] == null) continue;
     if (amt[i] == null) return { error: `Regel ${i + 1}: controleer het bedrag.` };
-    const cents = Math.abs(amt[i]!);
-    lines.push({ description: desc[i].trim().slice(0, 200), quantity: qty[i] || 1, unitCents: credit ? -cents : cents });
+    const vat = (["standard", "reduced", "zero", "exempt"] as const).find((v) => v === vats[i]) ?? "standard";
+    lines.push({ description: desc[i].trim().slice(0, 200), quantity: qty[i] || 1, unitCents: credit ? -Math.abs(amt[i]!) : amt[i]!, vat });
   }
   const buyer: Buyer = { name: str(f, "buyerName").slice(0, 120), email: str(f, "buyerEmail") || null, address: str(f, "buyerAddress").slice(0, 300) || null };
   const supply = str(f, "supplyDate");
@@ -125,7 +131,7 @@ export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormSt
       await issueInvoice(db, id, ctx, { paid });
       refresh();
       // The draft form disappears once issued: show the result on the page itself.
-      redirect(`/ajanda/facturen/${id}?melding=uitgegeven`);
+      redirect(`/agenda/facturen/${id}?melding=uitgegeven`);
     }
     if (op === "email") {
       await emailInvoice(db, id, ctx);
@@ -136,12 +142,12 @@ export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormSt
     if (op === "credit") {
       const cid = await createCredit(db, id, ctx);
       refresh();
-      redirect(`/ajanda/facturen/${cid}`);
+      redirect(`/agenda/facturen/${cid}`);
     }
     if (op === "delete") {
       await deleteDraft(db, id, ctx);
       refresh();
-      redirect("/ajanda/facturen?verwijderd=1");
+      redirect("/agenda/facturen?verwijderd=1");
     }
   } catch (err) {
     if (err && typeof err === "object" && "digest" in err) throw err; // redirect()
@@ -156,6 +162,9 @@ export async function saveInvoiceSettingsAction(_: FormState, f: FormData): Prom
   const rateBp = rate ? Math.round(Number(rate) * 100) : null;
   if (rate && (!Number.isFinite(rateBp) || rateBp! <= 0 || rateBp! > 5000)) return { error: "Vul een geldig btw-percentage in (bijvoorbeeld zoals je boekhouder het opgaf)." };
   const mode = str(f, "vatMode");
+  const red = str(f, "reducedRate").replace(",", ".");
+  const reducedRateBp = red ? Math.round(Number(red) * 100) : null;
+  if (red && (!Number.isFinite(reducedRateBp) || reducedRateBp! < 0 || reducedRateBp! > 5000)) return { error: "Vul een geldig verlaagd btw-percentage in, of laat het leeg." };
   const v: InvoiceSettings = {
     ...defaultInvoiceSettings,
     legalName: str(f, "legalName").slice(0, 120),
@@ -165,7 +174,8 @@ export async function saveInvoiceSettingsAction(_: FormState, f: FormData): Prom
     city: str(f, "city").slice(0, 80),
     country: str(f, "country").slice(0, 60) || "Nederland",
     kvk: str(f, "kvk").replace(/\s/g, "").slice(0, 8),
-    vatMode: mode === "standard" || mode === "exempt" ? mode : "",
+    vatMode: mode === "standard" || mode === "exempt" || mode === "kor" ? mode : "",
+    reducedRateBp: mode === "standard" ? reducedRateBp : null,
     vatNumber: str(f, "vatNumber").replace(/[\s.]/g, "").toUpperCase().slice(0, 14),
     vatRateBp: rateBp,
     exemptionText: str(f, "exemptionText").slice(0, 300),
@@ -182,4 +192,48 @@ export async function saveInvoiceSettingsAction(_: FormState, f: FormData): Prom
   revalidatePath("/admin/bedrijf");
   const missing = invoiceReadiness(v);
   return missing.length ? { ok: true, message: `Opgeslagen. Nog nodig voor facturen: ${missing.join(" · ")}.` } : { ok: true, message: "Opgeslagen. Je kunt nu facturen uitgeven." };
+}
+
+// ───────────────────────────────────────────────────────────── Expenses
+
+export async function expenseAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const { validateExpense } = await import("../expenses/core");
+  const { addReceipt, ReceiptError } = await import("../expenses/service");
+  const { expenses } = await import("../db/schema");
+  const { eq } = await import("drizzle-orm");
+  const v = validateExpense(
+    { spentOn: str(f, "spentOn"), category: str(f, "category"), vendor: str(f, "vendor"), description: str(f, "description"), amount: str(f, "amount"), vatRate: str(f, "vatRate"), vatAmount: str(f, "vatAmount"), status: str(f, "status"), notes: str(f, "notes") },
+    parseEuroToCents,
+  );
+  if (!v.ok) return { error: v.error };
+  const db = getDb();
+  let id = int(f, "id");
+  if (id) await db.update(expenses).set(v.value).where(eq(expenses.id, id));
+  else {
+    const [res] = (await db.insert(expenses).values({ ...v.value, userId: s.user.id })) as unknown as [{ insertId: number }];
+    id = res.insertId;
+  }
+  const file = f.get("receipt");
+  if (file && typeof file === "object" && "size" in file && (file as File).size > 0) {
+    try {
+      await addReceipt(db, id!, file as File);
+    } catch (err) {
+      if (err instanceof ReceiptError) return { error: `Uitgave opgeslagen, maar de bon niet: ${err.message}` };
+      throw err;
+    }
+  }
+  await audit(db, { userId: s.user.id, action: "expense.saved", entity: "expense", entityId: id ?? undefined, details: { amountCents: v.value.amountCents } });
+  revalidatePath("/agenda/uitgaven");
+  revalidatePath("/agenda/financien");
+  return { ok: true, message: "Uitgave opgeslagen." };
+}
+
+export async function deleteReceiptAction(f: FormData) {
+  const s = await assertOwner();
+  const { deleteReceipt } = await import("../expenses/service");
+  const id = int(f, "receiptId");
+  if (id) await deleteReceipt(getDb(), id);
+  await audit(getDb(), { userId: s.user.id, action: "expense.receipt_deleted", entity: "receipt", entityId: id ?? undefined });
+  revalidatePath("/agenda/uitgaven");
 }

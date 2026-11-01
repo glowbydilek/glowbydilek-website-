@@ -11,23 +11,25 @@ import { CheckList } from "@/components/ui/CheckList";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { categoryCopy } from "@/content/copy";
+import { groupCopy } from "@/content/copy";
 import { hasPhoto } from "@/content/media";
-import { categoryIds, type CategoryId } from "@/content/slugs";
-import { findGroup } from "@/content/treatments";
-import { bookingHref, categoryHref, href, type Locale } from "@/i18n/config";
+import { bookingHref, type Locale } from "@/i18n/config";
+import { groupById, groupHref, href, publicGroups, publicItems, sectionById, sectionHref } from "@/lib/catalogue/web";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
 import { singleServiceJsonLd } from "@/lib/seo";
 
-/** Category page: face, body or bikini & intimate. */
-export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId }) {
+/** Group page: a waxing zone (face, body, bikini) or an owner-created sub-category. */
+export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
   const dict = getDictionary(locale);
   const s = dict.service;
-  const c = categoryCopy(locale, id);
-  const group = findGroup(id);
-  const others = categoryIds.filter((x) => x !== id);
-  const path = categoryHref(locale, id);
+  const group = groupById(id)!;
+  const section = sectionById(group.sectionId)!;
+  const c = groupCopy(locale, id, group.name[locale]);
+  const items = publicItems({ sectionId: group.sectionId, groupId: id });
+  const others = publicGroups(group.sectionId).filter((g) => g.id !== id);
+  const path = groupHref(locale, group);
+  const sectionLink = section.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, section);
 
   const sections: Record<string, ReactNode> = {
     hero: (
@@ -36,10 +38,10 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
           locale={locale}
           photo={group.photo}
           ratio={id === "face" ? 4 / 5 : 5 / 4}
-          crumbs={[{ name: dict.nav.treatments, href: href(locale, "treatments") }, { name: c.label }]}
+          crumbs={[{ name: section.name[locale], href: sectionLink }, { name: c.label }]}
           {...c.hero}
         >
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-wrap items-center gap-3">
             <ButtonLink href="#behandelingen" arrow>
               {s.inThisArea}
             </ButtonLink>
@@ -50,7 +52,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
         </PageHero>
       </>
     ),
-    intro: (
+    intro: !c.intro.title && !c.involves.title ? null : (
       <>
         {/* Intro + what it involves */}
         <section className="section-tight border-t border-line/70">
@@ -87,8 +89,8 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
               </h2>
               <p className="lead mt-4">{s.inThisAreaIntro}</p>
             </div>
-            <ul className={`mt-block grid gap-5 sm:grid-cols-2 ${group.treatments.length === 4 ? "xl:grid-cols-4" : "lg:grid-cols-3"}`}>
-              {group.treatments.map((t, i) => (
+            <ul className={`mt-block grid gap-5 sm:grid-cols-2 ${items.length === 4 ? "xl:grid-cols-4" : "lg:grid-cols-3"}`}>
+              {items.map((t, i) => (
                 <li key={t.id} data-reveal style={{ ["--reveal-delay" as string]: `${i * 70}ms` }}>
                   <TreatmentCard locale={locale} id={t.id} />
                 </li>
@@ -98,7 +100,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
         </section>
       </>
     ),
-    expect: (
+    expect: !c.expect.steps.length ? null : (
       <>
         {/* What to expect */}
         <section className="section">
@@ -117,7 +119,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
         </section>
       </>
     ),
-    info: (
+    info: !c.suitable.items.length && !c.preparation.length ? null : (
       <>
         {/* Suitability, preparation, aftercare, precautions */}
         <section className="section bg-sand">
@@ -153,7 +155,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
         </section>
       </>
     ),
-    faq: (
+    faq: !c.faqs.length ? null : (
       <>
         {/* FAQ */}
         <section className="section">
@@ -174,19 +176,18 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: CategoryId })
         </section>
       </>
     ),
-    others: (
+    others: !others.length ? null : (
       <>
         {/* Other areas */}
         <section className="section-tight bg-surface">
           <Container>
             <h2 className="eyebrow">{s.otherAreas}</h2>
             <ul className="mt-6 grid gap-5 md:grid-cols-2">
-              {others.map((o) => {
-                const oc = categoryCopy(locale, o);
-                const og = findGroup(o);
+              {others.map((og) => {
+                const oc = groupCopy(locale, og.id, og.name[locale]);
                 return (
-                  <li key={o} data-reveal>
-                    <Link href={categoryHref(locale, o)} className="group grid grid-cols-[6rem_1fr] items-center gap-5 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-5 transition-shadow duration-500 hover:shadow-card sm:grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words">
+                  <li key={og.id} data-reveal>
+                    <Link href={groupHref(locale, og)} className="group grid grid-cols-[6rem_1fr] items-center gap-5 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-5 transition-shadow duration-500 hover:shadow-card sm:grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words">
                       {hasPhoto(og.photo) && (
                         <div className="zoom-frame overflow-hidden rounded-2xl">
                           <Photo id={og.photo} locale={locale} ratio={1} sizes="128px" />

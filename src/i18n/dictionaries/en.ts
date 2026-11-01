@@ -8,6 +8,11 @@ export const en: Dictionary = {
   meta: {
     tagline: "Professional waxing",
     pages: {
+      services: {
+        title: "All treatments",
+        description:
+          "All Glow by Dilek treatments in one place: waxing and — once available — facial and body treatments, massages and packages. By appointment only.",
+      },
       home: {
         title: "Glow by Dilek — Waxing studio by appointment",
         description:
@@ -49,6 +54,8 @@ export const en: Dictionary = {
     },
   },
   nav: {
+    services: "All treatments",
+    waxingTeaser: "Face, body and bikini area",
     home: "Home",
     treatments: "Treatments",
     prices: "Prices",
@@ -269,6 +276,7 @@ export const en: Dictionary = {
     ],
   },
   treatments: {
+    count: "{n} treatment(s)",
     hero: {
       eyebrow: "Treatments",
       title: "Careful waxing,",
@@ -336,6 +344,7 @@ export const en: Dictionary = {
     ],
   },
   about: {
+    education: { eyebrow: "Education & background", title: "Expertise", diploma: "Diploma", certificate: "Certificate", photoAlt: "Portrait of Dilek" },
     hero: {
       eyebrow: "About Dilek",
       title: "A studio with",
@@ -435,6 +444,7 @@ export const en: Dictionary = {
     },
   },
   forms: {
+    promoCode: "Promo code",
     name: "Name",
     email: "Email address",
     phone: "Phone number",
@@ -467,6 +477,7 @@ export const en: Dictionary = {
     sending: "Sending…",
     required: "required",
     errors: {
+      promoCode: "This promo code is not (or no longer) valid.",
       required: "Please fill in this field.",
       invalid: "Please check this field.",
       tooShort: "This is a little too short.",
@@ -588,8 +599,56 @@ export const en: Dictionary = {
       },
     ],
   },
+  quote: {
+    eyebrow: "Price proposal",
+    title: "Your personal price proposal",
+    hello: "Hi {name}, below is the price proposal for your request.",
+    treatment: "Treatment",
+    moment: "When",
+    price: "Price",
+    inclVat: "incl. VAT",
+    validUntil: "Valid until",
+    explain: "If you accept, this becomes the agreed price for your appointment. Nothing is charged online; you pay at the appointment.",
+    accept: "I accept",
+    decline: "No, thank you",
+    pending: "One moment…",
+    accepted: "Thank you! You have accepted the proposal. You will receive a confirmation by email.",
+    declined: "You have declined the proposal. Dilek may contact you personally.",
+    notFound: "This link is not (or no longer) valid. Feel free to get in touch with any questions.",
+    questions: "Questions about this proposal?",
+    state: { accepted: "This proposal has already been accepted.", declined: "This proposal has been declined.", withdrawn: "This proposal was withdrawn or replaced by a new one.", expired: "This proposal has expired. Get in touch for a new proposal." },
+    errors: {
+      expired: "This proposal has expired in the meantime.",
+      answered: "This proposal has already been answered, or it was replaced.",
+      notFound: "This link is not (or no longer) valid.",
+      rateLimited: "Too many attempts. Please try again in a few minutes.",
+      unavailable: "Something went wrong. Please try again later or email us.",
+    },
+  },
+  offer: {
+    badge: "Offer",
+    until: "until {date}",
+    code: "with code {code}",
+    actionPrice: "Offer price",
+    reference: "Lowest price in the past 30 days: {price}",
+  },
+  campaign: {
+    region: "Offers and news",
+    prev: "Previous",
+    next: "Next",
+    pause: "Pause",
+    play: "Play",
+    slide: "{n} of {total}",
+  },
+  products: {
+    title: "Products & care",
+    intro: "These are the products Dilek works with during treatments. This is not a shop: feel free to ask for advice at your appointment.",
+    professional: "For professional use only",
+    empty: "There are no products on this page yet.",
+  },
   footer: {
     follow: "Follow Glow by Dilek",
+    login: "Log in",
     tagline: "Personal waxing treatments for face, body and bikini area, with calm, care and honest advice. By appointment only.",
     treatments: "Treatments",
     studio: "Studio",
@@ -600,6 +659,7 @@ export const en: Dictionary = {
     note: "No tracking, no advertising cookies.",
   },
   service: {
+    categoryLabel: "Category",
     areaLabel: "Area",
     categoryPage: "Guide, preparation and aftercare",
     inThisArea: "Treatments in this area",
@@ -619,6 +679,9 @@ export const en: Dictionary = {
     otherAreas: "Other areas",
     price: "Rate",
     priceOnRequest: "On request",
+    duration: "Duration",
+    minutes: "{n} minutes",
+    included: "Included in this package",
     readPreparation: "Full preparation guide",
     readAftercare: "All aftercare tips",
     readProcess: "How an appointment works",

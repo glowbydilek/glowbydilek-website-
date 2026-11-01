@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { mailto, siteConfig, whatsappLink } from "@/content/site";
 import { href, type Locale } from "@/i18n/config";
-import { override } from "@/lib/cms/current";
+import { currentSnapshot, override } from "@/lib/cms/current";
 import { publicSocial, validateAnalytics, validateBusiness } from "@/lib/cms/menu";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { CookieSettingsLink } from "./analytics/Analytics";
@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { NavModel } from "./navModel";
 import { SocialIcons } from "./SocialIcons";
 import { Icon } from "./ui/Icon";
+import { publishedLegal } from "@/lib/legal";
 
 /** Espresso footer: logo, short promise, grouped navigation, contact, social and legal. */
 export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary; nav: NavModel }) {
@@ -48,7 +49,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                   </li>
                 ))}
                 <li>
-                  <Link href={href(locale, "treatments")} className={linkCls}>
+                  <Link href={nav.allHref} className={linkCls}>
                     {dict.nav.allTreatments}
                   </Link>
                 </li>
@@ -76,6 +77,13 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                     </Link>
                   </li>
                 ))}
+                {currentSnapshot().marketing?.productsPage && (
+                  <li>
+                    <Link href={locale === "nl" ? "/producten" : "/en/products"} className={linkCls}>
+                      {dict.products.title}
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
             <div className="col-span-2 md:col-span-1">
@@ -116,8 +124,19 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
             <Link href={href(locale, "privacy")} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0">
               {dict.nav.privacy}
             </Link>
+            {publishedLegal(locale).map((l) => (
+              <Link key={l.key} href={l.href} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0">
+                {l.label}
+              </Link>
+            ))}
             {analytics.enabled && <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />}
             <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" className="-my-2" />
+            {/* Discreet owner entrance; the private areas are noindex and login-protected.
+                A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/login" rel="nofollow" className="inline-flex min-h-10 items-center text-paper/45 hover:text-glow sm:min-h-0">
+              {dict.footer.login}
+            </a>
           </div>
         </div>
       </div>

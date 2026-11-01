@@ -4,8 +4,8 @@ import { draftMode } from "next/headers";
 import { cache } from "react";
 import { currentSession } from "../auth/session";
 import { databaseConfigured, getDb } from "../db/client";
-import { contentEntries, media, treatments } from "../db/schema";
-import { EMPTY_SNAPSHOT, setSnapshotResolver, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
+import { contentEntries, media, packageItems, serviceGroups, serviceSections, treatments } from "../db/schema";
+import { EMPTY_SNAPSHOT, setSnapshotResolver, type MarketingSnapshot, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
 
 /**
  * Loads owner-edited content for rendering.
@@ -36,6 +36,22 @@ export function invalidateContent() {
   cacheState.version++;
 }
 
+async function loadMarketing(db: ReturnType<typeof getDb>): Promise<MarketingSnapshot> {
+  const { activeCampaigns, historyFor, runningPromotions } = await import("../promotions/service");
+  const [promos, campaigns] = await Promise.all([runningPromotions(db), activeCampaigns(db)]);
+  const shown = promos.filter((p) => p.showPublic);
+  const ids = shown.some((p) => p.scope !== "items") ? null : [...new Set(shown.flatMap((p) => p.scopeIds))];
+  const rows = shown.length ? await historyFor(db, ids ?? [...(await db.select({ id: treatments.id }).from(treatments)).map((r) => r.id)]) : [];
+  const history: MarketingSnapshot["history"] = {};
+  for (const r of rows) (history[r.itemId] ??= []).push({ createdAt: r.createdAt, priceCents: r.priceCents, pricingMode: r.pricingMode });
+  const { getSetting } = await import("../db/settings");
+  const productsPage = (await getSetting(db, "products_public", { enabled: false })).enabled === true;
+  const { publishedReviews } = await import("../reviews/service");
+  const rv = await publishedReviews(db, "—", 3);
+  const reviews = { list: rv.list.map((r) => ({ id: r.id, rating: r.rating, body: r.body, name: r.name, verified: r.verified, locale: r.locale })), count: rv.count, average: rv.average };
+  return { reviews, promotions: shown, campaigns, history, hasCodes: promos.some((p) => Boolean(p.code)), productsPage };
+}
+
 async function load(status: "published" | "draft"): Promise<Snapshot> {
   const db = getDb();
   const rows = await db.select().from(contentEntries).where(eq(contentEntries.status, "published"));
@@ -46,6 +62,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
   }
   const trows = await db.select().from(treatments);
   const tmap = new Map<string, TreatmentLive>(trows.map((t) => [t.id, { ...t }]));
+  const [sections, groups, parts] = await Promise.all([db.select().from(serviceSections), db.select().from(serviceGroups), db.select().from(packageItems)]);
   const photoMap = (docs.get("photos|all") ?? {}) as Record<string, number>;
   const ids = Object.values(photoMap).filter((n) => Number.isInteger(n));
   const photos = new Map<string, PhotoOverride>();
@@ -56,7 +73,8 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
       if (m) photos.set(slot, { mediaId: m.id, version: m.updatedAt.getTime(), width: m.width, height: m.height, altNl: m.altNl, altEn: m.altEn, focusMobile: m.focusMobile, focusDesktop: m.focusDesktop });
     }
   }
-  return { docs, treatments: tmap, photos, preview: status === "draft", version: cacheState.version };
+  const marketing = await loadMarketing(db);
+  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**

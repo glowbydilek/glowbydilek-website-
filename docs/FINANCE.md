@@ -13,7 +13,7 @@ All amounts are **integer cents** (`src/lib/finance/money.ts`); no floating-poin
 
 Nothing is estimated: an appointment without an agreed price never counts as revenue; a completed appointment with an agreed price but no payment appears under "nog geen betaling vastgelegd".
 
-## Financiën (Ajanda → Financiën)
+## Financiën (Agenda → Financiën)
 
 Day, week, month, year and custom periods (Europe/Amsterdam calendar days): received, refunded, net, paying customers, average per paying customer, per payment method, per treatment, per day, invoiced, open invoices, unpaid completed appointments, completed/cancelled/no-show counts, new and returning customers. PDF report via the "PDF-rapport" button.
 
@@ -21,7 +21,7 @@ Day, week, month, year and custom periods (Europe/Amsterdam calendar days): rece
 
 Payments are never deleted. A mistake is **voided** with a reason; it stays visible (struck through) and in the audit log.
 
-## Invoices (Ajanda → Facturen & PDF)
+## Invoices (Agenda → Facturen & PDF)
 
 1. **Business details first.** Admin → Bedrijf & facturen: legal name, address, KVK number, VAT situation (charge VAT with your VAT-ID and rate, or exempt with the exact wording your accountant confirmed), optional IBAN. **Issuing is blocked** until these are complete; nothing is pre-filled or guessed. Have your accountant check them once.
 2. **Draft** from an appointment or customer profile: lines are pre-filled from the agreed price snapshot (or left empty to fill in). Amounts are **including VAT** (consumer prices); VAT is derived per line with round-half-up.

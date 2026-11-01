@@ -31,7 +31,7 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
     // Narrow week columns: everything stacked, nothing wider than the column.
     return (
       <Link
-        href={`/ajanda/afspraak/${appt.id}`}
+        href={`/agenda/afspraak/${appt.id}`}
         className={`block min-w-0 rounded-xl border border-line border-l-4 bg-white p-2.5 text-sm shadow-sm transition hover:border-ink/30 ${edge[appt.status] ?? "border-l-line"}`}
       >
         <p className="font-semibold text-ink">
@@ -49,7 +49,7 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
   }
   return (
     <Link
-      href={`/ajanda/afspraak/${appt.id}`}
+      href={`/agenda/afspraak/${appt.id}`}
       className="group flex items-stretch gap-3 rounded-2xl border border-line bg-white p-3 shadow-sm transition hover:border-ink/30 active:scale-[0.99]"
     >
       <span aria-hidden="true" className={`w-1.5 shrink-0 rounded-full ${bar[appt.status] ?? "bg-line"}`} />

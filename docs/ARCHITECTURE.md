@@ -6,7 +6,7 @@
 - Three areas share one codebase and one owner identity:
   - **Public website** (NL/EN): pages are rendered from built-in content plus owner edits published in the admin. Root layouts revalidate every 5 minutes, and publishing invalidates the cache immediately.
   - **`/admin`** ("Admin Glow by Dilek"): content management (pages and sections, theme, header/footer, media, treatments and prices, SEO and redirects, email templates, security, audit log, backup).
-  - **`/ajanda`** ("Glow by Dilek — Ajanda"): mobile-first calendar and CRM (today, agenda day/week/month/list, requests, appointments, customers, inbox, working hours, settings), installable on the iPhone home screen.
+  - **`/agenda`** ("Glow by Dilek — Agenda"): mobile-first calendar and CRM (today, agenda day/week/month/list, requests, appointments, customers, inbox, working hours, settings), installable on the iPhone home screen.
 - No analytics and no tracking cookies. The only cookie is the owner's session cookie in the private areas. The only third-party script is Cloudflare Turnstile on form pages.
 - **Hostinger compatibility:** the build uses the WebAssembly SWC compiler with webpack (see README). Keep `next`, `@next/swc-wasm-nodejs` and `eslint-config-next` on the same exact version. `sharp` (image processing) is the only native module and is optional at build time.
 
@@ -20,7 +20,7 @@
 | `src/lib/time.ts` | Europe/Amsterdam conversions. Stored times are UTC. A local time in the spring DST gap moves forward; an ambiguous autumn time resolves to its first occurrence. |
 | `src/lib/notifications/` | Templates (NL/EN, placeholder validation), transactional outbox, SMTP delivery and the cron tick. See `docs/EMAIL.md`. |
 | `src/lib/cms/` | Content registry, draft/publish/versions, theme tokens, menu, media processing, custom pages, section ordering, and the per-request snapshot used while rendering. |
-| `src/lib/private/` | Server actions for the admin and Ajanda. Every action re-checks the owner session. |
+| `src/lib/private/` | Server actions for the admin and Agenda. Every action re-checks the owner session. |
 | `src/lib/forms/` | Public form handling: validation, Turnstile, rate limits, duplicate detection. |
 
 ### Double-booking prevention
@@ -73,13 +73,13 @@ The footer, structured data and sitemap use the route map and the published cate
 | Step | How it works |
 | --- | --- |
 | Request | Website form (preferred moment) or, when online booking is enabled **and** working hours plus at least one bookable treatment with a confirmed duration exist, an exact free time. Stored as `requested`; the customer is told it is **not yet confirmed** |
-| Review | Ajanda → Aanvragen: approve, propose another time, or decline |
-| Manual appointments | Ajanda → Nieuwe afspraak (phone or Instagram bookings), with the same collision checks |
+| Review | Agenda → Aanvragen: approve, propose another time, or decline |
+| Manual appointments | Agenda → Nieuwe afspraak (phone or Instagram bookings), with the same collision checks |
 | Changes | Reschedule, cancel, completed, no-show, archive; every change is recorded in the appointment history |
 | Emails | Queued in the outbox with the change; retried by the cron job |
 | Reminder | Queued by the cron job before each confirmed appointment (default 24 h) |
-| Location details | Stored privately in Ajanda → Instellingen and inserted only into confirmation, reschedule and reminder emails |
-| Privacy | Customer export (JSON) and anonymisation in Ajanda → Klanten |
+| Location details | Stored privately in Agenda → Instellingen and inserted only into confirmation, reschedule and reminder emails |
+| Privacy | Customer export (JSON) and anonymisation in Agenda → Klanten |
 
 No payments are taken online.
 

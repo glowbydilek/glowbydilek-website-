@@ -34,7 +34,7 @@ export async function systemStatus(db: DB): Promise<{ checks: Check[]; counts: {
       const risky = ["TURNSTILE_ALLOW_TEST_KEYS", "INSECURE_COOKIES", "ALLOW_INSECURE_DEV_SECRET", "TURNSTILE_SITEVERIFY_URL"].filter((k) => process.env[k]);
       return { label: "Testinstellingen uit", ok: risky.length === 0, detail: risky.length ? `Alleen voor testen, verwijder in Hostinger: ${risky.join(", ")}` : "Geen testinstellingen actief" };
     })(),
-    { label: "Werktijden", ok: Number(wh.n) > 0, detail: Number(wh.n) > 0 ? "Ingesteld" : "Nog niet ingesteld in Ajanda → Werktijden" },
+    { label: "Werktijden", ok: Number(wh.n) > 0, detail: Number(wh.n) > 0 ? "Ingesteld" : "Nog niet ingesteld in Agenda → Werktijden" },
   ];
   return { checks, counts: { pending: Number(p.n), unread: Number(u.n), failedMail: mail.failed } };
 }

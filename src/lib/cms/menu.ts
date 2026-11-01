@@ -1,6 +1,6 @@
 /**
  * Menu configuration (pure). Only existing public pages can be linked, so a
- * menu edit can never create a broken link or expose /admin or /ajanda.
+ * menu edit can never create a broken link or expose /admin or /agenda.
  */
 import type { RouteKey } from "../../i18n/config";
 

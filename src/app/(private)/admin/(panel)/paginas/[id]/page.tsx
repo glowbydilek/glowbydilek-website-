@@ -7,7 +7,8 @@ import { EDITOR_PAGES, PAGE_SECTIONS } from "@/lib/cms/registry";
 import { editorValue, translationStatus, versions } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
 import { eq } from "drizzle-orm";
-import { customPages } from "@/lib/db/schema";
+import { customPages, serviceGroups, serviceSections, treatments } from "@/lib/db/schema";
+import { defaultSectionCopy, defaultTreatmentCopy, groupCopy } from "@/content/copy";
 import { BLANK_CUSTOM } from "@/lib/cms/custom";
 import { CustomPageSettings } from "@/components/private/cms/CustomPageForms";
 import { restoreVersionAction } from "@/lib/private/cmsActions";
@@ -26,11 +27,38 @@ export default async function EditPage({ params, searchParams }: { params: Promi
     [custom] = await getDb().select().from(customPages).where(eq(customPages.id, Number(id.slice(5))));
     if (custom) page = { id, label: `Informatiepagina /info/${custom.slugNl}`, group: "Eigen", paths: { nl: `/info/${custom.slugNl}`, en: `/en/info/${custom.slugEn}` }, docs: [{ key: `custom:${custom.id}`, label: "Teksten" }] };
   }
+  // Owner-created catalogue entries: build the editor page and default copy from the database.
+  let fallback: unknown = custom ? BLANK_CUSTOM : undefined;
+  const loc0 = sp.taal === "en" ? "en" : "nl";
+  const dyn = !page ? /^(treatment|section|category)-([a-z0-9][a-z0-9-]{0,59})$/.exec(id) : null;
+  if (dyn) {
+    const db0 = getDb();
+    const [kind, key] = [dyn[1], dyn[2]];
+    if (kind === "treatment") {
+      const [t] = await db0.select().from(treatments).where(eq(treatments.id, key));
+      if (t) {
+        page = { id, label: t.nameNl, group: "Eigen", paths: { nl: "/", en: "/en" }, sectionsPage: "treatment", docs: [{ key: `treatment:${key}`, label: "Teksten" }] };
+        fallback = defaultTreatmentCopy(loc0, { name: { nl: t.nameNl, en: t.nameEn }, description: { nl: t.descriptionNl, en: t.descriptionEn } });
+      }
+    } else if (kind === "section") {
+      const [x] = await db0.select().from(serviceSections).where(eq(serviceSections.id, key));
+      if (x) {
+        page = { id, label: x.nameNl, group: "Eigen", paths: { nl: `/${x.slugNl}`, en: `/en/${x.slugEn}` }, docs: [{ key: `section:${key}`, label: "Teksten" }] };
+        fallback = defaultSectionCopy(loc0, loc0 === "en" ? x.nameEn : x.nameNl);
+      }
+    } else {
+      const [g] = await db0.select().from(serviceGroups).where(eq(serviceGroups.id, key));
+      if (g) {
+        page = { id, label: g.nameNl, group: "Eigen", paths: { nl: "/", en: "/en" }, sectionsPage: "category", docs: [{ key: `category:${key}`, label: "Teksten" }] };
+        fallback = groupCopy(loc0, key, loc0 === "en" ? g.nameEn : g.nameNl);
+      }
+    }
+  }
   if (!page) notFound();
   const docKey = page.docs.find((d) => d.key === sp.doc)?.key ?? page.docs[0].key;
-  const locale = sp.taal === "en" ? "en" : "nl";
+  const locale = loc0;
   const db = getDb();
-  const [ev, hist, ts] = await Promise.all([editorValue(db, docKey, locale, custom ? BLANK_CUSTOM : undefined), versions(db, docKey, locale), translationStatus(db, docKey)]);
+  const [ev, hist, ts] = await Promise.all([editorValue(db, docKey, locale, fallback), versions(db, docKey, locale), translationStatus(db, docKey)]);
   const sectionsEv = page.sectionsPage ? await editorValue(db, `sections:${page.sectionsPage}`, "all", {}) : null;
   const sections = (sectionsEv?.value ?? {}) as { order?: string[]; hidden?: string[] };
   const href = (doc: string, taal: string) => `/admin/paginas/${id}?doc=${encodeURIComponent(doc)}&taal=${taal}`;

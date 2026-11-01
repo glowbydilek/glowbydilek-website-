@@ -19,7 +19,7 @@ export function ClosingCta({ locale, dict }: { locale: Locale; dict: Dictionary 
               <p className="eyebrow">{t.eyebrow}</p>
               <h2 className="display mt-4 max-w-2xl text-[2.3rem] text-paper sm:text-5xl lg:text-[3.6rem]">{t.title}</h2>
               <p className="lead mt-4 max-w-xl">{t.body}</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <ButtonLink href={href(locale, "booking")} variant="gold" arrow>
                   {dict.cta.request}
                 </ButtonLink>

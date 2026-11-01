@@ -29,11 +29,11 @@ Work through this in order. Do **not** merge or deploy without the owner's appro
 - [ ] Two-step verification enabled in Admin → Beveiliging; recovery codes stored offline.
 - [ ] Cron job added (`docs/DEPLOYMENT.md` § 4); after 10–20 minutes the admin overview shows the automatic task as green. (Only then do reminders count as operational.)
 - [ ] The admin overview shows Turnstile "Live sleutels ingesteld" and SMTP configured.
-- [ ] `/admin` and `/ajanda` are not in `sitemap.xml` and respond with `x-robots-tag: noindex`.
+- [ ] `/admin` and `/agenda` are not in `sitemap.xml` and respond with `x-robots-tag: noindex`.
 
 - [ ] `https://glowbydilek.nl` and `https://glowbydilek.nl/en` load; the photos display; there are no console errors.
-- [ ] Contact form (NL): submit a test message from a personal address. The notification arrives at hello@glowbydilek.nl, **Reply-To** is the test address, the acknowledgement arrives, and the message appears in Ajanda → Berichten.
-- [ ] Appointment form (EN): the same test. The acknowledgement says the request is **not yet confirmed** and the request appears in Ajanda → Aanvragen. Decline or cancel it afterwards (and anonymise the test customer), so no test data stays in production.
+- [ ] Contact form (NL): submit a test message from a personal address. The notification arrives at hello@glowbydilek.nl, **Reply-To** is the test address, the acknowledgement arrives, and the message appears in Agenda → Berichten.
+- [ ] Appointment form (EN): the same test. The acknowledgement says the request is **not yet confirmed** and the request appears in Agenda → Aanvragen. Decline or cancel it afterwards (and anonymise the test customer), so no test data stays in production.
 - [ ] Reply to the notification, and check that the reply reaches the customer address.
 - [ ] The Turnstile check appears on both forms; a submission without completing it is refused, and the form keeps its values.
 - [ ] Open a treatment page (e.g. `/waxbehandelingen/bikini-intiem/brazilian-wax`), click "Vraag deze behandeling aan" and check the treatment is preselected.
