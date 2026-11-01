@@ -1,6 +1,6 @@
 # Photography
 
-**Status: 14 photo slots, all filled** with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
+**Status: 17 photo slots, all filled** (3 added on 1 November 2026 for the new facial, body and massage categories) with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
 
 **Review for the service-page rebuild (October 2026).** The existing 12 slots and their 48 WebP files were reviewed again: none were weak enough to replace (no watermarks, no bad crops at the current focal points, all on-palette). Instead, **4 slots were added** for the new category, treatment and guide pages so the same image is not repeated on every page. They come from assets that had already been licensed in the same session but were not used yet — no new licences or paid services were needed. Unsplash could not be used (the connected account's email is unconfirmed); Firefly / Figma image generation was not used (no AI people, and paid credits would be required).
 
@@ -30,6 +30,13 @@
 | `linen` | 471323214 | Linen towels on a wooden ladder, bathroom still life | Preparation page (labelled "Sfeerbeeld"), Brazilian page | — |
 | `dropper` | 350923403 | Amber dropper bottle with a grass stem on white | Aftercare page | — |
 | `vase` | 468279647 | Ceramic vase with dried flowers on a table | FAQ page, Back page | — |
+| `facial` | 434690877 | Ghassoul in wooden bowl on chopping board with sponge and towel | Gezichtsbehandelingen (hero), Gezichtsmasker, Gezichtspeeling, Glow Face Trio | — |
+| `massage` | 468953240 | Spa composition with bottle of organic cosmetic oil | Massages (hero), Ontspanningsmassage | — |
+| `bodycare` | 242641713 | Closeup of salt and clay for bath. Towels and body brush | Lichaamsbehandelingen (hero), Lichaamspakking | — |
+
+**Licensed on 1 November 2026 but not used** (free collection; off-palette or off-subject after review): #479834634 (green clay on mint), #793954787 (rice water on pink), #266751135 (mostly empty white spa set), #1880475900 (alum stones). They are not on the site.
+
+The new categories are still drafts; their photos only appear once the owner publishes them. Real photos of the owner's own products and room would be even better and can replace these slots in Admin → Media.
 
 ### Where each treatment page takes its image
 

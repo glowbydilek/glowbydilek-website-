@@ -29,7 +29,10 @@ export type PhotoId =
   | "treatments-hero"
   | "linen"
   | "dropper"
-  | "vase";
+  | "vase"
+  | "facial"
+  | "massage"
+  | "bodycare";
 
 export type Photo = {
   id: PhotoId;
@@ -218,6 +221,42 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Quiet still life for FAQ and info pages.",
     credit: "Adobe Stock #468279647 — Adobe Stock (free collection), Standard License",
+  },
+  facial: {
+    id: "facial",
+    file: "facial",
+    aspect: 2356 / 1571,
+    focus: { mobile: "62% 45%", desktop: "60% 45%" },
+    alt: {
+      nl: "Kleipoeder in een houten schaaltje op een snijplank, naast een spons en een handdoek",
+      en: "Clay powder in a wooden bowl on a board, next to a sponge and a towel",
+    },
+    brief: "Facial treatments: calm skincare still life (no faces).",
+    credit: "Adobe Stock #434690877 — Adobe Stock (free collection), Standard License",
+  },
+  massage: {
+    id: "massage",
+    file: "massage",
+    aspect: 1571 / 2356,
+    focus: { mobile: "40% 70%", desktop: "40% 70%" },
+    alt: {
+      nl: "Flesje olie naast gestapelde stenen en droog gras op een lichte achtergrond",
+      en: "Bottle of oil beside stacked stones and dried grass on a light background",
+    },
+    brief: "Massages: quiet oil-and-stone still life (no bodies).",
+    credit: "Adobe Stock #468953240 — Adobe Stock (free collection), Standard License",
+  },
+  bodycare: {
+    id: "bodycare",
+    file: "bodycare",
+    aspect: 2364 / 1565,
+    focus: { mobile: "45% 55%", desktop: "45% 55%" },
+    alt: {
+      nl: "Lichaamsborstel op opgevouwen handdoeken met schaaltjes zout en klei en een aloëplant",
+      en: "Body brush on folded towels with bowls of salt and clay and an aloe plant",
+    },
+    brief: "Body treatments: towels, brush and bowls (no bodies).",
+    credit: "Adobe Stock #242641713 — Adobe Stock (free collection), Standard License",
   },
 };
 
