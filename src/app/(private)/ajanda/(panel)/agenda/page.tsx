@@ -113,7 +113,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
           {items.length ? <ul className="space-y-2">{items.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-muted">Geen komende afspraken.</p>}
         </Card>
       ) : (
-        <div className={view === "week" ? "grid gap-3 lg:grid-cols-7" : ""}>
+        <div className={view === "week" ? "grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 [&>*]:min-w-0" : ""}>
           {days.map((day) => {
             const list = byDay.get(day) ?? [];
             const ov = overrides.find((o) => o.day === day);
@@ -125,7 +125,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
                 </Link>
                 {ov?.note && <p className="mb-2 text-xs text-muted">{ov.note}</p>}
                 {list.length ? (
-                  <ul className="space-y-2">{list.map((i) => <li key={i.appt.id}><AppointmentCard item={i} /></li>)}</ul>
+                  <ul className="space-y-2">{list.map((i) => <li key={i.appt.id}><AppointmentCard item={i} compact={view === "week"} /></li>)}</ul>
                 ) : (
                   <p className="text-sm text-muted">—</p>
                 )}

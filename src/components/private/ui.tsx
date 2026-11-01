@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { cloneElement, isValidElement, useId } from "react";
 import { useFormStatus } from "react-dom";
 
 /** Small UI kit for the private areas (admin and agenda): clear, calm, large touch targets. */
@@ -52,12 +53,20 @@ export function LinkButton({ href, variant = "outline", children, className = ""
 }
 
 export function Field({ label, hint, error, children, htmlFor }: { label: string; hint?: string; error?: string; children: ReactNode; htmlFor?: string }) {
+  // Links the label to its control automatically (accessible name), unless the caller passes htmlFor.
+  const auto = useId();
+  let id = htmlFor;
+  let control = children;
+  if (!id && isValidElement<{ id?: string }>(children)) {
+    id = children.props.id ?? auto;
+    if (!children.props.id) control = cloneElement(children, { id });
+  }
   return (
-    <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="block text-sm font-medium text-charcoal">
+    <div className="min-w-0 space-y-1.5">
+      <label htmlFor={id} className="block text-sm font-medium text-charcoal">
         {label}
       </label>
-      {children}
+      {control}
       {hint && !error && <p className="text-xs text-muted">{hint}</p>}
       {error && <p className="text-sm text-[#8e2f24]">{error}</p>}
     </div>
@@ -79,7 +88,7 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
 
 export function Card({ children, className = "", title, actions }: { children: ReactNode; className?: string; title?: string; actions?: ReactNode }) {
   return (
-    <section className={`rounded-2xl border border-stone bg-white p-4 shadow-sm sm:p-6 ${className}`}>
+    <section className={`min-w-0 rounded-2xl border border-stone bg-white p-4 shadow-sm sm:p-6 ${className}`}>
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           {title && <h2 className="font-serif text-2xl text-charcoal">{title}</h2>}

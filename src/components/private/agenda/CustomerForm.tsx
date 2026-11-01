@@ -10,7 +10,7 @@ export function CustomerForm({ c }: { c: { id: number; firstName: string; lastNa
       <ActionForm action={customerAction}>
         <input type="hidden" name="id" value={c.id} />
         <input type="hidden" name="op" value="update" />
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
           <Field label="Voornaam"><Input name="firstName" defaultValue={c.firstName} required /></Field>
           <Field label="Achternaam"><Input name="lastName" defaultValue={c.lastName} /></Field>
           <Field label="Telefoon"><Input name="phone" type="tel" defaultValue={c.phone ?? ""} /></Field>

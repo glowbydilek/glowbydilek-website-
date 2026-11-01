@@ -22,7 +22,7 @@ export default async function MediaPage() {
         <Card title="Foto uploaden"><UploadForm /></Card>
         <Card title={`Bibliotheek (${items.length})`}>
           {items.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((m, i) => <MediaItem key={m.id} m={{ ...m, version: m.updatedAt.getTime() }} usage={usage[i]} />)}
             </div>
           ) : (

@@ -14,10 +14,10 @@ function Rows({ name, suffix = "", rows, setRows, label }: { name: string; suffi
     <div className="space-y-2">
       {rows.map((r, i) => (
         <div key={i} className="flex items-center gap-2">
-          <Input aria-label={`${label} van`} type="time" step={300} name={`${name}-start${suffix}`} value={r.start} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, start: e.target.value } : x)))} className="max-w-[8.5rem]" />
+          <Input aria-label={`${label} van`} type="time" step={300} name={`${name}-start${suffix}`} value={r.start} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, start: e.target.value } : x)))} className="min-w-0 max-w-[8.5rem] flex-1 px-2.5" />
           <span aria-hidden="true">–</span>
-          <Input aria-label={`${label} tot`} type="time" step={300} name={`${name}-end${suffix}`} value={r.end} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, end: e.target.value } : x)))} className="max-w-[8.5rem]" />
-          <button type="button" aria-label={`${label} verwijderen`} onClick={() => setRows(rows.filter((_, j) => j !== i))} className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:bg-charcoal/6">✕</button>
+          <Input aria-label={`${label} tot`} type="time" step={300} name={`${name}-end${suffix}`} value={r.end} onChange={(e) => setRows(rows.map((x, j) => (j === i ? { ...x, end: e.target.value } : x)))} className="min-w-0 max-w-[8.5rem] flex-1 px-2.5" />
+          <button type="button" aria-label={`${label} verwijderen`} onClick={() => setRows(rows.filter((_, j) => j !== i))} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted hover:bg-charcoal/6">✕</button>
         </div>
       ))}
     </div>
@@ -35,7 +35,7 @@ function DayEditor({ d, value, onChange }: { d: number; value: DayHours & { enab
         </span>
       </label>
       {value.enabled && (
-        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+        <div className="mt-2 grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
           <div>
             <p className="mb-1 text-xs uppercase tracking-[0.14em] text-muted">Werktijden</p>
             <Rows name="open" suffix={`-${d}`} rows={value.open} setRows={(open) => onChange({ ...value, open })} label="Werktijd" />
@@ -77,7 +77,7 @@ export function OverrideForm({ defaultDay }: { defaultDay: string }) {
   const [breaks, setBreaks] = useState<Iv[]>([]);
   return (
     <ActionForm action={saveOverrideAction} resetOnSuccess>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Datum"><Input type="date" name="day" defaultValue={defaultDay} required /></Field>
         <Field label="Wat wil je?">
           <Select name="mode" value={mode} onChange={(e) => setMode(e.target.value)}>
@@ -102,7 +102,7 @@ export function OverrideForm({ defaultDay }: { defaultDay: string }) {
         </div>
       )}
       {mode !== "closed" && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
           <Field label="Capaciteit op deze dag (optioneel)" hint="Aantal klanten tegelijk"><Input type="number" name="capacity" min={1} max={10} /></Field>
           <Field label="Max. afspraken op deze dag (optioneel)"><Input type="number" name="maxAppointments" min={1} max={50} /></Field>
         </div>
@@ -116,7 +116,7 @@ export function OverrideForm({ defaultDay }: { defaultDay: string }) {
 export function BlockForm({ defaultDay }: { defaultDay: string }) {
   return (
     <ActionForm action={saveBlockAction} resetOnSuccess>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Van datum"><Input type="date" name="fromDay" defaultValue={defaultDay} required /></Field>
         <Field label="Tot en met datum"><Input type="date" name="toDay" defaultValue={defaultDay} /></Field>
         <Field label="Vanaf tijd (optioneel)" hint="Leeg = hele dag"><Input type="time" name="fromTime" step={300} /></Field>

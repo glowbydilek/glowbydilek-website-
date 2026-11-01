@@ -7,7 +7,7 @@ import { Field, Input, SubmitButton } from "../ui";
 export function CreateCustomPage() {
   return (
     <ActionForm action={createCustomPageAction}>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Titel (NL)"><Input name="titleNl" required maxLength={120} /></Field>
         <Field label="Titel (EN)"><Input name="titleEn" required maxLength={120} /></Field>
         <Field label="Adres (NL)" hint="Wordt /info/…"><Input name="slugNl" required pattern="[a-z0-9-]+" placeholder="cadeaubon" /></Field>

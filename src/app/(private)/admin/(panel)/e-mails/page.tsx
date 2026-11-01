@@ -17,7 +17,7 @@ export default async function Emails({ searchParams }: { searchParams: Promise<R
   return (
     <>
       <PageHeader title="E-mailteksten" subtitle="De berichten die klanten automatisch ontvangen. Datum, tijd en behandeling worden automatisch ingevuld." />
-      <div className="grid gap-5 lg:grid-cols-[16rem_1fr]">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[16rem_1fr]">
         <Card>
           <ul className="space-y-1">
             {TEMPLATE_KEYS.map((k) => (

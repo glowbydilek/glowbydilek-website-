@@ -59,7 +59,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       {ts.nl.published !== ts.en.published && (
         <div className="mb-4"><Notice tone="warning">Alleen de {ts.nl.published ? "Nederlandse" : "Engelse"} versie is aangepast. Vergeet de andere taal niet bij te werken.</Notice></div>
       )}
-      <div className="grid gap-5 xl:grid-cols-[1fr_20rem]">
+      <div className="grid [&>*]:min-w-0 gap-5 xl:grid-cols-[1fr_20rem]">
         <Card>
           <p className="mb-4 text-sm text-muted">
             {ev.hasDraft ? "Je bewerkt een concept (nog niet zichtbaar op de website)." : ev.published ? `Gepubliceerde versie ${ev.published.version}.` : "Dit is de oorspronkelijke tekst."} Opslaan als concept, bekijk het voorbeeld en publiceer als je tevreden bent.

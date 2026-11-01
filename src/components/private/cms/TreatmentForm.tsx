@@ -33,12 +33,12 @@ export function TreatmentForm({ t }: { t: TreatmentRowView }) {
   return (
     <ActionForm action={treatmentAction}>
       <input type="hidden" name="id" value={t.id} />
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-3">
         <Field label="Prijs in euro" hint="Leeg = 'op aanvraag'"><Input name="price" inputMode="decimal" defaultValue={t.priceCents != null ? (t.priceCents / 100).toString().replace(".", ",") : ""} placeholder="bijv. 35" /></Field>
         <Field label="Duur (minuten)" hint="Nodig voor online tijdstippen"><Input name="duration" type="number" min={5} max={480} step={5} defaultValue={t.durationMinutes ?? ""} /></Field>
         <Field label="Opruimtijd na afloop (min)"><Input name="buffer" type="number" min={0} max={120} step={5} defaultValue={t.bufferMinutes} /></Field>
       </div>
-      <div className="grid gap-1 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-1 sm:grid-cols-2">
         {check("priceFrom", "Prijs tonen als 'vanaf'", t.priceFrom)}
         {check("active", "Actief (beschikbaar)", t.active)}
         {check("visible", "Zichtbaar op de website", t.visible)}

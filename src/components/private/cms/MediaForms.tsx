@@ -11,7 +11,7 @@ export function UploadForm() {
       <Field label="Foto (JPG, PNG of WebP, max. 12 MB)">
         <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required className="block w-full text-sm file:mr-3 file:min-h-11 file:rounded-full file:border-0 file:bg-charcoal file:px-4 file:text-ivory" />
       </Field>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Omschrijving (NL)" hint="Wat staat er op de foto?"><Input name="altNl" maxLength={300} /></Field>
         <Field label="Omschrijving (EN)"><Input name="altEn" maxLength={300} /></Field>
         <Field label="Bron" hint="Bijv. eigen foto, Adobe Stock #123"><Input name="source" maxLength={300} /></Field>

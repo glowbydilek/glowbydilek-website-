@@ -44,7 +44,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
   return (
     <>
       <PageHeader title="SEO & doorverwijzingen" subtitle="Titels en omschrijvingen voor Google, per pagina en per taal. Adressen van pagina's veranderen niet; oude adressen kun je doorverwijzen." />
-      <div className="grid gap-5 lg:grid-cols-[18rem_1fr]">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[18rem_1fr]">
         <Card>
           <ul className="max-h-[36rem] space-y-0.5 overflow-y-auto text-sm">
             {items.map((i) => (

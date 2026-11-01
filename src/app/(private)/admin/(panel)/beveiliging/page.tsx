@@ -35,7 +35,7 @@ export default async function Security() {
   return (
     <>
       <PageHeader title="Beveiliging" subtitle={`Account: ${s.user.email}. Dit account geeft toegang tot zowel Admin als Ajanda.`} />
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <Card title="Tweestapsverificatie"><MfaSetup enabled={s.user.mfaEnabled} remaining={remaining} /></Card>
         <Card title="Wachtwoord wijzigen"><ChangePasswordForm /></Card>
         <Card title={`Actieve sessies (${active.length})`}>

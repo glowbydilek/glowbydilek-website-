@@ -26,8 +26,8 @@ export default async function AdminHome() {
         <Link href="/ajanda/berichten" className="rounded-2xl border border-stone bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
         <Link href="/ajanda/instellingen#emails" className="rounded-2xl border border-stone bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
       </div>
-      <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-        <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.4fr_1fr]">
+        <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
           {tiles.map((t) => (
             <Link key={t.href} href={t.href} className="rounded-2xl border border-stone bg-white p-4 transition hover:border-charcoal/30">
               <span className="block font-serif text-2xl">{t.title}</span>

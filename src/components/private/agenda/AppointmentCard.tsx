@@ -13,10 +13,40 @@ const bar: Record<string, string> = {
   no_show: "bg-[#b0584c]",
 };
 
+const edge: Record<string, string> = {
+  requested: "border-l-[#d9a441]",
+  proposed: "border-l-[#d98a41]",
+  confirmed: "border-l-[#5c7f5a]",
+  completed: "border-l-[#5b6c9a]",
+  cancelled: "border-l-[#b0584c]",
+  declined: "border-l-[#b0584c]",
+  no_show: "border-l-[#b0584c]",
+};
+
 /** Large, tappable appointment card (agenda lists). */
-export function AppointmentCard({ item, showDate = false }: { item: ListItem; showDate?: boolean }) {
+export function AppointmentCard({ item, showDate = false, compact = false }: { item: ListItem; showDate?: boolean; compact?: boolean }) {
   const { appt, customer, treatments } = item;
   const st = STATUS[appt.status] ?? { label: appt.status, tone: "neutral" as const };
+  if (compact) {
+    // Narrow week columns: everything stacked, nothing wider than the column.
+    return (
+      <Link
+        href={`/ajanda/afspraak/${appt.id}`}
+        className={`block min-w-0 rounded-xl border border-stone border-l-4 bg-white p-2.5 text-sm shadow-sm transition hover:border-charcoal/30 ${edge[appt.status] ?? "border-l-stone"}`}
+      >
+        <p className="font-semibold text-charcoal">
+          {appt.startAt ? `${time(appt.startAt)}–${time(appt.endAt)}` : (appt.requestedDate ?? "—")}
+        </p>
+        <p className="break-words font-medium text-charcoal">
+          {customer.firstName} {customer.lastName}
+        </p>
+        <p className="break-words text-xs text-charcoal-soft">{treatments.join(", ") || "—"}</p>
+        <span className="mt-1.5 inline-block">
+          <Badge tone={st.tone}>{st.label}</Badge>
+        </span>
+      </Link>
+    );
+  }
   return (
     <Link
       href={`/ajanda/afspraak/${appt.id}`}

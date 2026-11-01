@@ -20,9 +20,16 @@ export function TemplateForm({ k, locale, subject, body, custom }: { k: Template
       <Field label="Tekst" hint="Gewone tekst. Een lege regel begint een nieuwe alinea.">
         <Textarea name="body" rows={12} value={t.body} onChange={(e) => setT({ ...t, body: e.target.value })} />
       </Field>
-      <p className="text-xs text-muted">
-        Plaatshouders: {ALLOWED[k].map((p) => <code key={p} className="mr-2 whitespace-nowrap">{`{{${p}}}`}{REQUIRED[k].includes(p) ? "*" : ""} <span className="text-muted">({PLACEHOLDERS[p].nl.toLowerCase()})</span></code>)} · * verplicht
-      </p>
+      <div className="text-xs text-muted">
+        <p>Plaatshouders (* verplicht):</p>
+        <ul className="mt-1 space-y-0.5">
+          {ALLOWED[k].map((p) => (
+            <li key={p} className="break-words">
+              <code className="text-charcoal">{`{{${p}}}`}{REQUIRED[k].includes(p) ? "*" : ""}</code> {PLACEHOLDERS[p].nl.toLowerCase()}
+            </li>
+          ))}
+        </ul>
+      </div>
       {errors.length > 0 && <Notice tone="error">{errors.join(" ")}</Notice>}
       <details className="rounded-xl border border-stone p-3">
         <summary className="cursor-pointer text-sm">Voorbeeld</summary>

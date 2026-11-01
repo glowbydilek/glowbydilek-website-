@@ -50,7 +50,7 @@ export function MenuEditor({ initial, choices, labels }: { initial: MenuConfig; 
       <input type="hidden" name="locale" value="all" />
       <input type="hidden" name="path" value="/" />
       <input type="hidden" name="data" value={JSON.stringify(m)} />
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-3">
         <Picker title="Hoofdmenu (header)" value={m.header} choices={choices} labels={labels} locked={["treatments"]} onChange={(header) => setM({ ...m, header: header as MenuConfig["header"] })} />
         <Picker title="Footer: Studio" value={m.footerStudio} choices={choices} labels={labels} onChange={(v) => setM({ ...m, footerStudio: v as MenuConfig["header"] })} />
         <Picker title="Footer: Goed om te weten" value={m.footerInfo} choices={choices} labels={labels} onChange={(v) => setM({ ...m, footerInfo: v as MenuConfig["header"] })} />
@@ -72,7 +72,7 @@ export function BusinessForm({ phone, instagram }: { phone: string; instagram: s
       <input type="hidden" name="docKey" value="business" />
       <input type="hidden" name="locale" value="all" />
       <input type="hidden" name="data" value={JSON.stringify(v)} />
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Telefoonnummer (optioneel, zichtbaar in de footer)"><Input value={v.phone} onChange={(e) => setV({ ...v, phone: e.target.value })} inputMode="tel" /></Field>
         <Field label="Instagram-gebruikersnaam (optioneel)"><Input value={v.instagram} onChange={(e) => setV({ ...v, instagram: e.target.value })} placeholder="glowbydilek" /></Field>
       </div>

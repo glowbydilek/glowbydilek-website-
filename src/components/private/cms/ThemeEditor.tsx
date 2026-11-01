@@ -42,7 +42,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
 
       <div>
         <p className="mb-2 text-sm font-medium">Kleuren</p>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
           {(Object.keys(COLOR_LABELS) as (keyof Theme["colors"])[]).map((k) => (
             <label key={k} className="flex items-center gap-3 rounded-xl border border-stone bg-white p-2">
               <input type="color" value={c[k]} onChange={(e) => setTheme({ ...theme, colors: { ...c, [k]: e.target.value } })} className="h-11 w-11 shrink-0 cursor-pointer rounded-lg border border-stone" aria-label={COLOR_LABELS[k]} />
@@ -55,7 +55,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
         {OPTIONS.map((o) => (
           <label key={o.key} className="space-y-1.5">
             <span className="block text-sm font-medium">{o.label}</span>

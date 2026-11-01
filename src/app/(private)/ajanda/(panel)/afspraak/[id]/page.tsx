@@ -65,7 +65,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
       />
       {sp.opgeslagen && <div className="mb-4"><Notice tone="success">✓ Afspraak opgeslagen.</Notice></div>}
       {sp.melding && DONE[sp.melding] && <div className="mb-4"><Notice tone="success">✓ {DONE[sp.melding]}</Notice></div>}
-      <div className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-5">
           <Card title="Gegevens">
             <dl className="grid grid-cols-[8rem_1fr] gap-x-3 gap-y-2 text-sm">
@@ -101,7 +101,7 @@ export default async function AppointmentPage({ params, searchParams }: { params
               <ul className="divide-y divide-stone text-sm">
                 {mails.map((m) => (
                   <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-                    <span className="min-w-0 truncate">{m.subject}</span>
+                    <span className="min-w-0 flex-1 basis-56 break-words">{m.subject}</span>
                     <span className="text-xs text-muted">
                       {MAIL_NL[m.status] ?? m.status}
                       {m.status === "sent" && m.sentAt ? ` · ${formatLocal(m.sentAt, "nl", { dateStyle: "short", timeStyle: "short" })}` : ""}

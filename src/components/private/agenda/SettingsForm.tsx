@@ -17,7 +17,7 @@ export function SettingsForm({ b, p, bookableCount }: { b: BookingSettings; p: P
           </span>
         </span>
       </label>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-3">
         <Field label="Klanten tegelijk" hint="Standaard 1"><Input type="number" name="capacity" min={1} max={10} defaultValue={b.capacity} /></Field>
         <Field label="Max. afspraken per dag" hint="Leeg = geen maximum"><Input type="number" name="maxPerDay" min={1} max={50} defaultValue={b.maxPerDay ?? ""} /></Field>
         <Field label="Tijdstappen"><Select name="slotStepMinutes" defaultValue={String(b.slotStepMinutes)}>{[5, 10, 15, 20, 30, 60].map((n) => <option key={n} value={n}>{n} minuten</option>)}</Select></Field>

@@ -29,7 +29,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
           )
         }
       />
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <Card title="Gegevens">{c.anonymizedAt ? <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice> : <CustomerForm c={c} />}</Card>
         <Card title={`Afspraken (${appts.length})`}>
           {appts.length ? <ul className="space-y-2">{appts.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-muted">Nog geen afspraken.</p>}

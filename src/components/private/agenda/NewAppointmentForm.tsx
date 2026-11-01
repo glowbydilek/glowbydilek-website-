@@ -62,7 +62,7 @@ export function NewAppointmentForm({
         ))}
       </fieldset>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-3">
         <Field label="Datum" htmlFor="day">
           <Input id="day" name="day" type="date" required defaultValue={day} />
         </Field>
@@ -77,7 +77,7 @@ export function NewAppointmentForm({
         Eindtijd: <strong>{duration ? addMinutes(start, duration) : "—"}</strong>
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
         <Field label="Voornaam" htmlFor="firstName">
           <Input id="firstName" name="firstName" required autoComplete="off" defaultValue={customer?.firstName} />
         </Field>

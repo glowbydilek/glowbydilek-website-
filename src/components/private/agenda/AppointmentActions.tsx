@@ -31,7 +31,7 @@ function Panel({ title, children, open = false, tone = "default" }: { title: str
 
 function WhenFields({ day, time, duration, required = true }: { day: string; time: string; duration: number | null; required?: boolean }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-3">
       <Field label="Datum">
         <Input name="day" type="date" defaultValue={day} required={required} />
       </Field>
