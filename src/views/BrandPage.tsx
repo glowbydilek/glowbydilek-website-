@@ -14,12 +14,13 @@ const assets = [
 ];
 
 const palette = [
-  ["Porselein", "#F5F0E8", "bg-paper", "Achtergrond"],
-  ["Zand", "#EAE1D5", "bg-sand", "Rustige secties"],
-  ["Lijn", "#D9CBBA", "bg-line", "Haarlijnen"],
-  ["Espresso", "#221A17", "bg-ink", "Tekst, knoppen, donkere secties · 15,1:1"],
-  ["Hars", "#A0461E", "bg-accent", "Accent, links, glinstering · 5,5:1"],
-  ["Gloed", "#F0D3B4", "bg-glow", "Accent op donker · 12:1"],
+  ["Parel", "#FFFCFB", "bg-paper", "Achtergrond"],
+  ["Zacht roze", "#F5E6E7", "bg-sand", "Zachte secties, kaarten"],
+  ["Orchidee", "#EEE3F2", "bg-glow-soft", "Lichtreflecties"],
+  ["Diep pruim", "#2B202B", "bg-ink", "Tekst, knoppen, donkere secties · 15,3:1"],
+  ["Rozenhout", "#8E4759", "bg-accent", "Accent, links, glinstering · 6,4:1"],
+  ["Champagne", "#C69B73", "bg-champagne", "Metaaldetail (decoratief, niet voor tekst op licht)"],
+  ["Ivoor", "#FAF5EE", "bg-ivory", "Warme tweede ondergrond"],
 ];
 
 export function BrandPage() {

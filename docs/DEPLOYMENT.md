@@ -35,6 +35,7 @@ Enter these **only in Hostinger's environment-variable screen**. Never paste the
 | `AUTH_SECRET` | at least 32 random characters (sessions, MFA encryption, IP hashing) | **yes** |
 | `CRON_SECRET` | at least 24 random characters, different from `AUTH_SECRET` | **yes** |
 | `CONSULTATION_KEY` | *(only if you use the consultation form)* `openssl rand -base64 32` — see `docs/CONSULTATION.md` | **yes** |
+| `INTAKE_DOCUMENT_KEY` | *(only to store signed intake forms)* `openssl rand -base64 32`, different from every other secret — see `docs/INTAKE.md`. Keep a copy outside Hostinger: without it stored forms cannot be read | **yes** |
 | `OWNER_EMAIL` | `hello@glowbydilek.nl` (default) | no |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | `smtp.hostinger.com` / `465` / `true` | no |
 | `SMTP_USER` | `hello@glowbydilek.nl` | no |
@@ -59,6 +60,12 @@ Migration `0001_platform_crm_finance` is **additive only** (new tables and nulla
 ## 2c. Migration 0002 (catalogue & business modules)
 
 Migration `0002_catalogue_business` is also **additive only**: 13 new tables (service sections and groups, package contents, price history, price quotes, promotions and redemptions, campaign slides, products, protocols, stock movements, expenses, expense receipts) and nullable or defaulted columns on `treatments` and `appointments`. Existing rows keep working: a waxing treatment without the new columns is read with its built-in section, zone and slug. On first use the admin seeds the new categories and treatments **as drafts** (INSERT IGNORE, never overwriting edits). Tested: empty database → 0000–0002, and an existing 0001 database with data upgraded to 0002 with all counts unchanged.
+
+## 2d. Migration 0003 (intake & consent)
+
+Migration `0003_intake_documents` is **additive only**: two new tables (`intake_templates`, `intake_documents`) and no change to existing tables. The v1 forms (NL, EN) are created on first use. Tested on a fresh database (0000–0003) and as an upgrade of a database with data. The booking pages also call a new read-only endpoint, `/api/booking/closed-days`.
+
+**Catalogue change in this release:** the *Massages* section and *Ontspanningsmassage* are now **published** in the built-in catalogue (price on request, no duration). On a database where these rows already exist as drafts, publish them in Admin → Behandelingen (existing owner edits are never overwritten).
 
 **URL change:** the owner area moved from `/ajanda` to `/agenda`. Old links (including reset emails sent before the release) redirect permanently. Bookmarks on phones can be updated to `https://glowbydilek.nl/login`.
 

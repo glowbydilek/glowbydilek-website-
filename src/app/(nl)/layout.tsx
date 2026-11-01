@@ -1,8 +1,5 @@
 import "@fontsource-variable/newsreader/standard.css";
-import "@fontsource-variable/bodoni-moda/opsz.css";
-import "@fontsource-variable/bodoni-moda/opsz-italic.css";
 import "@fontsource-variable/newsreader/standard-italic.css";
-import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";

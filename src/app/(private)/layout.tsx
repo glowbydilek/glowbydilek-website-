@@ -1,8 +1,6 @@
 import "@fontsource-variable/newsreader/standard.css";
-import "@fontsource-variable/bodoni-moda/opsz.css";
-import "@fontsource-variable/bodoni-moda/opsz-italic.css";
-import "@fontsource-variable/instrument-sans/standard.css";
 import "../globals.css";
+import { fontVariables } from "../fonts";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
@@ -24,7 +22,7 @@ export const dynamic = "force-dynamic";
 
 export default function PrivateRoot({ children }: { children: ReactNode }) {
   return (
-    <html lang="nl">
+    <html lang="nl" className={fontVariables}>
       <body className="min-h-dvh bg-[#f4f1ea] text-ink antialiased">{children}</body>
     </html>
   );

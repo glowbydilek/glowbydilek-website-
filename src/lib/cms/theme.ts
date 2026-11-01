@@ -146,7 +146,7 @@ export function themeCss(theme: Theme): string {
   const spacing = { compact: ["clamp(2.5rem,1.75rem + 3vw,4.5rem)", "clamp(2rem,1.5rem + 2vw,3.25rem)"], normal: null, airy: ["clamp(4.5rem,3rem + 5vw,8.5rem)", "clamp(3rem,2rem + 3.5vw,5.5rem)"] }[theme.spacing];
   if (spacing) vars.push(`--space-section:${spacing[0]}`, `--space-section-tight:${spacing[1]}`);
   if (theme.headingFont === "newsreader") vars.push(`--font-serif:"Newsreader Variable","Newsreader",Georgia,serif`);
-  if (theme.headingFont === "instrument") vars.push(`--font-serif:"Instrument Sans Variable","Instrument Sans",ui-sans-serif,system-ui,sans-serif`);
+  if (theme.headingFont === "instrument") vars.push(`--font-serif:var(--font-instrument),ui-sans-serif,system-ui,sans-serif`);
   if (theme.headingWeight !== 380) vars.push(`--heading-weight:${theme.headingWeight}`);
   if (theme.buttonShape !== "pill") vars.push(`--radius-button:${theme.buttonShape === "rounded" ? "0.5rem" : "0.125rem"}`);
   const rules: string[] = [];

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { fontVariables } from "@/app/fonts";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { ensureContent } from "@/lib/cms/store";
@@ -27,7 +28,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
   const nav = navModel(locale);
   const analytics = validateAnalytics(override("analytics", "all")).value;
   return (
-    <html lang={locale} data-scroll-behavior="smooth">
+    <html lang={locale} data-scroll-behavior="smooth" className={fontVariables}>
       <body className="flex min-h-dvh flex-col">
         {css && <style id="glow-theme" dangerouslySetInnerHTML={{ __html: css }} />}
         {snap.preview && <PreviewBanner />}

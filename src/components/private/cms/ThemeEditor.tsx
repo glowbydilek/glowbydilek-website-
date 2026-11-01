@@ -70,7 +70,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
 
       <div className="rounded-2xl p-5" style={{ background: c.paper, color: c.ink }}>
         <p className="text-xs uppercase tracking-[0.22em]" style={{ color: c.accentDeep }}>Voorbeeld</p>
-        <p className="mt-2 text-3xl" style={{ fontFamily: theme.headingFont === "instrument" ? "Instrument Sans Variable, sans-serif" : theme.headingFont === "newsreader" ? "Newsreader Variable, serif" : "Bodoni Moda Variable, serif", fontWeight: theme.headingWeight }}>
+        <p className="mt-2 text-3xl" style={{ fontFamily: theme.headingFont === "instrument" ? "var(--font-instrument), sans-serif" : theme.headingFont === "newsreader" ? "Newsreader Variable, serif" : "var(--font-bodoni), serif", fontWeight: theme.headingWeight }}>
           Jouw moment <em style={{ color: c.accent }}>om te stralen.</em>
         </p>
         <p className="mt-2 text-sm" style={{ color: c.inkSoft }}>Zo ziet lopende tekst eruit, met <span style={{ color: c.muted }}>gedempte tekst</span>.</p>
