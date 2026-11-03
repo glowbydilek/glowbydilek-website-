@@ -445,6 +445,18 @@ export const tr: Dictionary = {
       pending: "Talebinden sonra saat henüz kesinleşmez: Dilek kişisel olarak onaylar.",
     },
     formTitle: "Talebin",
+    modes: {
+      label: "Randevunu nasıl almak istersin?",
+      slotTitle: "Hemen saat seç",
+      slotBody: "Süresi belli bakımlar için: {list}.",
+      requestTitle: "Randevu talep et",
+      requestBody: "Masajlar ve talep üzerine yapılan bakımlar dahil tüm bakımlar için. Dilek sana kişisel olarak bir saat önerir.",
+      notListed: "Bakımın listede yok mu? Buradan talep et",
+    },
+    futureOnline: {
+      title: "Online ya da talep ile",
+      body: "Süresi belli bakımları doğrudan takvimden seçebilirsin; diğer her şey talep ile ilerler. Dilek her randevuyu e-posta ile kişisel olarak onaylar.",
+    },
     future: {
       title: "Kişisel planlama",
       body: "Otomatik bir rezervasyon takvimi yok: Dilek her talebi kendisi okur ve her randevuyu seninle kişisel olarak, e-postayla planlar.",

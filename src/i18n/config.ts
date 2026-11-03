@@ -95,6 +95,16 @@ export function bookingHref(locale: Locale, treatment?: TreatmentId | string): s
   return treatment ? `${base}?${bookingParam[locale]}=${encodeURIComponent(treatment)}` : base;
 }
 
+/** Treatment id preselected in a booking URL, in any language (?behandeling= / ?treatment= / ?bakim=). */
+export function preselectedTreatment(search: string): string | null {
+  const p = new URLSearchParams(search);
+  for (const l of locales) {
+    const v = p.get(bookingParam[l]);
+    if (v) return v;
+  }
+  return null;
+}
+
 export type PageRef =
   | { type: "static"; key: RouteKey }
   | { type: "category"; id: CategoryId }

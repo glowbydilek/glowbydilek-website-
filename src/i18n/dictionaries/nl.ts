@@ -451,6 +451,18 @@ export const nl = {
       pending: "Na je aanvraag is het tijdstip nog niet vastgelegd: Dilek bevestigt persoonlijk.",
     },
     formTitle: "Je aanvraag",
+    modes: {
+      label: "Hoe wil je een afspraak maken?",
+      slotTitle: "Direct een tijd kiezen",
+      slotBody: "Voor behandelingen met een vaste duur: {list}.",
+      requestTitle: "Afspraak aanvragen",
+      requestBody: "Voor alle behandelingen, ook massages en behandelingen op aanvraag. Dilek stelt persoonlijk een tijdstip voor.",
+      notListed: "Staat je behandeling er niet bij? Vraag hem hier aan",
+    },
+    futureOnline: {
+      title: "Online of op aanvraag",
+      body: "Behandelingen met een vaste duur kies je direct in de agenda; al het andere vraag je aan. Dilek bevestigt elke afspraak persoonlijk per e-mail.",
+    },
     future: {
       title: "Persoonlijk ingepland",
       body: "Er is geen automatische boekingsagenda: Dilek leest elke aanvraag zelf en plant iedere afspraak persoonlijk met je in, per e-mail.",

@@ -1,6 +1,6 @@
 "use client";
 
-import { intlTag, pick } from "@/i18n/config";
+import { intlTag, pick, preselectedTreatment } from "@/i18n/config";
 
 import { track } from "@/lib/analytics/track";
 import Link from "next/link";
@@ -59,8 +59,7 @@ export function BookingJourney({
 
   useEffect(() => {
     started.current = Date.now();
-    const p = new URLSearchParams(window.location.search);
-    const wanted = p.get("behandeling") ?? p.get("treatment");
+    const wanted = preselectedTreatment(window.location.search);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
     if (wanted && treatments.some((x) => x.id === wanted)) setPicked([wanted]);
   }, [treatments]);
@@ -176,7 +175,7 @@ export function BookingJourney({
                   {items.map((x) => {
                     const on = picked.includes(x.id);
                     return (
-                      <label key={x.id} className={chip(on)}>
+                      <label key={x.id} data-selected={on ? "true" : undefined} className={`sheen relative ${chip(on)}`}>
                         <input type="checkbox" className="sr-only" checked={on} onChange={() => setPicked((p) => (on ? p.filter((i) => i !== x.id) : [...p, x.id]))} />
                         {on && <Icon name="check" className="h-3.5 w-3.5" />}
                         {x.name}
@@ -208,16 +207,18 @@ export function BookingJourney({
             <>
               <div className="mt-4 flex gap-2 overflow-x-auto pb-1" role="listbox" aria-label={t.step2}>
                 {(days ?? []).map((d) => (
-                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_start", { form: "online" }); setDate(d.date); setTime(null); }} className={`min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface"}`}>
+                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_start", { form: "online" }); setDate(d.date); setTime(null); }} data-selected={date === d.date ? "true" : undefined} className={`sheen relative min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize transition-colors duration-300 ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
                     {fmtDay(d.date)}
+                    {date === d.date && <span aria-hidden="true" className="pick-star absolute right-1.5 top-1.5" />}
                   </button>
                 ))}
               </div>
               {selectedDay && (
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6" role="listbox" aria-label={fmtDay(selectedDay.date)}>
                   {selectedDay.times.map((tm) => (
-                    <button key={tm} type="button" role="option" aria-selected={time === tm} onClick={() => setTime(tm)} className={`min-h-11 rounded-full border text-sm ${time === tm ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface"}`}>
+                    <button key={tm} type="button" role="option" aria-selected={time === tm} onClick={() => setTime(tm)} data-selected={time === tm ? "true" : undefined} className={`sheen relative min-h-11 rounded-full border text-sm tabular-nums transition-colors duration-300 ${time === tm ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
                       {tm}
+                      {time === tm && <span aria-hidden="true" className="pick-star absolute right-2 top-1" />}
                     </button>
                   ))}
                 </div>

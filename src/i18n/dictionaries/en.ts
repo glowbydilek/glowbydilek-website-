@@ -448,6 +448,18 @@ export const en: Dictionary = {
       pending: "After your request the time is not yet fixed: Dilek confirms personally.",
     },
     formTitle: "Your request",
+    modes: {
+      label: "How would you like to book?",
+      slotTitle: "Choose a time now",
+      slotBody: "For treatments with a fixed duration: {list}.",
+      requestTitle: "Request an appointment",
+      requestBody: "For every treatment, including massages and treatments on request. Dilek suggests a time personally.",
+      notListed: "Treatment not listed? Request it here",
+    },
+    futureOnline: {
+      title: "Online or on request",
+      body: "Treatments with a fixed duration can be chosen straight from the calendar; everything else is requested. Dilek confirms every appointment personally by email.",
+    },
     future: {
       title: "Personally scheduled",
       body: "There is no automatic booking calendar: Dilek reads every request herself and schedules each appointment with you personally, by email.",

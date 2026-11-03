@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type KeyboardEvent, type MouseEvent } from "react";
-import { alternatePath, localeLabels, locales, matchPage, type Locale } from "@/i18n/config";
+import { alternatePath, localeLabels, locales, matchPage, type Locale, preselectedTreatment } from "@/i18n/config";
 import { bookingParam } from "@/content/slugs";
 
 /** Re-read when Next.js swaps the head metadata after a client navigation. */
@@ -135,8 +135,7 @@ export function LanguageSwitcher({
     const search = typeof window !== "undefined" ? window.location.search : "";
     if (!search) return;
     // Keep the preselected treatment when switching language on the booking page.
-    const params = new URLSearchParams(search);
-    const treatment = params.get("behandeling") ?? params.get("treatment") ?? params.get("bakim");
+    const treatment = preselectedTreatment(search);
     if (!treatment) return;
     e.preventDefault();
     router.push(`${target}?${bookingParam[l]}=${encodeURIComponent(treatment)}`);

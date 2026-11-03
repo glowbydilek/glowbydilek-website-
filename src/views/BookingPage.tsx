@@ -5,12 +5,13 @@ import { PreselectedNotice } from "@/components/forms/PreselectedNotice";
 import { currentSnapshot } from "@/lib/cms/current";
 import { getCatalogue, groupById, itemById, priceLabel, publicItems, sectionById } from "@/lib/catalogue";
 import { BookingJourney } from "@/components/forms/BookingJourney";
+import { BookingModes } from "@/components/forms/BookingModes";
 import { siteConfig } from "@/content/site";
 import { onlineBookingStatus, requestCalendar } from "@/lib/booking/public";
 import { amsterdamToday } from "@/lib/forms/validation";
 import { withDbOrFallback } from "@/lib/db/client";
 import { turnstileSiteKey } from "@/lib/forms/turnstile";
-import { bookingAnchor, href } from "@/i18n/config";
+import { bookingAnchor, href, intlTag } from "@/i18n/config";
 import { PageHero } from "@/components/PageHero";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -20,9 +21,10 @@ import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 /**
- * Appointment request page. Requests are emailed to the studio; nothing is
- * confirmed automatically and no availability is shown (no scheduling system
- * yet — see docs/ARCHITECTURE.md).
+ * Booking page. With online booking switched on, visitors choose between
+ * picking a time (online-bookable treatments) and sending a request (every
+ * published treatment, incl. massages and anything on request); without it,
+ * only the request form is shown. Dilek confirms every appointment herself.
  */
 export async function BookingPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -39,7 +41,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
     <>
       <PageHero locale={locale} photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
         <PreselectedNotice
-          names={Object.fromEntries(publicItems().map((x) => [x.id, x.name[locale]]))}
+          names={Object.fromEntries(publicItems({ locale }).map((x) => [x.id, x.name[locale]]))}
           label={t.preselected}
           cta={t.toForm}
           anchor={bookingAnchor}
@@ -60,30 +62,43 @@ export async function BookingPage({ locale }: { locale: Locale }) {
           <div className="rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <div className="mt-8">
-              {online ? (
-                <BookingJourney
-                  locale={locale}
-                  t={t.journey}
-                  forms={dict.forms}
-                  categories={Object.fromEntries([
-                    ...getCatalogue().groups.map((g) => [g.id, g.name[locale]]),
-                    ...getCatalogue().sections.map((s) => [s.id, s.name[locale]]),
-                  ])}
-                  treatments={online.map((b) => {
-                    const item = itemById(b.id)!;
-                    const cat = item.groupId && groupById(item.groupId) ? item.groupId : (sectionById(item.sectionId)?.id ?? b.category);
-                    return {
-                      id: b.id,
-                      name: item.name[locale],
-                      category: cat,
-                      duration: b.duration!,
-                      price: priceLabel(item, locale, { from: t.journey.from, onRequest: "" }) || null,
-                    };
-                  })}
-                  privacyHref={href(locale, "privacy")}
-                  email={siteConfig.contact.email}
-                  turnstileSiteKey={turnstileSiteKey()}
-                  promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
+              {online && online.length ? (
+                <BookingModes
+                  bookableIds={online.map((b) => b.id)}
+                  labels={{
+                    ...t.modes,
+                    slotBody: t.modes.slotBody.replace(
+                      "{list}",
+                      [...new Set(online.map((b) => itemById(b.id)).filter((x) => x != null).map((x) => sectionById(x.sectionId)?.name[locale] ?? ""))].filter(Boolean).join(", ").toLocaleLowerCase(intlTag(locale)),
+                    ),
+                  }}
+                  slot={
+                    <BookingJourney
+                      locale={locale}
+                      t={t.journey}
+                      forms={dict.forms}
+                      categories={Object.fromEntries([
+                        ...getCatalogue().groups.map((g) => [g.id, g.name[locale]]),
+                        ...getCatalogue().sections.map((s) => [s.id, s.name[locale]]),
+                      ])}
+                      treatments={online.map((b) => {
+                        const item = itemById(b.id)!;
+                        const cat = item.groupId && groupById(item.groupId) ? item.groupId : (sectionById(item.sectionId)?.id ?? b.category);
+                        return {
+                          id: b.id,
+                          name: item.name[locale],
+                          category: cat,
+                          duration: b.duration!,
+                          price: priceLabel(item, locale, { from: t.journey.from, onRequest: "" }) || null,
+                        };
+                      })}
+                      privacyHref={href(locale, "privacy")}
+                      email={siteConfig.contact.email}
+                      turnstileSiteKey={turnstileSiteKey()}
+                      promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
+                    />
+                  }
+                  request={<AppointmentFormBlock locale={locale} dict={dict} calendar={calendar} />}
                 />
               ) : (
                 <AppointmentFormBlock locale={locale} dict={dict} calendar={calendar} />
@@ -98,8 +113,8 @@ export async function BookingPage({ locale }: { locale: Locale }) {
             )}
             <div className="rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
               <Icon name="calendar" className="h-6 w-6 text-accent-deep" />
-              <h3 className="mt-4 font-serif text-2xl text-ink">{t.future.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{t.future.body}</p>
+              <h3 className="mt-4 font-serif text-2xl text-ink">{(online?.length ? t.futureOnline : t.future).title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{(online?.length ? t.futureOnline : t.future).body}</p>
             </div>
           </div>
         </Container>
