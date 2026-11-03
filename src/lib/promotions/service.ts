@@ -95,9 +95,9 @@ export async function removePromotion(db: DB, appointmentId: number) {
 
 export type CampaignView = {
   id: number;
-  title: { nl: string; en: string };
-  text: { nl: string; en: string };
-  cta: { nl: string; en: string };
+  title: Record<"nl" | "en" | "tr", string>;
+  text: Record<"nl" | "en" | "tr", string>;
+  cta: Record<"nl" | "en" | "tr", string>;
   href: string;
   mediaId: number | null;
 };
@@ -106,7 +106,8 @@ export async function activeCampaigns(db: DB, now = new Date()): Promise<Campaig
   const rows = await db.select().from(campaigns).where(eq(campaigns.status, "active")).orderBy(asc(campaigns.sort), asc(campaigns.id));
   return rows
     .filter((c) => (!c.startsAt || c.startsAt <= now) && (!c.endsAt || c.endsAt >= now))
-    .map((c) => ({ id: c.id, title: { nl: c.titleNl, en: c.titleEn || c.titleNl }, text: { nl: c.textNl, en: c.textEn || c.textNl }, cta: { nl: c.ctaNl, en: c.ctaEn || c.ctaNl }, href: c.href, mediaId: c.mediaId }));
+    // Turkish only when the owner wrote it (an empty title hides the slide on /tr).
+    .map((c) => ({ id: c.id, title: { nl: c.titleNl, en: c.titleEn || c.titleNl, tr: c.titleTr || "" }, text: { nl: c.textNl, en: c.textEn || c.textNl, tr: c.textTr || "" }, cta: { nl: c.ctaNl, en: c.ctaEn || c.ctaNl, tr: c.ctaTr || "" }, href: c.href, mediaId: c.mediaId }));
 }
 
 /** Price history rows for the given items (for the 30-day reference price). */

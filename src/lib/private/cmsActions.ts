@@ -1,5 +1,6 @@
 "use server";
 
+import { asLocale } from "../../i18n/config";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -9,7 +10,7 @@ import { audit } from "../db/audit";
 import { contentEntries, customPages, notificationTemplates, redirects, treatments } from "../db/schema";
 import { BLANK_CUSTOM, validSlug } from "../cms/custom";
 import { invalidateContent } from "../cms/store";
-import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, type Loc } from "../cms/service";
+import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, asLoc, type Loc } from "../cms/service";
 import { PAGE_SECTIONS } from "../cms/registry";
 import { validateTheme } from "../cms/theme";
 import { validateAnalytics, validateBusiness, validateSocial, validateMenu } from "../cms/menu";
@@ -18,12 +19,12 @@ import { allPages, matchPage, pagePath } from "@/i18n/config";
 import type { FormState } from "./authActions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "");
-const loc = (v: string): Loc => (v === "en" ? "en" : v === "all" ? "all" : "nl");
 
 function revalidateSite() {
   invalidateContent();
   revalidatePath("/", "layout");
   revalidatePath("/en", "layout");
+  revalidatePath("/tr", "layout");
 }
 
 function parseJson(raw: string): unknown {
@@ -40,7 +41,7 @@ export async function contentAction(_: FormState, f: FormData): Promise<FormStat
   const s = await assertOwner();
   const db = getDb();
   const docKey = str(f, "docKey");
-  const locale = loc(str(f, "locale"));
+  const locale = asLoc(str(f, "locale"));
   const op = str(f, "op");
   try {
     if (op === "save" || op === "publish" || op === "preview") {
@@ -188,7 +189,7 @@ export async function redirectAction(_: FormState, f: FormData): Promise<FormSta
 export async function templateAction(_: FormState, f: FormData): Promise<FormState> {
   const s = await assertOwner();
   const key = str(f, "key") as TemplateKey;
-  const locale = str(f, "locale") === "en" ? "en" : "nl";
+  const locale = asLocale(str(f, "locale"));
   if (!TEMPLATE_KEYS.includes(key)) return { error: "Onbekende e-mail." };
   const db = getDb();
   if (str(f, "op") === "reset") {

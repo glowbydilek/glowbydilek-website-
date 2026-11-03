@@ -1,5 +1,6 @@
 "use server";
 
+import { asLocale } from "../../i18n/config";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { assertOwner } from "../auth/session";
@@ -21,7 +22,7 @@ async function guard(run: () => Promise<FormState | void>): Promise<FormState> {
 
 export async function newRevisionAction(_: FormState, f: FormData): Promise<FormState> {
   const s = await assertOwner();
-  const locale = str(f, "locale") === "en" ? "en" : "nl";
+  const locale = asLocale(str(f, "locale"));
   let id = 0;
   const r = await guard(async () => {
     id = await createRevision(getDb(), locale, s.user.id);
@@ -63,7 +64,7 @@ export async function uploadIntakeAction(_: FormState, f: FormData): Promise<For
         file,
         signedOn: str(f, "signedOn"),
         templateVersion: str(f, "version").split("|")[1] ?? "",
-        locale: str(f, "version").split("|")[0] === "en" ? "en" : "nl",
+        locale: asLocale(str(f, "version").split("|")[0]),
         note: str(f, "note"),
         consentGiven: f.get("consent") === "on",
       },

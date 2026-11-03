@@ -21,7 +21,7 @@ export function parseEuroToCents(raw: string | null | undefined): number | null 
 }
 
 /** 4550 → "€ 45,50" (nl) / "€45.50" (en). */
-export function formatCents(cents: number, locale: "nl" | "en" = "nl"): string {
+export function formatCents(cents: number, locale: "nl" | "en" | "tr" = "nl"): string {
   const neg = cents < 0;
   const abs = Math.abs(Math.trunc(cents));
   const euros = Math.floor(abs / 100).toString();

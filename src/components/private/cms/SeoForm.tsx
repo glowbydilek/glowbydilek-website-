@@ -8,7 +8,7 @@ import { Buttons } from "./ContentEditor";
 
 export type Seo = { title?: string; description?: string; noindex?: boolean; ogTitle?: string; ogDescription?: string; ogImage?: number | null };
 
-export function SeoForm({ seoKey, locale, initial, defaults, path, media }: { seoKey: string; locale: "nl" | "en"; initial: Seo; defaults: { title: string; description: string }; path: string; media: { id: number; name: string }[] }) {
+export function SeoForm({ seoKey, locale, initial, defaults, path, media }: { seoKey: string; locale: "nl" | "en" | "tr"; initial: Seo; defaults: { title: string; description: string }; path: string; media: { id: number; name: string }[] }) {
   const [v, setV] = useState<Seo>(initial);
   const title = v.title || defaults.title;
   const desc = v.description || defaults.description;

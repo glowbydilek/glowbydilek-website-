@@ -1,3 +1,4 @@
+import { intlTag } from "@/i18n/config";
 /**
  * The live service catalogue: built-in entries merged with the owner's
  * database rows from the current content snapshot. Pure module (no database
@@ -37,9 +38,9 @@ function mergeItem(base: Item | undefined, t: TreatmentLive, groups: Group[]): I
     kind: t.kind === "package" ? "package" : (base?.kind ?? "treatment"),
     sectionId,
     groupId: groupCandidate ?? null,
-    slug: { nl: t.slugNl || base?.slug.nl || t.id, en: t.slugEn || base?.slug.en || t.id },
-    name: { nl: t.nameNl || base?.name.nl || t.id, en: t.nameEn || base?.name.en || t.nameNl || t.id },
-    description: { nl: t.descriptionNl || base?.description.nl || "", en: t.descriptionEn || base?.description.en || t.descriptionNl || "" },
+    slug: { nl: t.slugNl || base?.slug.nl || t.id, en: t.slugEn || base?.slug.en || t.id, tr: t.slugTr || base?.slug.tr || t.slugEn || base?.slug.en || t.id },
+    name: { nl: t.nameNl || base?.name.nl || t.id, en: t.nameEn || base?.name.en || t.nameNl || t.id, tr: t.nameTr || base?.name.tr || "" },
+    description: { nl: t.descriptionNl || base?.description.nl || "", en: t.descriptionEn || base?.description.en || t.descriptionNl || "", tr: t.descriptionTr || base?.description.tr || "" },
     photo: base?.photo ?? sectionPhoto,
     mediaId: t.mediaId,
     status: asStatus(t.status, base?.status ?? "published"),
@@ -74,8 +75,8 @@ export function getCatalogue(): Catalogue {
     sections.set(r.id, {
       id: r.id,
       kind: r.kind === "packages" ? "packages" : "treatments",
-      slug: { nl: r.slugNl, en: r.slugEn },
-      name: { nl: r.nameNl, en: r.nameEn || r.nameNl },
+      slug: { nl: r.slugNl, en: r.slugEn, tr: r.slugTr || b?.slug.tr || r.slugEn },
+      name: { nl: r.nameNl, en: r.nameEn || r.nameNl, tr: r.nameTr || b?.name.tr || "" },
       status: asStatus(r.status, "draft"),
       sort: r.sort,
       photo: b?.photo ?? "botanical",
@@ -89,8 +90,8 @@ export function getCatalogue(): Catalogue {
     groups.set(r.id, {
       id: r.id,
       sectionId: r.sectionId,
-      slug: { nl: r.slugNl, en: r.slugEn },
-      name: { nl: r.nameNl, en: r.nameEn || r.nameNl },
+      slug: { nl: r.slugNl, en: r.slugEn, tr: r.slugTr || b?.slug.tr || r.slugEn },
+      name: { nl: r.nameNl, en: r.nameEn || r.nameNl, tr: r.nameTr || b?.name.tr || "" },
       status: asStatus(r.status, "draft"),
       sort: r.sort,
       photo: b?.photo ?? sections.get(r.sectionId)?.photo ?? "botanical",
@@ -158,26 +159,35 @@ export function isPublicItem(i: Item, seen = new Set<string>()): boolean {
   return true;
 }
 
-export function publicItems(filter?: { sectionId?: string; groupId?: string | null }): Item[] {
+/** Public items; with `locale`, only those translated into that language. */
+export function publicItems(filter?: { sectionId?: string; groupId?: string | null; locale?: Locale }): Item[] {
   return getCatalogue().items.filter(
     (i) =>
       (!filter?.sectionId || i.sectionId === filter.sectionId) &&
       (filter?.groupId === undefined || i.groupId === filter.groupId) &&
-      isPublicItem(i),
+      isPublicItem(i) &&
+      (!filter?.locale || translated(i, filter.locale)),
   );
 }
 
-export function publicGroups(sectionId: string): Group[] {
-  return getCatalogue().groups.filter((g) => g.sectionId === sectionId && shown(g.status) && publicItems({ sectionId, groupId: g.id }).length > 0);
+export function publicGroups(sectionId: string, locale?: Locale): Group[] {
+  return getCatalogue().groups.filter(
+    (g) => g.sectionId === sectionId && shown(g.status) && (!locale || translated(g, locale)) && publicItems({ sectionId, groupId: g.id, locale }).length > 0,
+  );
 }
 
-export function publicSections(): Section[] {
-  return getCatalogue().sections.filter((s) => shown(s.status) && publicItems({ sectionId: s.id }).length > 0);
+export function publicSections(locale?: Locale): Section[] {
+  return getCatalogue().sections.filter((s) => shown(s.status) && (!locale || translated(s, locale)) && publicItems({ sectionId: s.id, locale }).length > 0);
 }
 
 // ─────────────────────────────────────────────────────────────── Paths
 
-const prefix = (locale: Locale) => (locale === "en" ? "/en" : "");
+const prefix = (locale: Locale) => (locale === "nl" ? "" : `/${locale}`);
+
+/** Turkish needs its own name before an entry is shown on /tr (no placeholder text). */
+export function translated(e: { name: { tr: string } }, locale: Locale): boolean {
+  return locale !== "tr" || Boolean(e.name.tr.trim());
+}
 
 export function sectionHref(locale: Locale, s: Section | string): string {
   const sec = typeof s === "string" ? sectionById(s) : s;
@@ -206,24 +216,24 @@ export function resolveCatalogue(locale: Locale, segments: string[]): Resolved |
   const [s1, s2, s3, ...rest] = segments.map((x) => decodeURIComponent(x).toLowerCase());
   if (!s1 || rest.length) return null;
   const section = getCatalogue().sections.find((s) => s.slug[locale] === s1);
-  if (!section || !shown(section.status)) return null;
+  if (!section || !shown(section.status) || !translated(section, locale)) return null;
   if (!s2) return publicItems({ sectionId: section.id }).length || previewing() ? { type: "section", section } : null;
   const group = getCatalogue().groups.find((g) => g.sectionId === section.id && g.slug[locale] === s2);
   if (group) {
-    if (!shown(group.status)) return null;
+    if (!shown(group.status) || !translated(group, locale)) return null;
     if (!s3) return { type: "group", section, group };
     const item = getCatalogue().items.find((i) => i.groupId === group.id && i.slug[locale] === s3);
-    return item && isPublicItem(item) ? { type: "item", section, group, item } : null;
+    return item && isPublicItem(item) && translated(item, locale) ? { type: "item", section, group, item } : null;
   }
   if (s3) return null;
   const item = getCatalogue().items.find((i) => i.sectionId === section.id && !i.groupId && i.slug[locale] === s2);
-  return item && isPublicItem(item) ? { type: "item", section, group: null, item } : null;
+  return item && isPublicItem(item) && translated(item, locale) ? { type: "item", section, group: null, item } : null;
 }
 
 /** Path of the same catalogue page in the other language (language switcher). */
 export function alternateCataloguePath(pathname: string, target: Locale): string | null {
-  const from: Locale = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";
-  const segs = pathname.replace(/^\/en(?=\/|$)/, "").split(/[?#]/)[0].split("/").filter(Boolean);
+  const from: Locale = /^\/en(\/|$)/.test(pathname) ? "en" : /^\/tr(\/|$)/.test(pathname) ? "tr" : "nl";
+  const segs = pathname.replace(/^\/(en|tr)(?=\/|$)/, "").split(/[?#]/)[0].split("/").filter(Boolean);
   const r = resolveCatalogue(from, segs);
   if (!r) return null;
   if (r.type === "section") return sectionHref(target, r.section);
@@ -248,7 +258,7 @@ export function itemDuration(i: Item): number | null {
 /** Human price label; never "€0". */
 export function priceLabel(i: Item, locale: Locale, words: { from: string; onRequest: string }): string {
   if (i.pricing.mode === "on_request" || i.pricing.cents == null) return words.onRequest;
-  const amount = new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", {
+  const amount = new Intl.NumberFormat(locale === "en" ? "en-IE" : intlTag(locale), {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: i.pricing.cents % 100 === 0 ? 0 : 2,

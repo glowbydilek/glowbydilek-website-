@@ -22,8 +22,8 @@ import { singleServiceJsonLd } from "@/lib/seo";
 export function SectionPage({ locale, section }: { locale: Locale; section: Section }) {
   const dict = getDictionary(locale);
   const c = sectionCopy(locale, section.id, section.name[locale]);
-  const groups = publicGroups(section.id);
-  const loose = publicItems({ sectionId: section.id, groupId: null });
+  const groups = publicGroups(section.id, locale);
+  const loose = publicItems({ sectionId: section.id, groupId: null, locale });
 
   const blocks: ReactNode[] = [];
   blocks.push(
@@ -88,7 +88,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
         </div>
         {groups.map((g) => {
           const gc = groupCopy(locale, g.id, g.name[locale]);
-          const items = publicItems({ sectionId: section.id, groupId: g.id });
+          const items = publicItems({ sectionId: section.id, groupId: g.id, locale });
           return (
             <div key={g.id} className="mt-block">
               <div className="flex items-end justify-between gap-4 border-b border-line pb-3">

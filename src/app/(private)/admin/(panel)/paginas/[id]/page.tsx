@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentEditor } from "@/components/private/cms/ContentEditor";
@@ -29,7 +30,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
   }
   // Owner-created catalogue entries: build the editor page and default copy from the database.
   let fallback: unknown = custom ? BLANK_CUSTOM : undefined;
-  const loc0 = sp.taal === "en" ? "en" : "nl";
+  const loc0 = asLocale(sp.taal);
   const dyn = !page ? /^(treatment|section|category)-([a-z0-9][a-z0-9-]{0,59})$/.exec(id) : null;
   if (dyn) {
     const db0 = getDb();
@@ -38,7 +39,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       const [t] = await db0.select().from(treatments).where(eq(treatments.id, key));
       if (t) {
         page = { id, label: t.nameNl, group: "Eigen", paths: { nl: "/", en: "/en" }, sectionsPage: "treatment", docs: [{ key: `treatment:${key}`, label: "Teksten" }] };
-        fallback = defaultTreatmentCopy(loc0, { name: { nl: t.nameNl, en: t.nameEn }, description: { nl: t.descriptionNl, en: t.descriptionEn } });
+        fallback = defaultTreatmentCopy(loc0, { name: { nl: t.nameNl, en: t.nameEn, tr: t.nameTr ?? "" }, description: { nl: t.descriptionNl, en: t.descriptionEn, tr: t.descriptionTr ?? "" } });
       }
     } else if (kind === "section") {
       const [x] = await db0.select().from(serviceSections).where(eq(serviceSections.id, key));
@@ -76,7 +77,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
         ))}
       </div>
       <div className="mb-4 inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Taal">
-        {(["nl", "en"] as const).map((l) => (
+        {(["nl", "en", "tr"] as const).map((l) => (
           <Link key={l} href={href(docKey, l)} role="tab" aria-selected={l === locale} className={`min-h-10 rounded-full px-4 py-2 text-sm ${l === locale ? "bg-ink text-paper" : ""}`}>
             {l === "nl" ? "Nederlands" : "Engels"}
             {ts[l].draft && " · concept"}
@@ -92,7 +93,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
           <p className="mb-4 text-sm text-muted">
             {ev.hasDraft ? "Je bewerkt een concept (nog niet zichtbaar op de website)." : ev.published ? `Gepubliceerde versie ${ev.published.version}.` : "Dit is de oorspronkelijke tekst."} Opslaan als concept, bekijk het voorbeeld en publiceer als je tevreden bent.
           </p>
-          <ContentEditor key={`${docKey}|${locale}`} docKey={docKey} locale={locale} initial={ev.value as Json} path={locale === "en" ? page.paths.en : page.paths.nl} hasDraft={ev.hasDraft} canReset={Boolean(ev.published)} />
+          <ContentEditor key={`${docKey}|${locale}`} docKey={docKey} locale={locale} initial={ev.value as Json} path={page.paths[locale] ?? page.paths.nl} hasDraft={ev.hasDraft} canReset={Boolean(ev.published)} />
         </Card>
         <div className="space-y-5">
           {custom && (

@@ -38,6 +38,9 @@ export type IntakeBlock =
   | { type: "signature"; parts: string[] }
   | { type: "pagebreak" };
 
+/** Answer column headings per language. */
+export const ANSWERS: Record<"nl" | "en" | "tr", string[]> = { nl: ["Ja", "Nee", "Weet niet"], en: ["Yes", "No", "Not sure"], tr: ["Evet", "Hayır", "Emin değilim"] };
+
 export type ParsedIntake = { title: string; answers: string[]; blocks: IntakeBlock[] };
 
 export const VERSION_PATTERN = /^GBD-INTAKE-\d{4}-\d{2}-v\d{1,3}$/;
@@ -146,10 +149,9 @@ export function nextVersion(current: string, now: Date = new Date()): string {
   return `GBD-INTAKE-${y}-${m}-v1`;
 }
 
-export const INITIAL_VERSION = "GBD-INTAKE-2026-11-v1";
-
-/** The supplied v1 forms (owner's draft wording, November 2026). */
-export const BUILTIN_INTAKE: Record<"nl" | "en", string> = {
+/** Version 1 (November 2026 handover): kept so existing signed copies stay traceable. */
+export const LEGACY_VERSION = "GBD-INTAKE-2026-11-v1";
+export const LEGACY_INTAKE_V1: Record<"nl" | "en", string> = {
   nl: `= Intake en toestemmingsformulier
 > Voor beautybehandelingen en ontspannende massages bij Glow by Dilek. Eén formulier voor alle behandelingen; aanvullende vragen zijn alleen van toepassing op de gekozen behandeling.
 @answers Ja | Nee | Weet niet
@@ -252,4 +254,158 @@ _ Additional notes (optional)
 # 6  For the practitioner only
 _ Treatment/safety discussed
 ~ Practitioner name | Date | Version: {version}`,
+};
+
+
+/**
+ * Version 2: the master consultation & intake form from the v13 package,
+ * in Dutch, English and Turkish. One form for every treatment, with
+ * conditional modules (waxing, facial/steam, massage) that only apply to the
+ * booked treatment. A beauty consultation, not a medical assessment; owner
+ * and privacy review required before use.
+ */
+export const INITIAL_VERSION = "GBD-INTAKE-2026-11-v2";
+
+export const BUILTIN_INTAKE: Record<"nl" | "en" | "tr", string> = {
+  nl: `= Persoonlijk intake- en adviesformulier
+> We stellen enkele vragen om je wensen te begrijpen en de behandeling zorgvuldig af te stemmen. Dit formulier is geen medische beoordeling.
+@answers Ja | Nee | Bespreek ik liever persoonlijk
+# 1  Gegevens en afspraak
+- Voor- en achternaam
+- E-mailadres / Telefoonnummer
+- Datum van de afspraak
+- Klantnummer (alleen intern)
+- Formulierversie en documentnummer: {version} / ________
+> Gewenste behandeling(en):
+[] Massage
+[] Waxbehandeling
+[] Gezichtsbehandeling (met stoom)
+[] Anders:
+_ Zijn er wensen of aandachtspunten die je wilt bespreken?
+# 2  Een kort gesprek over veiligheid en comfort
+> Beantwoord alleen wat relevant is voor je behandeling. Je kunt altijd kiezen om iets liever persoonlijk te bespreken.
+? Heb je huidgevoeligheden of allergieën die voor deze behandeling relevant kunnen zijn?
+? Zijn er huidplekjes, wondjes, irritaties of andere plekken die we beter kunnen vermijden?
+? Is er een behandeling, medicijn of gezondheidsomstandigheid waarvan jij denkt dat wij er rekening mee moeten houden?
+? Ben je zwanger of geef je borstvoeding, voor zover relevant voor de gekozen behandeling?
+_ Welke gebieden mogen wel of liever niet worden behandeld?
+_ Heb je voorkeuren voor druk, tempo, temperatuur, privacy of communicatie?
+_ Toelichting (optioneel)
+---
+# 3  Alleen bij de gekozen behandeling
+> Vul alleen het onderdeel in dat bij jouw behandeling hoort; de rest mag leeg blijven.
+?? Waxbehandeling
+? Gebruik je op de te behandelen huid momenteel producten of behandelingen die de huid gevoeliger kunnen maken, zoals bepaalde exfoliërende middelen of retinoïden?
+? Heeft de huid op de te behandelen plek onlangs een andere behandeling gehad, of is er irritatie waar we rekening mee moeten houden?
+?? Gezichtsbehandeling / stoom
+? Is je gezichtshuid op dit moment extra gevoelig, geïrriteerd of recent behandeld?
+? Zijn er producten, ingrediënten of temperatuurverschillen waar je gevoelig op reageert?
+> Dilek bespreekt vooraf of stoom voor jouw verzorging geschikt is.
+?? Massage
+? Zijn er pijnlijke, gevoelige of geblesseerde gebieden die niet gemasseerd mogen worden?
+? Zijn er omstandigheden waardoor je liever eerst overlegt of de massage passend is?
+> Je kunt tijdens de behandeling altijd aangeven of je meer of minder druk wilt, wilt pauzeren of wilt stoppen.
+# 4  Verklaring, privacy en bewaren
+> Ik heb mijn wensen en relevante aandachtspunten zo goed mogelijk gedeeld. Ik begrijp dat ik tijdens de behandeling vragen kan stellen of kan aangeven dat ik wil stoppen. Dilek kan de behandeling uitstellen of aanpassen als dat zorgvuldiger is. Ik heb informatie ontvangen over hoe mijn persoonsgegevens en eventuele intakegegevens worden verwerkt en bewaard, en waar ik privacyvragen kan stellen (glowbydilek.nl/privacy). Deze intake is geen medische beoordeling.
+* Ik bevestig de verklaring hierboven.
+* Ik geef toestemming om dit ondertekende formulier veilig bij mijn klantgegevens te bewaren. (Zonder dit vakje wordt het formulier niet bewaard; de veiligheid wordt dan mondeling besproken.)
+* Ik wil af en toe nieuws of aanbiedingen ontvangen. (optioneel, geen voorwaarde voor de afspraak)
+~ Naam | Datum | Handtekening / digitale bevestiging
+# 5  Alleen door Glow by Dilek in te vullen
+_ Besproken voorzorg of aanpassing
+~ Naam behandelaar | Datum | Versie: {version}`,
+  en: `= Personal consultation and intake form
+> We ask a few questions to understand your preferences and tailor the session with care. This form is not a medical assessment.
+@answers Yes | No | Prefer to discuss privately
+# 1  Details and appointment
+- First and last name
+- Email address / Phone number
+- Appointment date
+- Customer ID (internal only)
+- Form version and document number: {version} / ________
+> Requested treatment(s):
+[] Massage
+[] Waxing
+[] Facial treatment (with steam)
+[] Other:
+_ Do you have preferences or anything you would like to discuss?
+# 2  A short safety and comfort conversation
+> Answer only what is relevant to your treatment. You can always choose to discuss something privately instead.
+? Do you have any skin sensitivities or allergies relevant to this treatment?
+? Are there any cuts, irritation or other areas we should avoid?
+? Is there a treatment, medication or health consideration you feel we should take into account?
+? Are you pregnant or breastfeeding, if relevant to the chosen treatment?
+_ Which areas may be treated, and which would you prefer to avoid?
+_ Do you have preferences for pressure, pace, temperature, privacy or communication?
+_ Details (optional)
+---
+# 3  Only for the chosen treatment
+> Fill in only the part that belongs to your treatment; the rest may stay blank.
+?? Waxing
+? Are you currently using skincare products or treatments on the area that may increase skin sensitivity, such as certain exfoliants or retinoids?
+? Has the area recently received another treatment, or is there irritation we should consider?
+?? Facial treatment / steam
+? Is your facial skin currently especially sensitive, irritated or recently treated?
+? Are there products, ingredients or temperature changes to which you are sensitive?
+> Dilek will discuss whether steam is suitable for your facial session before use.
+?? Massage
+? Are there painful, sensitive or injured areas that should not be massaged?
+? Is there anything that makes you want to discuss whether massage is appropriate first?
+> You can ask for a change in pressure, a break or an end to the session at any time.
+# 4  Acknowledgment, privacy and record-keeping
+> I have shared my preferences and relevant considerations as accurately as I can. I understand that I may ask questions or ask to stop the session at any time. Dilek may postpone or adjust a treatment when appropriate for safe, careful service. I have received information on how my personal and any intake details are processed and retained, and where to ask privacy questions (glowbydilek.nl/privacy). This intake is not a medical assessment.
+* I confirm the acknowledgment above.
+* I consent to this signed form being stored securely with my customer record. (Without this box the form is not kept; safety is then discussed verbally.)
+* I would like occasional news or offers. (optional, not a condition for the appointment)
+~ Name | Date | Signature / electronic acknowledgment
+# 5  For Glow by Dilek only
+_ Precautions or adjustments discussed
+~ Practitioner name | Date | Version: {version}`,
+  tr: `= Kişisel ön görüşme ve bakım formu
+> Tercihlerini anlamak ve bakımı özenle planlamak için birkaç soru soruyoruz. Bu form tıbbi değerlendirme değildir.
+@answers Evet | Hayır | Yüz yüze konuşmayı tercih ederim
+# 1  Bilgiler ve randevu
+- Ad ve soyad
+- E-posta / Telefon numarası
+- Randevu tarihi
+- Müşteri numarası (yalnızca kurum içi)
+- Form sürümü ve belge numarası: {version} / ________
+> İstenen bakım(lar):
+[] Masaj
+[] Ağda
+[] Yüz bakımı (buharlı)
+[] Diğer:
+_ Paylaşmak istediğin tercihler veya önemli noktalar var mı?
+# 2  Güvenlik ve rahatlık üzerine kısa bir görüşme
+> Yalnızca bakımınla ilgili olanları yanıtla. Bir konuyu yüz yüze konuşmayı her zaman tercih edebilirsin.
+? Bu bakımla ilgili olabilecek cilt hassasiyetlerin veya alerjilerin var mı?
+? Kaçınmamız gereken yara, tahriş veya başka hassas bölgelerin var mı?
+? Dikkate almamızı istediğin bir tedavi, ilaç veya sağlık durumun var mı?
+? Seçtiğin bakımla ilgiliyse hamile misin veya emziriyor musun?
+_ Hangi bölgelere işlem yapılabilir, hangilerinden kaçınılmasını istersin?
+_ Baskı, tempo, sıcaklık, mahremiyet veya iletişim konusunda tercihin var mı?
+_ Açıklama (isteğe bağlı)
+---
+# 3  Yalnızca seçilen bakım için
+> Yalnızca bakımına ait bölümü doldur; diğerleri boş kalabilir.
+?? Ağda
+? İşlem yapılacak bölgede cildi hassaslaştırabilecek peeling ürünleri veya retinoid gibi ürün/uygulamalar kullanıyor musun?
+? İşlem yapılacak bölgeye yakın zamanda başka bir uygulama yapıldı mı veya dikkat edilmesi gereken tahriş var mı?
+?? Yüz bakımı / buhar
+? Yüz cildin şu anda çok hassas, tahriş olmuş veya yakın zamanda işlem görmüş durumda mı?
+? Hassasiyet gösterdiğin ürünler, içerikler veya sıcaklık değişimleri var mı?
+> Dilek, buharın yüz bakımına uygun olup olmadığını önceden seninle değerlendirir.
+?? Masaj
+? Masaj yapılmaması gereken ağrılı, hassas veya yaralı bölgelerin var mı?
+? Masajın uygunluğunu önce konuşmak istediğin herhangi bir durum var mı?
+> Uygulama sırasında baskının değişmesini, ara verilmesini veya işlemin durdurulmasını istediğin zaman söyleyebilirsin.
+# 4  Beyan, gizlilik ve saklama
+> Tercihlerimi ve bakımla ilgili önemli gördüğüm bilgileri mümkün olduğunca doğru paylaştım. Uygulama sırasında soru sorabileceğimi veya işlemin durdurulmasını isteyebileceğimi biliyorum. Dilek, özenli ve güvenli hizmet için gerekli gördüğünde bakımı erteleyebilir veya değiştirebilir. Kişisel bilgilerimin ve varsa ön görüşme bilgilerimin nasıl işlendiği ve saklandığı ile gizlilik konusunda nereye başvurabileceğim hakkında bilgilendirildim (glowbydilek.nl/privacy). Bu form tıbbi değerlendirme değildir.
+* Yukarıdaki beyanı onaylıyorum.
+* İmzalı bu formun müşteri kaydımla birlikte güvenli şekilde saklanmasına onay veriyorum. (Bu kutu işaretlenmezse form saklanmaz; güvenlik konuları sözlü olarak konuşulur.)
+* Ara sıra haber veya kampanya bilgisi almak istiyorum. (isteğe bağlı, randevu için koşul değildir)
+~ Ad soyad | Tarih | İmza / dijital onay
+# 5  Yalnızca Glow by Dilek tarafından doldurulur
+_ Konuşulan önlem veya uyarlama
+~ Uygulayıcının adı | Tarih | Sürüm: {version}`,
 };

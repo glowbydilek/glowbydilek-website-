@@ -26,8 +26,8 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
   const group = groupById(id)!;
   const section = sectionById(group.sectionId)!;
   const c = groupCopy(locale, id, group.name[locale]);
-  const items = publicItems({ sectionId: group.sectionId, groupId: id });
-  const others = publicGroups(group.sectionId).filter((g) => g.id !== id);
+  const items = publicItems({ sectionId: group.sectionId, groupId: id, locale });
+  const others = publicGroups(group.sectionId, locale).filter((g) => g.id !== id);
   const path = groupHref(locale, group);
   const sectionLink = section.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, section);
 

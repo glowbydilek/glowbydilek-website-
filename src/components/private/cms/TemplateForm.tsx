@@ -8,7 +8,7 @@ import { Field, Input, Notice, SubmitButton, Textarea } from "../ui";
 
 const SAMPLE = { firstName: "Sara", treatments: "Brazilian", date: "maandag 9 november 2026", time: "10:00", endTime: "10:45", request: "Aangevraagd: Brazilian — maandag 9 november 2026 10:00", location: "[praktische locatiegegevens uit Instellingen]", message: "" };
 
-export function TemplateForm({ k, locale, subject, body, custom }: { k: TemplateKey; locale: "nl" | "en"; subject: string; body: string; custom: boolean }) {
+export function TemplateForm({ k, locale, subject, body, custom }: { k: TemplateKey; locale: "nl" | "en" | "tr"; subject: string; body: string; custom: boolean }) {
   const [t, setT] = useState({ subject, body });
   const errors = useMemo(() => validateTemplate(k, t), [k, t]);
   const preview = renderTemplate(t, SAMPLE);

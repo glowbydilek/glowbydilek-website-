@@ -59,7 +59,11 @@ async function step(name, fn) {
     return c;
   };
   const checked = (page) =>
-    page.$$eval("form input[type=checkbox]:checked", (els) => els.map((e) => e.closest("label")?.textContent?.trim()).filter(Boolean));
+    page.$$eval("form:not([hidden] form) input[type=checkbox]:checked", (els) =>
+      els
+        .map((e) => [...(e.closest("label")?.childNodes ?? [])].filter((n) => n.nodeType === 3).map((n) => n.textContent).join("").trim())
+        .filter(Boolean),
+    );
 
   const desktop = await ctx(1440);
   const mobile = await ctx(390);
@@ -69,7 +73,7 @@ async function step(name, fn) {
     await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/brazilian-wax`);
     await p.getByRole("link", { name: "Vraag deze behandeling aan" }).first().click();
     await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
-    await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+    await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Brazilian"]);
     await p.close();
   });
@@ -79,8 +83,34 @@ async function step(name, fn) {
     await p.goto(`${BASE}/en/waxing-treatments/face`);
     await p.locator('a[href="/en/book-appointment?treatment=eyebrows"]').first().click();
     await p.waitForURL(/treatment=eyebrows/);
-    await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+    await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Eyebrows"]);
+    await p.close();
+  });
+
+  await step("Turkish booking link preselects (?bakim=)", async () => {
+    const p = await desktop.newPage();
+    await p.goto(`${BASE}/tr/randevu?bakim=massage-head`);
+    await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
+    assert.deepEqual(await checked(p), ["Baş masajı"]);
+    await p.close();
+  });
+
+  await step("on-request massage never disappears when online booking is on", async () => {
+    const p = await desktop.newPage();
+    await p.goto(`${BASE}/afspraak-maken?behandeling=massage-relaxation`);
+    await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
+    assert.deepEqual(await checked(p), ["Ontspanningsmassage (hele lichaam)"]);
+    const tabs = p.getByRole("tab");
+    if (await tabs.count()) {
+      // Online booking is switched on: the request tab is chosen for an on-request treatment …
+      assert.equal(await tabs.nth(1).getAttribute("aria-selected"), "true");
+      // … and from the time picker the request form is always one click away.
+      await tabs.first().click();
+      await p.getByRole("button", { name: /Staat je behandeling er niet bij/ }).click();
+      assert.equal(await tabs.nth(1).getAttribute("aria-selected"), "true");
+      assert.ok(await p.locator("[role=tabpanel]:not([hidden])").getByText("Voetmassage", { exact: true }).isVisible(), "massages listed in the request form");
+    }
     await p.close();
   });
 
@@ -95,14 +125,28 @@ async function step(name, fn) {
   await step("language switch keeps the page and the preselected treatment", async () => {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/waxbehandelingen/lichaam/oksels-waxen`);
-    await p.locator('header a[hreflang="en"]').click();
+    const pickLang = async (hreflang) => {
+      const btn = p.locator("header .lang-menu button").first();
+      await btn.click();
+      assert.equal(await btn.getAttribute("aria-expanded"), "true");
+      await p.locator(`header .lang-menu a[hreflang="${hreflang}"]`).first().click();
+    };
+    await pickLang("en");
     await p.waitForURL(`${BASE}/en/waxing-treatments/body/underarm-waxing`);
-    await p.locator('header a[hreflang="nl-NL"]').click();
+    await pickLang("tr-TR");
+    await p.waitForURL(`${BASE}/tr/agda/vucut/koltuk-alti-agdasi`);
+    assert.equal(await p.locator("html").getAttribute("lang"), "tr");
+    await pickLang("nl-NL");
     await p.waitForURL(`${BASE}/waxbehandelingen/lichaam/oksels-waxen`);
+    // Escape closes the language menu and returns focus to its button.
+    await p.locator("header .lang-menu button").first().click();
+    await p.keyboard.press("Escape");
+    assert.equal(await p.locator("header .lang-menu button").first().getAttribute("aria-expanded"), "false");
+    assert.ok(await p.evaluate(() => document.activeElement?.closest(".lang-menu") !== null), "focus back on the language button");
     await p.goto(`${BASE}/afspraak-maken?behandeling=hollywood`);
-    await p.locator('header a[hreflang="en"]').click();
+    await pickLang("en");
     await p.waitForURL(/\/en\/book-appointment\?treatment=hollywood/);
-    await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+    await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Hollywood"]);
     await p.close();
   });
@@ -113,7 +157,13 @@ async function step(name, fn) {
     await p.getByRole("button", { name: "Behandelingen" }).click();
     const menu = p.locator("#mega-menu");
     await menu.waitFor();
-    for (const name of ["Massages", "Ontspanningsmassage", "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem", "Nazorg"]) {
+    for (const name of [
+      "Gezichtsbehandelingen", "Gezichtsbehandeling met stoom",
+      "Massages", "Ontspanningsmassage (hele lichaam)", "Gezichtsmassage", "Hoofdmassage", "Handmassage", "Voetmassage",
+      "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem",
+      "Wenkbrauwen", "Bovenlip", "Kin", "Volledig gezicht", "Oksels", "Onderarmen", "Hele armen", "Onderbenen", "Hele benen", "Rug", "Bikinilijn", "Brazilian", "Hollywood",
+      "Nazorg", "Alle behandelingen",
+    ]) {
       assert.ok(await menu.getByRole("link", { name, exact: true }).count(), `missing ${name}`);
     }
     await p.keyboard.press("Escape");
@@ -162,10 +212,13 @@ async function step(name, fn) {
       await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
       await atTop("booking page from a treatment CTA");
       assert.ok(await p.getByRole("status").filter({ hasText: "Brazilian" }).count(), "preselection notice visible");
-      await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+      await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
       await p.mouse.wheel(0, 3000);
       await p.waitForTimeout(400);
-      await p.locator('footer a[href="/waxbehandelingen"]').click();
+      // On phones the footer groups each category in a collapsible panel.
+      const fold = p.locator("footer details").filter({ hasText: "Waxbehandelingen" });
+      if (await fold.isVisible()) await fold.locator("summary").click();
+      await p.locator('footer a[href="/waxbehandelingen"]').filter({ visible: true }).first().click();
       await p.waitForURL(`${BASE}/waxbehandelingen`);
       await atTop("section page from the footer");
       await p.mouse.wheel(0, 1200);
@@ -247,7 +300,7 @@ async function step(name, fn) {
     await step("appointment request from a treatment page is sent successfully", async () => {
       const p = await desktop.newPage();
       await p.goto(`${BASE}/en/book-appointment?treatment=half-legs`);
-      await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
+      await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
       const date = new Date(Date.now() + 9 * 864e5).toISOString().slice(0, 10);
       const fill = async () => {
         // Custom calendar (no native date input): Escape closes and returns focus, then pick the day.

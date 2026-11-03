@@ -12,16 +12,16 @@ import { TreatmentDetailPage } from "./TreatmentDetailPage";
 export function catalogueMetadata(locale: Locale, r: Resolved): Metadata {
   if (r.type === "section") {
     const c = sectionCopy(locale, r.section.id, r.section.name[locale]);
-    return buildMetadata({ locale, paths: { nl: sectionHref("nl", r.section), en: sectionHref("en", r.section) }, title: c.seoTitle, description: c.seoDescription, seoKey: `section-${r.section.id}` });
+    return buildMetadata({ locale, paths: { nl: sectionHref("nl", r.section), en: sectionHref("en", r.section), tr: sectionHref("tr", r.section) }, title: c.seoTitle, description: c.seoDescription, seoKey: `section-${r.section.id}` });
   }
   if (r.type === "group") {
     const c = groupCopy(locale, r.group.id, r.group.name[locale]);
-    return buildMetadata({ locale, paths: { nl: groupHref("nl", r.group), en: groupHref("en", r.group) }, title: c.seoTitle, description: c.seoDescription, seoKey: `category-${r.group.id}` });
+    return buildMetadata({ locale, paths: { nl: groupHref("nl", r.group), en: groupHref("en", r.group), tr: groupHref("tr", r.group) }, title: c.seoTitle, description: c.seoDescription, seoKey: `category-${r.group.id}` });
   }
   const t = itemCopy(locale, r.item.id, r.item);
   return buildMetadata({
     locale,
-    paths: { nl: itemHref("nl", r.item), en: itemHref("en", r.item) },
+    paths: { nl: itemHref("nl", r.item), en: itemHref("en", r.item), tr: itemHref("tr", r.item) },
     title: t.seoTitle,
     description: t.seoDescription,
     seoKey: `treatment-${r.item.id}`,

@@ -45,8 +45,8 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
 
   test("seeding never invents prices or durations and never overwrites owner edits", async () => {
     const all = await db.select().from(treatments);
-    // 13 published waxing treatments + the relaxation massage; facial/body/package entries as drafts.
-    assert.equal(all.filter((t) => t.status === "published").length, 14);
+    // 13 waxing treatments, 5 massages and facial care with steam are published; the rest are drafts.
+    assert.equal(all.filter((t) => t.status === "published").length, 19);
     assert.ok(all.filter((t) => t.status !== "published").every((t) => t.status === "draft"));
     assert.ok(all.filter((t) => !["brazilian", "eyebrows"].includes(t.id)).every((t) => t.priceCents === null && t.durationMinutes === null));
     await db.update(treatments).set({ priceCents: 4500 }).where(eq(treatments.id, "chin"));

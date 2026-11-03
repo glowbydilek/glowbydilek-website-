@@ -12,7 +12,7 @@ import { applyPromotion, checkCode } from "@/lib/promotions/service";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function names(d: AppointmentInput, locale: "nl" | "en" = d.locale): string[] {
+function names(d: AppointmentInput, locale: "nl" | "en" | "tr" = d.locale): string[] {
   const items = getCatalogue().items;
   return d.treatments.map((id) => items.find((x) => x.id === id)?.name[locale] ?? id);
 }

@@ -1,5 +1,3 @@
-import "@fontsource-variable/newsreader/standard.css";
-import "@fontsource-variable/newsreader/standard-italic.css";
 import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";

@@ -9,7 +9,7 @@ import { formatLocal } from "@/lib/time";
 
 export const metadata = { title: "Intakeformulier" };
 
-const LANG = { nl: "Nederlands", en: "English" } as const;
+const LANG = { nl: "Nederlands", en: "English", tr: "Türkçe" } as const;
 const STATUS = { active: ["Actief", "confirmed"], draft: ["Concept", "pending"], retired: ["Vorige versie", "neutral"] } as const;
 
 export default async function IntakeTemplatesPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
@@ -29,7 +29,7 @@ export default async function IntakeTemplatesPage({ searchParams }: { searchPara
         </Notice>
       </div>
       <div className="grid gap-5 lg:grid-cols-2">
-        {(["nl", "en"] as const).map((locale) => {
+        {(["nl", "en", "tr"] as const).map((locale) => {
           const list = rows.filter((r) => r.locale === locale);
           const active = list.find((r) => r.status === "active");
           return (

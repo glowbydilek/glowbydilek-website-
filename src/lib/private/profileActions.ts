@@ -36,6 +36,7 @@ export async function profileAction(_: FormState, f: FormData): Promise<FormStat
   invalidateContent();
   revalidatePath("/over-dilek");
   revalidatePath("/en/about-dilek");
+  revalidatePath("/tr/dilek-hakkinda");
   revalidatePath("/admin/over-dilek");
   return { ok: true, message: p.published ? (p.verified ? "Opgeslagen en zichtbaar op Over Dilek." : "Opgeslagen. Achtergrond en certificaten zijn zichtbaar; het diploma pas na het vinkje ‘exact gecontroleerd’.") : "Opgeslagen (niet zichtbaar op de website)." };
 }

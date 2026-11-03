@@ -181,6 +181,8 @@ export const customPages = mysqlTable("custom_pages", {
   id: int("id").autoincrement().primaryKey(),
   slugNl: varchar("slug_nl", { length: 120 }).notNull().unique(),
   slugEn: varchar("slug_en", { length: 120 }).notNull().unique(),
+  /** Turkish slug (migration 0004); null = no Turkish version yet. */
+  slugTr: varchar("slug_tr", { length: 120 }),
   published: boolean("published").notNull().default(false),
   noindex: boolean("noindex").notNull().default(false),
   createdAt: created(),
@@ -206,6 +208,7 @@ export const media = mysqlTable("media", {
   bytes: int("bytes").notNull(),
   altNl: varchar("alt_nl", { length: 300 }).notNull().default(""),
   altEn: varchar("alt_en", { length: 300 }).notNull().default(""),
+  altTr: varchar("alt_tr", { length: 300 }).notNull().default(""),
   focusMobile: varchar("focus_mobile", { length: 20 }).notNull().default("50% 50%"),
   focusDesktop: varchar("focus_desktop", { length: 20 }).notNull().default("50% 50%"),
   source: varchar("source", { length: 300 }).notNull().default(""),
@@ -235,8 +238,11 @@ export const treatments = mysqlTable("treatments", {
   category: varchar("category", { length: 30 }).notNull(),
   nameNl: varchar("name_nl", { length: 120 }).notNull(),
   nameEn: varchar("name_en", { length: 120 }).notNull(),
+  /** Turkish (migration 0004): null = translation still needed (hidden on /tr). */
+  nameTr: varchar("name_tr", { length: 120 }),
   descriptionNl: text("description_nl").notNull(),
   descriptionEn: text("description_en").notNull(),
+  descriptionTr: text("description_tr"),
   /** Confirmed price in cents; null = "on request". */
   priceCents: int("price_cents"),
   priceFrom: boolean("price_from").notNull().default(false),
@@ -260,6 +266,7 @@ export const treatments = mysqlTable("treatments", {
   groupId: varchar("group_id", { length: 60 }),
   slugNl: varchar("slug_nl", { length: 120 }),
   slugEn: varchar("slug_en", { length: 120 }),
+  slugTr: varchar("slug_tr", { length: 120 }),
   status: varchar("status", { length: 12 }).notNull().default("published"),
   /** fixed | from | on_request. Null (pre-0002) = derived from priceCents/priceFrom. */
   pricingMode: varchar("pricing_mode", { length: 12 }),
@@ -278,8 +285,10 @@ export const serviceSections = mysqlTable("service_sections", {
   kind: varchar("kind", { length: 12 }).notNull().default("treatments"), // treatments | packages
   slugNl: varchar("slug_nl", { length: 80 }).notNull().unique(),
   slugEn: varchar("slug_en", { length: 80 }).notNull().unique(),
+  slugTr: varchar("slug_tr", { length: 80 }),
   nameNl: varchar("name_nl", { length: 120 }).notNull(),
   nameEn: varchar("name_en", { length: 120 }).notNull(),
+  nameTr: varchar("name_tr", { length: 120 }),
   status: varchar("status", { length: 12 }).notNull().default("draft"),
   mediaId: int("media_id"),
   sort: int("sort").notNull().default(0),
@@ -295,8 +304,10 @@ export const serviceGroups = mysqlTable(
     sectionId: varchar("section_id", { length: 60 }).notNull(),
     slugNl: varchar("slug_nl", { length: 80 }).notNull(),
     slugEn: varchar("slug_en", { length: 80 }).notNull(),
+    slugTr: varchar("slug_tr", { length: 80 }),
     nameNl: varchar("name_nl", { length: 120 }).notNull(),
     nameEn: varchar("name_en", { length: 120 }).notNull(),
+    nameTr: varchar("name_tr", { length: 120 }),
     status: varchar("status", { length: 12 }).notNull().default("draft"),
     mediaId: int("media_id"),
     sort: int("sort").notNull().default(0),
@@ -425,6 +436,7 @@ export const appointmentTreatments = mysqlTable(
     /** Name snapshot, so history stays readable if a treatment is renamed. */
     nameNl: varchar("name_nl", { length: 120 }).notNull(),
     nameEn: varchar("name_en", { length: 120 }).notNull(),
+    nameTr: varchar("name_tr", { length: 120 }),
     durationMinutes: smallint("duration_minutes"),
     /** List price at booking time (cents), null when no price was configured. */
     priceCents: int("price_cents"),
@@ -767,6 +779,7 @@ export const promotions = mysqlTable("promotions", {
   id: int("id").autoincrement().primaryKey(),
   nameNl: varchar("name_nl", { length: 120 }).notNull(),
   nameEn: varchar("name_en", { length: 120 }).notNull(),
+  nameTr: varchar("name_tr", { length: 120 }),
   /** percent (value in basis points) | fixed (value in cents). */
   kind: varchar("kind", { length: 10 }).notNull(),
   value: int("value").notNull(),
@@ -785,6 +798,7 @@ export const promotions = mysqlTable("promotions", {
   showPublic: boolean("show_public").notNull().default(false),
   noteNl: varchar("note_nl", { length: 300 }),
   noteEn: varchar("note_en", { length: 300 }),
+  noteTr: varchar("note_tr", { length: 300 }),
   createdAt: created(),
   updatedAt: updated(),
 });
@@ -806,10 +820,13 @@ export const campaigns = mysqlTable("campaigns", {
   id: int("id").autoincrement().primaryKey(),
   titleNl: varchar("title_nl", { length: 140 }).notNull(),
   titleEn: varchar("title_en", { length: 140 }).notNull(),
+  titleTr: varchar("title_tr", { length: 140 }),
   textNl: varchar("text_nl", { length: 400 }).notNull().default(""),
   textEn: varchar("text_en", { length: 400 }).notNull().default(""),
+  textTr: varchar("text_tr", { length: 400 }),
   ctaNl: varchar("cta_nl", { length: 60 }).notNull().default(""),
   ctaEn: varchar("cta_en", { length: 60 }).notNull().default(""),
+  ctaTr: varchar("cta_tr", { length: 60 }),
   /** Internal path only (validated). */
   href: varchar("href", { length: 200 }).notNull().default(""),
   mediaId: int("media_id"),

@@ -11,8 +11,10 @@
  * them. Only `published` entries are public.
  */
 import type { PhotoId } from "@/content/media";
+import type { Locale } from "@/i18n/config";
 
-export type L = { nl: string; en: string };
+/** A text in every site language. An empty Turkish name means "translation needed" (hidden on /tr). */
+export type L = Record<Locale, string>;
 export type Status = "draft" | "published" | "archived";
 export type PricingMode = "fixed" | "from" | "on_request";
 export type VatCategory = "standard" | "reduced" | "zero" | "exempt";
@@ -82,8 +84,10 @@ export type CatalogueRows = {
     kind: string;
     slugNl: string;
     slugEn: string;
+    slugTr?: string | null;
     nameNl: string;
     nameEn: string;
+    nameTr?: string | null;
     status: string;
     mediaId: number | null;
     sort: number;
@@ -93,8 +97,10 @@ export type CatalogueRows = {
     sectionId: string;
     slugNl: string;
     slugEn: string;
+    slugTr?: string | null;
     nameNl: string;
     nameEn: string;
+    nameTr?: string | null;
     status: string;
     mediaId: number | null;
     sort: number;

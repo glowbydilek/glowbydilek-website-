@@ -1,8 +1,29 @@
 # Photography
 
-**Status: 17 photo slots, all filled** (3 added on 1 November 2026 for the new facial, body and massage categories) with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
+**Status: 28 photo slots, all filled** (11 service-specific slots added on 3 November 2026 for v13, see below) (3 added on 1 November 2026 for the new facial, body and massage categories) with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
 
 **Review for the service-page rebuild (October 2026).** The existing 12 slots and their 48 WebP files were reviewed again: none were weak enough to replace (no watermarks, no bad crops at the current focal points, all on-palette). Instead, **4 slots were added** for the new category, treatment and guide pages so the same image is not repeated on every page. They come from assets that had already been licensed in the same session but were not used yet — no new licences or paid services were needed. Unsplash could not be used (the connected account's email is unconfirmed); Firefly / Figma image generation was not used (no AI people, and paid credits would be required).
+
+
+## v13 service-specific photos (3 November 2026)
+
+The v13 brief asked for images that show the actual service instead of repeated bottles, stones and vases. Eleven assets were licensed from the **Adobe Stock free collection** (Standard License, no cost; the licence call returned no price quote). Every person is a stock model — never Dilek, staff or a client. The facial-steamer photo shows the type of equipment only: it is not the studio's own device and makes no ozone or device claim.
+
+| Slot | Adobe Stock ID | Shows | Used on |
+| --- | --- | --- | --- |
+| `massage-body` | 453749067 | Back massage, woman relaxing | Massages section, Ontspanningsmassage (hele lichaam) |
+| `massage-head` | 461978663 | Scalp massage | Hoofdmassage |
+| `massage-face` | 626852054 | Female masseuse's hands on the forehead | Gezichtsmassage |
+| `massage-hand` | 382951621 | Hand and finger massage (no face) | Handmassage |
+| `massage-foot` | 214559198 | Foot massage on a towel (no face) | Voetmassage |
+| `facial-steam` | 1218786696 | Woman with eye pads under a facial steamer | Gezichtsbehandeling met stoom |
+| `wax-legs` | 490022317 | Wax on the lower leg | Onderbenen |
+| `wax-underarm` | 486751786 | Warm wax on the underarm | Oksels |
+| `wax-lip` | 624353393 | Wax on the upper lip | Bovenlip, Kin |
+| `wax-arms` | 231285152 | Wax strip on the arm | Onderarmen, Hele armen |
+| `wax-back` | 115961544 | Wax strip on the shoulder | Rug |
+
+Bikini, Brazilian and Hollywood pages deliberately keep still lifes (no bodies). The `massage` still life (#468953240) is no longer referenced by the built-in catalogue but stays available in Admin → Media. Originals are in `assets/photos/` (not committed).
 
 ## Licence
 
@@ -40,7 +61,7 @@ The new categories are still drafts; their photos only appear once the owner pub
 
 ### Where each treatment page takes its image
 
-Eyebrows `zone-face` · Upper lip `dropper` · Chin `botanical` · Full face `hero` · Underarms `aftercare` · Half arms `materials` · Full arms `botanical` · Half legs `zone-body` · Full legs `treatments-hero` · Back `vase` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
+Eyebrows `zone-face` · Upper lip `wax-lip` · Chin `wax-lip` · Full face `hero` · Underarms `wax-underarm` · Half arms `wax-arms` · Full arms `wax-arms` · Half legs `wax-legs` · Full legs `treatments-hero` · Back `wax-back` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
 
 **Direction (2026 identity):** one portrait (the calm `hero` image) on the homepage; everywhere else still lifes, textures and materials in warm natural light. The two additional model portraits were removed (November 2026) so that no page suggests a person is Dilek or a client, and the image style stays consistent.
 

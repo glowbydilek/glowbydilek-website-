@@ -7,7 +7,7 @@ import { customers, intakeDocuments, intakeTemplates } from "../db/schema";
 import { consultationEnabled } from "../consultation/service";
 import { stripMetadata } from "../cms/strip";
 import { checkIntakeFile, INTAKE_MAX_PIXELS } from "./files";
-import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, nextVersion, parseIntake } from "./template";
+import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, LEGACY_INTAKE_V1, LEGACY_VERSION, nextVersion, parseIntake } from "./template";
 
 /**
  * Intake & consent: master templates (versioned) and signed copies per
@@ -24,21 +24,57 @@ import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, nextVersion, parseI
  */
 
 export class IntakeError extends Error {}
-type Locale = "nl" | "en";
+type Locale = "nl" | "en" | "tr";
 type Who = { userId: number; mfa: boolean };
 
 // ─────────────────────────────────────────────────────────────── templates
 
-/** Creates the supplied v1 forms on first use (idempotent). */
+/** Change notes that mark the built-in v13 master form (so it is installed once per language). */
+const MASTER_NOTE_ACTIVE = "Master-intakeformulier v2 (NL/EN/TR, v13-pakket)";
+const MASTER_NOTE_FIRST = "Eerste versie (master-intakeformulier v2, concept)";
+const MASTER_NOTE_REVIEW = "Master-intakeformulier v2 (v13) — naast jouw eigen concept toegevoegd; controleer en activeer";
+
+/**
+ * Creates the built-in master forms (NL, EN, TR; idempotent).
+ * - Empty database: the master form becomes the active version.
+ * - The untouched v1 form is active and there is no draft: the master form
+ *   becomes active and v1 is kept (retired), so earlier signed copies stay
+ *   traceable.
+ * - The owner has her own revision (edited text or an open draft): nothing
+ *   of hers changes. The master form is added once as a separate draft
+ *   under the next free version number, for her to review and activate.
+ */
 export async function ensureIntakeTemplates(db: DB) {
-  const rows = await db.select({ locale: intakeTemplates.locale }).from(intakeTemplates);
-  for (const locale of ["nl", "en"] as const) {
-    if (rows.some((r) => r.locale === locale)) continue;
-    const p = parseIntake(BUILTIN_INTAKE[locale], INITIAL_VERSION);
-    await db
-      .insert(intakeTemplates)
-      .values({ locale, version: INITIAL_VERSION, status: "active", title: p.title, source: BUILTIN_INTAKE[locale], changeNote: "Eerste versie (aangeleverd concept)", activatedAt: new Date() })
-      .catch(() => {}); // a parallel request created it
+  const rows = await db
+    .select({ id: intakeTemplates.id, locale: intakeTemplates.locale, version: intakeTemplates.version, status: intakeTemplates.status, source: intakeTemplates.source, changeNote: intakeTemplates.changeNote })
+    .from(intakeTemplates);
+  for (const locale of ["nl", "en", "tr"] as const) {
+    const mine = rows.filter((r) => r.locale === locale);
+    const installed = mine.some((r) => r.source === BUILTIN_INTAKE[locale] || r.changeNote === MASTER_NOTE_ACTIVE || r.changeNote === MASTER_NOTE_FIRST || r.changeNote === MASTER_NOTE_REVIEW);
+    if (installed) continue;
+    const active = mine.find((r) => r.status === "active");
+    const legacy = locale === "tr" ? undefined : LEGACY_INTAKE_V1[locale];
+    const untouchedV1 = Boolean(active && active.version === LEGACY_VERSION && active.source === legacy && !mine.some((r) => r.status === "draft"));
+    const mode: "first" | "upgrade" | "review" = !mine.length ? "first" : untouchedV1 ? "upgrade" : "review";
+    let version = INITIAL_VERSION;
+    while (mine.some((r) => r.version === version)) version = nextVersion(version);
+    try {
+      await db.transaction(async (tx) => {
+        if (mode === "upgrade") await tx.update(intakeTemplates).set({ status: "retired", retiredAt: new Date() }).where(eq(intakeTemplates.id, active!.id));
+        const p = parseIntake(BUILTIN_INTAKE[locale], version);
+        await tx.insert(intakeTemplates).values({
+          locale,
+          version,
+          status: mode === "review" ? "draft" : "active",
+          title: p.title,
+          source: BUILTIN_INTAKE[locale],
+          changeNote: mode === "upgrade" ? MASTER_NOTE_ACTIVE : mode === "first" ? MASTER_NOTE_FIRST : MASTER_NOTE_REVIEW,
+          ...(mode === "review" ? {} : { activatedAt: new Date() }),
+        });
+      });
+    } catch {
+      /* a parallel request created it */
+    }
   }
 }
 

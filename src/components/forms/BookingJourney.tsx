@@ -1,5 +1,7 @@
 "use client";
 
+import { intlTag, pick, preselectedTreatment } from "@/i18n/config";
+
 import { track } from "@/lib/analytics/track";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
@@ -29,7 +31,7 @@ export function BookingJourney({
   turnstileSiteKey,
   promoField = false,
 }: {
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   t: Dictionary["booking"]["journey"];
   forms: Dictionary["forms"];
   treatments: JourneyTreatment[];
@@ -57,8 +59,7 @@ export function BookingJourney({
 
   useEffect(() => {
     started.current = Date.now();
-    const p = new URLSearchParams(window.location.search);
-    const wanted = p.get("behandeling") ?? p.get("treatment");
+    const wanted = preselectedTreatment(window.location.search);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
     if (wanted && treatments.some((x) => x.id === wanted)) setPicked([wanted]);
   }, [treatments]);
@@ -87,7 +88,7 @@ export function BookingJourney({
   }, [load]);
 
   const fmtDay = (d: string) =>
-    new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${d}T12:00:00Z`));
+    new Intl.DateTimeFormat(intlTag(locale), { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${d}T12:00:00Z`));
   const shift = (n: number) => {
     const d = new Date(`${from}T12:00:00Z`);
     d.setUTCDate(d.getUTCDate() + n);
@@ -161,7 +162,7 @@ export function BookingJourney({
   return (
     <form onSubmit={submit} noValidate className="space-y-9">
       <Honeypot value={honeypot} onChange={setHoneypot} />
-      <fieldset>
+      <fieldset className="min-w-0">
         <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">1 · {t.step1}</legend>
         <div className="mt-4 space-y-4">
           {Object.entries(categories).map(([cat, label]) => {
@@ -174,7 +175,7 @@ export function BookingJourney({
                   {items.map((x) => {
                     const on = picked.includes(x.id);
                     return (
-                      <label key={x.id} className={chip(on)}>
+                      <label key={x.id} data-selected={on ? "true" : undefined} className={`sheen relative ${chip(on)}`}>
                         <input type="checkbox" className="sr-only" checked={on} onChange={() => setPicked((p) => (on ? p.filter((i) => i !== x.id) : [...p, x.id]))} />
                         {on && <Icon name="check" className="h-3.5 w-3.5" />}
                         {x.name}
@@ -190,7 +191,7 @@ export function BookingJourney({
       </fieldset>
 
       {picked.length > 0 && (
-        <fieldset>
+        <fieldset className="min-w-0">
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">2 · {t.step2} <span className="normal-case tracking-normal text-muted">({t.duration} {duration} {t.minutes})</span></legend>
           <div className="mt-3 flex items-center justify-between gap-2">
             <button type="button" onClick={() => shift(-14)} className="min-h-11 rounded-full border border-ink/15 px-4 text-sm">‹ {t.earlier}</button>
@@ -200,22 +201,24 @@ export function BookingJourney({
             <p className="mt-4 text-sm text-muted" role="status">{t.loading}</p>
           ) : days && days.length === 0 ? (
             <p className="mt-4 rounded-2xl bg-glow-soft p-4 text-sm text-ink-soft">
-              {t.noTimes} <Link href={locale === "nl" ? "/contact" : "/en/contact"} className="underline">{forms.topics.question}</Link>
+              {t.noTimes} <Link href={pick(locale, { nl: "/contact", en: "/en/contact", tr: "/tr/iletisim" })} className="underline">{forms.topics.question}</Link>
             </p>
           ) : (
             <>
               <div className="mt-4 flex gap-2 overflow-x-auto pb-1" role="listbox" aria-label={t.step2}>
                 {(days ?? []).map((d) => (
-                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_start", { form: "online" }); setDate(d.date); setTime(null); }} className={`min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface"}`}>
+                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_start", { form: "online" }); setDate(d.date); setTime(null); }} data-selected={date === d.date ? "true" : undefined} className={`sheen relative min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize transition-colors duration-300 ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
                     {fmtDay(d.date)}
+                    {date === d.date && <span aria-hidden="true" className="pick-star absolute right-1.5 top-1.5" />}
                   </button>
                 ))}
               </div>
               {selectedDay && (
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6" role="listbox" aria-label={fmtDay(selectedDay.date)}>
                   {selectedDay.times.map((tm) => (
-                    <button key={tm} type="button" role="option" aria-selected={time === tm} onClick={() => setTime(tm)} className={`min-h-11 rounded-full border text-sm ${time === tm ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface"}`}>
+                    <button key={tm} type="button" role="option" aria-selected={time === tm} onClick={() => setTime(tm)} data-selected={time === tm ? "true" : undefined} className={`sheen relative min-h-11 rounded-full border text-sm tabular-nums transition-colors duration-300 ${time === tm ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
                       {tm}
+                      {time === tm && <span aria-hidden="true" className="pick-star absolute right-2 top-1" />}
                     </button>
                   ))}
                 </div>
@@ -226,7 +229,7 @@ export function BookingJourney({
       )}
 
       {date && time && (
-        <fieldset className="space-y-6">
+        <fieldset className="min-w-0 space-y-6">
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">3 · {t.step3}</legend>
           <p className="flex items-center justify-between gap-3 rounded-2xl bg-accent/12 p-4 text-sm">
             <span><strong className="font-medium">{t.selected}:</strong> <span className="capitalize">{fmtDay(date)}</span> · {time}</span>

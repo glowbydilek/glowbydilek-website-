@@ -47,10 +47,18 @@ The owner can adjust every colour in **Admin → Thema & Design**. Changes are v
 
 ## Typography
 
-- **Newsreader** (variable, optical size) for headings and display text; italic for the single emphasised phrase in a heading.
+- **Newsreader Medium (500)** for headings and display text (since v13); italic for the single emphasised phrase in a heading. Bodoni Moda's hairlines were too fine on iPhone screens; the comparison is in `docs/review/v13/type-specimen-iphone.png`. Bodoni remains available as a theme option (Admin → Thema & Design).
 - **Instrument Sans** (variable) for text, navigation, buttons and labels.
 - Labels ("eyebrows") are tracked caps preceded by a small glint. Buttons and navigation use **sentence case**, never spaced capitals.
-- Both fonts are self-hosted via `@fontsource-variable` (no request to Google Fonts).
+- All fonts are self-hosted through `next/font/local` (`src/app/fonts.ts`, SIL Open Font License, no request to Google Fonts). Each family has a Latin file and a **Latin Extended** file for the Turkish letters İ ğ Ğ ş Ş; the extended file has a `unicode-range` and is only downloaded on pages that use those letters.
+
+### Logo candidates (v13, awaiting approval)
+
+`node scripts/brand/logo-candidates.cjs` writes three options to `docs/review/v13/logo-candidates/` (overview: `logo-candidates.png`). The live site keeps **A** until the owner chooses.
+
+- **A · Atelier** — current lockup.
+- **B · Helder** (recommended) — same style with heavier strokes and a larger signature; stays crisp at 28–36 px in the phone header.
+- **C · Signatuur** — sturdier wordmark with BY DILEK underneath; for the footer, print and social only (the caps line is too small below ~48 px).
 
 ## Components and layout
 

@@ -21,7 +21,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.treatments;
   // Published waxing zones (built-in or added by the owner) with their published treatments.
-  const zones = publicGroups("waxing").map((g) => {
+  const zones = publicGroups("waxing", locale).map((g) => {
     const b = treatmentGroups.find((x) => x.id === g.id);
     const c = groupCopy(locale, g.id, g.name[locale]);
     return {
@@ -34,7 +34,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       suitable: b?.suitable[locale] ?? "",
       note: b?.note[locale] ?? "",
       href: groupHref(locale, g),
-      items: publicItems({ sectionId: "waxing", groupId: g.id }),
+      items: publicItems({ sectionId: "waxing", groupId: g.id, locale }),
     };
   });
   const faqs = [dict.faq.treatments[0], dict.faq.treatments[3], dict.faq.general[1], dict.faq.general[2]];

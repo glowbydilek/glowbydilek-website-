@@ -13,6 +13,7 @@ import {
   resetPassword,
   revokeAllSessions,
   revokeSession,
+  setInitialPassword,
   startMfaEnrolment,
   verifyMfa,
 } from "../auth/service";
@@ -27,6 +28,7 @@ import {
   type Area,
 } from "../auth/session";
 import { createSession } from "../auth/service";
+import { DB_HINT, dbErrorKind } from "../ops/errors";
 import { verifyTurnstile } from "../forms/turnstile";
 import { audit } from "../db/audit";
 
@@ -34,11 +36,21 @@ export type FormState = { error?: string; code?: string; ok?: boolean; message?:
 
 const area = (v: FormDataEntryValue | null): Area => (v === "agenda" ? "agenda" : "admin");
 
+/** A database that is configured but failing gets an honest message, not "not connected". */
+function dbProblem(err: unknown): FormState {
+  console.error("[auth] database error:", dbErrorKind(err));
+  return { error: `${DB_HINT[dbErrorKind(err)]} Zie /login/status.` };
+}
+
 export async function loginAction(_: FormState, form: FormData): Promise<FormState> {
   const a = area(form.get("area"));
   if (!databaseConfigured()) return { error: "De database is nog niet gekoppeld. Zie docs/DEPLOYMENT.md." };
   const db = getDb();
-  await ensureOwner(db);
+  try {
+    await ensureOwner(db);
+  } catch (err) {
+    return dbProblem(err);
+  }
   const ctx = await requestContext();
   const captcha = await verifyTurnstile({ token: form.get("turnstileToken"), action: "login", ip: ctx.ip, optional: true });
   if (!captcha.ok) return { error: captcha.reason === "unavailable" ? "De beveiligingscontrole is niet beschikbaar. Probeer het later opnieuw." : "Rond de beveiligingscontrole af en probeer het opnieuw." };
@@ -70,7 +82,11 @@ export async function forgotAction(_: FormState, form: FormData): Promise<FormSt
   };
   if (!databaseConfigured()) return { error: "De database is nog niet gekoppeld." };
   const db = getDb();
-  await ensureOwner(db);
+  try {
+    await ensureOwner(db);
+  } catch (err) {
+    return dbProblem(err);
+  }
   const ctx = await requestContext();
   const captcha = await verifyTurnstile({ token: form.get("turnstileToken"), action: "reset", ip: ctx.ip, optional: true });
   if (!captcha.ok) return { error: "Rond de beveiligingscontrole af en probeer het opnieuw." };
@@ -84,6 +100,30 @@ export async function forgotAction(_: FormState, form: FormData): Promise<FormSt
     }
   }
   return neutral;
+}
+
+export async function setupAction(_: FormState, form: FormData): Promise<FormState> {
+  if (!databaseConfigured()) return { error: "De database is nog niet gekoppeld (DATABASE_URL). Zie /login/status." };
+  const pw = String(form.get("password") ?? "");
+  if (pw !== String(form.get("confirm") ?? "")) return { error: "De twee wachtwoorden zijn niet gelijk." };
+  let r;
+  try {
+    r = await setInitialPassword(getDb(), { token: String(form.get("token") ?? ""), email: String(form.get("email") ?? ""), password: pw }, await requestContext());
+  } catch (err) {
+    return dbProblem(err);
+  }
+  if (!r.ok) {
+    const map = {
+      disabled: "Deze route staat uit. Gebruik \"Wachtwoord vergeten?\".",
+      invalid: "De code of het e-mailadres klopt niet, of er is al een wachtwoord ingesteld.",
+      rateLimited: "Te veel pogingen. Probeer het over een uur opnieuw.",
+      tooShort: "Kies een wachtwoord van minimaal 12 tekens.",
+      tooLong: "Dit wachtwoord is te lang.",
+      weak: "Dit wachtwoord is te makkelijk te raden. Kies iets langers of unieks.",
+    };
+    return { error: map[r.reason] };
+  }
+  redirect("/agenda/login?reset=1");
 }
 
 export async function resetAction(_: FormState, form: FormData): Promise<FormState> {

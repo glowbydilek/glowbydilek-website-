@@ -35,7 +35,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
 
   test("draft → publish → version history → restore → discard", async () => {
     const base = (await editorValue(db, "dict:home", "nl")).value as { hero: { title: string } };
-    assert.equal(base.hero.title, "Jouw moment");
+    assert.equal(base.hero.title, "Schoonheid, aandacht");
     await saveDraft(db, "dict:home", "nl", { ...base, hero: { ...base.hero, title: "Nieuwe titel" } }, 1);
     let v = await editorValue(db, "dict:home", "nl");
     assert.equal(v.hasDraft, true);
@@ -56,7 +56,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
     v = await editorValue(db, "dict:home", "nl");
     assert.equal((v.value as typeof base).hero.title, "Tweede titel", "published unchanged");
     // EN untouched
-    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "A little moment,");
+    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "Beauty, personal care");
   });
 
   test("unknown documents are rejected", async () => {
@@ -79,4 +79,12 @@ test("uploads: only real JPEG/PNG/WebP bytes are accepted; SVG/HTML disguised as
   assert.equal(r.height, 800);
   assert.deepEqual(r.variants.map((v) => v.mime), ["image/webp", "image/webp", "image/webp"]);
   assert.ok(r.variants.every((v) => !v.data.includes(Buffer.from("<script>"))));
+});
+
+test("the editor language keeps Turkish (a TR edit never overwrites Dutch)", async () => {
+  const { asLoc } = await import("../src/lib/cms/service.ts");
+  assert.equal(asLoc("tr"), "tr");
+  assert.equal(asLoc("en"), "en");
+  assert.equal(asLoc("all"), "all");
+  assert.equal(asLoc("xx"), "nl");
 });

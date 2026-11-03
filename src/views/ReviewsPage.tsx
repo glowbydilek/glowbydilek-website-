@@ -5,7 +5,7 @@ import { ReviewForm } from "@/components/forms/ReviewForm";
 import { ReportReview } from "@/components/ReportReview";
 import { siteConfig } from "@/content/site";
 import { allTreatments } from "@/content/treatments";
-import { href, type Locale } from "@/i18n/config";
+import { href, type Locale, pick, intlTag } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { withDbOrFallback } from "@/lib/db/client";
 import { turnstileSiteKey } from "@/lib/forms/turnstile";
@@ -20,7 +20,7 @@ export async function ReviewsPage({ locale }: { locale: Locale }) {
   const t = dict.reviews;
   const data = await withDbOrFallback(async (db) => ({ ...(await publishedReviews(db, t.anonymous)), settings: await getReviewSettings(db) }), { list: [], count: 0, average: null, settings: defaultReviewSettings });
   const names = Object.fromEntries(allTreatments().map((x) => [x.id, x.name[locale]]));
-  const fmt = new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { month: "long", year: "numeric", timeZone: "Europe/Amsterdam" });
+  const fmt = new Intl.DateTimeFormat(intlTag(locale), { month: "long", year: "numeric", timeZone: "Europe/Amsterdam" });
   return (
     <>
       <section className="pt-header pb-10 sm:pb-14">
@@ -36,7 +36,7 @@ export async function ReviewsPage({ locale }: { locale: Locale }) {
                 <span aria-hidden="true" className="text-accent">
                   {"★".repeat(Math.round(data.average))}
                 </span>
-                {t.average.replace("{avg}", data.average.toLocaleString(locale === "nl" ? "nl-NL" : "en-GB")).replace("{count}", String(data.count))}
+                {t.average.replace("{avg}", data.average.toLocaleString(intlTag(locale))).replace("{count}", String(data.count))}
               </p>
             )}
           </div>
@@ -82,7 +82,7 @@ export async function ReviewsPage({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <section id={locale === "nl" ? "schrijven" : "write"} className="section scroll-mt-[var(--header-safe)] bg-sand">
+      <section id={pick(locale, { nl: "schrijven", en: "write", tr: "yaz" })} className="section scroll-mt-[var(--header-safe)] bg-sand">
         <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div>
             <h2 className="display text-[2.25rem] text-ink sm:text-5xl">{t.form.title}</h2>

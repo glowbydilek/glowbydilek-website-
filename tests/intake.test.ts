@@ -5,7 +5,7 @@ import sharp from "sharp";
 import { saveConsultationSettings } from "../src/lib/consultation/service.ts";
 import { auditLogs, customers, intakeDocuments, intakeTemplates } from "../src/lib/db/schema.ts";
 import { checkIntakeFile } from "../src/lib/intake/files.ts";
-import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, nextVersion, parseIntake } from "../src/lib/intake/template.ts";
+import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, LEGACY_INTAKE_V1, LEGACY_VERSION, nextVersion, parseIntake } from "../src/lib/intake/template.ts";
 import {
   activateDraft,
   activeTemplate,
@@ -13,6 +13,7 @@ import {
   decryptFile,
   deleteIntakeDocument,
   encryptFile,
+  ensureIntakeTemplates,
   intakeDocumentsFor,
   intakeStorageStatus,
   readIntakeDocument,
@@ -24,19 +25,22 @@ import { closeDb, resetDb, skipDb } from "./helpers/db.ts";
 
 // ───────────────────────────────────────────────────────────────── pure
 
-test("the supplied v1 forms parse into the same structure in Dutch and English", () => {
-  for (const locale of ["nl", "en"] as const) {
+test("the master form (v2) has the same structure in Dutch, English and Turkish", () => {
+  for (const locale of ["nl", "en", "tr"] as const) {
     const p = parseIntake(BUILTIN_INTAKE[locale], INITIAL_VERSION);
     const count = (t: string) => p.blocks.filter((b) => b.type === t).length;
     const questions = p.blocks.flatMap((b) => (b.type === "questions" ? b.items : []));
-    assert.equal(questions.length, 12, `${locale}: 6 general + 6 treatment-specific questions`);
-    assert.equal(p.blocks.flatMap((b) => (b.type === "statements" ? b.items : [])).length, 3, `${locale}: three consent boxes`);
+    assert.equal(questions.length, 10, `${locale}: 4 general + 2 waxing + 2 facial/steam + 2 massage questions`);
+    assert.deepEqual(p.blocks.filter((b) => b.type === "questions" && b.title).length, 3, `${locale}: three conditional modules`);
+    assert.equal(p.blocks.flatMap((b) => (b.type === "statements" ? b.items : [])).length, 3, `${locale}: acknowledgment, storage consent, optional marketing`);
     assert.equal(count("signature"), 2);
-    assert.equal(p.blocks.flatMap((b) => (b.type === "options" ? b.items : [])).length, 6);
+    assert.equal(p.blocks.flatMap((b) => (b.type === "options" ? b.items : [])).length, 4);
     assert.ok(p.blocks.some((b) => b.type === "signature" && b.parts.some((x) => x.includes(INITIAL_VERSION))), "version printed on the form");
     assert.equal(checkIntakeSource(BUILTIN_INTAKE[locale], INITIAL_VERSION).ok, true);
   }
-  assert.deepEqual(parseIntake(BUILTIN_INTAKE.en, INITIAL_VERSION).answers, ["Yes", "No", "Not sure"]);
+  assert.deepEqual(parseIntake(BUILTIN_INTAKE.en, INITIAL_VERSION).answers, ["Yes", "No", "Prefer to discuss privately"]);
+  assert.deepEqual(parseIntake(BUILTIN_INTAKE.tr, INITIAL_VERSION).answers, ["Evet", "Hayır", "Yüz yüze konuşmayı tercih ederim"]);
+  assert.match(BUILTIN_INTAKE.tr, /ı.*İ|İ.*ı/s, "Turkish dotted/dotless i present");
 });
 
 test("revisions get a new version and must keep title, consent, signature and version", () => {
@@ -114,9 +118,10 @@ describe("intake & consent against MariaDB", { skip: skipDb }, () => {
   test("templates: v1 is created once per language; a revision is a draft until activated; old versions are kept", async () => {
     assert.equal((await activeTemplate(db, "nl"))?.version, INITIAL_VERSION);
     assert.equal((await activeTemplate(db, "en"))?.version, INITIAL_VERSION);
+    assert.equal((await activeTemplate(db, "tr"))?.version, INITIAL_VERSION);
     const id = await createRevision(db, "nl", 1);
     assert.equal(await createRevision(db, "nl", 1), id, "one draft at a time");
-    const changed = BUILTIN_INTAKE.nl.replace("Wensen en aandachtspunten", "Wensen en voorkeuren");
+    const changed = BUILTIN_INTAKE.nl.replace("Gegevens en afspraak", "Gegevens en jouw afspraak");
     await assert.rejects(activateDraft(db, id, 1), /veranderd/, "a change note is required");
     await saveDraft(db, id, changed, "Kop 4 verduidelijkt", 1);
     await activateDraft(db, id, 1);
@@ -126,6 +131,35 @@ describe("intake & consent against MariaDB", { skip: skipDb }, () => {
     assert.equal(nl.find((r) => r.version === INITIAL_VERSION)?.status, "retired");
     assert.equal(nl.find((r) => r.version === INITIAL_VERSION)?.source, BUILTIN_INTAKE.nl, "retired wording unchanged");
     await assert.rejects(saveDraft(db, id, changed, "x", 1), /concept/, "an active version cannot be edited");
+  });
+
+  test("upgrade from v12: an untouched v1 becomes retired; an owner's own draft is kept and the master form is added beside it", async () => {
+    await db.delete(intakeTemplates);
+    const v1 = (locale: "nl" | "en") => ({ locale, version: LEGACY_VERSION, status: "active" as const, title: parseIntake(LEGACY_INTAKE_V1[locale], LEGACY_VERSION).title, source: LEGACY_INTAKE_V1[locale], changeNote: "Eerste versie (aangeleverd concept)", activatedAt: new Date() });
+    // NL: Dilek started her own revision in v12 (a draft that already uses the name "v2").
+    await db.insert(intakeTemplates).values([v1("nl"), v1("en")]);
+    const ownDraft = LEGACY_INTAKE_V1.nl.replace("Intake", "Intake (mijn versie)");
+    await db.insert(intakeTemplates).values({ locale: "nl", version: INITIAL_VERSION, status: "draft", title: "x", source: ownDraft });
+    await ensureIntakeTemplates(db);
+    await ensureIntakeTemplates(db); // idempotent
+    const rows = await db.select().from(intakeTemplates);
+    const nl = rows.filter((r) => r.locale === "nl");
+    const en = rows.filter((r) => r.locale === "en");
+    const tr = rows.filter((r) => r.locale === "tr");
+    // EN: untouched v1 → master v2 active, v1 retired with its wording unchanged.
+    assert.equal(en.find((r) => r.status === "active")?.version, INITIAL_VERSION);
+    assert.equal(en.find((r) => r.version === LEGACY_VERSION)?.status, "retired");
+    assert.equal(en.find((r) => r.version === LEGACY_VERSION)?.source, LEGACY_INTAKE_V1.en);
+    // NL: her v1 stays active, her draft is untouched, the master form is a separate draft (v3).
+    assert.equal(nl.find((r) => r.status === "active")?.version, LEGACY_VERSION);
+    assert.equal(nl.find((r) => r.version === INITIAL_VERSION)?.source, ownDraft);
+    const master = nl.filter((r) => r.source === BUILTIN_INTAKE.nl);
+    assert.equal(master.length, 1, "installed once");
+    assert.equal(master[0]!.status, "draft");
+    assert.notEqual(master[0]!.version, INITIAL_VERSION);
+    // TR: new language → active master form.
+    assert.equal(tr.length, 1);
+    assert.equal(tr[0]!.status, "active");
   });
 
   test("uploads are refused until the key, the AVG confirmations, MFA and the client's consent are in place", async () => {

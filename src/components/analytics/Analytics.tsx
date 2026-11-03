@@ -43,7 +43,7 @@ export function Analytics({
   bookingPaths,
 }: {
   measurementId: string | null;
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   labels: { title: string; body: string; accept: string; decline: string; more: string };
   privacyHref: string;
   bookingPaths: string[];

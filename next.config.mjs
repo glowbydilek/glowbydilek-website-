@@ -85,6 +85,8 @@ const nextConfig = {
       // Personal price-proposal links: never indexed, cached or leaked via Referer.
       { source: "/offerte/:path*", headers: privateHeaders },
       { source: "/en/quote/:path*", headers: privateHeaders },
+      { source: "/tr/teklif/:path*", headers: privateHeaders },
+      { source: "/login/:path*", headers: privateHeaders },
       { source: "/api/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }, { key: "Cache-Control", value: "no-store" }] },
     ];
   },

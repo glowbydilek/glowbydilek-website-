@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { IntakeSheet } from "@/components/private/intake/IntakeSheet";
 import { PrintButton } from "@/components/private/intake/PrintButton";
@@ -22,7 +23,7 @@ export default async function IntakePrintPage({ params }: { params: Promise<{ id
           <PrintButton />
         </span>
       </div>
-      <IntakeSheet source={t.source} version={t.version} locale={t.locale === "en" ? "en" : "nl"} />
+      <IntakeSheet source={t.source} version={t.version} locale={asLocale(t.locale)} />
     </main>
   );
 }

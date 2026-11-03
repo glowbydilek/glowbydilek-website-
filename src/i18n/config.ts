@@ -12,7 +12,7 @@ import {
  * Internationalisation and URL model.
  *
  * Dutch (nl) is the default language and is served without a URL prefix.
- * English (en) is served under /en. Every page has a localised slug so both
+ * English (en) is served under /en, Turkish (tr) under /tr. Every page has a localised slug so both
  * languages are fully indexable and linked through hreflang, and the
  * language switcher always lands on the equivalent page.
  *
@@ -23,13 +23,14 @@ import {
  * - treatment pages: /waxbehandelingen/{category}/{treatment}
  *                    /en/waxing-treatments/{category}/{treatment}
  */
-export const locales = ["nl", "en"] as const;
+export const locales = ["nl", "en", "tr"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "nl";
 
 export const localeLabels: Record<Locale, { short: string; long: string; hrefLang: string; ogLocale: string }> = {
   nl: { short: "NL", long: "Nederlands", hrefLang: "nl-NL", ogLocale: "nl_NL" },
   en: { short: "EN", long: "English", hrefLang: "en", ogLocale: "en_GB" },
+  tr: { short: "TR", long: "Türkçe", hrefLang: "tr-TR", ogLocale: "tr_TR" },
 };
 
 export const routeKeys = [
@@ -50,19 +51,19 @@ export const routeKeys = [
 export type RouteKey = (typeof routeKeys)[number];
 
 export const routes: Record<RouteKey, Record<Locale, string>> = {
-  home: { nl: "/", en: "/en" },
-  services: { nl: "/behandelingen", en: "/en/treatments" },
-  treatments: { nl: "/waxbehandelingen", en: "/en/waxing-treatments" },
-  prices: { nl: "/prijzen", en: "/en/prices" },
-  about: { nl: "/over-dilek", en: "/en/about-dilek" },
-  contact: { nl: "/contact", en: "/en/contact" },
-  booking: { nl: "/afspraak-maken", en: "/en/book-appointment" },
-  process: { nl: "/hoe-werkt-een-afspraak", en: "/en/appointment-process" },
-  preparation: { nl: "/voorbereiding", en: "/en/preparation" },
-  aftercare: { nl: "/nazorg", en: "/en/aftercare" },
-  faq: { nl: "/veelgestelde-vragen", en: "/en/faq" },
-  reviews: { nl: "/beoordelingen", en: "/en/reviews" },
-  privacy: { nl: "/privacy", en: "/en/privacy" },
+  home: { nl: "/", en: "/en", tr: "/tr" },
+  services: { nl: "/behandelingen", en: "/en/treatments", tr: "/tr/bakimlar" },
+  treatments: { nl: "/waxbehandelingen", en: "/en/waxing-treatments", tr: "/tr/agda" },
+  prices: { nl: "/prijzen", en: "/en/prices", tr: "/tr/fiyatlar" },
+  about: { nl: "/over-dilek", en: "/en/about-dilek", tr: "/tr/dilek-hakkinda" },
+  contact: { nl: "/contact", en: "/en/contact", tr: "/tr/iletisim" },
+  booking: { nl: "/afspraak-maken", en: "/en/book-appointment", tr: "/tr/randevu" },
+  process: { nl: "/hoe-werkt-een-afspraak", en: "/en/appointment-process", tr: "/tr/randevu-sureci" },
+  preparation: { nl: "/voorbereiding", en: "/en/preparation", tr: "/tr/hazirlik" },
+  aftercare: { nl: "/nazorg", en: "/en/aftercare", tr: "/tr/bakim-sonrasi" },
+  faq: { nl: "/veelgestelde-vragen", en: "/en/faq", tr: "/tr/sss" },
+  reviews: { nl: "/beoordelingen", en: "/en/reviews", tr: "/tr/yorumlar" },
+  privacy: { nl: "/privacy", en: "/en/privacy", tr: "/tr/gizlilik" },
 };
 
 /**
@@ -92,6 +93,16 @@ export function treatmentHref(locale: Locale, id: TreatmentId): string {
 export function bookingHref(locale: Locale, treatment?: TreatmentId | string): string {
   const base = routes.booking[locale];
   return treatment ? `${base}?${bookingParam[locale]}=${encodeURIComponent(treatment)}` : base;
+}
+
+/** Treatment id preselected in a booking URL, in any language (?behandeling= / ?treatment= / ?bakim=). */
+export function preselectedTreatment(search: string): string | null {
+  const p = new URLSearchParams(search);
+  for (const l of locales) {
+    const v = p.get(bookingParam[l]);
+    if (v) return v;
+  }
+  return null;
 }
 
 export type PageRef =
@@ -143,7 +154,9 @@ export function alternatePath(pathname: string, target: Locale): string {
 }
 
 export function localeFromPathname(pathname: string): Locale {
-  return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "nl";
+  if (pathname === "/en" || pathname.startsWith("/en/")) return "en";
+  if (pathname === "/tr" || pathname.startsWith("/tr/")) return "tr";
+  return "nl";
 }
 
 export function findCategory(locale: Locale, slug: string): CategoryId | undefined {
@@ -152,4 +165,20 @@ export function findCategory(locale: Locale, slug: string): CategoryId | undefin
 
 export function findTreatment(locale: Locale, category: CategoryId, slug: string): TreatmentId | undefined {
   return treatmentIds.find((id) => treatmentSlugs[id].category === category && treatmentSlugs[id][locale] === slug);
+}
+
+/** BCP-47 tag for Intl date and number formatting. */
+export const intlTags: Record<Locale, string> = { nl: "nl-NL", en: "en-GB", tr: "tr-TR" };
+export function intlTag(locale: Locale): string {
+  return intlTags[locale] ?? "nl-NL";
+}
+
+/** Choose a per-language value (keeps short UI strings next to their use). */
+export function pick<T>(locale: Locale, v: Record<Locale, T>): T {
+  return v[locale];
+}
+
+/** A supported language from untrusted input (form value, database row); Dutch otherwise. */
+export function asLocale(v: unknown): Locale {
+  return v === "en" || v === "tr" ? v : "nl";
 }

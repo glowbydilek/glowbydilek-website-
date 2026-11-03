@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { preselectedTreatment } from "@/i18n/config";
 import { Icon } from "../ui/Icon";
 
 /**
@@ -21,8 +22,7 @@ export function PreselectedNotice({
 }) {
   const [name, setName] = useState<string | null>(null);
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const id = p.get("behandeling") ?? p.get("treatment");
+    const id = preselectedTreatment(window.location.search);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
     if (id && names[id]) setName(names[id]);
   }, [names]);

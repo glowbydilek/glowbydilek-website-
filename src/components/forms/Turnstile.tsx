@@ -52,7 +52,7 @@ export function Turnstile({
 }: {
   siteKey: string;
   action: string;
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   resetKey: number;
   onToken: (token: string | null) => void;
   labels: { title: string; loading: string; blocked: string; email: string; unavailable?: string };

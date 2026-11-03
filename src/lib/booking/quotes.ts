@@ -1,3 +1,4 @@
+import { asLocale } from "../../i18n/config";
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, inArray } from "drizzle-orm";
@@ -29,7 +30,7 @@ export class QuoteError extends Error {
 
 const hash = (t: string) => createHash("sha256").update(t).digest("hex");
 const site = () => (process.env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").replace(/\/+$/, "");
-export const quotePath = (locale: string, token: string) => (locale === "en" ? `/en/quote/${token}` : `/offerte/${token}`);
+export const quotePath = (locale: string, token: string) => (locale === "en" ? `/en/quote/${token}` : locale === "tr" ? `/tr/teklif/${token}` : `/offerte/${token}`);
 
 export type QuoteStatus = "sent" | "accepted" | "declined" | "withdrawn" | "expired";
 
@@ -52,7 +53,7 @@ export async function sendQuote(
     const expiresAt = new Date(now.getTime() + days * 86_400_000);
     const [res] = await tx.insert(priceQuotes).values({ appointmentId, amountCents: input.amountCents, message: input.message?.trim().slice(0, 1000) || null, tokenHash: hash(token), status: "sent", expiresAt, userId: ctx.userId });
     const quoteId = Number((res as { insertId: number }).insertId);
-    const locale = row.appointments.locale === "en" ? "en" : "nl";
+    const locale = asLocale(row.appointments.locale);
     await queueAppointmentEmail(tx as Tx, appointmentId, "price_proposal", `price_proposal:${quoteId}`, {
       message: input.message,
       vars: { amount: formatCents(input.amountCents), link: `${site()}${quotePath(locale, token)}`, validUntil: formatLongDate(expiresAt, locale) },
@@ -85,11 +86,11 @@ export async function quoteByToken(db: DB, token: string, now = new Date()) {
     amountCents: q.amountCents,
     message: q.message,
     expiresAt: q.expiresAt,
-    locale: row.appointments.locale === "en" ? ("en" as const) : ("nl" as const),
+    locale: row.appointments.locale === "en" ? ("en" as const) : row.appointments.locale === "tr" ? ("tr" as const) : ("nl" as const),
     firstName: row.customers.firstName,
     startAt: row.appointments.startAt,
     requestedDate: row.appointments.requestedDate,
-    treatments: items.map((i) => ({ nl: i.nameNl, en: i.nameEn })),
+    treatments: items.map((i) => ({ nl: i.nameNl, en: i.nameEn, tr: i.nameTr || i.nameEn })),
   };
 }
 

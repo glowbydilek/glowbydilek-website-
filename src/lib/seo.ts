@@ -15,8 +15,8 @@ type MetaInput = {
   locale: Locale;
   /** Key of the owner's SEO overrides ("seo:<key>" content document). */
   seoKey?: string;
-  /** Path of this page per language (for canonical + hreflang). */
-  paths: Record<Locale, string>;
+  /** Path of this page per language (canonical + hreflang). A language without a path has no version (no hreflang). */
+  paths: { nl: string } & Partial<Record<Locale, string>>;
   title: string;
   description: string;
   /** Use the title as-is (no " | Glow by Dilek" suffix). */
@@ -42,7 +42,7 @@ export function buildMetadata(input: MetaInput): Metadata {
   const dict = getDictionary(locale);
   const path = paths[locale];
   const languages: Record<string, string> = {};
-  for (const l of locales) languages[localeLabels[l].hrefLang] = paths[l];
+  for (const l of locales) if (paths[l]) languages[localeLabels[l].hrefLang] = paths[l];
   languages["x-default"] = paths.nl;
 
   const fullTitle = absolute ? title : `${title} | ${siteConfig.name}`;
@@ -98,7 +98,7 @@ export function categoryMetadata(locale: Locale, id: CategoryId): Metadata {
   const c = categoryCopy(locale, id);
   return buildMetadata({
     locale,
-    paths: { nl: categoryHref("nl", id), en: categoryHref("en", id) },
+    paths: { nl: categoryHref("nl", id), en: categoryHref("en", id), tr: categoryHref("tr", id) },
     title: c.seoTitle,
     description: c.seoDescription,
     seoKey: `category-${id}`,
@@ -109,7 +109,7 @@ export function treatmentMetadata(locale: Locale, id: TreatmentId): Metadata {
   const t = treatmentCopy(locale, id);
   return buildMetadata({
     locale,
-    paths: { nl: treatmentHref("nl", id), en: treatmentHref("en", id) },
+    paths: { nl: treatmentHref("nl", id), en: treatmentHref("en", id), tr: treatmentHref("tr", id) },
     title: t.seoTitle,
     description: t.seoDescription,
     seoKey: `treatment-${id}`,
@@ -160,14 +160,14 @@ export function businessJsonLd(locale: Locale) {
         addressCountry: siteConfig.country,
       },
     }),
-    knowsLanguage: ["nl", "en"],
+    knowsLanguage: ["nl", "en", "tr"],
     ...(sameAs && { sameAs }),
   };
 }
 
 /** Service + catalogue of published treatments (prices only when confirmed). */
 export function serviceJsonLd(locale: Locale) {
-  const sections = publicSections();
+  const sections = publicSections(locale);
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -179,7 +179,7 @@ export function serviceJsonLd(locale: Locale) {
       itemListElement: sections.map((sec) => ({
         "@type": "OfferCatalog",
         name: sec.name[locale],
-        itemListElement: publicItems({ sectionId: sec.id }).map((t) => ({
+        itemListElement: publicItems({ sectionId: sec.id, locale }).map((t) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: t.name[locale], description: t.description[locale] },
           ...(t.pricing.mode === "fixed" && t.pricing.cents != null ? { price: (t.pricing.cents / 100).toFixed(2), priceCurrency: "EUR" } : {}),
@@ -214,6 +214,6 @@ export function singleServiceJsonLd(locale: Locale, name: string, description: s
     url: absoluteUrl(path),
     serviceType: name,
     provider: { "@id": `${siteConfig.url}/#business` },
-    inLanguage: locale === "nl" ? "nl-NL" : "en",
+    inLanguage: localeLabels[locale].hrefLang,
   };
 }

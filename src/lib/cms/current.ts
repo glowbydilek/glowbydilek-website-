@@ -4,7 +4,7 @@ import type { Promotion } from "../promotions/core";
 export type MarketingSnapshot = {
   /** Running promotions the owner chose to show on the website. */
   promotions: Promotion[];
-  campaigns: { id: number; title: { nl: string; en: string }; text: { nl: string; en: string }; cta: { nl: string; en: string }; href: string; mediaId: number | null }[];
+  campaigns: { id: number; title: Record<"nl" | "en" | "tr", string>; text: Record<"nl" | "en" | "tr", string>; cta: Record<"nl" | "en" | "tr", string>; href: string; mediaId: number | null }[];
   /** The latest published reviews (newest first, never filtered by rating) and the overall count/average. */
   reviews: { list: { id: number; rating: number; body: string; name: string; verified: boolean; locale: string }[]; count: number; average: number | null };
   /** Owner switched on the public "Producten & verzorging" page. */
@@ -32,8 +32,10 @@ export type TreatmentLive = {
   bookableOnline: boolean;
   nameNl: string;
   nameEn: string;
+  nameTr?: string | null;
   descriptionNl: string;
   descriptionEn: string;
+  descriptionTr?: string | null;
   mediaId: number | null;
   category: string;
   sort: number;
@@ -44,13 +46,14 @@ export type TreatmentLive = {
   groupId?: string | null;
   slugNl?: string | null;
   slugEn?: string | null;
+  slugTr?: string | null;
   status?: string;
   pricingMode?: string | null;
   vatCategory?: string;
   related?: unknown;
 };
 
-export type PhotoOverride = { mediaId: number; version: number; width: number; height: number; altNl: string; altEn: string; focusMobile: string; focusDesktop: string };
+export type PhotoOverride = { mediaId: number; version: number; width: number; height: number; altNl: string; altEn: string; altTr?: string; focusMobile: string; focusDesktop: string };
 
 export type Snapshot = {
   /** `${docKey}|${locale}` → owner override */

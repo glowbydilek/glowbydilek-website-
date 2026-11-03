@@ -17,20 +17,27 @@ import { extraSectionsNl, extraTreatmentsNl } from "../../content/copy/extra.nl"
 import { BUILTIN_ITEMS, BUILTIN_SECTIONS } from "../catalogue/builtin";
 import { legalEn } from "../../content/copy/legal.en";
 import { legalNl, type LegalKey } from "../../content/copy/legal.nl";
+import { categoriesTr } from "../../content/copy/categories.tr";
+import { faqPageTr, guidesTr } from "../../content/copy/guides.tr";
+import { treatmentsTr } from "../../content/copy/treatments.tr";
+import { extraSectionsTr, extraTreatmentsTr } from "../../content/copy/extra.tr";
+import { legalTr } from "../../content/copy/legal.tr";
+import { wellnessSections, wellnessTreatments } from "../../content/copy/wellness";
 
-const LEGAL: { key: LegalKey; nl: string; en: string }[] = [
-  { key: "cookies", nl: "/cookiebeleid", en: "/en/cookie-policy" },
-  { key: "terms", nl: "/algemene-voorwaarden", en: "/en/terms" },
-  { key: "cancellation", nl: "/annuleringsbeleid", en: "/en/cancellation-policy" },
-  { key: "reviews", nl: "/beoordelingsbeleid", en: "/en/review-policy" },
+const LEGAL: { key: LegalKey; nl: string; en: string; tr: string }[] = [
+  { key: "cookies", nl: "/cookiebeleid", en: "/en/cookie-policy", tr: "/tr/cerez-politikasi" },
+  { key: "terms", nl: "/algemene-voorwaarden", en: "/en/terms", tr: "/tr/genel-kosullar" },
+  { key: "cancellation", nl: "/annuleringsbeleid", en: "/en/cancellation-policy", tr: "/tr/iptal-politikasi" },
+  { key: "reviews", nl: "/beoordelingsbeleid", en: "/en/review-policy", tr: "/tr/yorum-politikasi" },
 ];
 import { en } from "../../i18n/dictionaries/en";
 import { nl } from "../../i18n/dictionaries/nl";
+import { tr } from "../../i18n/dictionaries/tr";
 import { pagePath, routes, type Locale, type PageRef } from "../../i18n/config";
 
 export type DocKey = string;
 export type DocDef = { key: DocKey; label: string; defaults: Record<Locale, unknown> };
-export type EditorPage = { id: string; label: string; group: string; docs: { key: DocKey; label: string }[]; paths: Record<Locale, string>; sectionsPage?: string };
+export type EditorPage = { id: string; label: string; group: string; docs: { key: DocKey; label: string }[]; paths: { nl: string } & Partial<Record<Locale, string>>; sectionsPage?: string };
 
 const dictSections = Object.keys(nl) as (keyof typeof nl)[];
 const DICT_LABELS: Record<string, string> = {
@@ -59,14 +66,18 @@ const DICT_LABELS: Record<string, string> = {
 };
 
 export const DOCS: DocDef[] = [
-  ...dictSections.map((k) => ({ key: `dict:${k}`, label: DICT_LABELS[k] ?? k, defaults: { nl: nl[k], en: en[k] } })),
-  ...categoryIds.map((id) => ({ key: `category:${id}`, label: categoriesNl[id].label, defaults: { nl: categoriesNl[id], en: categoriesEn[id] } })),
-  ...treatmentIds.map((id) => ({ key: `treatment:${id}`, label: treatmentsNl[id].title, defaults: { nl: treatmentsNl[id], en: treatmentsEn[id] } })),
-  ...Object.keys(extraTreatmentsNl).map((id) => ({ key: `treatment:${id}`, label: extraTreatmentsNl[id].title, defaults: { nl: extraTreatmentsNl[id], en: extraTreatmentsEn[id] } })),
-  ...Object.keys(extraSectionsNl).map((id) => ({ key: `section:${id}`, label: extraSectionsNl[id].seoTitle, defaults: { nl: extraSectionsNl[id], en: extraSectionsEn[id] } })),
-  ...(["process", "preparation", "aftercare"] as const).map((k) => ({ key: `guide:${k}`, label: guidesNl[k].hero.eyebrow, defaults: { nl: guidesNl[k], en: guidesEn[k] } })),
-  { key: "faqpage", label: "Veelgestelde vragen (pagina)", defaults: { nl: faqPageNl, en: faqPageEn } },
-  ...LEGAL.map((l) => ({ key: `legal:${l.key}`, label: legalNl[l.key].title, defaults: { nl: legalNl[l.key], en: legalEn[l.key] } })),
+  ...dictSections.map((k) => ({ key: `dict:${k}`, label: DICT_LABELS[k] ?? k, defaults: { nl: nl[k], en: en[k], tr: tr[k] } })),
+  ...categoryIds.map((id) => ({ key: `category:${id}`, label: categoriesNl[id].label, defaults: { nl: categoriesNl[id], en: categoriesEn[id], tr: categoriesTr[id] } })),
+  ...treatmentIds.map((id) => ({ key: `treatment:${id}`, label: treatmentsNl[id].title, defaults: { nl: treatmentsNl[id], en: treatmentsEn[id], tr: treatmentsTr[id] } })),
+  // Confirmed massages and facial care with steam (NL/EN/TR side by side).
+  ...Object.keys(wellnessTreatments).map((id) => ({ key: `treatment:${id}`, label: wellnessTreatments[id].nl.title, defaults: wellnessTreatments[id] })),
+  ...Object.keys(wellnessSections).map((id) => ({ key: `section:${id}`, label: wellnessSections[id].nl.seoTitle, defaults: wellnessSections[id] })),
+  // Drafts (not public until the owner publishes them).
+  ...Object.keys(extraTreatmentsTr).map((id) => ({ key: `treatment:${id}`, label: extraTreatmentsNl[id].title, defaults: { nl: extraTreatmentsNl[id], en: extraTreatmentsEn[id], tr: extraTreatmentsTr[id] } })),
+  ...Object.keys(extraSectionsTr).map((id) => ({ key: `section:${id}`, label: extraSectionsNl[id].seoTitle, defaults: { nl: extraSectionsNl[id], en: extraSectionsEn[id], tr: extraSectionsTr[id] } })),
+  ...(["process", "preparation", "aftercare"] as const).map((k) => ({ key: `guide:${k}`, label: guidesNl[k].hero.eyebrow, defaults: { nl: guidesNl[k], en: guidesEn[k], tr: guidesTr[k] } })),
+  { key: "faqpage", label: "Veelgestelde vragen (pagina)", defaults: { nl: faqPageNl, en: faqPageEn, tr: faqPageTr } },
+  ...LEGAL.map((l) => ({ key: `legal:${l.key}`, label: legalNl[l.key].title, defaults: { nl: legalNl[l.key], en: legalEn[l.key], tr: legalTr[l.key] } })),
 ];
 
 export const DOC_MAP = new Map(DOCS.map((d) => [d.key, d]));
@@ -78,7 +89,7 @@ export function isDocKey(key: string): boolean {
   return DOC_MAP.has(key) || /^custom:\d+$/.test(key) || CATALOGUE_DOC.test(key);
 }
 
-const p = (page: PageRef) => ({ nl: pagePath("nl", page), en: pagePath("en", page) });
+const p = (page: PageRef) => ({ nl: pagePath("nl", page), en: pagePath("en", page), tr: pagePath("tr", page) });
 
 /** Pages as the owner sees them in the editor, each with the documents it uses. */
 export const EDITOR_PAGES: EditorPage[] = [
@@ -97,7 +108,7 @@ export const EDITOR_PAGES: EditorPage[] = [
     id: `section-${sec.id}`,
     label: sec.name.nl,
     group: "Nieuwe categorieën (concept tot publicatie)",
-    paths: { nl: `/${sec.slug.nl}`, en: `/en/${sec.slug.en}` },
+    paths: { nl: `/${sec.slug.nl}`, en: `/en/${sec.slug.en}`, tr: `/tr/${sec.slug.tr}` },
     docs: [{ key: `section:${sec.id}`, label: "Teksten" }],
   })),
   ...BUILTIN_ITEMS.filter((i) => i.sectionId !== "waxing").map((i) => {
@@ -106,12 +117,12 @@ export const EDITOR_PAGES: EditorPage[] = [
       id: `treatment-${i.id}`,
       label: i.name.nl,
       group: "Nieuwe categorieën (concept tot publicatie)",
-      paths: { nl: `/${sec.slug.nl}/${i.slug.nl}`, en: `/en/${sec.slug.en}/${i.slug.en}` },
+      paths: { nl: `/${sec.slug.nl}/${i.slug.nl}`, en: `/en/${sec.slug.en}/${i.slug.en}`, tr: `/tr/${sec.slug.tr}/${i.slug.tr}` },
       sectionsPage: "treatment",
       docs: [{ key: `treatment:${i.id}`, label: "Teksten" }],
     };
   }),
-  ...LEGAL.map((l) => ({ id: `legal-${l.key}`, label: legalNl[l.key].title, group: "Juridisch", paths: { nl: l.nl, en: l.en }, docs: [{ key: `legal:${l.key}`, label: "Tekst" }] })),
+  ...LEGAL.map((l) => ({ id: `legal-${l.key}`, label: legalNl[l.key].title, group: "Juridisch", paths: { nl: l.nl, en: l.en, tr: l.tr }, docs: [{ key: `legal:${l.key}`, label: "Tekst" }] })),
   {
     id: "global",
     label: "Algemene teksten (menu, knoppen, footer, formulieren)",

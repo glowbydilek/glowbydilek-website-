@@ -1,25 +1,28 @@
+import { intlTag } from "@/i18n/config";
 import type { AppointmentInput, ContactInput, ContactTopic, TimeRange } from "../forms/validation";
 import { escapeHtml } from "../forms/validation";
 
 type Mail = { subject: string; text: string; html: string };
 
-const topicLabels: Record<ContactTopic, { nl: string; en: string }> = {
-  question: { nl: "Algemene vraag", en: "General question" },
-  treatment: { nl: "Vraag over een behandeling", en: "Question about a treatment" },
-  appointment: { nl: "Afspraak", en: "Appointment" },
-  other: { nl: "Overig", en: "Other" },
+const topicLabels: Record<ContactTopic, { nl: string; en: string; tr: string }> = {
+  question: { nl: "Algemene vraag", en: "General question", tr: "Genel soru" },
+  treatment: { nl: "Vraag over een behandeling", en: "Question about a treatment", tr: "Bir bakım hakkında soru" },
+  appointment: { nl: "Afspraak", en: "Appointment", tr: "Randevu" },
+  other: { nl: "Overig", en: "Other", tr: "Diğer" },
 };
 
-export const timeLabels: Record<TimeRange, { nl: string; en: string }> = {
-  morning: { nl: "Ochtend", en: "Morning" },
-  afternoon: { nl: "Middag", en: "Afternoon" },
-  evening: { nl: "Avond", en: "Evening" },
-  flexible: { nl: "Flexibel", en: "Flexible" },
+export const timeLabels: Record<TimeRange, { nl: string; en: string; tr: string }> = {
+  morning: { nl: "Ochtend", en: "Morning", tr: "Sabah" },
+  afternoon: { nl: "Middag", en: "Afternoon", tr: "Öğleden sonra" },
+  evening: { nl: "Avond", en: "Evening", tr: "Akşam" },
+  flexible: { nl: "Flexibel", en: "Flexible", tr: "Esnek" },
 };
 
-export function formatDate(iso: string, locale: "nl" | "en"): string {
+const languageName = { nl: "Nederlands", en: "Engels", tr: "Turks" } as const;
+
+export function formatDate(iso: string, locale: "nl" | "en" | "tr"): string {
   const d = new Date(`${iso}T12:00:00Z`);
-  return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", {
+  return new Intl.DateTimeFormat(intlTag(locale), {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -71,7 +74,7 @@ export function contactOwnerMail(d: ContactInput): Mail {
       ["E-mail", d.email],
       ["Telefoon", d.phone ?? "—"],
       ["Onderwerp", topicLabels[d.topic].nl],
-      ["Taal", d.locale === "nl" ? "Nederlands" : "Engels"],
+      ["Taal", languageName[d.locale]],
       ["Bericht", d.message],
     ],
     "Via het contactformulier op glowbydilek.nl is een nieuw bericht binnengekomen. Klik op ‘Beantwoorden’ om de klant direct te antwoorden.",
@@ -79,6 +82,18 @@ export function contactOwnerMail(d: ContactInput): Mail {
 }
 
 export function contactCustomerMail(d: ContactInput): Mail {
+  if (d.locale === "tr") {
+    return mail(
+      "Mesajını aldık — Glow by Dilek",
+      `Teşekkürler, ${d.name}`,
+      [
+        ["Konu", topicLabels[d.topic].tr],
+        ["Mesajın", d.message],
+      ],
+      "Mesajın için teşekkürler. Sorunsuz ulaştı; Dilek en kısa sürede sana kişisel olarak yanıt verecek.",
+      "Bu otomatik bir alındı bildirimidir. Eklemek istediğin bir şey var mı? Bu e-postayı yanıtlaman yeterli.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    );
+  }
   if (d.locale === "en") {
     return mail(
       "We have received your message — Glow by Dilek",
@@ -118,13 +133,27 @@ export function appointmentOwnerMail(d: AppointmentInput, treatmentNames: string
       ["E-mail", d.email],
       ["Telefoon", d.phone ?? "—"],
       ["Opmerking", d.notes ?? "—"],
-      ["Taal", d.locale === "nl" ? "Nederlands" : "Engels"],
+      ["Taal", languageName[d.locale]],
     ],
     "Er is een nieuwe afspraakaanvraag binnengekomen via glowbydilek.nl. Deze afspraak is nog NIET bevestigd. Beantwoord deze e-mail om de afspraak te bevestigen, een ander moment voor te stellen of de aanvraag af te wijzen — je antwoord gaat direct naar de klant. Deel praktische locatiegegevens pas in je persoonlijke bevestiging.",
   );
 }
 
 export function appointmentCustomerMail(d: AppointmentInput, treatmentNames: string[]): Mail {
+  if (d.locale === "tr") {
+    return mail(
+      "Randevu talebin alındı — Glow by Dilek",
+      `Teşekkürler, ${d.name}`,
+      [
+        ["Bakım(lar)", treatmentNames.join(", ")],
+        ["Tercih edilen tarih", formatDate(d.preferredDate, "tr")],
+        ["Tercih edilen saat", timeLabels[d.timeRange].tr],
+        ["Alternatif", d.alternative ?? "—"],
+      ],
+      "Teşekkürler — randevu talebin bize ulaştı. Lütfen dikkat: bu bir talep, henüz onaylanmış bir randevu değil. Dilek talebini inceleyecek ve tarihi ile saati onaylamak ya da seninki uygun değilse başka bir zaman önermek için seninle kişisel olarak iletişime geçecek.",
+      "Randevun ancak Dilek onayladığında kesinleşir. Bakımlar yalnızca randevu ile yapılır; adres gibi pratik bilgiler onaydan sonra kişisel olarak paylaşılır. Bir şeyi değiştirmek ya da eklemek mi istiyorsun? Bu e-postayı yanıtlaman yeterli.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    );
+  }
   if (d.locale === "en") {
     return mail(
       "Your appointment request has been received — Glow by Dilek",

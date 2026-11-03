@@ -13,6 +13,7 @@ const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
 const refreshPublic = () => {
   revalidatePath("/beoordelingen");
   revalidatePath("/en/reviews");
+  revalidatePath("/tr/yorumlar");
   revalidatePath("/admin/beoordelingen");
 };
 

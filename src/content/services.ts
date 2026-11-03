@@ -40,10 +40,10 @@ export const serviceCategories: ServiceCategory[] = [
     published: true,
     status: "available",
     route: "treatments",
-    name: { nl: "Waxing", en: "Waxing" },
+    name: { nl: "Waxing", en: "Waxing", tr: "Ağda" },
     shortDescription: {
       nl: "Professionele waxbehandelingen voor gezicht, lichaam en bikinizone.",
-      en: "Professional waxing for face, body and bikini area.",
+      en: "Professional waxing for face, body and bikini area.", tr: "Yüz, vücut ve bikini bölgesi için profesyonel ağda.",
     },
   },
   // ---- Planned — NOT published. Do not enable without owner confirmation. ----
@@ -51,22 +51,22 @@ export const serviceCategories: ServiceCategory[] = [
     id: "laser",
     published: false,
     status: "planned",
-    name: { nl: "Laserontharing", en: "Laser hair removal" },
-    shortDescription: { nl: "", en: "" },
+    name: { nl: "Laserontharing", en: "Laser hair removal", tr: "Lazer epilasyon" },
+    shortDescription: { nl: "", en: "", tr: "" },
   },
   {
     id: "skin",
     published: false,
     status: "planned",
-    name: { nl: "Huid- en gezichtsverzorging", en: "Skin and facial care" },
-    shortDescription: { nl: "", en: "" },
+    name: { nl: "Huid- en gezichtsverzorging", en: "Skin and facial care", tr: "Cilt ve yüz bakımı" },
+    shortDescription: { nl: "", en: "", tr: "" },
   },
   {
     id: "beauty",
     published: false,
     status: "planned",
-    name: { nl: "Beautybehandelingen", en: "Beauty treatments" },
-    shortDescription: { nl: "", en: "" },
+    name: { nl: "Beautybehandelingen", en: "Beauty treatments", tr: "Güzellik bakımları" },
+    shortDescription: { nl: "", en: "", tr: "" },
   },
 ];
 

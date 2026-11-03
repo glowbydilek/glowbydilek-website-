@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { TemplateForm } from "@/components/private/cms/TemplateForm";
 import { Card, PageHeader } from "@/components/private/ui";
@@ -11,7 +12,7 @@ export const metadata = { title: "E-mailteksten" };
 export default async function Emails({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const key = (TEMPLATE_KEYS.includes(sp.mail as TemplateKey) ? sp.mail : "confirmed") as TemplateKey;
-  const locale = sp.taal === "en" ? "en" : "nl";
+  const locale = asLocale(sp.taal);
   const db = getDb();
   const [t, customRows] = await Promise.all([loadTemplate(db, key, locale), db.select({ key: notificationTemplates.key }).from(notificationTemplates)]);
   return (
@@ -27,7 +28,7 @@ export default async function Emails({ searchParams }: { searchParams: Promise<R
             ))}
           </ul>
         </Card>
-        <Card title={TEMPLATE_LABELS[key]} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/e-mails?mail=${key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
+        <Card title={TEMPLATE_LABELS[key]} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en", "tr"] as const).map((l) => <Link key={l} href={`/admin/e-mails?mail=${key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
           <TemplateForm key={`${key}-${locale}`} k={key} locale={locale} subject={t.subject} body={t.body} custom={customRows.some((r) => r.key === key)} />
         </Card>
       </div>

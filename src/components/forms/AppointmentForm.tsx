@@ -1,5 +1,6 @@
 "use client";
 
+import { preselectedTreatment } from "@/i18n/config";
 import { track } from "@/lib/analytics/track";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -31,7 +32,7 @@ export function AppointmentForm({
   turnstileSiteKey,
   promoField = false,
 }: {
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   t: Dictionary["forms"];
   groups: Group[];
   /** Closed weekdays and dates (disabled in the calendar, refused by the API). */
@@ -76,12 +77,11 @@ export function AppointmentForm({
     setValues((v) => ({ ...v, [k]: e.target.value }));
     clear(k);
   };
-  // Preselect a treatment from the URL (?behandeling=… or ?treatment=…),
+  // Preselect a treatment from the URL (?behandeling=, ?treatment= or ?bakim=),
   // e.g. when arriving from a treatment page. Read after hydration so the
   // page itself can stay static.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const wanted = params.get("behandeling") ?? params.get("treatment");
+    const wanted = preselectedTreatment(window.location.search);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
     if (wanted && ids.includes(wanted)) setTreatments((s) => (s.includes(wanted) ? s : [...s, wanted]));
   }, [ids]);
@@ -132,7 +132,7 @@ export function AppointmentForm({
     k === "promoCode" && (errors[k] || serverFields?.[k]) ? t.errors.promoCode : errors[k] ? t.errors[errors[k]] : serverFields?.[k] ? t.errors[serverFields[k] as ErrorCode] : undefined;
 
   const chip = (on: boolean) =>
-    `inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent-deep ${
+    `sheen relative inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent-deep ${
       on ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface text-ink hover:border-ink/40"
     }`;
 
@@ -140,7 +140,7 @@ export function AppointmentForm({
     <form ref={formRef} onSubmit={onSubmit} noValidate className="relative space-y-9">
       <Honeypot value={honeypot} onChange={setHoneypot} />
 
-      <fieldset aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
+      <fieldset className="min-w-0" aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
         <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
           {t.treatments} <span aria-hidden="true" className="text-accent-deep">*</span>
         </legend>
@@ -155,7 +155,7 @@ export function AppointmentForm({
                 {g.treatments.map((tr) => {
                   const on = treatments.includes(tr.id);
                   return (
-                    <label key={tr.id} className={chip(on)}>
+                    <label key={tr.id} data-selected={on ? "true" : undefined} className={chip(on)}>
                       <input
                         type="checkbox"
                         className="sr-only"
@@ -193,13 +193,13 @@ export function AppointmentForm({
           error={fe("preferredDate")}
           labels={t.datePicker}
         />
-        <fieldset aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
+        <fieldset className="min-w-0" aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
             {t.timeRange} <span aria-hidden="true" className="text-accent-deep">*</span>
           </legend>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {TIME_RANGES.map((r) => (
-              <label key={r} className={`${chip(timeRange === r)} justify-center`}>
+              <label key={r} data-selected={timeRange === r ? "true" : undefined} className={`${chip(timeRange === r)} justify-center`}>
                 <input
                   type="radio"
                   name="timeRange"
@@ -212,6 +212,7 @@ export function AppointmentForm({
                   }}
                 />
                 {t.timeRanges[r]}
+                {timeRange === r && <span aria-hidden="true" className="pick-star absolute right-3 top-1.5" />}
               </label>
             ))}
           </div>

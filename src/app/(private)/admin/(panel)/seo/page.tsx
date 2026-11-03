@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { desc } from "drizzle-orm";
 import { DeleteRedirect, RedirectForm } from "@/components/private/cms/RedirectForm";
@@ -20,7 +21,7 @@ const items: Item[] = [
   ...treatmentIds.map((id) => ({ key: `treatment-${id}`, label: treatmentCopy("nl", id).seoTitle, ref: { type: "treatment" as const, id } })),
 ];
 
-function defaultsFor(item: Item, locale: "nl" | "en") {
+function defaultsFor(item: Item, locale: "nl" | "en" | "tr") {
   if (item.ref.type === "static") return staticPageMeta(locale, item.ref.key);
   if (item.ref.type === "category") {
     const c = categoryCopy(locale, item.ref.id);
@@ -33,7 +34,7 @@ function defaultsFor(item: Item, locale: "nl" | "en") {
 export default async function SeoPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const item = items.find((i) => i.key === sp.pagina) ?? items[0];
-  const locale = sp.taal === "en" ? "en" : "nl";
+  const locale = asLocale(sp.taal);
   const db = getDb();
   const [ev, reds, imgs] = await Promise.all([
     editorValue(db, `seo:${item.key}`, locale, {}),
@@ -55,7 +56,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
           </ul>
         </Card>
         <div className="space-y-5">
-          <Card title={item.label} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en"] as const).map((l) => <Link key={l} href={`/admin/seo?pagina=${item.key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
+          <Card title={item.label} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en", "tr"] as const).map((l) => <Link key={l} href={`/admin/seo?pagina=${item.key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
             <SeoForm key={`${item.key}-${locale}`} seoKey={item.key} locale={locale} initial={(ev.value ?? {}) as Seo} defaults={defaultsFor(item, locale)} path={pagePath(locale, item.ref)} media={imgs} />
           </Card>
           <Card title="Doorverwijzingen">

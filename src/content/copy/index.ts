@@ -8,6 +8,11 @@ import { treatmentsEn } from "./treatments.en";
 import { treatmentsNl } from "./treatments.nl";
 import { extraSectionsEn, extraTreatmentsEn } from "./extra.en";
 import { extraSectionsNl, extraTreatmentsNl } from "./extra.nl";
+import { categoriesTr } from "./categories.tr";
+import { extraSectionsTr, extraTreatmentsTr } from "./extra.tr";
+import { faqPageTr, guidesTr } from "./guides.tr";
+import { treatmentsTr } from "./treatments.tr";
+import { wellnessSections, wellnessTreatments } from "./wellness";
 import type { CategoryCopy, FaqPageCopy, GuideCopy, GuideKey, SectionCopy, TreatmentCopy } from "./types";
 import { override } from "../../lib/cms/current";
 import { mergeContent } from "../../lib/cms/registry";
@@ -17,10 +22,10 @@ const withOverride = <T>(def: T, key: string, locale: Locale): T => {
   return o === undefined ? def : mergeContent(def, o);
 };
 
-const categories = { nl: categoriesNl, en: categoriesEn };
-const treatments = { nl: treatmentsNl, en: treatmentsEn };
-const guides = { nl: guidesNl, en: guidesEn };
-const faqPages = { nl: faqPageNl, en: faqPageEn };
+const categories: Record<Locale, typeof categoriesNl> = { nl: categoriesNl, en: categoriesEn, tr: categoriesTr };
+const treatments: Record<Locale, typeof treatmentsNl> = { nl: treatmentsNl, en: treatmentsEn, tr: treatmentsTr };
+const guides: Record<Locale, typeof guidesNl> = { nl: guidesNl, en: guidesEn, tr: guidesTr };
+const faqPages: Record<Locale, typeof faqPageNl> = { nl: faqPageNl, en: faqPageEn, tr: faqPageTr };
 
 export function categoryCopy(locale: Locale, id: CategoryId): CategoryCopy {
   return withOverride(categories[locale][id], `category:${id}`, locale);
@@ -30,8 +35,8 @@ export function treatmentCopy(locale: Locale, id: TreatmentId): TreatmentCopy {
   return withOverride(treatments[locale][id], `treatment:${id}`, locale);
 }
 
-const extraTreatments = { nl: extraTreatmentsNl, en: extraTreatmentsEn };
-const extraSections = { nl: extraSectionsNl, en: extraSectionsEn };
+const extraTreatments: Record<Locale, Record<string, TreatmentCopy>> = { nl: extraTreatmentsNl, en: extraTreatmentsEn, tr: extraTreatmentsTr };
+const extraSections: Record<Locale, Record<string, SectionCopy>> = { nl: extraSectionsNl, en: extraSectionsEn, tr: extraSectionsTr };
 
 type Basic = { name: Record<Locale, string>; description: Record<Locale, string> };
 
@@ -40,14 +45,18 @@ export function defaultTreatmentCopy(locale: Locale, b: Basic): TreatmentCopy {
   const name = b.name[locale] || b.name.nl;
   const desc = b.description[locale] || b.description.nl;
   // Search engines want a fuller description; add a neutral, factual closing sentence.
-  const tail = locale === "nl" ? " Bij Glow by Dilek, uitsluitend op afspraak. Lees wat je kunt verwachten en vraag je afspraak aan." : " At Glow by Dilek, by appointment only. Read what to expect and request your appointment.";
+  const tail = {
+    nl: " Bij Glow by Dilek, uitsluitend voor vrouwen en op afspraak. Lees wat je kunt verwachten en vraag je afspraak aan.",
+    en: " At Glow by Dilek, for women only and by appointment. Read what to expect and request your appointment.",
+    tr: " Glow by Dilek'te, yalnızca kadınlara ve randevuyla. Neler bekleyeceğini oku ve randevunu talep et.",
+  }[locale];
   return {
     seoTitle: name,
     seoDescription: (desc.length < 90 ? `${desc}${tail}` : desc).slice(0, 300),
     title: name,
     lead: desc,
     teaser: desc,
-    areaTitle: locale === "nl" ? "Wat houdt de behandeling in?" : "What does the treatment involve?",
+    areaTitle: { nl: "Wat houdt de behandeling in?", en: "What does the treatment involve?", tr: "Bakım neleri kapsar?" }[locale],
     area: desc,
     // One blank entry per list gives the admin editor a template to add to.
     appointment: [""],
@@ -72,7 +81,7 @@ function tidy<T>(v: T): T {
 
 /** Long-form copy of any catalogue item: built-in, draft or owner-created, plus owner edits. */
 export function itemCopy(locale: Locale, id: string, basic: Basic): TreatmentCopy {
-  const builtin = (treatments[locale] as Record<string, TreatmentCopy>)[id] ?? extraTreatments[locale][id];
+  const builtin = wellnessTreatments[id]?.[locale] ?? (treatments[locale] as Record<string, TreatmentCopy>)[id] ?? extraTreatments[locale][id];
   return tidy(withOverride(builtin ?? defaultTreatmentCopy(locale, basic), `treatment:${id}`, locale));
 }
 
@@ -83,14 +92,14 @@ export function defaultSectionCopy(locale: Locale, name: string): SectionCopy {
     hero: { eyebrow: name, title: name, titleEm: "", subtitle: "" },
     intro: { title: "", paragraphs: [""] },
     listTitle: name,
-    listIntro: locale === "nl" ? "Kies een behandeling voor alle details." : "Choose a treatment for all the details.",
+    listIntro: { nl: "Kies een behandeling voor alle details.", en: "Choose a treatment for all the details.", tr: "Tüm ayrıntılar için bir bakım seç." }[locale],
     teaser: "",
     faqs: [{ q: "", a: "" }],
   };
 }
 
 export function sectionCopy(locale: Locale, id: string, name: string): SectionCopy {
-  return tidy(withOverride(extraSections[locale][id] ?? defaultSectionCopy(locale, name), `section:${id}`, locale));
+  return tidy(withOverride(wellnessSections[id]?.[locale] ?? extraSections[locale][id] ?? defaultSectionCopy(locale, name), `section:${id}`, locale));
 }
 
 /** Copy of a waxing zone or an owner-created group. */

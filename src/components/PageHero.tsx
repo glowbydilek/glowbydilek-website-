@@ -1,3 +1,4 @@
+import { pick } from "@/i18n/config";
 import type { ReactNode } from "react";
 import { hasPhoto, type PhotoId } from "@/content/media";
 import type { Locale } from "@/i18n/config";
@@ -46,7 +47,7 @@ export function PageHero({
     <div>
       {crumbs && (
         <div className="rise mb-6">
-          <Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: locale === "nl" ? "/" : "/en" }, ...crumbs]} />
+          <Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: pick(locale, { nl: "/", en: "/en", tr: "/tr" }) }, ...crumbs]} />
         </div>
       )}
       <p className="eyebrow rise">{eyebrow}</p>

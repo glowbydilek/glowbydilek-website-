@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { mailto, siteConfig, whatsappLink } from "@/content/site";
-import { href, type Locale } from "@/i18n/config";
+import { href, type Locale, pick } from "@/i18n/config";
 import { currentSnapshot, override } from "@/lib/cms/current";
 import { publicSocial, validateAnalytics, validateBusiness } from "@/lib/cms/menu";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -37,24 +37,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-9 md:grid-cols-4">
-            <div>
-              <p className={heading}>{dict.footer.treatments}</p>
-              <ul className="mt-3">
-                {nav.categories.map((c) => (
-                  <li key={c.href}>
-                    <Link href={c.href} className={linkCls}>
-                      {c.label}
-                    </Link>
-                  </li>
-                ))}
-                <li>
-                  <Link href={nav.allHref} className={linkCls}>
-                    {dict.nav.allTreatments}
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-9 md:grid-cols-3">
             <div>
               <p className={heading}>{dict.footer.studio}</p>
               <ul className="mt-3">
@@ -79,7 +62,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                 ))}
                 {currentSnapshot().marketing?.productsPage && (
                   <li>
-                    <Link href={locale === "nl" ? "/producten" : "/en/products"} className={linkCls}>
+                    <Link href={pick(locale, { nl: "/producten", en: "/en/products", tr: "/tr/urunler" })} className={linkCls}>
                       {dict.products.title}
                     </Link>
                   </li>
@@ -116,6 +99,68 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
           </div>
         </div>
 
+        {/* Every published treatment, grouped by category (same source as the menus) */}
+        <nav aria-label={dict.footer.treatments} className="border-b border-paper/10 py-10">
+          <p className={heading}>{dict.footer.treatments}</p>
+          <div className="mt-4 grid gap-x-10 gap-y-2 md:mt-6 md:grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] md:gap-y-8">
+            {nav.categories.map((c) => {
+              const body = (
+                <>
+                  {c.groups.map((g, gi) => (
+                    <div key={g.href ?? gi} className="mt-2">
+                      {g.label &&
+                        (g.href ? (
+                          <Link href={g.href} className="inline-flex min-h-10 items-center text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-glow/90 hover:text-glow md:min-h-0 md:py-1">
+                            {g.label}
+                          </Link>
+                        ) : (
+                          <p className="py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-glow/90">{g.label}</p>
+                        ))}
+                      <ul className="grid grid-cols-2 gap-x-4 md:grid-cols-1">
+                        {g.items.map((t) => (
+                          <li key={t.href}>
+                            <Link href={t.href} className={linkCls}>
+                              {t.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <Link href={c.href} className="mt-2 inline-flex min-h-10 items-center gap-1.5 text-sm text-glow hover:text-paper md:min-h-0 md:py-1">
+                    {c.label}
+                    <Icon name="arrow" className="h-3 w-3" />
+                  </Link>
+                </>
+              );
+              return (
+                <div key={c.href}>
+                  {/* Phones: compact accordion */}
+                  <details className="group border-b border-paper/10 md:hidden">
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+                      <span className="font-serif text-[1.3rem] leading-tight text-paper">{c.label}</span>
+                      <span className="flex items-center gap-2 text-xs text-paper/60">
+                        {c.treatments.length}
+                        <Icon name="chevron" className="h-3.5 w-3.5 rotate-90 text-glow transition-transform duration-300 group-open:-rotate-90" />
+                      </span>
+                    </summary>
+                    <div className="pb-4">{body}</div>
+                  </details>
+                  {/* Larger screens: always visible columns */}
+                  <div className="hidden md:block">
+                    <p className="font-serif text-[1.3rem] leading-tight text-paper">{c.label}</p>
+                    {body}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <Link href={nav.allHref} className="btn btn-outline mt-8 min-h-11 border-paper/30 px-5 py-2 text-sm text-paper hover:border-paper">
+            {dict.nav.allTreatments}
+            <Icon name="arrow" className="h-4 w-4" />
+          </Link>
+        </nav>
+
         <div className="flex flex-col gap-3 py-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
           <p className="flex items-center gap-2">
             <Glint className="h-3 w-auto text-glow" />© {year} {siteConfig.name}. {dict.footer.rights}
@@ -130,7 +175,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
               </Link>
             ))}
             {analytics.enabled && <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />}
-            <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" className="-my-2" />
+            <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" placement="up" />
             {/* Discreet owner entrance; the private areas are noindex and login-protected.
                 A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
