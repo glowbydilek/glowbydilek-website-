@@ -19,7 +19,7 @@ export type Theme = {
   };
   buttonShape: "pill" | "rounded" | "square";
   headingFont: "bodoni" | "newsreader" | "instrument";
-  headingWeight: 340 | 380 | 460;
+  headingWeight: 340 | 380 | 460 | 500 | 600;
   logoHeight: "small" | "medium" | "large";
   headerStyle: "frosted" | "solid";
   footerTone: "ink" | "sand";
@@ -43,8 +43,9 @@ export const APPROVED_THEME: Theme = {
     glowSoft: "#eee3f2",
   },
   buttonShape: "pill",
-  headingFont: "bodoni",
-  headingWeight: 380,
+  // v13: Newsreader Medium; Bodoni's hairlines were too fine on iPhone screens.
+  headingFont: "newsreader",
+  headingWeight: 500,
   logoHeight: "medium",
   headerStyle: "frosted",
   footerTone: "ink",
@@ -107,7 +108,7 @@ export function validateTheme(input: unknown): { theme: Theme; errors: string[] 
     colors,
     buttonShape: pick("buttonShape", ["pill", "rounded", "square"]),
     headingFont: pick("headingFont", ["bodoni", "newsreader", "instrument"]),
-    headingWeight: pick("headingWeight", [340, 380, 460]),
+    headingWeight: pick("headingWeight", [340, 380, 460, 500, 600]),
     logoHeight: pick("logoHeight", ["small", "medium", "large"]),
     headerStyle: pick("headerStyle", ["frosted", "solid"]),
     footerTone: pick("footerTone", ["ink", "sand"]),
@@ -145,9 +146,9 @@ export function themeCss(theme: Theme): string {
   if (radius) vars.push(`--radius-card:${radius[0]}`, `--radius-media:${radius[1]}`);
   const spacing = { compact: ["clamp(2.5rem,1.75rem + 3vw,4.5rem)", "clamp(2rem,1.5rem + 2vw,3.25rem)"], normal: null, airy: ["clamp(4.5rem,3rem + 5vw,8.5rem)", "clamp(3rem,2rem + 3.5vw,5.5rem)"] }[theme.spacing];
   if (spacing) vars.push(`--space-section:${spacing[0]}`, `--space-section-tight:${spacing[1]}`);
-  if (theme.headingFont === "newsreader") vars.push(`--font-serif:"Newsreader Variable","Newsreader",Georgia,serif`);
-  if (theme.headingFont === "instrument") vars.push(`--font-serif:var(--font-instrument),ui-sans-serif,system-ui,sans-serif`);
-  if (theme.headingWeight !== 380) vars.push(`--heading-weight:${theme.headingWeight}`);
+  if (theme.headingFont === "bodoni") vars.push(`--font-serif:var(--font-bodoni-stack)`);
+  if (theme.headingFont === "instrument") vars.push(`--font-serif:var(--font-sans)`);
+  if (theme.headingWeight !== APPROVED_THEME.headingWeight) vars.push(`--heading-weight:${theme.headingWeight}`);
   if (theme.buttonShape !== "pill") vars.push(`--radius-button:${theme.buttonShape === "rounded" ? "0.5rem" : "0.125rem"}`);
   const rules: string[] = [];
   if (vars.length) rules.push(`:root{${vars.join(";")}}`);

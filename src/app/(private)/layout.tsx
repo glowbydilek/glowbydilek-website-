@@ -1,4 +1,3 @@
-import "@fontsource-variable/newsreader/standard.css";
 import "../globals.css";
 import { fontVariables } from "../fonts";
 import type { Metadata, Viewport } from "next";
