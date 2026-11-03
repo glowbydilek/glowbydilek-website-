@@ -27,6 +27,15 @@ export function Header({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
+  // Mobile menu: the category that contains the current page starts open.
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const toggleMenu = () => {
+    if (!open) {
+      const here = nav.categories.find((c) => pathname === c.href || pathname.startsWith(`${c.href}/`) || c.treatments.some((t) => t.href === pathname));
+      setExpanded(here?.href ?? null);
+    }
+    setOpen((v) => !v);
+  };
   const headerRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -206,7 +215,7 @@ export function Header({
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
-            onClick={() => setOpen((v) => !v)}
+            onClick={toggleMenu}
           >
             <span
               className={`absolute h-px w-6 bg-ink transition-transform duration-500 ${open ? "rotate-45" : "-translate-y-[4px]"}`}
@@ -218,68 +227,66 @@ export function Header({
         </div>
       </div>
 
-      {/* Desktop mega menu */}
+      {/* Desktop mega menu: every published treatment, grouped by category */}
       {mega && (
         <div
           id="mega-menu"
-          className="absolute inset-x-0 top-full hidden border-b border-line bg-paper shadow-[var(--shadow-soft)] lg:block"
+          className="mega-panel absolute inset-x-0 top-full hidden max-h-[calc(100dvh-5rem)] overflow-y-auto border-b border-line bg-paper shadow-[var(--shadow-soft)] lg:block"
         >
-          <div
-            className="mx-auto grid max-w-[88rem] gap-10 px-12 py-10"
-            style={{ gridTemplateColumns: `repeat(${Math.max(1, nav.categories.length)}, minmax(0, 1fr)) 0.9fr` }}
-          >
+          <div className="mx-auto grid max-w-[88rem] grid-cols-[repeat(auto-fit,minmax(11.5rem,1fr))] gap-x-10 gap-y-8 px-12 py-10">
             {nav.categories.map((c) => (
-              <div key={c.href}>
+              <div key={c.href} className={c.groups.length > 1 ? "col-span-full xl:col-span-3" : ""}>
                 <Link
                   href={c.href}
                   onClick={close}
-                  className="group inline-flex items-center gap-2 font-serif text-[1.65rem] leading-tight text-ink hover:text-accent"
+                  className="group inline-flex items-center gap-2 font-serif text-[1.55rem] leading-tight text-ink hover:text-accent-deep"
                 >
                   {c.label}
-                  <Icon
-                    name="arrow"
-                    className="h-4 w-4 text-accent-deep transition-transform duration-500 group-hover:translate-x-1"
-                  />
+                  <Icon name="arrow" className="h-4 w-4 text-accent-deep transition-transform duration-500 group-hover:translate-x-1" />
                 </Link>
-                <p className="mt-1 text-sm leading-relaxed text-muted">
-                  {c.teaser}
-                </p>
-                <ul className="mt-4 space-y-1.5">
-                  {c.treatments.map((t) => (
-                    <li key={t.href}>
-                      <Link
-                        href={t.href}
-                        onClick={close}
-                        aria-current={pathname === t.href ? "page" : undefined}
-                        className="link-underline text-ink-soft hover:text-ink"
-                      >
-                        {t.label}
-                      </Link>
-                    </li>
+                {c.teaser && <p className="mt-1 text-sm leading-relaxed text-muted">{c.teaser}</p>}
+                <div className={c.groups.length > 1 ? "mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-3" : "mt-4"}>
+                  {c.groups.map((g, gi) => (
+                    <div key={g.href ?? gi}>
+                      {g.label &&
+                        (g.href ? (
+                          <Link href={g.href} onClick={close} className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep hover:text-ink">
+                            {g.label}
+                          </Link>
+                        ) : (
+                          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">{g.label}</p>
+                        ))}
+                      <ul className={`${g.label ? "mt-2" : ""} space-y-1`}>
+                        {g.items.map((t) => (
+                          <li key={t.href}>
+                            <Link
+                              href={t.href}
+                              onClick={close}
+                              aria-current={pathname === t.href ? "page" : undefined}
+                              className="nav-item inline-flex min-h-8 items-center text-[0.95rem] text-ink-soft hover:text-ink"
+                            >
+                              {t.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             ))}
-            <div className="border-l border-line pl-8">
+            <div className="border-line xl:border-l xl:pl-8">
               <p className="eyebrow">{dict.nav.info}</p>
               <ul className="mt-4 space-y-2">
                 {nav.info.map((l) => (
                   <li key={l.href}>
-                    <Link
-                      href={l.href}
-                      onClick={close}
-                      className="link-underline text-ink-soft hover:text-ink"
-                    >
+                    <Link href={l.href} onClick={close} className="link-underline text-ink-soft hover:text-ink">
                       {l.label}
                     </Link>
                   </li>
                 ))}
               </ul>
-              <Link
-                href={nav.allHref}
-                onClick={close}
-                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-deep hover:text-ink"
-              >
+              <Link href={nav.allHref} onClick={close} className="btn btn-outline mt-6 min-h-11 px-4 py-2 text-sm">
                 {dict.nav.allTreatments}
                 <Icon name="arrow" className="h-3.5 w-3.5" />
               </Link>
@@ -325,24 +332,70 @@ export function Header({
             </ul>
 
             <p className="eyebrow mt-8">{dict.nav.categories}</p>
-            <ul className="mt-3 grid gap-2">
-              {nav.categories.map((c) => (
-                <li key={c.href}>
-                  <Link
-                    href={c.href}
-                    onClick={close}
-                    aria-current={pathname === c.href ? "page" : undefined}
-                    className="block border-b border-line py-3"
-                  >
-                    <span className="block font-serif text-[1.4rem] leading-tight text-ink">
-                      {c.label}
-                    </span>
-                    <span className="mt-0.5 block text-sm leading-snug text-muted">
-                      {c.teaser}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+            <ul className="mt-3 border-t border-line">
+              {nav.categories.map((c, ci) => {
+                const openCat = expanded === c.href;
+                const panelId = `mcat-${ci}`;
+                return (
+                  <li key={c.href} className="border-b border-line">
+                    <div className="flex items-center justify-between gap-2">
+                      <Link
+                        href={c.href}
+                        onClick={close}
+                        aria-current={pathname === c.href ? "page" : undefined}
+                        className="min-w-0 flex-1 py-3"
+                      >
+                        <span className="block font-serif text-[1.4rem] leading-tight text-ink">{c.label}</span>
+                        {c.teaser && <span className="mt-0.5 block text-sm leading-snug text-muted">{c.teaser}</span>}
+                      </Link>
+                      <button
+                        type="button"
+                        aria-expanded={openCat}
+                        aria-controls={panelId}
+                        aria-label={`${c.label}: ${c.treatments.length} ${dict.home.treatments.count}`}
+                        onClick={() => setExpanded(openCat ? null : c.href)}
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink"
+                      >
+                        <Icon name="chevron" className={`h-3.5 w-3.5 transition-transform duration-300 ${openCat ? "-rotate-90" : "rotate-90"}`} />
+                      </button>
+                    </div>
+                    <div id={panelId} hidden={!openCat} className="mcat-panel pb-4">
+                      {c.groups.map((g, gi) => (
+                        <div key={g.href ?? gi} className="mt-2">
+                          {g.label &&
+                            (g.href ? (
+                              <Link href={g.href} onClick={close} className="inline-flex min-h-10 items-center text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">
+                                {g.label}
+                              </Link>
+                            ) : (
+                              <p className="py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">{g.label}</p>
+                            ))}
+                          <ul className="grid grid-cols-1 gap-x-4 min-[400px]:grid-cols-2">
+                            {g.items.map((t) => (
+                              <li key={t.href}>
+                                <Link
+                                  href={t.href}
+                                  onClick={close}
+                                  aria-current={pathname === t.href ? "page" : undefined}
+                                  className={`flex min-h-11 items-center text-[0.98rem] ${pathname === t.href ? "text-accent-deep" : "text-ink-soft"}`}
+                                >
+                                  {t.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
+              <li>
+                <Link href={nav.allHref} onClick={close} className="flex min-h-12 items-center justify-between font-medium text-accent-deep">
+                  {dict.nav.allTreatments}
+                  <Icon name="arrow" className="h-4 w-4" />
+                </Link>
+              </li>
             </ul>
 
             <p className="eyebrow mt-8">{dict.nav.info}</p>

@@ -684,6 +684,7 @@ export const tr: Dictionary = {
     inThisArea: "Bu bölgedeki uygulamalar",
     inThisAreaIntro: "Tüm ayrıntılar için bir uygulama seç ya da hemen randevu talep et.",
     viewTreatment: "Devamını oku",
+    viewCategory: "{name} hakkında her şey",
     requestThis: "Bu bakımı talep et",
     area: "Hangi bölgeye uygulanır?",
     appointment: "Randevu nasıl geçer?",

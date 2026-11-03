@@ -103,6 +103,9 @@ export function LanguageSwitcher({
     const i = list.indexOf(document.activeElement as HTMLAnchorElement);
     if (e.key === "Escape") {
       e.preventDefault();
+      // Only close this menu, not the mobile menu around it.
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
       close(true);
     } else if (e.key === "ArrowDown") {
       e.preventDefault();

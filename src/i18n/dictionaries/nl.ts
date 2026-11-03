@@ -690,6 +690,7 @@ export const nl = {
     inThisArea: "Behandelingen in deze zone",
     inThisAreaIntro: "Kies een behandeling voor alle details, of vraag direct een afspraak aan.",
     viewTreatment: "Lees meer",
+    viewCategory: "Alles over {name}",
     requestThis: "Vraag deze behandeling aan",
     area: "Om welke zone gaat het?",
     appointment: "Zo verloopt de afspraak",

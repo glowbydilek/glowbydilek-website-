@@ -95,12 +95,26 @@ async function step(name, fn) {
   await step("language switch keeps the page and the preselected treatment", async () => {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/waxbehandelingen/lichaam/oksels-waxen`);
-    await p.locator('header a[hreflang="en"]').click();
+    const pickLang = async (hreflang) => {
+      const btn = p.locator("header .lang-menu button").first();
+      await btn.click();
+      assert.equal(await btn.getAttribute("aria-expanded"), "true");
+      await p.locator(`header .lang-menu a[hreflang="${hreflang}"]`).first().click();
+    };
+    await pickLang("en");
     await p.waitForURL(`${BASE}/en/waxing-treatments/body/underarm-waxing`);
-    await p.locator('header a[hreflang="nl-NL"]').click();
+    await pickLang("tr-TR");
+    await p.waitForURL(`${BASE}/tr/agda/vucut/koltuk-alti-agdasi`);
+    assert.equal(await p.locator("html").getAttribute("lang"), "tr");
+    await pickLang("nl-NL");
     await p.waitForURL(`${BASE}/waxbehandelingen/lichaam/oksels-waxen`);
+    // Escape closes the language menu and returns focus to its button.
+    await p.locator("header .lang-menu button").first().click();
+    await p.keyboard.press("Escape");
+    assert.equal(await p.locator("header .lang-menu button").first().getAttribute("aria-expanded"), "false");
+    assert.ok(await p.evaluate(() => document.activeElement?.closest(".lang-menu") !== null), "focus back on the language button");
     await p.goto(`${BASE}/afspraak-maken?behandeling=hollywood`);
-    await p.locator('header a[hreflang="en"]').click();
+    await pickLang("en");
     await p.waitForURL(/\/en\/book-appointment\?treatment=hollywood/);
     await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
     assert.deepEqual(await checked(p), ["Hollywood"]);
@@ -113,7 +127,13 @@ async function step(name, fn) {
     await p.getByRole("button", { name: "Behandelingen" }).click();
     const menu = p.locator("#mega-menu");
     await menu.waitFor();
-    for (const name of ["Massages", "Ontspanningsmassage", "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem", "Nazorg"]) {
+    for (const name of [
+      "Gezichtsbehandelingen", "Gezichtsbehandeling met stoom",
+      "Massages", "Ontspanningsmassage (hele lichaam)", "Gezichtsmassage", "Hoofdmassage", "Handmassage", "Voetmassage",
+      "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem",
+      "Wenkbrauwen", "Bovenlip", "Kin", "Volledig gezicht", "Oksels", "Onderarmen", "Hele armen", "Onderbenen", "Hele benen", "Rug", "Bikinilijn", "Brazilian", "Hollywood",
+      "Nazorg", "Alle behandelingen",
+    ]) {
       assert.ok(await menu.getByRole("link", { name, exact: true }).count(), `missing ${name}`);
     }
     await p.keyboard.press("Escape");
@@ -165,7 +185,10 @@ async function step(name, fn) {
       await p.waitForFunction(() => document.querySelectorAll("form input[type=checkbox]:checked").length === 1);
       await p.mouse.wheel(0, 3000);
       await p.waitForTimeout(400);
-      await p.locator('footer a[href="/waxbehandelingen"]').click();
+      // On phones the footer groups each category in a collapsible panel.
+      const fold = p.locator("footer details").filter({ hasText: "Waxbehandelingen" });
+      if (await fold.isVisible()) await fold.locator("summary").click();
+      await p.locator('footer a[href="/waxbehandelingen"]').filter({ visible: true }).first().click();
       await p.waitForURL(`${BASE}/waxbehandelingen`);
       await atTop("section page from the footer");
       await p.mouse.wheel(0, 1200);

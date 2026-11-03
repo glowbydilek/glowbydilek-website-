@@ -35,7 +35,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
 
   test("draft → publish → version history → restore → discard", async () => {
     const base = (await editorValue(db, "dict:home", "nl")).value as { hero: { title: string } };
-    assert.equal(base.hero.title, "Jouw moment");
+    assert.equal(base.hero.title, "Schoonheid, aandacht");
     await saveDraft(db, "dict:home", "nl", { ...base, hero: { ...base.hero, title: "Nieuwe titel" } }, 1);
     let v = await editorValue(db, "dict:home", "nl");
     assert.equal(v.hasDraft, true);

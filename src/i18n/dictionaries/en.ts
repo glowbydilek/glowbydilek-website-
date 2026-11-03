@@ -687,6 +687,7 @@ export const en: Dictionary = {
     inThisArea: "Treatments in this area",
     inThisAreaIntro: "Choose a treatment for all the details, or request an appointment straight away.",
     viewTreatment: "Read more",
+    viewCategory: "All about {name}",
     requestThis: "Request this treatment",
     area: "Which area is treated?",
     appointment: "How the appointment goes",

@@ -6,7 +6,14 @@ import { override } from "@/lib/cms/current";
 import { validateMenu } from "@/lib/cms/menu";
 
 export type NavLink = { label: string; href: string };
-export type NavCategory = NavLink & { teaser: string; treatments: NavLink[] };
+/** A sub-category (waxing: face, body, bikini) or, for sections without groups, one unnamed group. */
+export type NavGroup = { label: string | null; href: string | null; items: NavLink[] };
+export type NavCategory = NavLink & {
+  teaser: string;
+  groups: NavGroup[];
+  /** Every published treatment in this category (flattened). */
+  treatments: NavLink[];
+};
 export type NavModel = {
   categories: NavCategory[];
   /** "All treatments": the overview once several sections are published, else the waxing page. */
@@ -17,42 +24,43 @@ export type NavModel = {
 };
 
 /**
- * Small, serialisable navigation model passed to the client header.
- * Built from the live catalogue: with one published section (today: waxing)
- * the menu shows its zones; with several, one column per section.
+ * Small, serialisable navigation model passed to the client header and the
+ * footer. Built from the live catalogue: every published, translated
+ * treatment appears, grouped by category and sub-category, so the mega
+ * menu, the mobile category menu, the footer and the all-treatments page
+ * always show the same complete list. Nothing is truncated.
  */
 export function navModel(locale: Locale): NavModel {
   const dict = getDictionary(locale);
   const menu = validateMenu(override("menu", "all"));
   const link = (key: RouteKey) => ({ key, label: dict.nav[key], href: href(locale, key) });
-  const sections = publicSections();
-  const groupColumn = (g: ReturnType<typeof publicGroups>[number]): NavCategory => {
-    const c = groupCopy(locale, g.id, g.name[locale]);
-    return {
-      label: c.label,
+  const sections = publicSections(locale);
+  const item = (t: ReturnType<typeof publicItems>[number]): NavLink => ({ label: t.name[locale], href: itemHref(locale, t) });
+
+  const categories: NavCategory[] = sections.map((s) => {
+    const groups = publicGroups(s.id, locale).map((g) => ({
+      label: groupCopy(locale, g.id, g.name[locale]).label,
       href: groupHref(locale, g),
-      teaser: c.teaser,
-      treatments: publicItems({ sectionId: g.sectionId, groupId: g.id }).map((t) => ({ label: t.name[locale], href: itemHref(locale, t) })),
+      items: publicItems({ sectionId: s.id, groupId: g.id, locale }).map(item),
+    }));
+    const loose = publicItems({ sectionId: s.id, groupId: null, locale }).map(item);
+    const all: NavGroup[] = [...groups, ...(loose.length ? [{ label: groups.length ? s.name[locale] : null, href: null, items: loose }] : [])];
+    const teaser = s.id === "waxing" ? dict.nav.waxingTeaser : sectionCopy(locale, s.id, s.name[locale]).teaser;
+    return {
+      label: s.name[locale],
+      href: s.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, s),
+      teaser,
+      groups: all,
+      treatments: all.flatMap((g) => g.items),
     };
-  };
-  const categories: NavCategory[] =
-    sections.length <= 1
-      ? sections.flatMap((s) => publicGroups(s.id).map(groupColumn))
-      : sections.map((s) => {
-          const groups = publicGroups(s.id);
-          const sectionLink = s.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, s);
-          const teaser = s.id === "waxing" ? dict.nav.waxingTeaser : sectionCopy(locale, s.id, s.name[locale]).teaser;
-          const links = groups.length
-            ? groups.map((g) => ({ label: groupCopy(locale, g.id, g.name[locale]).label, href: groupHref(locale, g) }))
-            : publicItems({ sectionId: s.id }).map((t) => ({ label: t.name[locale], href: itemHref(locale, t) }));
-          return { label: s.name[locale], href: sectionLink, teaser, treatments: links.slice(0, 7) };
-        });
+  });
+  const allHref = sections.length > 1 ? href(locale, "services") : href(locale, "treatments");
   return {
     categories,
-    allHref: sections.length > 1 ? href(locale, "services") : href(locale, "treatments"),
+    allHref,
     info: menu.footerInfo.map(link),
     // "Behandelingen" always leads to the overview of every published section.
-    primary: menu.header.map((k) => (k === "treatments" ? { ...link(k), href: sections.length > 1 ? href(locale, "services") : href(locale, "treatments") } : link(k))),
+    primary: menu.header.map((k) => (k === "treatments" ? { ...link(k), href: allHref } : link(k))),
     studio: menu.footerStudio.map(link),
   };
 }
