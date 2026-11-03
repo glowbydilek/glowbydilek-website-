@@ -14,11 +14,14 @@ export type ItemView = {
   groupId: string | null;
   slugNl: string;
   slugEn: string;
+  slugTr: string;
   status: string;
   nameNl: string;
   nameEn: string;
+  nameTr: string;
   descriptionNl: string;
   descriptionEn: string;
+  descriptionTr: string;
   pricingMode: string;
   priceCents: number | null;
   durationMinutes: number | null;
@@ -112,7 +115,10 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
         <Check name="bookableOnline" label="Online boekbaar (tijdstip kiezen)" on={t.bookableOnline} hint="Alleen met duur en vaste/vanaf-prijs" />
       </div>
       <details className="rounded-xl border border-line p-3">
-        <summary className="cursor-pointer text-sm">Naam, korte omschrijving en webadres (NL/EN)</summary>
+        <summary className="cursor-pointer text-sm">
+          Naam, korte omschrijving en webadres (NL/EN/TR)
+          {!t.nameTr && <span className="ml-2 rounded-full bg-glow-soft px-2 py-0.5 text-xs font-medium text-accent-deep">Vertaling nodig (TR)</span>}
+        </summary>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
           <Field label="Naam (NL)"><Input name="nameNl" defaultValue={t.nameNl} required /></Field>
           <Field label="Naam (EN)"><Input name="nameEn" defaultValue={t.nameEn} required /></Field>
@@ -120,6 +126,9 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
           <Field label="Omschrijving (EN)"><Textarea name="descriptionEn" rows={3} defaultValue={t.descriptionEn} /></Field>
           <Field label="Webadres (NL)" hint="Kleine letters en streepjes"><Input name="slugNl" defaultValue={t.slugNl} pattern="[a-z0-9]+(-[a-z0-9]+)*" /></Field>
           <Field label="Webadres (EN)"><Input name="slugEn" defaultValue={t.slugEn} pattern="[a-z0-9]+(-[a-z0-9]+)*" /></Field>
+          <Field label="Naam (TR)" hint="Leeg = niet zichtbaar op de Turkse site"><Input name="nameTr" defaultValue={t.nameTr} lang="tr" /></Field>
+          <Field label="Webadres (TR)" hint="Leeg = automatisch uit de Turkse naam"><Input name="slugTr" defaultValue={t.slugTr} pattern="[a-z0-9]+(-[a-z0-9]+)*" /></Field>
+          <Field label="Omschrijving (TR)"><Textarea name="descriptionTr" rows={3} defaultValue={t.descriptionTr} lang="tr" /></Field>
         </div>
       </details>
       {confirmNeeded && (
@@ -160,14 +169,15 @@ export function PackagePartsForm({ id, parts, treatments }: { id: string; parts:
   );
 }
 
-export function SectionForm({ s }: { s: { id: string; nameNl: string; nameEn: string; status: string; sort: number; slugNl: string; slugEn: string } }) {
+export function SectionForm({ s }: { s: { id: string; nameNl: string; nameEn: string; nameTr: string; status: string; sort: number; slugNl: string; slugEn: string } }) {
   const [status, setStatus] = useState(s.status);
   return (
     <ActionForm action={sectionAction}>
       <input type="hidden" name="id" value={s.id} />
-      <div className="grid gap-3 sm:grid-cols-4 [&>*]:min-w-0">
+      <div className="grid gap-3 sm:grid-cols-5 [&>*]:min-w-0">
         <Field label="Naam (NL)"><Input name="nameNl" defaultValue={s.nameNl} required /></Field>
         <Field label="Naam (EN)"><Input name="nameEn" defaultValue={s.nameEn} required /></Field>
+        <Field label="Naam (TR)" hint={s.nameTr ? undefined : "Vertaling nodig (TR)"}><Input name="nameTr" defaultValue={s.nameTr} lang="tr" /></Field>
         <Field label="Status">
           <Select name="status" value={status} onChange={(e) => setStatus(e.target.value)} disabled={s.id === "waxing"}>
             {Object.entries(STATUS_LABEL).map(([k, v]) => (
@@ -185,12 +195,13 @@ export function SectionForm({ s }: { s: { id: string; nameNl: string; nameEn: st
   );
 }
 
-export function GroupForm({ g }: { g: { id: string; nameNl: string; nameEn: string; status: string; sort: number } }) {
+export function GroupForm({ g }: { g: { id: string; nameNl: string; nameEn: string; nameTr: string; status: string; sort: number } }) {
   return (
     <ActionForm action={groupAction} className="flex flex-wrap items-end gap-3">
       <input type="hidden" name="id" value={g.id} />
       <Field label="Naam (NL)"><Input name="nameNl" defaultValue={g.nameNl} required /></Field>
       <Field label="Naam (EN)"><Input name="nameEn" defaultValue={g.nameEn} required /></Field>
+      <Field label="Naam (TR)" hint={g.nameTr ? undefined : "Vertaling nodig (TR)"}><Input name="nameTr" defaultValue={g.nameTr} lang="tr" /></Field>
       <Field label="Status">
         <Select name="status" defaultValue={g.status}>
           {Object.entries(STATUS_LABEL).map(([k, v]) => (
@@ -228,6 +239,7 @@ export function CreateItemForm({ sections, groups }: { sections: (Opt & { kind: 
         </Field>
         <Field label={isPkg ? "Naam pakket (NL)" : "Naam behandeling (NL)"}><Input name="nameNl" required /></Field>
         <Field label="Naam (EN)"><Input name="nameEn" required /></Field>
+        <Field label="Naam (TR)" hint="Optioneel; leeg = niet op /tr"><Input name="nameTr" lang="tr" /></Field>
         <Field label="Korte omschrijving (NL)"><Textarea name="descriptionNl" rows={2} /></Field>
         <Field label="Korte omschrijving (EN)"><Textarea name="descriptionEn" rows={2} /></Field>
       </div>
@@ -241,6 +253,7 @@ export function CreateSectionForm() {
     <ActionForm action={createSectionAction} resetOnSuccess className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end [&>*]:min-w-0">
       <Field label="Naam (NL)"><Input name="nameNl" required placeholder="bijv. Wimpers & wenkbrauwen" /></Field>
       <Field label="Naam (EN)"><Input name="nameEn" required /></Field>
+        <Field label="Naam (TR)" hint="Optioneel; leeg = niet op /tr"><Input name="nameTr" lang="tr" /></Field>
       <SubmitButton variant="outline">Categorie toevoegen</SubmitButton>
     </ActionForm>
   );
@@ -258,6 +271,7 @@ export function CreateGroupForm({ sections }: { sections: Opt[] }) {
       </Field>
       <Field label="Naam (NL)"><Input name="nameNl" required /></Field>
       <Field label="Naam (EN)"><Input name="nameEn" required /></Field>
+        <Field label="Naam (TR)" hint="Optioneel; leeg = niet op /tr"><Input name="nameTr" lang="tr" /></Field>
       <SubmitButton variant="outline">Subcategorie toevoegen</SubmitButton>
     </ActionForm>
   );

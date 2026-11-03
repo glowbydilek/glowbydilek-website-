@@ -18,6 +18,8 @@ export const RESERVED_ROOTS = new Set<string>([
 
 export function slugify(input: string): string {
   return input
+    .replace(/ı/g, "i")
+    .replace(/İ/g, "I")
     .normalize("NFKD")
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase()

@@ -28,11 +28,16 @@ function refresh() {
   revalidatePath("/sitemap.xml");
 }
 
-function names(f: FormData): { nameNl: string; nameEn: string } | { error: string } {
+/**
+ * Dutch and English names are required; Turkish is optional. An empty
+ * Turkish name keeps the built-in translation, or (for owner-created
+ * entries) hides the entry on /tr until it is translated.
+ */
+function names(f: FormData): { nameNl: string; nameEn: string; nameTr: string | null } | { error: string } {
   const nameNl = str(f, "nameNl").slice(0, 120);
   const nameEn = str(f, "nameEn").slice(0, 120);
   if (!nameNl || !nameEn) return { error: "Vul de naam in het Nederlands en Engels in." };
-  return { nameNl, nameEn };
+  return { nameNl, nameEn, nameTr: str(f, "nameTr").slice(0, 120) || null };
 }
 
 // ────────────────────────────────────────────────────────────── Items
@@ -64,12 +69,14 @@ export async function itemAction(_: FormState, f: FormData): Promise<FormState> 
   }
   const slugNl = str(f, "slugNl").toLowerCase() || t.slugNl || slugify(n.nameNl);
   const slugEn = str(f, "slugEn").toLowerCase() || t.slugEn || slugify(n.nameEn);
-  const siblings = (await db.select({ id: treatments.id, sectionId: treatments.sectionId, groupId: treatments.groupId, category: treatments.category, slugNl: treatments.slugNl, slugEn: treatments.slugEn }).from(treatments).where(ne(treatments.id, id))).filter(
+  const slugTr = str(f, "slugTr").toLowerCase() || t.slugTr || (n.nameTr ? slugify(n.nameTr) : null);
+  const siblings = (await db.select({ id: treatments.id, sectionId: treatments.sectionId, groupId: treatments.groupId, category: treatments.category, slugNl: treatments.slugNl, slugEn: treatments.slugEn, slugTr: treatments.slugTr }).from(treatments).where(ne(treatments.id, id))).filter(
     (r) => (r.sectionId ?? "waxing") === sectionId && (r.groupId ?? (sectionId === "waxing" ? r.category : null)) === groupId,
   );
   const e1 = slugError(slugNl, { taken: siblings.map((r) => r.slugNl ?? "") });
   const e2 = slugError(slugEn, { taken: siblings.map((r) => r.slugEn ?? "") });
-  if (e1 || e2) return { error: e1 ?? e2! };
+  const e3 = slugTr ? slugError(slugTr, { taken: siblings.map((r) => r.slugTr ?? "") }) : null;
+  if (e1 || e2 || e3) return { error: e1 ?? e2 ?? e3! };
   const sort = Number(str(f, "sort") || t.sort);
 
   const changedPrice = t.pricingMode !== p.value.pricingMode || t.priceCents !== p.value.priceCents;
@@ -79,12 +86,14 @@ export async function itemAction(_: FormState, f: FormData): Promise<FormState> 
       ...n,
       descriptionNl: str(f, "descriptionNl").slice(0, 600),
       descriptionEn: str(f, "descriptionEn").slice(0, 600),
+      descriptionTr: str(f, "descriptionTr").slice(0, 600) || null,
       ...p.value,
       sectionId,
       groupId,
       category: groupId ?? sectionId,
       slugNl,
       slugEn,
+      slugTr,
       status,
       sort: Number.isInteger(sort) ? sort : t.sort,
       active: status !== "archived",
@@ -129,6 +138,8 @@ export async function createItemAction(_: FormState, f: FormData): Promise<FormS
     status: "draft",
     nameNl: n.nameNl,
     nameEn: n.nameEn,
+    nameTr: n.nameTr,
+    slugTr: n.nameTr ? slugify(n.nameTr) : null,
     descriptionNl: str(f, "descriptionNl").slice(0, 600),
     descriptionEn: str(f, "descriptionEn").slice(0, 600),
     pricingMode: "on_request",
@@ -176,7 +187,7 @@ export async function sectionAction(_: FormState, f: FormData): Promise<FormStat
   if (!status) return { error: "Kies een status." };
   if (status === "published" && row.status !== "published" && f.get("confirm") !== "on") return { error: "Bevestig dat je deze categorie wilt publiceren (vinkje)." };
   if (id === "waxing" && status !== "published") return { error: "Waxbehandelingen is de basis van de website en blijft gepubliceerd." };
-  await db.update(serviceSections).set({ ...n, status, sort: Number(str(f, "sort")) || row.sort }).where(eq(serviceSections.id, id));
+  await db.update(serviceSections).set({ ...n, slugTr: row.slugTr ?? (n.nameTr ? slugify(n.nameTr) : null), status, sort: Number(str(f, "sort")) || row.sort }).where(eq(serviceSections.id, id));
   await audit(db, { userId: s.user.id, action: "catalogue.section.updated", entity: "section", entityId: id, details: { status } });
   refresh();
   return { ok: true, message: status === "published" ? "Opgeslagen. Gepubliceerde behandelingen in deze categorie zijn nu zichtbaar." : "Opgeslagen." };
@@ -195,7 +206,7 @@ export async function createSectionAction(_: FormState, f: FormData): Promise<Fo
   if (e) return { error: e };
   const id = slugNl.slice(0, 60);
   if (existing.some((r) => r.id === id)) return { error: "Er bestaat al een categorie met dit adres." };
-  await db.insert(serviceSections).values({ id, kind: "treatments", slugNl, slugEn, ...n, status: "draft", sort: existing.length });
+  await db.insert(serviceSections).values({ id, kind: "treatments", slugNl, slugEn, slugTr: n.nameTr ? slugify(n.nameTr) : null, ...n, status: "draft", sort: existing.length });
   await audit(db, { userId: s.user.id, action: "catalogue.section.created", entity: "section", entityId: id });
   refresh();
   return { ok: true, message: `Categorie “${n.nameNl}” aangemaakt als concept (/${slugNl}).` };
@@ -218,7 +229,7 @@ export async function createGroupAction(_: FormState, f: FormData): Promise<Form
   const e = slugError(slugNl, { taken }) ?? slugError(slugEn, { taken });
   if (e) return { error: e };
   const id = `${sectionId}-${slugNl}`.slice(0, 60);
-  await db.insert(serviceGroups).values({ id, sectionId, slugNl, slugEn, ...n, status: "draft", sort: siblings.length });
+  await db.insert(serviceGroups).values({ id, sectionId, slugNl, slugEn, slugTr: n.nameTr ? slugify(n.nameTr) : null, ...n, status: "draft", sort: siblings.length });
   await audit(db, { userId: s.user.id, action: "catalogue.group.created", entity: "group", entityId: id });
   refresh();
   return { ok: true, message: `Subcategorie “${n.nameNl}” aangemaakt als concept.` };
@@ -234,7 +245,7 @@ export async function groupAction(_: FormState, f: FormData): Promise<FormState>
   if ("error" in n) return n;
   const status = asStatus(str(f, "status"));
   if (!status) return { error: "Kies een status." };
-  await db.update(serviceGroups).set({ ...n, status, sort: Number(str(f, "sort")) || row.sort }).where(eq(serviceGroups.id, id));
+  await db.update(serviceGroups).set({ ...n, slugTr: row.slugTr ?? (n.nameTr ? slugify(n.nameTr) : null), status, sort: Number(str(f, "sort")) || row.sort }).where(eq(serviceGroups.id, id));
   await audit(db, { userId: s.user.id, action: "catalogue.group.updated", entity: "group", entityId: id, details: { status } });
   refresh();
   return { ok: true, message: "Opgeslagen." };

@@ -152,6 +152,8 @@ test("prices: never € 0, 'from' prefix, on-request label", () => {
 test("admin validation: slugs, reserved paths, pricing and package contents", () => {
   assert.equal(slugify("Wimpers & Wenkbrauwen"), "wimpers-en-wenkbrauwen");
   assert.equal(slugify("Gezichtsbehandeling Één"), "gezichtsbehandeling-een");
+  assert.equal(slugify("Buhar destekli yüz bakımı"), "buhar-destekli-yuz-bakimi");
+  assert.equal(slugify("İğne ŞÇÖ ağda"), "igne-sco-agda");
   for (const r of ["prijzen", "contact", "admin", "agenda", "login", "waxbehandelingen", "behandelingen", "offerte"]) assert.ok(RESERVED_ROOTS.has(r), r);
   assert.match(slugError("prijzen", { root: true })!, /vaste pagina/);
   assert.match(slugError("Hoofdletters")!, /kleine letters/);

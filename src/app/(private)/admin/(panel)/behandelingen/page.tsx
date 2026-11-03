@@ -2,7 +2,7 @@ import Link from "next/link";
 import { asc } from "drizzle-orm";
 import { CreateGroupForm, CreateItemForm, CreateSectionForm, GroupForm, ItemForm, PackagePartsForm, SectionForm, type ItemView } from "@/components/private/cms/CatalogueForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
-import { BUILTIN_ITEMS } from "@/lib/catalogue/builtin";
+import { BUILTIN_GROUPS, BUILTIN_ITEMS, BUILTIN_SECTIONS } from "@/lib/catalogue/builtin";
 import { getDb } from "@/lib/db/client";
 import { packageItems, serviceGroups, serviceSections, treatments } from "@/lib/db/schema";
 import { ensureSeeded } from "@/lib/db/seed";
@@ -43,11 +43,14 @@ export default async function TreatmentsAdmin() {
       groupId,
       slugNl: r.slugNl ?? b?.slug.nl ?? r.id,
       slugEn: r.slugEn ?? b?.slug.en ?? r.id,
+      slugTr: r.slugTr ?? b?.slug.tr ?? "",
       status: r.status,
       nameNl: r.nameNl,
       nameEn: r.nameEn,
       descriptionNl: r.descriptionNl,
       descriptionEn: r.descriptionEn,
+      nameTr: r.nameTr ?? b?.name.tr ?? "",
+      descriptionTr: r.descriptionTr ?? b?.description.tr ?? "",
       pricingMode: mode,
       priceCents: r.priceCents,
       durationMinutes: r.durationMinutes,
@@ -59,6 +62,9 @@ export default async function TreatmentsAdmin() {
       sort: r.sort,
     };
   });
+  // Turkish names: the stored value, else the built-in translation ("" = translation needed).
+  const sectionTr = (x: (typeof sections)[number]) => ({ ...x, nameTr: x.nameTr ?? BUILTIN_SECTIONS.find((b) => b.id === x.id)?.name.tr ?? "" });
+  const groupTr = (x: (typeof groups)[number]) => ({ ...x, nameTr: x.nameTr ?? BUILTIN_GROUPS.find((b) => b.id === x.id)?.name.tr ?? "" });
   const sectionOpts = sections.map((s) => ({ id: s.id, label: s.nameNl, kind: s.kind }));
   const groupOpts = groups.map((g) => ({ id: g.id, label: g.nameNl, sectionId: g.sectionId }));
   const treatmentOpts = items
@@ -76,6 +82,9 @@ export default async function TreatmentsAdmin() {
       <div className="mb-5 space-y-3">
         <Notice tone="info">
           Alleen <strong>gepubliceerde</strong> behandelingen in een <strong>gepubliceerde</strong> categorie staan op de website. Concepten zie je alleen hier en in de voorbeeldweergave. Zonder prijs toont de site ‘Op aanvraag’ — nooit € 0.
+        </Notice>
+        <Notice tone="info">
+          Turkse pagina&apos;s (/tr) tonen alleen behandelingen en categorieën met een Turkse naam. Ontbreekt die, dan staat er <strong>Vertaling nodig (TR)</strong> en blijft het onderdeel verborgen op /tr (geen Engelse of Nederlandse tekst als vervanging).
         </Notice>
         <Notice tone="warning">
           De nieuwe gezichts-, lichaams-, massage- en pakketbehandelingen staan klaar als <strong>concept</strong>. Controleer per behandeling of je hem echt aanbiedt, vul prijs en duur in en publiceer pas daarna. Btw-tarieven anders dan 21% alleen na akkoord van je boekhouder.
@@ -99,7 +108,7 @@ export default async function TreatmentsAdmin() {
               <details className="mb-4 rounded-2xl border border-line p-3">
                 <summary className="cursor-pointer text-sm font-medium">Categorie-instellingen</summary>
                 <div className="mt-3 space-y-3">
-                  <SectionForm s={s} />
+                  <SectionForm s={sectionTr(s)} />
                   <Link href={s.id === "waxing" ? "/admin/paginas/treatments" : `/admin/paginas/section-${s.id}`} className="inline-block text-sm text-accent-deep underline">
                     Teksten van de categoriepagina bewerken
                   </Link>
@@ -116,7 +125,7 @@ export default async function TreatmentsAdmin() {
                   {b.group && !b.group.id.match(/^(face|body|intimate)$/) && (
                     <details className="mb-3 rounded-xl border border-line p-3">
                       <summary className="cursor-pointer text-sm">Subcategorie bewerken</summary>
-                      <div className="mt-3"><GroupForm g={b.group} /></div>
+                      <div className="mt-3"><GroupForm g={groupTr(b.group)} /></div>
                     </details>
                   )}
                   <div className="space-y-3">
@@ -134,6 +143,7 @@ export default async function TreatmentsAdmin() {
                             {t.durationMinutes ? `${t.durationMinutes} min` : "duur?"}
                             {!t.visible ? " · verborgen" : ""}
                             {t.bookableOnline ? " · online" : ""}
+                            {!t.nameTr && <Badge tone="pending">Vertaling nodig (TR)</Badge>}
                           </span>
                         </summary>
                         <div className="mt-3 space-y-4">
