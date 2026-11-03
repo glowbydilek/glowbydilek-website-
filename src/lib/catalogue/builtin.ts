@@ -22,7 +22,7 @@ export const BUILTIN_SECTIONS: Section[] = [
   // Published for the confirmed facial care with steam; the other facial entries remain drafts.
   { id: "facial", kind: "treatments", slug: { nl: "gezichtsbehandelingen", en: "facial-treatments", tr: "yuz-bakimlari" }, name: { nl: "Gezichtsbehandelingen", en: "Facial treatments", tr: "Yüz bakımları" }, status: "published", sort: -2, photo: "facial", mediaId: null, builtin: true },
   { id: "bodycare", kind: "treatments", slug: { nl: "lichaamsbehandelingen", en: "body-treatments", tr: "vucut-bakimlari" }, name: { nl: "Lichaamsbehandelingen", en: "Body treatments", tr: "Vücut bakımları" }, status: "draft", sort: 2, photo: "bodycare", mediaId: null, builtin: true },
-  { id: "massage", kind: "treatments", slug: { nl: "massages", en: "massages", tr: "masajlar" }, name: { nl: "Massages", en: "Massages", tr: "Masajlar" }, status: "published", sort: -1, photo: "massage", mediaId: null, builtin: true },
+  { id: "massage", kind: "treatments", slug: { nl: "massages", en: "massages", tr: "masajlar" }, name: { nl: "Massages", en: "Massages", tr: "Masajlar" }, status: "published", sort: -1, photo: "massage-body", mediaId: null, builtin: true },
   { id: "packages", kind: "packages", slug: { nl: "pakketten", en: "packages", tr: "paketler" }, name: { nl: "Pakketten", en: "Packages", tr: "Paketler" }, status: "draft", sort: 4, photo: "aftercare", mediaId: null, builtin: true },
 ];
 
@@ -95,7 +95,7 @@ const facial: Item[] = [
         en: "A caring moment for your face, in which steam can be one of the steps. Dilek first discusses your skin and your wishes, and whether steam is suitable for you.",
         tr: "Buharın adımlardan biri olabildiği, yüzüne ayrılmış bir bakım anı. Dilek önce cildini ve beklentilerini, buharın sana uygun olup olmadığını seninle konuşur.",
       },
-      photo: "facial",
+      photo: "facial-steam",
       sort: -1,
       related: ["massage-face", "massage-head", "eyebrows"],
     }),
@@ -183,7 +183,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       en: "A quiet moment with attention to the whole body. Beforehand you discuss which areas are treated and what feels comfortable for you.",
       tr: "Tüm bedenine özen gösterilen sakin bir zaman. Öncesinde hangi bölgelere odaklanılacağını ve senin için neyin rahat olduğunu konuşursunuz.",
     },
-    photo: "massage",
+    photo: "massage-body",
     related: ["massage-head", "massage-foot", "massage-hand"],
   },
   {
@@ -195,7 +195,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       en: "Gentle care focused on your face. The treatment and your comfort are agreed together beforehand.",
       tr: "Yüzüne odaklanan nazik bir bakım. Uygulama ve rahatlık tercihlerin önceden birlikte belirlenir.",
     },
-    photo: "facial",
+    photo: "massage-face",
     related: ["facial-steam", "massage-head", "massage-relaxation"],
   },
   {
@@ -207,7 +207,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       en: "A moment for your head and yourself. Beforehand you discuss the touch you prefer and whether the scalp is included.",
       tr: "Başına ve kendine ayırdığın kısa bir dinlenme. Öncesinde nasıl bir dokunuştan hoşlandığını ve saç derisinin dahil olup olmayacağını konuşursunuz.",
     },
-    photo: "linen",
+    photo: "massage-head",
     related: ["massage-face", "massage-relaxation", "massage-hand"],
   },
   {
@@ -219,7 +219,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       en: "Your hands are busy all day. Give them a calm massage, tuned to what feels comfortable for you.",
       tr: "Ellerin gün boyu çalışıyor. Onlara, senin için rahat olana göre ayarlanan sakin bir masaj armağan et.",
     },
-    photo: "dropper",
+    photo: "massage-hand",
     related: ["massage-foot", "massage-head", "massage-relaxation"],
   },
   {
@@ -231,7 +231,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       en: "A calm care moment for your feet. You share your wishes and any sensitivities beforehand.",
       tr: "Ayakların için sakin bir bakım anı. Tercihlerini ve varsa hassasiyetlerini önceden paylaşırsın.",
     },
-    photo: "aftercare",
+    photo: "massage-foot",
     related: ["massage-hand", "massage-relaxation", "massage-head"],
   },
 ];

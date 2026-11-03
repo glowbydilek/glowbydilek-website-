@@ -32,7 +32,18 @@ export type PhotoId =
   | "vase"
   | "facial"
   | "massage"
-  | "bodycare";
+  | "bodycare"
+  | "massage-body"
+  | "massage-head"
+  | "massage-face"
+  | "massage-hand"
+  | "massage-foot"
+  | "facial-steam"
+  | "wax-legs"
+  | "wax-underarm"
+  | "wax-lip"
+  | "wax-arms"
+  | "wax-back";
 
 export type Photo = {
   id: PhotoId;
@@ -257,7 +268,149 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Body treatments: towels, brush and bowls (no bodies).",
     credit: "Adobe Stock #242641713 — Adobe Stock (free collection), Standard License",
+  },  "massage-body": {
+    id: "massage-body",
+    file: "massage-body",
+    aspect: 3332 / 1111,
+    focus: { mobile: "30% 50%", desktop: "40% 50%" },
+    alt: {
+      nl: "Vrouw ligt ontspannen met gesloten ogen op een massagetafel terwijl haar rug wordt gemasseerd",
+      en: "Woman lying relaxed with closed eyes on a massage table while her back is massaged",
+      tr: "Sırtına masaj yapılırken masaj masasında gözleri kapalı, rahat uzanan bir kadın",
+    },
+    brief: "Full-body relaxation massage: back massage, calm mood. Model, not Dilek or a client.",
+    credit: "Adobe Stock #453749067 — Adobe Stock (free collection), Standard License",
   },
+  "massage-head": {
+    id: "massage-head",
+    file: "massage-head",
+    aspect: 2356 / 1571,
+    focus: { mobile: "45% 40%", desktop: "50% 40%" },
+    alt: {
+      nl: "Handen masseren zacht het hoofd van een vrouw die met gesloten ogen op een handdoek ligt",
+      en: "Hands gently massaging the head of a woman lying with closed eyes on a towel",
+      tr: "Gözleri kapalı, havlu üzerinde uzanan bir kadının başına nazikçe masaj yapan eller",
+    },
+    brief: "Head massage: scalp massage, bright and calm. Model, not Dilek or a client.",
+    credit: "Adobe Stock #461978663 — Adobe Stock (free collection), Standard License",
+  },
+  "massage-face": {
+    id: "massage-face",
+    file: "massage-face",
+    aspect: 2356 / 1571,
+    focus: { mobile: "45% 45%", desktop: "45% 45%" },
+    alt: {
+      nl: "Handen van een masseuse masseren het voorhoofd van een vrouw met gesloten ogen",
+      en: "A masseuse's hands massaging the forehead of a woman with closed eyes",
+      tr: "Bir masözün elleri, gözleri kapalı bir kadının alnına masaj yapıyor",
+    },
+    brief: "Face massage: gentle hands on the face. Model, not Dilek or a client.",
+    credit: "Adobe Stock #626852054 — Adobe Stock (free collection), Standard License",
+  },
+  "massage-hand": {
+    id: "massage-hand",
+    file: "massage-hand",
+    aspect: 2356 / 1571,
+    focus: { mobile: "55% 45%", desktop: "55% 45%" },
+    alt: {
+      nl: "Close-up van handen die de vingers en hand van een vrouw masseren",
+      en: "Close-up of hands massaging a woman's fingers and hand",
+      tr: "Bir kadının parmaklarına ve eline masaj yapan ellerin yakın çekimi",
+    },
+    brief: "Hand massage: close-up of hands (no face).",
+    credit: "Adobe Stock #382951621 — Adobe Stock (free collection), Standard License",
+  },
+  "massage-foot": {
+    id: "massage-foot",
+    file: "massage-foot",
+    aspect: 2356 / 1571,
+    focus: { mobile: "55% 60%", desktop: "55% 60%" },
+    alt: {
+      nl: "Handen masseren een voet die op een opgerolde handdoek rust, in een lichte ruimte met kaarsen",
+      en: "Hands massaging a foot resting on a rolled towel, in a bright room with candles",
+      tr: "Mumlarla aydınlık bir odada, rulo havlu üzerinde duran bir ayağa masaj yapan eller",
+    },
+    brief: "Foot massage: feet and hands only (no face).",
+    credit: "Adobe Stock #214559198 — Adobe Stock (free collection), Standard License",
+  },
+  "facial-steam": {
+    id: "facial-steam",
+    file: "facial-steam",
+    aspect: 2500 / 1480,
+    focus: { mobile: "62% 55%", desktop: "60% 55%" },
+    alt: {
+      nl: "Vrouw met haarband en oogpads ligt op een behandelstoel onder een gezichtsstomer",
+      en: "Woman with a headband and eye pads lying on a treatment bed under a facial steamer",
+      tr: "Saç bandı ve göz pedleriyle bir bakım koltuğunda, yüz buhar makinesinin altında uzanan kadın",
+    },
+    brief: "Facial care with steam: shows the type of equipment only (not the studio's own device). Model, not Dilek or a client. No ozone or device claims.",
+    credit: "Adobe Stock #1218786696 — Adobe Stock (free collection), Standard License",
+  },  "wax-legs": {
+    id: "wax-legs",
+    file: "wax-legs",
+    aspect: 2246 / 1647,
+    focus: { mobile: "40% 55%", desktop: "40% 55%" },
+    alt: {
+      nl: "Schoonheidsspecialiste brengt roze wax aan op het onderbeen van een vrouw op een behandeltafel",
+      en: "Beautician applying pink wax to the lower leg of a woman on a treatment bed",
+      tr: "Bir güzellik uzmanı, bakım masasındaki bir kadının alt bacağına pembe ağda uyguluyor",
+    },
+    brief: "Leg waxing: wax on the lower leg in a bright room. Models, not Dilek or a client.",
+    credit: "Adobe Stock #490022317 — Adobe Stock (free collection), Standard License",
+  },
+  "wax-underarm": {
+    id: "wax-underarm",
+    file: "wax-underarm",
+    aspect: 2355 / 1571,
+    focus: { mobile: "55% 45%", desktop: "55% 45%" },
+    alt: {
+      nl: "Vrouw ligt ontspannen met een opgeheven arm terwijl er warme wax op de oksel wordt aangebracht",
+      en: "Woman lying relaxed with a raised arm while warm wax is applied to the underarm",
+      tr: "Kolu yukarıda rahatça uzanan bir kadının koltuk altına ılık ağda sürülüyor",
+    },
+    brief: "Underarm waxing: bright, calm. Models, not Dilek or a client.",
+    credit: "Adobe Stock #486751786 — Adobe Stock (free collection), Standard License",
+  },
+  "wax-lip": {
+    id: "wax-lip",
+    file: "wax-lip",
+    aspect: 2355 / 1571,
+    focus: { mobile: "50% 45%", desktop: "50% 45%" },
+    alt: {
+      nl: "Wax wordt met een spatel op de bovenlip van een vrouw met gesloten ogen aangebracht",
+      en: "Wax being applied with a spatula to the upper lip of a woman with closed eyes",
+      tr: "Gözleri kapalı bir kadının üst dudağına spatula ile ağda sürülüyor",
+    },
+    brief: "Upper lip and chin waxing. Model, not Dilek or a client.",
+    credit: "Adobe Stock #624353393 — Adobe Stock (free collection), Standard License",
+  },
+  "wax-arms": {
+    id: "wax-arms",
+    file: "wax-arms",
+    aspect: 2355 / 1571,
+    focus: { mobile: "55% 55%", desktop: "55% 55%" },
+    alt: {
+      nl: "Schoonheidsspecialiste drukt een waxstrip op de arm van een cliënte, met rozen op de achtergrond",
+      en: "Beautician pressing a wax strip onto a client's arm, with roses in the background",
+      tr: "Arka planda güllerle, bir güzellik uzmanı müşterisinin koluna ağda bandı bastırıyor",
+    },
+    brief: "Arm waxing: wax strip on the forearm. Models, not Dilek or a client.",
+    credit: "Adobe Stock #231285152 — Adobe Stock (free collection), Standard License",
+  },
+  "wax-back": {
+    id: "wax-back",
+    file: "wax-back",
+    aspect: 2356 / 1571,
+    focus: { mobile: "40% 40%", desktop: "40% 40%" },
+    alt: {
+      nl: "Waxstrip wordt van de schouder van een vrouw met een handdoek om haar haar verwijderd",
+      en: "Wax strip being removed from the shoulder of a woman with a towel in her hair",
+      tr: "Saçında havlu olan bir kadının omzundan ağda bandı çekiliyor",
+    },
+    brief: "Back waxing: shoulder and upper back. Model, not Dilek or a client.",
+    credit: "Adobe Stock #115961544 — Adobe Stock (free collection), Standard License",
+  },
+
 };
 
 export function photoSrcSet(photo: Photo): string | undefined {
@@ -291,7 +444,8 @@ export function resolvePhoto(id: PhotoId): { src: string; srcSet: string; aspect
     aspect: p.aspect,
     alt: p.alt,
     focus: { mobile: p.focus?.mobile ?? "50% 40%", desktop: p.focus?.desktop ?? p.focus?.mobile ?? "50% 40%" },
-  };
+  
+};
 }
 
 export function hasPhoto(id: PhotoId): boolean {

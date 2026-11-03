@@ -74,7 +74,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "upper-lip",
-        photo: "dropper",
+        photo: "wax-lip",
         name: { nl: "Bovenlip", en: "Upper lip", tr: "Üst dudak" },
         description: {
           nl: "Snel en nauwkeurig verwijderen van haartjes op de bovenlip, voor een gladde, verzorgde huid.",
@@ -83,7 +83,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "chin",
-        photo: "botanical",
+        photo: "wax-lip",
         name: { nl: "Kin", en: "Chin", tr: "Çene" },
         description: {
           nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",
@@ -121,7 +121,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "underarms",
-        photo: "aftercare",
+        photo: "wax-underarm",
         name: { nl: "Oksels", en: "Underarms", tr: "Koltuk altı" },
         description: {
           nl: "Een frisse, gladde huid onder de armen, zonder de stoppels die scheren achterlaat.",
@@ -130,7 +130,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-arms",
-        photo: "materials",
+        photo: "wax-arms",
         name: { nl: "Onderarmen", en: "Half arms", tr: "Kol (dirsek altı)" },
         description: {
           nl: "Van pols tot elleboog, voor zachte en verzorgde armen.",
@@ -139,7 +139,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-arms",
-        photo: "botanical",
+        photo: "wax-arms",
         name: { nl: "Hele armen", en: "Full arms", tr: "Tüm kol" },
         description: {
           nl: "De volledige armen, van pols tot schouder.",
@@ -148,7 +148,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-legs",
-        photo: "zone-body",
+        photo: "wax-legs",
         name: { nl: "Onderbenen", en: "Half legs", tr: "Diz altı" },
         description: {
           nl: "Van enkel tot knie, voor zijdezachte benen.",
@@ -166,7 +166,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "back",
-        photo: "vase",
+        photo: "wax-back",
         name: { nl: "Rug", en: "Back", tr: "Sırt" },
         description: {
           nl: "Een gladde rug met een grondige en comfortabele behandeling.",
