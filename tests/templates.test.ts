@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { appointmentCustomerMail, contactCustomerMail } from "../src/lib/mail/templates.ts";
 import { DEFAULT_TEMPLATES, paragraphsToHtml, renderTemplate, TEMPLATE_KEYS, validateTemplate } from "../src/lib/notifications/templates.ts";
 
-test("every default template is valid in both languages", () => {
-  for (const k of TEMPLATE_KEYS) for (const l of ["nl", "en"] as const) assert.deepEqual(validateTemplate(k, DEFAULT_TEMPLATES[k][l]), [], `${k}/${l}`);
+test("every default template is valid in all three languages", () => {
+  for (const k of TEMPLATE_KEYS) for (const l of ["nl", "en", "tr"] as const) assert.deepEqual(validateTemplate(k, DEFAULT_TEMPLATES[k][l]), [], `${k}/${l}`);
 });
 
 test("edits that remove required placeholders, add HTML or unknown tags are rejected", () => {
@@ -30,4 +31,25 @@ test("rendering escapes values and drops empty optional paragraphs", () => {
   const html = paragraphsToHtml(r.paragraphs);
   assert.ok(html.includes("&lt;b&gt;Sara&lt;/b&gt;"));
   assert.ok(!html.includes("<b>Sara"));
+});
+
+test("Turkish customers get Turkish emails (request received, confirmed, rescheduled, cancelled, reminder, contact)", () => {
+  for (const k of ["request_received", "confirmed", "rescheduled", "cancelled", "reminder"] as const) {
+    const tr = DEFAULT_TEMPLATES[k].tr;
+    assert.notEqual(tr.subject, DEFAULT_TEMPLATES[k].nl.subject, k);
+    assert.notEqual(tr.subject, DEFAULT_TEMPLATES[k].en.subject, k);
+    const r = renderTemplate(tr, { firstName: "Ayşe", treatments: "Baş masajı", date: "9 Kasım 2026 Pazartesi", time: "10:00", endTime: "10:30", location: "", message: "", request: "Talep edilen: Baş masajı" });
+    assert.ok(!r.text.includes("{{"), k);
+  }
+  const m = appointmentCustomerMail(
+    { locale: "tr", name: "Ayşe", email: "a@example.com", treatments: ["massage-head"], preferredDate: "2026-11-09", timeRange: "morning" } as never,
+    ["Baş masajı"],
+  );
+  assert.match(m.subject, /Randevu talebin alındı/);
+  assert.match(m.text, /Sabah/);
+  assert.match(m.text, /Kasım/);
+  assert.ok(!/Behandeling|Treatment/.test(m.text));
+  const c = contactCustomerMail({ locale: "tr", name: "Ayşe", email: "a@example.com", topic: "question", message: "Merhaba" } as never);
+  assert.match(c.subject, /Mesajını aldık/);
+  assert.match(c.text, /Genel soru/);
 });

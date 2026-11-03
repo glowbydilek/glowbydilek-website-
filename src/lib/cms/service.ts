@@ -10,6 +10,9 @@ import { DOC_MAP, emptyLeaves, isDocKey, mergeContent, sanitizeContent } from ".
 
 export type Loc = "nl" | "en" | "tr" | "all";
 
+/** Editor language from a form value; anything unknown is Dutch. */
+export const asLoc = (v: string): Loc => (v === "en" || v === "tr" || v === "all" ? v : "nl");
+
 export class ContentError extends Error {
   constructor(message: string) {
     super(message);

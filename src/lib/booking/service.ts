@@ -30,6 +30,7 @@ import { getSetting, defaultBookingSettings, defaultPrivateSettings, type Bookin
 import { cancelPending, enqueue } from "../notifications/outbox";
 import { DEFAULT_TEMPLATES, paragraphsToHtml, renderTemplate, type TemplateKey, type TLocale } from "../notifications/templates";
 import { notificationTemplates } from "../db/schema";
+import { BUILTIN_ITEMS } from "../catalogue/builtin";
 import { addDays, dayBoundsUtc, formatLongDate, formatTime, localToUtc, toLocalParts, type LocalDate } from "../time";
 import { normalizeEmail, normalizeName, normalizePhone } from "../crm/normalize";
 import { availableSlots, dayPlan, peakLoad, type Busy, type BookingRules, type Override, type WeeklyRule } from "./engine";
@@ -229,11 +230,12 @@ type ApptView = { appt: Appointment; customer: Customer; items: (typeof appointm
 async function emailVars(tx: Tx, v: ApptView, message?: string, withLocation = false) {
   const locale = asLocale(v.appt.locale);
   const priv = await getSetting(tx as unknown as DB, "private", defaultPrivateSettings);
-  const names = v.items.map((i) => (locale === "en" ? i.nameEn : i.nameNl)).join(", ");
+  const names = v.items.map((i) => (locale === "en" ? i.nameEn : locale === "tr" ? i.nameTr || BUILTIN_ITEMS.find((b) => b.id === i.treatmentId)?.name.tr || i.nameEn : i.nameNl)).join(", ");
   const start = v.appt.startAt;
+  const requested = { nl: "Aangevraagd", en: "Requested", tr: "Talep edilen" }[locale];
   const request = start
-    ? `${locale === "en" ? "Requested" : "Aangevraagd"}: ${names} — ${formatLongDate(start, locale)} ${formatTime(start, locale)}`
-    : `${locale === "en" ? "Requested" : "Aangevraagd"}: ${names}${v.appt.requestedDate ? ` — ${formatLongDate(localToUtc(v.appt.requestedDate, 720), locale)}` : ""}`;
+    ? `${requested}: ${names} — ${formatLongDate(start, locale)} ${formatTime(start, locale)}`
+    : `${requested}: ${names}${v.appt.requestedDate ? ` — ${formatLongDate(localToUtc(v.appt.requestedDate, 720), locale)}` : ""}`;
   return {
     firstName: v.customer.firstName,
     treatments: names,
@@ -418,7 +420,7 @@ async function writeItems(tx: Tx, appointmentId: number, rows: TreatmentRow[]) {
   await tx.delete(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, appointmentId));
   if (rows.length)
     await tx.insert(appointmentTreatments).values(
-      rows.map((r) => ({ appointmentId, treatmentId: r.id, nameNl: r.nameNl, nameEn: r.nameEn, durationMinutes: r.durationMinutes, priceCents: r.priceCents })),
+      rows.map((r) => ({ appointmentId, treatmentId: r.id, nameNl: r.nameNl, nameEn: r.nameEn, nameTr: r.nameTr || BUILTIN_ITEMS.find((b) => b.id === r.id)?.name.tr || null, durationMinutes: r.durationMinutes, priceCents: r.priceCents })),
     );
 }
 

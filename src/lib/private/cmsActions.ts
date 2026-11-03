@@ -10,7 +10,7 @@ import { audit } from "../db/audit";
 import { contentEntries, customPages, notificationTemplates, redirects, treatments } from "../db/schema";
 import { BLANK_CUSTOM, validSlug } from "../cms/custom";
 import { invalidateContent } from "../cms/store";
-import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, type Loc } from "../cms/service";
+import { ContentError, discardDraft, editorValue, publish, resetToDefault, restoreVersion, saveDraft, asLoc, type Loc } from "../cms/service";
 import { PAGE_SECTIONS } from "../cms/registry";
 import { validateTheme } from "../cms/theme";
 import { validateAnalytics, validateBusiness, validateSocial, validateMenu } from "../cms/menu";
@@ -19,7 +19,6 @@ import { allPages, matchPage, pagePath } from "@/i18n/config";
 import type { FormState } from "./authActions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "");
-const loc = (v: string): Loc => (v === "en" ? "en" : v === "all" ? "all" : "nl");
 
 function revalidateSite() {
   invalidateContent();
@@ -42,7 +41,7 @@ export async function contentAction(_: FormState, f: FormData): Promise<FormStat
   const s = await assertOwner();
   const db = getDb();
   const docKey = str(f, "docKey");
-  const locale = loc(str(f, "locale"));
+  const locale = asLoc(str(f, "locale"));
   const op = str(f, "op");
   try {
     if (op === "save" || op === "publish" || op === "preview") {

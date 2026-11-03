@@ -80,3 +80,11 @@ test("uploads: only real JPEG/PNG/WebP bytes are accepted; SVG/HTML disguised as
   assert.deepEqual(r.variants.map((v) => v.mime), ["image/webp", "image/webp", "image/webp"]);
   assert.ok(r.variants.every((v) => !v.data.includes(Buffer.from("<script>"))));
 });
+
+test("the editor language keeps Turkish (a TR edit never overwrites Dutch)", async () => {
+  const { asLoc } = await import("../src/lib/cms/service.ts");
+  assert.equal(asLoc("tr"), "tr");
+  assert.equal(asLoc("en"), "en");
+  assert.equal(asLoc("all"), "all");
+  assert.equal(asLoc("xx"), "nl");
+});
