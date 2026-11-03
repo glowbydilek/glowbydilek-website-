@@ -69,6 +69,23 @@ Migration `0003_intake_documents` is **additive only**: two new tables (`intake_
 
 **URL change:** the owner area moved from `/ajanda` to `/agenda`. Old links (including reset emails sent before the release) redirect permanently. Bookmarks on phones can be updated to `https://glowbydilek.nl/login`.
 
+## 2e. Migration 0004 (Turkish) and owner-login repair (v13)
+
+**Migration `0004_turkish_locale`** is additive only: nullable `*_tr` columns (name, slug, description) on treatments, sections, groups, appointment items, promotions, campaigns, custom pages and media. No column is dropped or rewritten; existing rows keep working (an empty Turkish name means "translation needed" and the item is hidden on `/tr`). Verified on 3 November 2026: fresh install 0000→0004 (50 tables) and upgrade 0003→0004 with existing customer/treatment rows preserved.
+
+**Why the owner cannot log in (diagnosed 3 November 2026, read-only):** production has no database and no secrets. The only environment variable is `NEXT_PUBLIC_SITE_URL` and the Hostinger account lists no MySQL database, so there is no owner account, no session key and no SMTP to send a reset link. The code now says so honestly instead of a generic error.
+
+Repair, in this order (owner action in hPanel; values never in chat, ZIPs or GitHub):
+
+1. hPanel → Databases → create a MySQL database + user (note name, user, password).
+2. hPanel → Websites → glowbydilek.nl → Node.js → Environment variables: add `DATABASE_URL` (host `127.0.0.1`), `DB_MIGRATE_ON_BUILD=true`, `AUTH_SECRET` (≥ 32 random characters), `CRON_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` (the mailbox password), `MAIL_TO`, the real Turnstile keys, `INTAKE_DOCUMENT_KEY` and `CONSULTATION_KEY` (32-byte base64), and temporarily `OWNER_SETUP_TOKEN` (≥ 24 random characters).
+3. Redeploy (only after the owner approved this release). Migrations run during the build.
+4. Open `https://glowbydilek.nl/login/status`: every line must be **In orde** (database, migrations 5/5, session key, clock, owner account, SMTP). The page never shows values.
+5. Set the first password: either **Wachtwoord vergeten?** (needs SMTP), or `/login/eerste-wachtwoord` with the e-mail address and `OWNER_SETUP_TOKEN` (works once, only while no password exists, 5 tries per hour, audited).
+6. Log in, turn on two-step verification (Agenda → Beveiliging), then **remove `OWNER_SETUP_TOKEN`** from the environment and redeploy.
+
+Proof that this works on a test stack: `scripts/e2e-setup.cjs` (first password → real login → `__Host-glow_session` cookie, httpOnly/Secure/SameSite=Lax → agenda) and `scripts/e2e-private.cjs` (forgot password → e-mail link → new password → login → logout everywhere). A `200` on `/login` alone proves nothing.
+
 ## 3. First deploy, step by step
 
 1. Approve and merge the platform pull request (owner).
