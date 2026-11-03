@@ -1,3 +1,4 @@
+import { asLocale } from "../../i18n/config";
 /**
  * Server-side validation for the contact and appointment-request forms.
  *
@@ -6,7 +7,7 @@
  * to localised messages.
  */
 
-export type Locale = "nl" | "en";
+export type Locale = "nl" | "en" | "tr";
 export type ErrorCode = "required" | "invalid" | "tooShort" | "tooLong" | "pastDate" | "tooFar" | "closedDay" | "consent";
 export type FieldErrors = Record<string, ErrorCode>;
 export type Result<T> = { ok: true; data: T } | { ok: false; errors: FieldErrors };
@@ -61,7 +62,7 @@ function text(v: unknown, max: number, singleLine = true): string {
 }
 
 function locale(v: unknown): Locale {
-  return v === "en" ? "en" : "nl";
+  return asLocale(v);
 }
 
 function checkName(name: string, errors: FieldErrors) {

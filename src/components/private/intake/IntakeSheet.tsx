@@ -1,11 +1,11 @@
-import { parseIntake, type IntakeBlock } from "@/lib/intake/template";
+import { ANSWERS, parseIntake, type IntakeBlock } from "@/lib/intake/template";
 
 /**
  * The intake & consent form as an A4 sheet (preview and print). Uses the
  * same parsed blocks as the PDF, so wording is identical everywhere.
  */
-export function IntakeSheet({ source, version, locale }: { source: string; version: string; locale: "nl" | "en" }) {
-  const p = parseIntake(source, version, locale === "nl" ? ["Ja", "Nee", "Weet niet"] : ["Yes", "No", "Not sure"]);
+export function IntakeSheet({ source, version, locale }: { source: string; version: string; locale: "nl" | "en" | "tr" }) {
+  const p = parseIntake(source, version, ANSWERS[locale]);
   const Box = () => <span aria-hidden="true" className="inline-block h-3.5 w-3.5 shrink-0 border border-[#2b202b]" />;
   const Line = () => <span aria-hidden="true" className="mt-5 block border-b border-[#bfa9b1]" />;
   const block = (b: IntakeBlock, i: number) => {
@@ -99,7 +99,7 @@ export function IntakeSheet({ source, version, locale }: { source: string; versi
     }
   };
   return (
-    <article lang={locale === "nl" ? "nl" : "en"} className="intake-sheet mx-auto bg-white text-[#2b202b]">
+    <article lang={locale} className="intake-sheet mx-auto bg-white text-[#2b202b]">
       <div className="flex items-baseline justify-between text-[0.68rem] text-[#5c4a58]">
         <span className="font-serif text-base text-[#2b202b]">Glow <em>by Dilek</em></span>
         <span>{version}</span>

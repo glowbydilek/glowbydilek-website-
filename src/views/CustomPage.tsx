@@ -1,3 +1,4 @@
+import { pick } from "@/i18n/config";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { and, eq } from "drizzle-orm";
@@ -20,7 +21,7 @@ async function load(locale: Locale, slug: string) {
     const [p] = await db
       .select()
       .from(customPages)
-      .where(and(locale === "nl" ? eq(customPages.slugNl, slug) : eq(customPages.slugEn, slug)))
+      .where(and(locale === "nl" ? eq(customPages.slugNl, slug) : locale === "tr" ? eq(customPages.slugTr, slug) : eq(customPages.slugEn, slug)))
       .limit(1);
     return p ?? null;
   }, null);
@@ -36,7 +37,7 @@ export async function customPageMetadata(locale: Locale, slug: string): Promise<
   if (!r) return {};
   return buildMetadata({
     locale,
-    paths: { nl: `/info/${r.page.slugNl}`, en: `/en/info/${r.page.slugEn}` },
+    paths: { nl: `/info/${r.page.slugNl}`, en: `/en/info/${r.page.slugEn}`, ...(r.page.slugTr ? { tr: `/tr/bilgi/${r.page.slugTr}` } : {}) },
     title: r.c.seoTitle || r.c.title,
     description: r.c.seoDescription || r.c.intro.slice(0, 160),
     noindex: r.page.noindex,
@@ -53,7 +54,7 @@ export async function CustomPageView({ locale, slug }: { locale: Locale; slug: s
       <section className="pt-header border-b border-line/70 bg-paper pb-[var(--space-section-tight)]">
         <Container>
           <div className="max-w-3xl">
-            <div className="mb-6"><Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: locale === "nl" ? "/" : "/en" }, { name: r.c.title }]} /></div>
+            <div className="mb-6"><Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: pick(locale, { nl: "/", en: "/en", tr: "/tr" }) }, { name: r.c.title }]} /></div>
             <h1 className="display text-[2.5rem] sm:text-6xl">{r.c.title}</h1>
             {r.c.intro && <p className="lead mt-5">{r.c.intro}</p>}
           </div>

@@ -1,5 +1,6 @@
 "use server";
 
+import { asLocale } from "../../i18n/config";
 import { and, eq, inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -78,7 +79,7 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
         lastName: str(f, "lastName"),
         email: email || null,
         phone: str(f, "phone") || null,
-        locale: str(f, "locale") === "en" ? "en" : "nl",
+        locale: asLocale(str(f, "locale")),
         treatmentIds,
         day: when.day,
         minute: when.minute,
@@ -198,7 +199,7 @@ export async function customerAction(_: FormState, f: FormData): Promise<FormSta
     await updateCustomer(
       getDb(),
       id,
-      { firstName: str(f, "firstName"), lastName: str(f, "lastName"), email: email || null, phone: str(f, "phone") || null, locale: str(f, "locale") === "en" ? "en" : "nl", notes: str(f, "notes") },
+      { firstName: str(f, "firstName"), lastName: str(f, "lastName"), email: email || null, phone: str(f, "phone") || null, locale: asLocale(str(f, "locale")), notes: str(f, "notes") },
       { userId: s.user.id },
     );
   } catch (err) {
@@ -244,6 +245,7 @@ export async function saveWeeklyHoursAction(_: FormState, f: FormData): Promise<
   // Whether online booking is operational depends on working hours.
   revalidatePath("/afspraak-maken");
   revalidatePath("/en/book-appointment");
+  revalidatePath("/tr/randevu");
   return { ok: true, message: "Werktijden opgeslagen. De beschikbaarheid is direct bijgewerkt." };
 }
 
@@ -346,6 +348,7 @@ export async function saveBookingSettingsAction(_: FormState, f: FormData): Prom
   refresh();
   revalidatePath("/afspraak-maken");
   revalidatePath("/en/book-appointment");
+  revalidatePath("/tr/randevu");
   return { ok: true, message: "Instellingen opgeslagen." };
 }
 

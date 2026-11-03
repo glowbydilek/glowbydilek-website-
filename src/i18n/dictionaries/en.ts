@@ -132,11 +132,11 @@ export const en: Dictionary = {
   home: {
     hero: {
       eyebrow: "Glow by Dilek · Beauty & relaxation",
-      title: "A little moment,",
-      titleEm: "just for you.",
+      title: "Beauty, personal care",
+      titleEm: "and time just for you.",
       subtitle:
-        "Personal beauty treatments and relaxing massages for women, thoughtfully tailored to your comfort, your preferences and time for yourself.",
-      facts: ["Personal attention", "By appointment only", "Confirmed by Dilek herself"],
+        "Personal facial care, relaxing massages and considered hair removal, in a calm setting shaped around your preferences. For women only, by appointment.",
+      facts: ["For women only", "By appointment only", "Qualified beauty therapist"],
     },
     statement: {
       eyebrow: "Time for yourself",
@@ -147,7 +147,7 @@ export const en: Dictionary = {
     treatments: {
       eyebrow: "Treatments",
       title: "Discover your treatment",
-      intro: "From a calming massage to caring waxing. Choose what suits you; every page tells you honestly what to expect.",
+      intro: "From relaxing massages and facial care with steam to careful waxing. Choose what suits you; every page tells you honestly what to expect.",
       count: "treatments",
       countOne: "treatment",
       more: "View",
@@ -180,7 +180,7 @@ export const en: Dictionary = {
     dilek: {
       eyebrow: "Meet Dilek",
       title: "Hi, I'm Dilek",
-      body: "At Glow by Dilek you have one familiar point of contact: me. I take time for you, explain what I do before I do it and tailor the treatment to your wishes. You can ask me anything.",
+      body: "I hold a Level 3 beauty therapy diploma. At Glow by Dilek you have one familiar point of contact: me. I take time for you, explain what I do before I do it and tailor the treatment to your wishes. You can ask me anything.",
       quote: "Your comfort and trust come first.",
     },
     faq: {
@@ -232,6 +232,10 @@ export const en: Dictionary = {
       {
         q: "Where do treatments take place?",
         a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+      },
+      {
+        q: "Is Glow by Dilek for women only?",
+        a: "Yes. Glow by Dilek welcomes women only, by appointment, so everyone can feel at ease and safe.",
       },
       {
         q: "What can I expect from a relaxation massage?",
@@ -362,9 +366,9 @@ export const en: Dictionary = {
       eyebrow: "The story",
       title: "Why Glow by Dilek exists",
       paragraphs: [
-        "My name is Dilek. I started Glow by Dilek with one wish: that a treatment should feel like a moment for yourself, not something you quickly ‘have to’ get done.",
+        "My name is Dilek and I hold a Level 3 beauty therapy diploma. I started Glow by Dilek with one wish: that a treatment should feel like a moment for yourself, not something you quickly ‘have to’ get done.",
         "That starts with the basics. A calm, clean space. Time for a conversation. An explanation of what I do and why. And a routine that's the same every time, so you always know what to expect.",
-        "Whether it's your very first treatment or you've been coming for years, you're welcome as you are — questions and all.",
+        "Glow by Dilek welcomes women only, by appointment. Whether it's your very first treatment or you've been coming for years, you're welcome as you are — questions and all.",
       ],
     },
     quote: "I'd rather see fewer clients and give each one more attention.",

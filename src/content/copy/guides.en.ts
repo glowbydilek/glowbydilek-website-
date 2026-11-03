@@ -4,7 +4,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
   process: {
     seoTitle: "How an appointment works",
     seoDescription:
-      "From request to confirmation: how to request a waxing appointment with Glow by Dilek, what happens next and how the treatment itself goes.",
+      "From request to confirmation: how to request an appointment with Glow by Dilek, what happens next and how the treatment itself goes.",
     hero: {
       eyebrow: "Appointment process",
       title: "Personally planned,",
@@ -202,7 +202,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
 };
 
 export const faqPageEn: FaqPageCopy = {
-  seoTitle: "Waxing FAQ",
+  seoTitle: "Frequently asked questions",
   seoDescription:
     "Answers to the most common questions about waxing with Glow by Dilek: preparation, pain, results, intimate treatments, appointments and privacy.",
   hero: {
@@ -213,6 +213,14 @@ export const faqPageEn: FaqPageCopy = {
       "The questions asked most often, answered briefly and clearly. Can’t find yours? Feel free to send a message.",
   },
   groups: [
+    {
+      title: "Massages and facial treatments",
+      items: [
+        { q: "Which massages do you offer?", a: "A full-body relaxation massage, facial massage, head massage, hand massage and foot massage. Each massage has its own page with details." },
+        { q: "Is a massage a medical treatment?", a: "No. The massages at Glow by Dilek are meant to help you relax. If you have complaints, an injury or a condition, check with your GP first." },
+        { q: "What happens during facial care with steam?", a: "Dilek first discusses your skin and whether steam is suitable for you. Steam is used at a comfortable distance and is never required; the other steps are agreed beforehand." },
+      ],
+    },
     {
       title: "About waxing",
       items: [
@@ -289,7 +297,7 @@ export const faqPageEn: FaqPageCopy = {
         },
         {
           q: "Do you also offer laser hair removal or other treatments?",
-          a: "At the moment Glow by Dilek focuses entirely on waxing. New treatments are only announced once they are genuinely available.",
+          a: "Laser hair removal is not offered. New treatments are only announced once they are genuinely available.",
         },
       ],
     },
@@ -298,7 +306,7 @@ export const faqPageEn: FaqPageCopy = {
       items: [
         {
           q: "What happens to the details I enter?",
-          a: "They are only used to answer your question and arrange your appointment, and are not stored in a database on the website. Read more in the privacy policy.",
+          a: "They are only used to answer your question and arrange your appointment, and are stored in the website's secured database, which only Dilek can access. Read more in the privacy policy.",
         },
         {
           q: "Should I include medical information in the form?",

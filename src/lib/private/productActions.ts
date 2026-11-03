@@ -20,6 +20,7 @@ function refresh() {
   revalidatePath("/admin/producten");
   revalidatePath("/producten");
   revalidatePath("/en/products");
+  revalidatePath("/tr/urunler");
   invalidateContent();
 }
 

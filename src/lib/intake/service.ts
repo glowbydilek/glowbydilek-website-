@@ -7,7 +7,7 @@ import { customers, intakeDocuments, intakeTemplates } from "../db/schema";
 import { consultationEnabled } from "../consultation/service";
 import { stripMetadata } from "../cms/strip";
 import { checkIntakeFile, INTAKE_MAX_PIXELS } from "./files";
-import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, nextVersion, parseIntake } from "./template";
+import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, LEGACY_INTAKE_V1, LEGACY_VERSION, nextVersion, parseIntake } from "./template";
 
 /**
  * Intake & consent: master templates (versioned) and signed copies per
@@ -24,21 +24,43 @@ import { BUILTIN_INTAKE, checkIntakeSource, INITIAL_VERSION, nextVersion, parseI
  */
 
 export class IntakeError extends Error {}
-type Locale = "nl" | "en";
+type Locale = "nl" | "en" | "tr";
 type Who = { userId: number; mfa: boolean };
 
 // ─────────────────────────────────────────────────────────────── templates
 
-/** Creates the supplied v1 forms on first use (idempotent). */
+/**
+ * Creates the built-in master forms on first use (NL, EN, TR; idempotent).
+ * A database that still has the untouched v1 form gets v2 as the active
+ * version; v1 is kept (retired) so earlier signed copies stay traceable.
+ * Owner revisions are never replaced.
+ */
 export async function ensureIntakeTemplates(db: DB) {
-  const rows = await db.select({ locale: intakeTemplates.locale }).from(intakeTemplates);
-  for (const locale of ["nl", "en"] as const) {
-    if (rows.some((r) => r.locale === locale)) continue;
+  const rows = await db.select({ id: intakeTemplates.id, locale: intakeTemplates.locale, version: intakeTemplates.version, status: intakeTemplates.status, source: intakeTemplates.source }).from(intakeTemplates);
+  for (const locale of ["nl", "en", "tr"] as const) {
+    const mine = rows.filter((r) => r.locale === locale);
+    if (mine.some((r) => r.version === INITIAL_VERSION)) continue;
+    const active = mine.find((r) => r.status === "active");
+    const legacy = locale === "tr" ? undefined : LEGACY_INTAKE_V1[locale];
+    const untouchedV1 = active && active.version === LEGACY_VERSION && active.source === legacy && !mine.some((r) => r.status === "draft");
+    if (mine.length && !untouchedV1) continue;
     const p = parseIntake(BUILTIN_INTAKE[locale], INITIAL_VERSION);
-    await db
-      .insert(intakeTemplates)
-      .values({ locale, version: INITIAL_VERSION, status: "active", title: p.title, source: BUILTIN_INTAKE[locale], changeNote: "Eerste versie (aangeleverd concept)", activatedAt: new Date() })
-      .catch(() => {}); // a parallel request created it
+    try {
+      await db.transaction(async (tx) => {
+        if (untouchedV1) await tx.update(intakeTemplates).set({ status: "retired", retiredAt: new Date() }).where(eq(intakeTemplates.id, active!.id));
+        await tx.insert(intakeTemplates).values({
+          locale,
+          version: INITIAL_VERSION,
+          status: "active",
+          title: p.title,
+          source: BUILTIN_INTAKE[locale],
+          changeNote: untouchedV1 ? "Master-intakeformulier v2 (NL/EN/TR, v13-pakket)" : "Eerste versie (master-intakeformulier v2, concept)",
+          activatedAt: new Date(),
+        });
+      });
+    } catch {
+      /* a parallel request created it */
+    }
   }
 }
 

@@ -65,14 +65,17 @@ after(() => setSnapshotResolver(() => null));
 
 // ───────────────────────────────────────────────────────── pure
 
-test("without a database the site shows massage and the 13 waxing treatments; the other new entries are drafts", () => {
+test("without a database: the five massages, facial care with steam and the 13 waxing treatments are public; the rest are drafts", () => {
   withSnapshot({});
-  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing"]);
-  assert.equal(publicItems().length, 14);
-  const m = itemById("massage-relaxation")!;
-  assert.equal(isPublicItem(m), true);
-  assert.equal(m.pricing.mode, "on_request", "massage has no invented price");
-  assert.equal(m.durationMinutes, null, "massage has no invented duration");
+  assert.deepEqual(publicSections().map((s) => s.id), ["facial", "massage", "waxing"]);
+  assert.equal(publicItems().length, 19);
+  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-steam"]) {
+    const m = itemById(id)!;
+    assert.equal(isPublicItem(m), true, id);
+    assert.equal(m.pricing.mode, "on_request", `${id} has no invented price`);
+    assert.equal(m.durationMinutes, null, `${id} has no invented duration`);
+    assert.ok(m.name.nl && m.name.en && m.name.tr, `${id} is named in NL, EN and TR`);
+  }
   for (const id of ["facial-manual-cleansing", "facial-brush-cleansing", "facial-exfoliation", "facial-mask", "facial-complete", "body-wrap", "pkg-glow-face-trio", "pkg-smooth-essentials", "pkg-glow-complete", "pkg-bikini-smooth"]) {
     const i = itemById(id)!;
     assert.equal(i.status, "draft", id);
@@ -80,7 +83,12 @@ test("without a database the site shows massage and the 13 waxing treatments; th
     assert.equal(i.pricing.mode, "on_request", `${id} has no invented price`);
     assert.equal(i.durationMinutes, null, `${id} has no invented duration`);
   }
-  assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen"]), null);
+  // The existing massage keeps its id and NL/EN addresses (bookings and links stay valid).
+  assert.equal(itemHref("nl", itemById("massage-relaxation")!), "/massages/ontspanningsmassage");
+  assert.equal(itemHref("en", itemById("massage-relaxation")!), "/en/massages/relaxation-massage");
+  assert.equal(itemHref("tr", itemById("massage-relaxation")!), "/tr/masajlar/tum-vucut-rahatlama-masaji");
+  assert.equal(resolveCatalogue("tr", ["agda", "yuz", "kas-agdasi"])?.type, "item");
+  assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "gezichtspeeling"]), null, "draft facial treatment stays hidden");
   assert.equal(resolveCatalogue("nl", ["pakketten", "glow-face-trio"]), null);
   assert.equal(resolveCatalogue("nl", ["waxbehandelingen", "gezicht", "wenkbrauwen-waxen"])?.type, "item");
 });
@@ -109,7 +117,7 @@ test("an item is public only when it, its section and (for packages) every part 
   assert.equal(itemHref("en", itemById("facial-exfoliation")!), "/en/facial-treatments/facial-exfoliation");
   assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "gezichtspeeling"])?.type, "item");
   assert.equal(alternateCataloguePath("/gezichtsbehandelingen/gezichtspeeling", "en"), "/en/facial-treatments/facial-exfoliation");
-  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing", "facial", "packages"]);
+  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing", "facial", "packages"], "owner sort order from the database");
 });
 
 test("archived or hidden items disappear, owner-created items resolve by their own slugs", () => {

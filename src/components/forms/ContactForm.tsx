@@ -12,7 +12,7 @@ import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
 
 type Props = {
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   t: Dictionary["forms"];
   privacyHref: string;
   email: string;

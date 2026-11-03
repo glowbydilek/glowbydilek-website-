@@ -3,8 +3,9 @@ import { mergeContent } from "../lib/cms/registry";
 import type { Locale } from "./config";
 import { en } from "./dictionaries/en";
 import { nl, type Dictionary } from "./dictionaries/nl";
+import { tr } from "./dictionaries/tr";
 
-const dictionaries: Record<Locale, Dictionary> = { nl, en };
+const dictionaries: Record<Locale, Dictionary> = { nl, en, tr };
 const memo = new WeakMap<Snapshot, Partial<Record<Locale, Dictionary>>>();
 
 /** UI copy for a locale: built-in text with the owner's published (or previewed) edits merged in. */

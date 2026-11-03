@@ -1,3 +1,4 @@
+import { pick } from "@/i18n/config";
 import { Container } from "@/components/Container";
 import type { Locale } from "@/i18n/config";
 import { legalDoc } from "@/lib/legal";
@@ -11,7 +12,7 @@ export function LegalPage({ locale, k }: { locale: Locale; k: LegalKey }) {
       <Container className="max-w-3xl">
         <p className="eyebrow">Glow by Dilek</p>
         <h1 className="display mt-4 text-[2.6rem] sm:text-6xl">{d.title}</h1>
-        {d.effectiveDate && <p className="mt-4 text-sm text-muted">{locale === "nl" ? "Geldig vanaf" : "Effective from"} {d.effectiveDate}</p>}
+        {d.effectiveDate && <p className="mt-4 text-sm text-muted">{pick(locale, { nl: "Geldig vanaf", en: "Effective from", tr: "Yürürlük tarihi" })} {d.effectiveDate}</p>}
         {d.intro && <p className="lead mt-8">{d.intro}</p>}
         <div className="mt-10 space-y-9">
           {d.sections.map((s) => (

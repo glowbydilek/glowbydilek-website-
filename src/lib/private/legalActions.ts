@@ -35,6 +35,7 @@ export async function legalStatusAction(_: FormState, f: FormData): Promise<Form
   invalidateContent();
   revalidatePath("/", "layout");
   revalidatePath("/en", "layout");
+  revalidatePath("/tr", "layout");
   revalidatePath("/admin/juridisch");
   return { ok: true, message: on ? "De pagina staat online en is gelinkt in de footer." : "De pagina is offline gehaald." };
 }

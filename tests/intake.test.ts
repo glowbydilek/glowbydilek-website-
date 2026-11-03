@@ -24,19 +24,22 @@ import { closeDb, resetDb, skipDb } from "./helpers/db.ts";
 
 // ───────────────────────────────────────────────────────────────── pure
 
-test("the supplied v1 forms parse into the same structure in Dutch and English", () => {
-  for (const locale of ["nl", "en"] as const) {
+test("the master form (v2) has the same structure in Dutch, English and Turkish", () => {
+  for (const locale of ["nl", "en", "tr"] as const) {
     const p = parseIntake(BUILTIN_INTAKE[locale], INITIAL_VERSION);
     const count = (t: string) => p.blocks.filter((b) => b.type === t).length;
     const questions = p.blocks.flatMap((b) => (b.type === "questions" ? b.items : []));
-    assert.equal(questions.length, 12, `${locale}: 6 general + 6 treatment-specific questions`);
-    assert.equal(p.blocks.flatMap((b) => (b.type === "statements" ? b.items : [])).length, 3, `${locale}: three consent boxes`);
+    assert.equal(questions.length, 10, `${locale}: 4 general + 2 waxing + 2 facial/steam + 2 massage questions`);
+    assert.deepEqual(p.blocks.filter((b) => b.type === "questions" && b.title).length, 3, `${locale}: three conditional modules`);
+    assert.equal(p.blocks.flatMap((b) => (b.type === "statements" ? b.items : [])).length, 3, `${locale}: acknowledgment, storage consent, optional marketing`);
     assert.equal(count("signature"), 2);
-    assert.equal(p.blocks.flatMap((b) => (b.type === "options" ? b.items : [])).length, 6);
+    assert.equal(p.blocks.flatMap((b) => (b.type === "options" ? b.items : [])).length, 4);
     assert.ok(p.blocks.some((b) => b.type === "signature" && b.parts.some((x) => x.includes(INITIAL_VERSION))), "version printed on the form");
     assert.equal(checkIntakeSource(BUILTIN_INTAKE[locale], INITIAL_VERSION).ok, true);
   }
-  assert.deepEqual(parseIntake(BUILTIN_INTAKE.en, INITIAL_VERSION).answers, ["Yes", "No", "Not sure"]);
+  assert.deepEqual(parseIntake(BUILTIN_INTAKE.en, INITIAL_VERSION).answers, ["Yes", "No", "Prefer to discuss privately"]);
+  assert.deepEqual(parseIntake(BUILTIN_INTAKE.tr, INITIAL_VERSION).answers, ["Evet", "Hayır", "Yüz yüze konuşmayı tercih ederim"]);
+  assert.match(BUILTIN_INTAKE.tr, /ı.*İ|İ.*ı/s, "Turkish dotted/dotless i present");
 });
 
 test("revisions get a new version and must keep title, consent, signature and version", () => {
@@ -114,9 +117,10 @@ describe("intake & consent against MariaDB", { skip: skipDb }, () => {
   test("templates: v1 is created once per language; a revision is a draft until activated; old versions are kept", async () => {
     assert.equal((await activeTemplate(db, "nl"))?.version, INITIAL_VERSION);
     assert.equal((await activeTemplate(db, "en"))?.version, INITIAL_VERSION);
+    assert.equal((await activeTemplate(db, "tr"))?.version, INITIAL_VERSION);
     const id = await createRevision(db, "nl", 1);
     assert.equal(await createRevision(db, "nl", 1), id, "one draft at a time");
-    const changed = BUILTIN_INTAKE.nl.replace("Wensen en aandachtspunten", "Wensen en voorkeuren");
+    const changed = BUILTIN_INTAKE.nl.replace("Gegevens en afspraak", "Gegevens en jouw afspraak");
     await assert.rejects(activateDraft(db, id, 1), /veranderd/, "a change note is required");
     await saveDraft(db, id, changed, "Kop 4 verduidelijkt", 1);
     await activateDraft(db, id, 1);

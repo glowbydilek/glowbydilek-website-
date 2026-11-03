@@ -10,7 +10,7 @@ import { escapeHtml } from "../forms/validation";
 
 export const TEMPLATE_KEYS = ["request_received", "confirmed", "proposed", "declined", "rescheduled", "cancelled", "reminder", "price_proposal", "price_accepted", "aftercare"] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
-export type TLocale = "nl" | "en";
+export type TLocale = "nl" | "en" | "tr";
 
 export type TemplateDef = { subject: string; body: string };
 
@@ -78,6 +78,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
       subject: "We have received your request — Glow by Dilek",
       body: "Hi {{firstName}},\n\nThank you for your appointment request. It has arrived safely.\n\n{{request}}\n\nPlease note: this is not yet a confirmed appointment. Dilek will review your request and let you know personally as soon as possible whether the time works.\n\nWarm regards,\nDilek — Glow by Dilek",
     },
+    tr: {
+      subject: "Talebini aldık — Glow by Dilek",
+      body: "Merhaba {{firstName}},\n\nRandevu talebin için teşekkürler. Talebin bize sorunsuz ulaştı.\n\n{{request}}\n\nLütfen dikkat: bu henüz onaylanmış bir randevu değildir. Dilek talebini inceler ve saatin uygun olup olmadığını en kısa sürede sana kişisel olarak bildirir.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    },
   },
   confirmed: {
     nl: {
@@ -87,6 +91,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
     en: {
       subject: "Your appointment is confirmed — {{date}} at {{time}}",
       body: "Hi {{firstName}},\n\nYour appointment is confirmed:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{location}}\n\n{{message}}\n\nIf you can't make it after all, please let us know as soon as possible by replying to this email.\n\nSee you then!\nDilek — Glow by Dilek",
+    },
+    tr: {
+      subject: "Randevun onaylandı — {{date}}, saat {{time}}",
+      body: "Merhaba {{firstName}},\n\nRandevun onaylandı:\n\nBakım: {{treatments}}\nTarih: {{date}}\nSaat: {{time}} – {{endTime}}\n\n{{location}}\n\n{{message}}\n\nBeklenmedik bir şekilde gelemeyecek misin? Lütfen bu e-postayı yanıtlayarak en kısa sürede haber ver.\n\nGörüşmek üzere!\nDilek — Glow by Dilek",
     },
   },
   proposed: {
@@ -98,6 +106,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
       subject: "A suggested time for your appointment — {{date}} at {{time}}",
       body: "Hi {{firstName}},\n\nUnfortunately the time in your request isn't available. Dilek suggests this moment instead:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{message}}\n\nDoes this work for you? Please reply to this email. Your appointment is fixed once Dilek confirms it afterwards.\n\nWarm regards,\nDilek — Glow by Dilek",
     },
+    tr: {
+      subject: "Randevun için bir öneri — {{date}}, saat {{time}}",
+      body: "Merhaba {{firstName}},\n\nTalebindeki saat maalesef uygun değil. Dilek bunun yerine şu zamanı öneriyor:\n\nBakım: {{treatments}}\nTarih: {{date}}\nSaat: {{time}} – {{endTime}}\n\n{{message}}\n\nBu sana uyuyor mu? Lütfen bu e-postayı yanıtla. Randevun, Dilek ardından onayladığında kesinleşir.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    },
   },
   declined: {
     nl: {
@@ -107,6 +119,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
     en: {
       subject: "About your appointment request — Glow by Dilek",
       body: "Hi {{firstName}},\n\nThank you for your request. Unfortunately Dilek is unable to schedule this appointment.\n\n{{message}}\n\nYou're very welcome to request another time or simply reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+    tr: {
+      subject: "Randevu talebin hakkında — Glow by Dilek",
+      body: "Merhaba {{firstName}},\n\nTalebin için teşekkürler. Maalesef Dilek bu randevuyu planlayamıyor.\n\n{{message}}\n\nBaşka bir zaman talep edebilir ya da bu e-postayı yanıtlayabilirsin.\n\nSevgiyle,\nDilek — Glow by Dilek",
     },
   },
   rescheduled: {
@@ -118,6 +134,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
       subject: "Your appointment has been moved — {{date}} at {{time}}",
       body: "Hi {{firstName}},\n\nYour appointment has been moved to:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{location}}\n\n{{message}}\n\nIf the new time doesn't work for you, please reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
     },
+    tr: {
+      subject: "Randevun değiştirildi — {{date}}, saat {{time}}",
+      body: "Merhaba {{firstName}},\n\nRandevun şu zamana taşındı:\n\nBakım: {{treatments}}\nTarih: {{date}}\nSaat: {{time}} – {{endTime}}\n\n{{location}}\n\n{{message}}\n\nYeni saat sana uymuyor mu? Lütfen bu e-postayı yanıtla.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    },
   },
   cancelled: {
     nl: {
@@ -127,6 +147,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
     en: {
       subject: "Your appointment on {{date}} has been cancelled",
       body: "Hi {{firstName}},\n\nYour appointment on {{date}} at {{time}} has been cancelled.\n\n{{message}}\n\nWould you like to make a new appointment? Feel free to request another time or reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+    tr: {
+      subject: "{{date}} tarihli randevun iptal edildi",
+      body: "Merhaba {{firstName}},\n\n{{date}} tarihinde saat {{time}} için olan randevun iptal edildi.\n\n{{message}}\n\nYeni bir randevu almak ister misin? Başka bir zaman talep edebilir ya da bu e-postayı yanıtlayabilirsin.\n\nSevgiyle,\nDilek — Glow by Dilek",
     },
   },
   reminder: {
@@ -138,6 +162,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
       subject: "Reminder: your appointment tomorrow at {{time}}",
       body: "Hi {{firstName}},\n\nA friendly reminder of your appointment:\n\nTreatment: {{treatments}}\nDate: {{date}}\nTime: {{time}} – {{endTime}}\n\n{{location}}\n\nTip: the page of your treatment explains how best to prepare.\n\nIf you can't make it after all, please let us know as soon as possible by replying to this email.\n\nSee you tomorrow!\nDilek — Glow by Dilek",
     },
+    tr: {
+      subject: "Hatırlatma: yarın saat {{time}} randevun var",
+      body: "Merhaba {{firstName}},\n\nRandevun için küçük bir hatırlatma:\n\nBakım: {{treatments}}\nTarih: {{date}}\nSaat: {{time}} – {{endTime}}\n\n{{location}}\n\nİpucu: bakımının sayfasında en iyi nasıl hazırlanacağın anlatılıyor.\n\nBeklenmedik bir şekilde gelemeyecek misin? Lütfen bu e-postayı yanıtlayarak en kısa sürede haber ver.\n\nYarın görüşmek üzere!\nDilek — Glow by Dilek",
+    },
   },
   price_proposal: {
     nl: {
@@ -147,6 +175,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
     en: {
       subject: "Your price proposal — Glow by Dilek",
       body: "Hi {{firstName}},\n\nThank you for your request for: {{treatments}}.\n\n{{request}}\n\nThe proposed price is: {{amount}} (including VAT).\n\n{{message}}\n\nView the proposal and let us know whether you agree via this personal link:\n{{link}}\n\nThe proposal is valid until {{validUntil}}. You are not committed to anything until you accept.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+    tr: {
+      subject: "Fiyat teklifin — Glow by Dilek",
+      body: "Merhaba {{firstName}},\n\nŞu bakım(lar) için talebin için teşekkürler: {{treatments}}.\n\n{{request}}\n\nÖnerilen fiyat: {{amount}} (KDV dahil).\n\n{{message}}\n\nTeklifi bu kişisel bağlantıdan görüntüleyebilir ve kabul edip etmediğini bildirebilirsin:\n{{link}}\n\nTeklif {{validUntil}} tarihine kadar geçerlidir. Kabul etmediğin sürece hiçbir yükümlülüğün yok.\n\nSevgiyle,\nDilek — Glow by Dilek",
     },
   },
   price_accepted: {
@@ -158,6 +190,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
       subject: "You accepted the price proposal — Glow by Dilek",
       body: "Hi {{firstName}},\n\nThank you! You have accepted the price proposal.\n\nTreatment: {{treatments}}\nAgreed price: {{amount}} (including VAT)\n\n{{request}}\n\nIf the time is not fixed yet, Dilek will let you know personally once the appointment is confirmed.\n\nWarm regards,\nDilek — Glow by Dilek",
     },
+    tr: {
+      subject: "Fiyat teklifini kabul ettin — Glow by Dilek",
+      body: "Merhaba {{firstName}},\n\nTeşekkürler! Fiyat teklifini kabul ettin.\n\nBakım: {{treatments}}\nAnlaşılan fiyat: {{amount}} (KDV dahil)\n\n{{request}}\n\nSaat henüz kesinleşmediyse, randevu onaylandığında Dilek sana kişisel olarak haber verir.\n\nSevgiyle,\nDilek — Glow by Dilek",
+    },
   },
   aftercare: {
     nl: {
@@ -167,6 +203,10 @@ export const DEFAULT_TEMPLATES: Record<TemplateKey, Record<TLocale, TemplateDef>
     en: {
       subject: "Lovely to see you — Glow by Dilek",
       body: "Hi {{firstName}},\n\nThank you for your visit. We hope you enjoyed it.\n\n{{message}}\n\nYou can find all aftercare tips on the website. Any questions, or is your skin reacting differently than expected? Just reply to this email.\n\nWarm regards,\nDilek — Glow by Dilek",
+    },
+    tr: {
+      subject: "Geldiğin için teşekkürler — Glow by Dilek",
+      body: "Merhaba {{firstName}},\n\nZiyaretin için teşekkürler. Umarız keyif almışsındır.\n\n{{message}}\n\nTüm bakım sonrası önerilerini web sitesinde bulabilirsin. Sorun mu var ya da cildin beklediğinden farklı mı tepki veriyor? Bu e-postayı yanıtlaman yeterli.\n\nSevgiyle,\nDilek — Glow by Dilek",
     },
   }
 };

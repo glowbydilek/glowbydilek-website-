@@ -1,3 +1,4 @@
+import { intlTag } from "../i18n/config";
 /**
  * Europe/Amsterdam time helpers. All business scheduling happens in
  * Amsterdam local time; the database stores UTC instants.
@@ -96,16 +97,16 @@ export function isLocalDate(s: string): boolean {
   return addDays(s, 0) === s;
 }
 
-export function formatLocal(d: Date, locale: "nl" | "en", opts: Intl.DateTimeFormatOptions): string {
-  return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { timeZone: TZ, ...opts }).format(d);
+export function formatLocal(d: Date, locale: "nl" | "en" | "tr", opts: Intl.DateTimeFormatOptions): string {
+  return new Intl.DateTimeFormat(intlTag(locale), { timeZone: TZ, ...opts }).format(d);
 }
 
 /** "dinsdag 3 november 2026" / "Tuesday 3 November 2026". */
-export function formatLongDate(d: Date, locale: "nl" | "en"): string {
+export function formatLongDate(d: Date, locale: "nl" | "en" | "tr"): string {
   return formatLocal(d, locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 }
 
-export function formatTime(d: Date, locale: "nl" | "en" = "nl"): string {
+export function formatTime(d: Date, locale: "nl" | "en" | "tr" = "nl"): string {
   return formatLocal(d, locale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 }
 

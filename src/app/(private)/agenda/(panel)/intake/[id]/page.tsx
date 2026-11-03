@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/private/ActionForm";
 import { IntakeSheet } from "@/components/private/intake/IntakeSheet";
@@ -30,7 +31,7 @@ export default async function IntakeTemplatePage({ params }: { params: Promise<{
   await requireOwner("agenda", `/agenda/intake/${id}`);
   const t = await getTemplate(getDb(), id);
   if (!t) notFound();
-  const locale = t.locale === "en" ? "en" : "nl";
+  const locale = asLocale(t.locale);
   const draft = t.status === "draft";
   return (
     <>

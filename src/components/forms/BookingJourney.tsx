@@ -1,5 +1,7 @@
 "use client";
 
+import { intlTag, pick } from "@/i18n/config";
+
 import { track } from "@/lib/analytics/track";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
@@ -29,7 +31,7 @@ export function BookingJourney({
   turnstileSiteKey,
   promoField = false,
 }: {
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   t: Dictionary["booking"]["journey"];
   forms: Dictionary["forms"];
   treatments: JourneyTreatment[];
@@ -87,7 +89,7 @@ export function BookingJourney({
   }, [load]);
 
   const fmtDay = (d: string) =>
-    new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${d}T12:00:00Z`));
+    new Intl.DateTimeFormat(intlTag(locale), { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${d}T12:00:00Z`));
   const shift = (n: number) => {
     const d = new Date(`${from}T12:00:00Z`);
     d.setUTCDate(d.getUTCDate() + n);
@@ -200,7 +202,7 @@ export function BookingJourney({
             <p className="mt-4 text-sm text-muted" role="status">{t.loading}</p>
           ) : days && days.length === 0 ? (
             <p className="mt-4 rounded-2xl bg-glow-soft p-4 text-sm text-ink-soft">
-              {t.noTimes} <Link href={locale === "nl" ? "/contact" : "/en/contact"} className="underline">{forms.topics.question}</Link>
+              {t.noTimes} <Link href={pick(locale, { nl: "/contact", en: "/en/contact", tr: "/tr/iletisim" })} className="underline">{forms.topics.question}</Link>
             </p>
           ) : (
             <>

@@ -1,5 +1,6 @@
 "use server";
 
+import { asLocale } from "../../i18n/config";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -24,6 +25,7 @@ function revalidateSite() {
   invalidateContent();
   revalidatePath("/", "layout");
   revalidatePath("/en", "layout");
+  revalidatePath("/tr", "layout");
 }
 
 function parseJson(raw: string): unknown {
@@ -188,7 +190,7 @@ export async function redirectAction(_: FormState, f: FormData): Promise<FormSta
 export async function templateAction(_: FormState, f: FormData): Promise<FormState> {
   const s = await assertOwner();
   const key = str(f, "key") as TemplateKey;
-  const locale = str(f, "locale") === "en" ? "en" : "nl";
+  const locale = asLocale(str(f, "locale"));
   if (!TEMPLATE_KEYS.includes(key)) return { error: "Onbekende e-mail." };
   const db = getDb();
   if (str(f, "op") === "reset") {

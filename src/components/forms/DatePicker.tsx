@@ -1,5 +1,7 @@
 "use client";
 
+import { intlTag } from "@/i18n/config";
+
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { isClosedDay, isSelectable, monthGrid, monthKey, shiftDays, shiftMonths, type RequestCalendar } from "@/lib/booking/calendar";
 import { Icon } from "../ui/Icon";
@@ -45,11 +47,11 @@ export function DatePicker({
   min: string;
   max: string;
   calendar: RequestCalendar;
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   error?: string;
   labels: DatePickerLabels;
 }) {
-  const tag = locale === "nl" ? "nl-NL" : "en-GB";
+  const tag = intlTag(locale);
   const [open, setOpen] = useState(false);
   const [focusDay, setFocusDay] = useState(value || min);
   const [glint, setGlint] = useState<string | null>(null);

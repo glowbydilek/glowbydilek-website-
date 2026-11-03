@@ -8,7 +8,7 @@ import { audit } from "../db/audit";
 import { contentEntries, contentVersions } from "../db/schema";
 import { DOC_MAP, emptyLeaves, isDocKey, mergeContent, sanitizeContent } from "./registry";
 
-export type Loc = "nl" | "en" | "all";
+export type Loc = "nl" | "en" | "tr" | "all";
 
 export class ContentError extends Error {
   constructor(message: string) {
@@ -102,11 +102,12 @@ export async function restoreVersion(db: DB, versionId: number, userId: number) 
 
 /** Translation status per document: published/draft per language and empty fields. */
 export async function translationStatus(db: DB, docKey: string) {
-  const out: Record<"nl" | "en", { draft: boolean; published: boolean; empty: number }> = {
+  const out: Record<"nl" | "en" | "tr", { draft: boolean; published: boolean; empty: number }> = {
     nl: { draft: false, published: false, empty: 0 },
     en: { draft: false, published: false, empty: 0 },
+    tr: { draft: false, published: false, empty: 0 },
   };
-  for (const l of ["nl", "en"] as const) {
+  for (const l of ["nl", "en", "tr"] as const) {
     const [d, p] = await Promise.all([entry(db, docKey, l, "draft"), entry(db, docKey, l, "published")]);
     out[l] = { draft: Boolean(d), published: Boolean(p), empty: emptyLeaves(d?.data ?? p?.data ?? DOC_MAP.get(docKey)?.defaults[l]).length };
   }

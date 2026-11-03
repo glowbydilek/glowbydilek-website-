@@ -1,3 +1,4 @@
+import { asLocale } from "@/i18n/config";
 import { NextResponse } from "next/server";
 import { assertOwner, UnauthorizedError } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
@@ -17,7 +18,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   }
   const t = await getTemplate(getDb(), Number((await params).id));
   if (!t) return new NextResponse("Not found", { status: 404 });
-  const pdf = await intakePdf(t.source, t.version, t.locale === "en" ? "en" : "nl");
+  const pdf = await intakePdf(t.source, t.version, asLocale(t.locale));
   return new NextResponse(new Uint8Array(pdf), {
     headers: {
       "Content-Type": "application/pdf",

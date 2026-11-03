@@ -12,13 +12,13 @@ test("every page has a unique path per language", () => {
       const p = pagePath(l, page);
       assert.ok(!seen.has(p), `duplicate path ${p}`);
       seen.add(p);
-      if (l === "en") assert.ok(p === "/en" || p.startsWith("/en/"), `EN path ${p}`);
-      else assert.ok(!p.startsWith("/en"), `NL path ${p}`);
+      if (l === "nl") assert.ok(!/^\/(en|tr)(\/|$)/.test(p), `NL path ${p}`);
+      else assert.ok(p === `/${l}` || p.startsWith(`/${l}/`), `${l.toUpperCase()} path ${p}`);
       assert.match(p, /^\/[a-z0-9/-]*$/, `clean slug ${p}`);
     }
   }
-  // static pages + categories + treatments, in two languages
-  assert.equal(seen.size, (13 + 3 + 13) * 2); // 13 static (incl. reviews, services overview) + 3 categories + 13 treatments
+  // static pages + categories + treatments, in three languages (NL, EN, TR)
+  assert.equal(seen.size, (13 + 3 + 13) * 3); // 13 static (incl. reviews, services overview) + 3 categories + 13 treatments
 });
 
 test("category routes match the agreed URLs", () => {
@@ -82,11 +82,14 @@ test("educational pages exist in both languages", () => {
   assert.equal(routes.process.en, "/en/appointment-process");
 });
 
-test("sitemap lists every page in both languages with hreflang alternates", async () => {
+test("sitemap lists every page in all three languages with hreflang alternates", async () => {
   const entries = await sitemap();
-  // With massage and waxing published, the "all treatments" overview, the massage landing page
-  // and the relaxation massage are listed too; of the legal pages only the cookie policy is online.
-  assert.equal(entries.length, (allPages().length + 3) * 2);
+  // Besides the fixed pages: the massage landing page and its five massages, the facial landing
+  // page with facial care with steam, and (of the legal pages) only the cookie policy.
+  assert.equal(entries.length, (allPages().length + 9) * 3);
+  assert.ok(entries.some((e) => e.url.endsWith("/tr/masajlar/tum-vucut-rahatlama-masaji")));
+  assert.ok(entries.some((e) => e.url.endsWith("/gezichtsbehandelingen/gezichtsbehandeling-met-stoom")));
+  assert.ok(entries.some((e) => e.url.endsWith("/tr/cerez-politikasi")));
   assert.ok(entries.some((e) => e.url.endsWith("/cookiebeleid")));
   assert.ok(!entries.some((e) => e.url.endsWith("/algemene-voorwaarden")));
   assert.ok(entries.some((e) => e.url.endsWith("/behandelingen")));
@@ -95,6 +98,6 @@ test("sitemap lists every page in both languages with hreflang alternates", asyn
   for (const e of entries) {
     assert.ok(e.url.startsWith("https://"), e.url);
     const langs = e.alternates?.languages as Record<string, string>;
-    assert.ok(langs["nl-NL"] && langs.en, `alternates for ${e.url}`);
+    assert.ok(langs["nl-NL"] && langs.en && langs["tr-TR"], `alternates for ${e.url}`);
   }
 });

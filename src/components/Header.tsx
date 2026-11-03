@@ -374,6 +374,7 @@ export function Header({
                   locale={locale}
                   label={dict.nav.language}
                   onNavigate={close}
+                  placement="up"
                 />
                 <a
                   href="mailto:hello@glowbydilek.nl"

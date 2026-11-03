@@ -1,3 +1,4 @@
+import { intlTag } from "@/i18n/config";
 import type { AppointmentInput, ContactInput, ContactTopic, TimeRange } from "../forms/validation";
 import { escapeHtml } from "../forms/validation";
 
@@ -17,9 +18,9 @@ export const timeLabels: Record<TimeRange, { nl: string; en: string }> = {
   flexible: { nl: "Flexibel", en: "Flexible" },
 };
 
-export function formatDate(iso: string, locale: "nl" | "en"): string {
+export function formatDate(iso: string, locale: "nl" | "en" | "tr"): string {
   const d = new Date(`${iso}T12:00:00Z`);
-  return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", {
+  return new Intl.DateTimeFormat(intlTag(locale), {
     weekday: "long",
     day: "numeric",
     month: "long",

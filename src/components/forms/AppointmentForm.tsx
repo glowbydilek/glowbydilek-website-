@@ -31,7 +31,7 @@ export function AppointmentForm({
   turnstileSiteKey,
   promoField = false,
 }: {
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   t: Dictionary["forms"];
   groups: Group[];
   /** Closed weekdays and dates (disabled in the calendar, refused by the API). */

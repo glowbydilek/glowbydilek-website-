@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { mailto, siteConfig, whatsappLink } from "@/content/site";
-import { href, type Locale } from "@/i18n/config";
+import { href, type Locale, pick } from "@/i18n/config";
 import { currentSnapshot, override } from "@/lib/cms/current";
 import { publicSocial, validateAnalytics, validateBusiness } from "@/lib/cms/menu";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -79,7 +79,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                 ))}
                 {currentSnapshot().marketing?.productsPage && (
                   <li>
-                    <Link href={locale === "nl" ? "/producten" : "/en/products"} className={linkCls}>
+                    <Link href={pick(locale, { nl: "/producten", en: "/en/products", tr: "/tr/urunler" })} className={linkCls}>
                       {dict.products.title}
                     </Link>
                   </li>
@@ -130,7 +130,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
               </Link>
             ))}
             {analytics.enabled && <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />}
-            <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" className="-my-2" />
+            <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" placement="up" />
             {/* Discreet owner entrance; the private areas are noindex and login-protected.
                 A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}

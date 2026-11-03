@@ -19,14 +19,15 @@ import { treatmentGroups } from "@/content/treatments";
 import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { groupCopy, sectionCopy } from "@/content/copy";
-import { alternatePath, href, type Locale } from "@/i18n/config";
+import { alternatePath, href, intlTag, routes, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
 
 /** Campaign links are stored as Dutch paths; on the English site they map to the English page when known. */
 function localiseHref(path: string, locale: Locale): string {
-  if (locale === "nl" || path.startsWith("/en")) return path;
-  return alternatePath(path, "en") !== "/en" || path === "/" ? alternatePath(path, "en") : path;
+  if (locale === "nl" || /^\/(en|tr)(\/|$)/.test(path)) return path;
+  const alt = alternatePath(path, locale);
+  return alt !== routes.home[locale] || path === "/" ? alt : path;
 }
 
 const defaultFeatured = ["massage-relaxation", "eyebrows", "underarms", "full-legs"];
@@ -135,7 +136,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       </>
     ),
     campaigns: (() => {
-      const camp = currentSnapshot().marketing?.campaigns ?? [];
+      const camp = (currentSnapshot().marketing?.campaigns ?? []).filter((c) => c.title[locale]);
       if (!camp.length) return null;
       return (
         <CampaignSlider
@@ -152,7 +153,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         <section className="section-tight bg-surface">
           <Container>
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-              <SectionHeading eyebrow={r.eyebrow} title={r.title} intro={rv.average != null ? r.average.replace("{avg}", rv.average.toLocaleString(locale === "nl" ? "nl-NL" : "en-GB")).replace("{count}", String(rv.count)) : undefined} size="md" />
+              <SectionHeading eyebrow={r.eyebrow} title={r.title} intro={rv.average != null ? r.average.replace("{avg}", rv.average.toLocaleString(intlTag(locale))).replace("{count}", String(rv.count)) : undefined} size="md" />
               <ButtonLink href={href(locale, "reviews")} variant="link" arrow>
                 {dict.nav.reviews}
               </ButtonLink>

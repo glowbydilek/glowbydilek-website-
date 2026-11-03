@@ -20,6 +20,7 @@ function refresh() {
   invalidateContent();
   revalidatePath("/", "layout");
   revalidatePath("/en", "layout");
+  revalidatePath("/tr", "layout");
   revalidatePath("/admin/acties");
 }
 

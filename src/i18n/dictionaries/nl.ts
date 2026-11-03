@@ -134,11 +134,11 @@ export const nl = {
   home: {
     hero: {
       eyebrow: "Glow by Dilek · Beauty & relaxation",
-      title: "Jouw moment",
-      titleEm: "om te stralen.",
+      title: "Schoonheid, aandacht",
+      titleEm: "en een moment helemaal voor jou.",
       subtitle:
-        "Persoonlijke schoonheidsbehandelingen en ontspannende massages voor vrouwen. Met aandacht voor jouw wensen, je comfort en een moment dat helemaal van jou is.",
-      facts: ["Persoonlijke aandacht", "Uitsluitend op afspraak", "Door Dilek zelf bevestigd"],
+        "Persoonlijke gezichtsverzorging, ontspannende massages en zorgvuldige ontharing, in een rustige setting waar jouw wensen centraal staan. Uitsluitend voor vrouwen, op afspraak.",
+      facts: ["Uitsluitend voor vrouwen", "Uitsluitend op afspraak", "Gediplomeerd schoonheidsspecialiste"],
     },
     statement: {
       eyebrow: "Even helemaal voor jezelf",
@@ -149,7 +149,7 @@ export const nl = {
     treatments: {
       eyebrow: "Behandelingen",
       title: "Ontdek jouw behandeling",
-      intro: "Van een rustgevende massage tot verzorgend waxen. Kies wat bij jou past; elke pagina vertelt eerlijk wat je kunt verwachten.",
+      intro: "Van ontspannende massages en een gezichtsbehandeling met stoom tot zorgvuldig waxen. Kies wat bij jou past; elke pagina vertelt eerlijk wat je kunt verwachten.",
       count: "behandelingen",
       countOne: "behandeling",
       more: "Bekijk",
@@ -182,7 +182,7 @@ export const nl = {
     dilek: {
       eyebrow: "Maak kennis",
       title: "Hoi, ik ben Dilek",
-      body: "Bij Glow by Dilek werk je met één vast aanspreekpunt: mij. Ik neem de tijd voor je, vertel wat ik doe voordat ik het doe en stem de behandeling af op jouw wensen. Je mag me alles vragen.",
+      body: "Ik ben gediplomeerd schoonheidsspecialiste (niveau 3). Bij Glow by Dilek werk je met één vast aanspreekpunt: mij. Ik neem de tijd voor je, vertel wat ik doe voordat ik het doe en stem de behandeling af op jouw wensen. Je mag me alles vragen.",
       quote: "Jouw comfort en vertrouwen gaan bij mij voor alles.",
     },
     faq: {
@@ -234,6 +234,10 @@ export const nl = {
       {
         q: "Waar vinden de behandelingen plaats?",
         a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+      },
+      {
+        q: "Is Glow by Dilek alleen voor vrouwen?",
+        a: "Ja. Glow by Dilek ontvangt uitsluitend vrouwen, op afspraak, zodat iedereen zich op haar gemak en veilig voelt.",
       },
       {
         q: "Wat kan ik verwachten van een ontspanningsmassage?",
@@ -364,9 +368,9 @@ export const nl = {
       eyebrow: "Het verhaal",
       title: "Waarom Glow by Dilek bestaat",
       paragraphs: [
-        "Mijn naam is Dilek. Ik ben Glow by Dilek begonnen met één wens: dat een behandeling voelt als een moment voor jezelf, en niet als iets wat je snel even ‘moet’.",
+        "Mijn naam is Dilek en ik ben gediplomeerd schoonheidsspecialiste (niveau 3). Ik ben Glow by Dilek begonnen met één wens: dat een behandeling voelt als een moment voor jezelf, en niet als iets wat je snel even ‘moet’.",
         "Dat begint bij de basis. Een rustige, schone ruimte. Tijd voor een gesprek. Uitleg over wat ik doe en waarom. En een werkwijze die elke keer hetzelfde is, zodat jij weet waar je aan toe bent.",
-        "Of het nu je allereerste behandeling is of je al jaren vaste klant bent: je bent welkom zoals je bent, met al je vragen.",
+        "Glow by Dilek is uitsluitend voor vrouwen en werkt op afspraak. Of het nu je allereerste behandeling is of je al jaren vaste klant bent: je bent welkom zoals je bent, met al je vragen.",
       ],
     },
     quote: "Ik werk liever met minder klanten en meer aandacht.",

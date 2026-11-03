@@ -14,7 +14,7 @@ function inviteToken(): string | null {
   return v && /^[A-Za-z0-9_-]{20,80}$/.test(v) ? v : null;
 }
 
-type Props = { locale: "nl" | "en"; t: Dictionary["reviews"]["form"]; forms: Dictionary["forms"]; privacyHref: string; email: string; turnstileSiteKey: string };
+type Props = { locale: "nl" | "en" | "tr"; t: Dictionary["reviews"]["form"]; forms: Dictionary["forms"]; privacyHref: string; email: string; turnstileSiteKey: string };
 
 /** Review form. Reads an optional invitation token from the URL (?t=…) so the page itself can stay static. */
 export function ReviewForm({ locale, t, forms, privacyHref, email, turnstileSiteKey }: Props) {

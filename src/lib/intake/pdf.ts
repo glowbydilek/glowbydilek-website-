@@ -1,7 +1,7 @@
 import "server-only";
 import PDFDocument from "pdfkit";
 import { logoData } from "../../components/brand/logoData";
-import { parseIntake, type IntakeBlock } from "./template";
+import { ANSWERS, parseIntake, type IntakeBlock } from "./template";
 
 /**
  * A4 PDF of the intake & consent master form (blank, to print and sign).
@@ -17,8 +17,8 @@ const LEFT = 56;
 const WIDTH = 483;
 const BOTTOM = 792;
 
-export async function intakePdf(source: string, version: string, locale: "nl" | "en"): Promise<Buffer> {
-  const parsed = parseIntake(source, version, locale === "nl" ? ["Ja", "Nee", "Weet niet"] : ["Yes", "No", "Not sure"]);
+export async function intakePdf(source: string, version: string, locale: "nl" | "en" | "tr"): Promise<Buffer> {
+  const parsed = parseIntake(source, version, ANSWERS[locale]);
   const doc = new PDFDocument({
     size: "A4",
     bufferPages: true,

@@ -4,7 +4,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
   process: {
     seoTitle: "Hoe werkt een afspraak?",
     seoDescription:
-      "Van aanvraag tot bevestiging: lees hoe je een waxafspraak bij Glow by Dilek aanvraagt, wat er daarna gebeurt en hoe de behandeling zelf verloopt.",
+      "Van aanvraag tot bevestiging: lees hoe je een afspraak bij Glow by Dilek aanvraagt, wat er daarna gebeurt en hoe de behandeling zelf verloopt.",
     hero: {
       eyebrow: "Hoe werkt een afspraak?",
       title: "Persoonlijk ingepland,",
@@ -202,7 +202,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
 };
 
 export const faqPageNl: FaqPageCopy = {
-  seoTitle: "Veelgestelde vragen over waxen",
+  seoTitle: "Veelgestelde vragen",
   seoDescription:
       "Antwoorden op de meest gestelde vragen over waxen bij Glow by Dilek: voorbereiding, pijn, resultaat, intieme behandelingen, afspraken en privacy.",
   hero: {
@@ -213,6 +213,14 @@ export const faqPageNl: FaqPageCopy = {
       "De vragen die het vaakst worden gesteld, kort en duidelijk beantwoord. Staat jouw vraag er niet bij? Stuur dan gerust een bericht.",
   },
   groups: [
+    {
+      title: "Massages en gezichtsbehandelingen",
+      items: [
+        { q: "Welke massages bieden jullie aan?", a: "Een ontspanningsmassage voor het hele lichaam, gezichtsmassage, hoofdmassage, handmassage en voetmassage. Elke massage heeft een eigen pagina met uitleg." },
+        { q: "Is een massage een medische behandeling?", a: "Nee. De massages bij Glow by Dilek zijn bedoeld om te ontspannen. Heb je klachten, een blessure of een aandoening, overleg dan eerst met je huisarts." },
+        { q: "Wat gebeurt er bij de gezichtsbehandeling met stoom?", a: "Dilek bespreekt eerst je huid en of stoom voor jou geschikt is. Stoom wordt op een comfortabele afstand gebruikt en is nooit verplicht; de andere stappen worden vooraf afgestemd." },
+      ],
+    },
     {
       title: "Over waxen",
       items: [
@@ -289,7 +297,7 @@ export const faqPageNl: FaqPageCopy = {
         },
         {
           q: "Bieden jullie ook laserontharing of andere behandelingen aan?",
-          a: "Op dit moment richt Glow by Dilek zich volledig op waxing. Nieuwe behandelingen worden pas aangekondigd als ze echt beschikbaar zijn.",
+          a: "Laserontharing wordt niet aangeboden. Nieuwe behandelingen worden pas aangekondigd als ze echt beschikbaar zijn.",
         },
       ],
     },
@@ -298,7 +306,7 @@ export const faqPageNl: FaqPageCopy = {
       items: [
         {
           q: "Wat gebeurt er met de gegevens die ik invul?",
-          a: "Ze worden alleen gebruikt om je vraag te beantwoorden en je afspraak af te stemmen, en worden niet in een database op de website opgeslagen. Lees meer in de privacyverklaring.",
+          a: "Ze worden alleen gebruikt om je vraag te beantwoorden en je afspraak af te stemmen, en worden opgeslagen in de beveiligde database van de website, waar alleen Dilek bij kan. Lees meer in de privacyverklaring.",
         },
         {
           q: "Moet ik medische informatie in het formulier zetten?",

@@ -1,3 +1,4 @@
+import { asLocale } from "../../i18n/config";
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, gt, isNull, sql } from "drizzle-orm";
@@ -34,7 +35,7 @@ export type ReviewInput = {
   displayName: string;
   displayMode: "name" | "initials" | "anonymous";
   treatmentId?: string | null;
-  locale: "nl" | "en";
+  locale: "nl" | "en" | "tr";
   email?: string | null;
   inviteToken?: string | null;
 };
@@ -62,7 +63,7 @@ export function validateReview(raw: Record<string, unknown>): { ok: true; data: 
       displayName: name.replace(/[\r\n]/g, " ").slice(0, 60),
       displayMode: mode === "initials" || mode === "anonymous" ? mode : "name",
       treatmentId: typeof raw.treatmentId === "string" && /^[a-z-]{2,40}$/.test(raw.treatmentId) ? raw.treatmentId : null,
-      locale: raw.locale === "en" ? "en" : "nl",
+      locale: asLocale(raw.locale),
       email: email || null,
       inviteToken: typeof raw.inviteToken === "string" && /^[A-Za-z0-9_-]{20,80}$/.test(raw.inviteToken) ? raw.inviteToken : null,
     },
@@ -156,14 +157,18 @@ export async function inviteForReview(db: DB, appointmentId: number, userId: num
   const [already] = await db.select({ id: reviewInvites.id }).from(reviewInvites).where(eq(reviewInvites.appointmentId, appointmentId));
   if (already) throw new ReviewError("Voor deze afspraak is al een uitnodiging verstuurd.");
   const token = randomBytes(24).toString("base64url");
-  const items = await db.select({ nl: appointmentTreatments.nameNl, en: appointmentTreatments.nameEn }).from(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, appointmentId));
-  const en = c.locale === "en";
+  const items = await db.select({ nl: appointmentTreatments.nameNl, en: appointmentTreatments.nameEn, tr: appointmentTreatments.nameTr }).from(appointmentTreatments).where(eq(appointmentTreatments.appointmentId, appointmentId));
+  const loc = c.locale === "en" || c.locale === "tr" ? c.locale : "nl";
   const base = siteUrl.replace(/\/+$/, "");
-  const link = en ? `${base}/en/reviews?t=${token}#write` : `${base}/beoordelingen?t=${token}#schrijven`;
-  const what = items.map((i) => (en ? i.en : i.nl)).join(", ");
-  const paragraphs = en
-    ? [`Dear ${c.firstName},`, `Thank you for your visit${what ? ` for ${what}` : ""}. Would you share your experience? It takes a minute, and every honest review — positive or critical — helps.`, link, "The link works once and is valid for 30 days. Of course you are free not to respond.", "Kind regards,\nDilek — Glow by Dilek"]
-    : [`Beste ${c.firstName},`, `Dank je wel voor je bezoek${what ? ` voor ${what}` : ""}. Wil je je ervaring delen? Het kost een minuut, en elke eerlijke beoordeling, positief of kritisch, helpt.`, link, "De link werkt één keer en is 30 dagen geldig. Reageren is natuurlijk helemaal vrijblijvend.", "Hartelijke groet,\nDilek — Glow by Dilek"];
+  const link = { nl: `${base}/beoordelingen?t=${token}#schrijven`, en: `${base}/en/reviews?t=${token}#write`, tr: `${base}/tr/yorumlar?t=${token}#yaz` }[loc];
+  const what = items.map((i) => (loc === "nl" ? i.nl : loc === "tr" ? i.tr || i.en : i.en)).join(", ");
+  const paragraphs = {
+    nl: [`Beste ${c.firstName},`, `Dank je wel voor je bezoek${what ? ` voor ${what}` : ""}. Wil je je ervaring delen? Het kost een minuut, en elke eerlijke beoordeling, positief of kritisch, helpt.`, link, "De link werkt één keer en is 30 dagen geldig. Reageren is natuurlijk helemaal vrijblijvend.", "Hartelijke groet,\nDilek — Glow by Dilek"],
+    en: [`Dear ${c.firstName},`, `Thank you for your visit${what ? ` for ${what}` : ""}. Would you share your experience? It takes a minute, and every honest review — positive or critical — helps.`, link, "The link works once and is valid for 30 days. Of course you are free not to respond.", "Kind regards,\nDilek — Glow by Dilek"],
+    tr: [`Merhaba ${c.firstName},`, `${what ? `${what} için ` : ""}ziyaretin için teşekkürler. Deneyimini paylaşmak ister misin? Bir dakikanı alır; olumlu ya da eleştirel, her dürüst yorum yardımcı olur.`, link, "Bağlantı bir kez çalışır ve 30 gün geçerlidir. Yanıt vermek elbette tamamen isteğe bağlıdır.", "Sevgiyle,\nDilek — Glow by Dilek"],
+  }[loc];
+  const subject = { nl: "Hoe was je bezoek? — Glow by Dilek", en: "How was your visit? — Glow by Dilek", tr: "Ziyaretin nasıldı? — Glow by Dilek" }[loc];
+  const cta = { nl: "Schrijf een beoordeling", en: "Write a review", tr: "Yorum yaz" }[loc];
   await db.transaction(async (tx) => {
     await tx.insert(reviewInvites).values({ tokenHash: sha(token), appointmentId, customerId: c.id, expiresAt: new Date(Date.now() + 30 * 86_400_000) });
     await enqueue(tx, {
@@ -173,9 +178,9 @@ export async function inviteForReview(db: DB, appointmentId: number, userId: num
       customerId: c.id,
       to: c.email!,
       replyTo: process.env.MAIL_TO || process.env.SMTP_USER || null,
-      subject: en ? "How was your visit? — Glow by Dilek" : "Hoe was je bezoek? — Glow by Dilek",
+      subject,
       text: paragraphs.join("\n\n"),
-      html: paragraphs.map((p) => (p.startsWith("http") ? `<p><a href="${p}">${en ? "Write a review" : "Schrijf een beoordeling"}</a></p>` : `<p>${p.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>")}</p>`)).join(""),
+      html: paragraphs.map((p) => (p.startsWith("http") ? `<p><a href="${p}">${cta}</a></p>` : `<p>${p.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>")}</p>`)).join(""),
     });
   });
   await audit(db, { userId, action: "review.invited", entity: "appointment", entityId: appointmentId });

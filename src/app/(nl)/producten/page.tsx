@@ -11,7 +11,7 @@ import { buildMetadata } from "@/lib/seo";
 import { ProductsPage } from "@/views/ProductsPage";
 
 const locale = "nl";
-const paths = { nl: "/producten", en: "/en/products" };
+const paths = { nl: "/producten", en: "/en/products", tr: "/tr/urunler" };
 
 export async function generateMetadata(): Promise<Metadata> {
   await ensureContent();
