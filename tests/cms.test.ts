@@ -56,7 +56,7 @@ describe("CMS workflow against MariaDB", { skip: skipDb }, () => {
     v = await editorValue(db, "dict:home", "nl");
     assert.equal((v.value as typeof base).hero.title, "Tweede titel", "published unchanged");
     // EN untouched
-    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "A little moment,");
+    assert.equal(((await editorValue(db, "dict:home", "en")).value as typeof base).hero.title, "Beauty, personal care");
   });
 
   test("unknown documents are rejected", async () => {
