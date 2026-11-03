@@ -160,14 +160,14 @@ export function businessJsonLd(locale: Locale) {
         addressCountry: siteConfig.country,
       },
     }),
-    knowsLanguage: ["nl", "en"],
+    knowsLanguage: ["nl", "en", "tr"],
     ...(sameAs && { sameAs }),
   };
 }
 
 /** Service + catalogue of published treatments (prices only when confirmed). */
 export function serviceJsonLd(locale: Locale) {
-  const sections = publicSections();
+  const sections = publicSections(locale);
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -179,7 +179,7 @@ export function serviceJsonLd(locale: Locale) {
       itemListElement: sections.map((sec) => ({
         "@type": "OfferCatalog",
         name: sec.name[locale],
-        itemListElement: publicItems({ sectionId: sec.id }).map((t) => ({
+        itemListElement: publicItems({ sectionId: sec.id, locale }).map((t) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: t.name[locale], description: t.description[locale] },
           ...(t.pricing.mode === "fixed" && t.pricing.cents != null ? { price: (t.pricing.cents / 100).toFixed(2), priceCurrency: "EUR" } : {}),

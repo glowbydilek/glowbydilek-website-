@@ -15,14 +15,14 @@ export function PricesPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.prices;
   // One price table per waxing zone, and one per other published section.
-  const tables = publicSections().flatMap((sec) => {
-    const zones = publicGroups(sec.id).map((g) => ({
+  const tables = publicSections(locale).flatMap((sec) => {
+    const zones = publicGroups(sec.id, locale).map((g) => ({
       id: g.id,
       title: sec.id === "waxing" ? groupCopy(locale, g.id, g.name[locale]).label : `${sec.name[locale]} · ${g.name[locale]}`,
       href: groupHref(locale, g),
-      items: publicItems({ sectionId: sec.id, groupId: g.id }),
+      items: publicItems({ sectionId: sec.id, groupId: g.id, locale }),
     }));
-    const loose = publicItems({ sectionId: sec.id, groupId: null });
+    const loose = publicItems({ sectionId: sec.id, groupId: null, locale });
     const link = sec.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, sec);
     return loose.length ? [...zones, { id: sec.id, title: sec.name[locale], href: link, items: loose }] : zones;
   });

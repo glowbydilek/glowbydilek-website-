@@ -16,13 +16,13 @@ export function ContactFormBlock({ locale, dict }: { locale: Locale; dict: Dicti
 
 export function AppointmentFormBlock({ locale, dict, calendar }: { locale: Locale; dict: Dictionary; calendar: RequestCalendar }) {
   // Every published treatment and package, grouped by zone (waxing) or section.
-  const groups = publicSections().flatMap((s) => {
-    const zones = publicGroups(s.id).map((g) => ({
+  const groups = publicSections(locale).flatMap((s) => {
+    const zones = publicGroups(s.id, locale).map((g) => ({
       id: g.id,
       name: s.id === "waxing" ? groupCopy(locale, g.id, g.name[locale]).label : `${s.name[locale]} · ${g.name[locale]}`,
-      treatments: publicItems({ sectionId: s.id, groupId: g.id }).map((t) => ({ id: t.id, name: t.name[locale] })),
+      treatments: publicItems({ sectionId: s.id, groupId: g.id, locale }).map((t) => ({ id: t.id, name: t.name[locale] })),
     }));
-    const loose = publicItems({ sectionId: s.id, groupId: null });
+    const loose = publicItems({ sectionId: s.id, groupId: null, locale });
     return loose.length ? [...zones, { id: s.id, name: s.name[locale], treatments: loose.map((t) => ({ id: t.id, name: t.name[locale] })) }] : zones;
   });
   return (

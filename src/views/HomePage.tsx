@@ -37,10 +37,10 @@ const defaultFeatured = ["massage-relaxation", "eyebrows", "underarms", "full-le
  * (waxing, facial, body, massage, packages); with waxing alone, its zones.
  */
 function discovery(locale: Locale) {
-  const sections = publicSections();
+  const sections = publicSections(locale);
   if (sections.length > 1) {
     return sections.map((sec) => {
-      const items = publicItems({ sectionId: sec.id });
+      const items = publicItems({ sectionId: sec.id, locale });
       const c = sec.id === "waxing" ? null : sectionCopy(locale, sec.id, sec.name[locale]);
       return {
         id: sec.id,
@@ -53,7 +53,7 @@ function discovery(locale: Locale) {
     });
   }
   return sections.flatMap((sec) =>
-    publicGroups(sec.id).map((g) => {
+    publicGroups(sec.id, locale).map((g) => {
       const b = treatmentGroups.find((x) => x.id === g.id);
       const c = groupCopy(locale, g.id, g.name[locale]);
       return {
@@ -62,7 +62,7 @@ function discovery(locale: Locale) {
         label: c.label,
         intro: b?.intro[locale] ?? c.teaser,
         href: groupHref(locale, g),
-        names: publicItems({ sectionId: sec.id, groupId: g.id }).map((i) => i.name[locale]),
+        names: publicItems({ sectionId: sec.id, groupId: g.id, locale }).map((i) => i.name[locale]),
       };
     }),
   );
