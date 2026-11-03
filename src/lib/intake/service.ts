@@ -29,33 +29,47 @@ type Who = { userId: number; mfa: boolean };
 
 // ─────────────────────────────────────────────────────────────── templates
 
+/** Change notes that mark the built-in v13 master form (so it is installed once per language). */
+const MASTER_NOTE_ACTIVE = "Master-intakeformulier v2 (NL/EN/TR, v13-pakket)";
+const MASTER_NOTE_FIRST = "Eerste versie (master-intakeformulier v2, concept)";
+const MASTER_NOTE_REVIEW = "Master-intakeformulier v2 (v13) — naast jouw eigen concept toegevoegd; controleer en activeer";
+
 /**
- * Creates the built-in master forms on first use (NL, EN, TR; idempotent).
- * A database that still has the untouched v1 form gets v2 as the active
- * version; v1 is kept (retired) so earlier signed copies stay traceable.
- * Owner revisions are never replaced.
+ * Creates the built-in master forms (NL, EN, TR; idempotent).
+ * - Empty database: the master form becomes the active version.
+ * - The untouched v1 form is active and there is no draft: the master form
+ *   becomes active and v1 is kept (retired), so earlier signed copies stay
+ *   traceable.
+ * - The owner has her own revision (edited text or an open draft): nothing
+ *   of hers changes. The master form is added once as a separate draft
+ *   under the next free version number, for her to review and activate.
  */
 export async function ensureIntakeTemplates(db: DB) {
-  const rows = await db.select({ id: intakeTemplates.id, locale: intakeTemplates.locale, version: intakeTemplates.version, status: intakeTemplates.status, source: intakeTemplates.source }).from(intakeTemplates);
+  const rows = await db
+    .select({ id: intakeTemplates.id, locale: intakeTemplates.locale, version: intakeTemplates.version, status: intakeTemplates.status, source: intakeTemplates.source, changeNote: intakeTemplates.changeNote })
+    .from(intakeTemplates);
   for (const locale of ["nl", "en", "tr"] as const) {
     const mine = rows.filter((r) => r.locale === locale);
-    if (mine.some((r) => r.version === INITIAL_VERSION)) continue;
+    const installed = mine.some((r) => r.source === BUILTIN_INTAKE[locale] || r.changeNote === MASTER_NOTE_ACTIVE || r.changeNote === MASTER_NOTE_FIRST || r.changeNote === MASTER_NOTE_REVIEW);
+    if (installed) continue;
     const active = mine.find((r) => r.status === "active");
     const legacy = locale === "tr" ? undefined : LEGACY_INTAKE_V1[locale];
-    const untouchedV1 = active && active.version === LEGACY_VERSION && active.source === legacy && !mine.some((r) => r.status === "draft");
-    if (mine.length && !untouchedV1) continue;
-    const p = parseIntake(BUILTIN_INTAKE[locale], INITIAL_VERSION);
+    const untouchedV1 = Boolean(active && active.version === LEGACY_VERSION && active.source === legacy && !mine.some((r) => r.status === "draft"));
+    const mode: "first" | "upgrade" | "review" = !mine.length ? "first" : untouchedV1 ? "upgrade" : "review";
+    let version = INITIAL_VERSION;
+    while (mine.some((r) => r.version === version)) version = nextVersion(version);
     try {
       await db.transaction(async (tx) => {
-        if (untouchedV1) await tx.update(intakeTemplates).set({ status: "retired", retiredAt: new Date() }).where(eq(intakeTemplates.id, active!.id));
+        if (mode === "upgrade") await tx.update(intakeTemplates).set({ status: "retired", retiredAt: new Date() }).where(eq(intakeTemplates.id, active!.id));
+        const p = parseIntake(BUILTIN_INTAKE[locale], version);
         await tx.insert(intakeTemplates).values({
           locale,
-          version: INITIAL_VERSION,
-          status: "active",
+          version,
+          status: mode === "review" ? "draft" : "active",
           title: p.title,
           source: BUILTIN_INTAKE[locale],
-          changeNote: untouchedV1 ? "Master-intakeformulier v2 (NL/EN/TR, v13-pakket)" : "Eerste versie (master-intakeformulier v2, concept)",
-          activatedAt: new Date(),
+          changeNote: mode === "upgrade" ? MASTER_NOTE_ACTIVE : mode === "first" ? MASTER_NOTE_FIRST : MASTER_NOTE_REVIEW,
+          ...(mode === "review" ? {} : { activatedAt: new Date() }),
         });
       });
     } catch {

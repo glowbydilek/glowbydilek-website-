@@ -88,14 +88,14 @@ async function step(name, fn) {
       await p.getByText(/opgeslagen/i).first().waitFor();
     });
 
-    await step("master form: active v1 in both languages, A4 print view and PDF download", async () => {
+    await step("master form: active v2 in three languages, A4 print view and PDF download", async () => {
       await p.goto(`${BASE}/agenda/intake`);
-      await p.getByText("GBD-INTAKE-2026-11-v1").first().waitFor();
+      await p.getByText("GBD-INTAKE-2026-11-v2").first().waitFor();
       await shot("templates");
       await p.getByRole("link", { name: "Afdrukken (A4)" }).first().click();
       await p.waitForURL(/\/agenda\/intake-afdruk\/\d+/);
-      await p.getByText("Intake en toestemmingsformulier").waitFor();
-      await p.getByText("Handtekening klant").waitFor();
+      await p.getByText("Persoonlijk intake- en adviesformulier").first().waitFor();
+      await p.getByText("Handtekening / digitale bevestiging").first().waitFor();
       await shot("print");
       const pdf = await p.pdf({ format: "A4", printBackground: true }).catch(() => null);
       if (pdf && SHOTS) require("node:fs").writeFileSync(`${SHOTS}/intake-print-chromium.pdf`, pdf);
@@ -103,15 +103,15 @@ async function step(name, fn) {
       const file = await dl.path();
       const head = require("node:fs").readFileSync(file).subarray(0, 5).toString();
       assert.equal(head, "%PDF-");
-      assert.match(dl.suggestedFilename(), /GBD-INTAKE-2026-11-v1-nl\.pdf/);
+      assert.match(dl.suggestedFilename(), /GBD-INTAKE-2026-11-v2-nl\.pdf/);
       if (SHOTS) await dl.saveAs(`${SHOTS}/intake-${dl.suggestedFilename()}`);
     });
 
-    await step("a revision is a draft, needs a change note, and keeps v1 as history", async () => {
+    await step("a revision is a draft, needs a change note, and keeps v2 as history", async () => {
       await p.goto(`${BASE}/agenda/intake`);
       await p.getByRole("button", { name: "Nieuwe revisie maken" }).first().click();
       await p.waitForURL(/\/agenda\/intake\/\d+$/);
-      await p.getByText("GBD-INTAKE-2026-11-v2").first().waitFor();
+      await p.getByText("GBD-INTAKE-2026-11-v3").first().waitFor();
       p.once("dialog", (d) => d.accept());
       await p.getByRole("button", { name: "Opslaan en activeren" }).click();
       await p.getByText(/Beschrijf kort wat er is veranderd/).waitFor();

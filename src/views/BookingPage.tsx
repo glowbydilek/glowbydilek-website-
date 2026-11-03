@@ -59,7 +59,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
 
       <section id={bookingAnchor} className="section-tight scroll-mt-[var(--header-safe)] bg-surface">
         <Container className="grid gap-8 lg:grid-cols-[1.45fr_0.55fr] lg:gap-10">
-          <div className="rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
+          <div className="min-w-0 rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9 lg:p-11" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <div className="mt-8">
               {online && online.length ? (

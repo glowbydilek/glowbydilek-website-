@@ -162,7 +162,7 @@ export function BookingJourney({
   return (
     <form onSubmit={submit} noValidate className="space-y-9">
       <Honeypot value={honeypot} onChange={setHoneypot} />
-      <fieldset>
+      <fieldset className="min-w-0">
         <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">1 · {t.step1}</legend>
         <div className="mt-4 space-y-4">
           {Object.entries(categories).map(([cat, label]) => {
@@ -191,7 +191,7 @@ export function BookingJourney({
       </fieldset>
 
       {picked.length > 0 && (
-        <fieldset>
+        <fieldset className="min-w-0">
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">2 · {t.step2} <span className="normal-case tracking-normal text-muted">({t.duration} {duration} {t.minutes})</span></legend>
           <div className="mt-3 flex items-center justify-between gap-2">
             <button type="button" onClick={() => shift(-14)} className="min-h-11 rounded-full border border-ink/15 px-4 text-sm">‹ {t.earlier}</button>
@@ -229,7 +229,7 @@ export function BookingJourney({
       )}
 
       {date && time && (
-        <fieldset className="space-y-6">
+        <fieldset className="min-w-0 space-y-6">
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">3 · {t.step3}</legend>
           <p className="flex items-center justify-between gap-3 rounded-2xl bg-accent/12 p-4 text-sm">
             <span><strong className="font-medium">{t.selected}:</strong> <span className="capitalize">{fmtDay(date)}</span> · {time}</span>

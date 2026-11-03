@@ -442,9 +442,10 @@ function mailsSince(since) {
     });
 
     await step("catalogue: a draft is published only after confirmation, and unpublishing hides it again", async () => {
+      // Body care is still a draft category in v13 (facial care and massages are published).
       await p.goto(`${BASE}/admin/behandelingen`);
       const sec = p
-        .locator("details", { has: p.locator('input[name="id"][value="facial"]') })
+        .locator("details", { has: p.locator('input[name="id"][value="bodycare"]') })
         .filter({ has: p.locator(":scope > summary", { hasText: "Categorie-instellingen" }) })
         .first();
       await sec.locator(":scope > summary").click();
@@ -452,7 +453,7 @@ function mailsSince(since) {
       await sec.locator('input[name="confirm"]').check();
       await sec.getByRole("button", { name: "Categorie opslaan" }).click();
       await sec.getByText("Gepubliceerde behandelingen in deze categorie").waitFor();
-      const item = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Gezichtspeeling" }) }).first();
+      const item = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Lichaamspakking" }) }).first();
       await item.locator(":scope > summary").click();
       await item.locator('select[name="pricingMode"]').selectOption("fixed");
       await item.locator('input[name="price"]').fill("55");
@@ -463,18 +464,18 @@ function mailsSince(since) {
       await item.locator('input[name="confirm"]').check();
       await item.getByRole("button", { name: "Opslaan" }).click();
       await item.getByText("Opgeslagen en gepubliceerd").waitFor();
-      const page = await fetch(`${BASE}/gezichtsbehandelingen/gezichtspeeling`);
+      const page = await fetch(`${BASE}/lichaamsbehandelingen/lichaamspakking`);
       assert.equal(page.status, 200);
       const html = (await page.text()).replace(/\u00a0|&nbsp;|&#160;/g, " ");
       assert.match(html, /€ ?55/);
       assert.equal((await fetch(`${BASE}/gezichtsbehandelingen/gezichtsmasker`)).status, 404, "other drafts stay hidden");
       await p.reload();
-      const again = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Gezichtspeeling" }) }).first();
+      const again = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Lichaamspakking" }) }).first();
       await again.locator(":scope > summary").click();
       await again.locator('select[name="status"]').selectOption("draft");
       await again.getByRole("button", { name: "Opslaan" }).click();
       await again.getByText("Opgeslagen.").waitFor();
-      assert.equal((await fetch(`${BASE}/gezichtsbehandelingen/gezichtspeeling`)).status, 404);
+      assert.equal((await fetch(`${BASE}/lichaamsbehandelingen/lichaamspakking`)).status, 404);
     });
 
     await step("price on request: proposal email, customer accepts via the personal link, agreed price recorded", async () => {

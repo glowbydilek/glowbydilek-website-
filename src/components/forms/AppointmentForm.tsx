@@ -140,7 +140,7 @@ export function AppointmentForm({
     <form ref={formRef} onSubmit={onSubmit} noValidate className="relative space-y-9">
       <Honeypot value={honeypot} onChange={setHoneypot} />
 
-      <fieldset aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
+      <fieldset className="min-w-0" aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>
         <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
           {t.treatments} <span aria-hidden="true" className="text-accent-deep">*</span>
         </legend>
@@ -193,7 +193,7 @@ export function AppointmentForm({
           error={fe("preferredDate")}
           labels={t.datePicker}
         />
-        <fieldset aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
+        <fieldset className="min-w-0" aria-describedby={fe("timeRange") ? "appt-time-error" : undefined}>
           <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
             {t.timeRange} <span aria-hidden="true" className="text-accent-deep">*</span>
           </legend>
