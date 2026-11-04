@@ -44,7 +44,10 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   // Media uploads in the admin (images up to 12 MB) are sent through Server Actions.
-  experimental: { serverActions: { bodySizeLimit: "14mb" } },
+  // `cpus` caps the parallel build workers: Hostinger reports 63 cores, and each
+  // worker opens its own database connection while pre-rendering pages, which
+  // exceeded the per-user connection limit of the shared MySQL server.
+  experimental: { serverActions: { bodySizeLimit: "14mb" }, cpus: Math.max(1, Number(process.env.BUILD_WORKERS) || 4) },
   // pdfkit reads its font metrics from node_modules at runtime; keep it unbundled.
   serverExternalPackages: ["pdfkit"],
   poweredByHeader: false,

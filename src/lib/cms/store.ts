@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { draftMode } from "next/headers";
 import { cache } from "react";
 import { currentSession } from "../auth/session";
-import { databaseConfigured, getDb } from "../db/client";
+import { databaseConfigured, describeDbError, getDb } from "../db/client";
 import { contentEntries, media, packageItems, serviceGroups, serviceSections, treatments } from "../db/schema";
 import { EMPTY_SNAPSHOT, setSnapshotResolver, type MarketingSnapshot, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
 
@@ -102,7 +102,7 @@ export async function ensureContent(): Promise<Snapshot> {
     cacheState.published = { snap, at: Date.now() };
     return (store.snap = snap);
   } catch (err) {
-    console.error("[cms] content could not be loaded, using built-in content:", err instanceof Error ? err.message.slice(0, 160) : err);
+    console.error("[cms] content could not be loaded, using built-in content:", describeDbError(err));
     return (store.snap = cacheState.published?.snap ?? EMPTY_SNAPSHOT);
   }
 }

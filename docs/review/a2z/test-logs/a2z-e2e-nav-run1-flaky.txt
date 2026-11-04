@@ -1,0 +1,14 @@
+✓ treatment page CTA preselects the treatment (NL)
+✓ treatment card 'request' link preselects (EN)
+✓ Turkish booking link preselects (?bakim=)
+✓ on-request massage never disappears when online booking is on
+✓ unknown treatment id is ignored
+✗ language switch keeps the page and the preselected treatment
+    Expected values to be strictly equal:
+✓ desktop mega menu opens, lists all categories and navigates
+✓ mobile menu: opens, locks scroll, Escape closes, links navigate
+✓ mobile: pages opened from a scrolled page start at the top
+✓ desktop: pages opened from a scrolled page start at the top
+✓ every header and footer link resolves
+✓ form without a completed security check is refused and keeps its values
+✓ API rejects missing and replayed Turnstile tokens
