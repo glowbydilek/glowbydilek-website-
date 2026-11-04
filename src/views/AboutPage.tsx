@@ -118,7 +118,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
             <ul className="mt-block grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {t.approach.items.map((v, i) => (
                 <li key={v.title} className="border-t border-accent/50 pt-5" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                  <span className="font-serif text-3xl italic text-accent-deep">0{i + 1}</span>
+                  <span className="block whitespace-nowrap tabular-nums font-serif text-3xl italic text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="mt-3 font-serif text-[1.7rem] text-ink">{v.title}</h3>
                   <p className="mt-2 leading-relaxed text-ink-soft">{v.body}</p>
                 </li>

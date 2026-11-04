@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { TemplateForm } from "@/components/private/cms/TemplateForm";
@@ -10,6 +11,7 @@ import { TEMPLATE_KEYS, TEMPLATE_LABELS, type TemplateKey } from "@/lib/notifica
 export const metadata = { title: "E-mailteksten" };
 
 export default async function Emails({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireOwner("admin");
   const sp = await searchParams;
   const key = (TEMPLATE_KEYS.includes(sp.mail as TemplateKey) ? sp.mail : "confirmed") as TemplateKey;
   const locale = asLocale(sp.taal);

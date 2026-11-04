@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { desc, ne } from "drizzle-orm";
 import { Badge, Card, PageHeader } from "@/components/private/ui";
@@ -14,6 +15,7 @@ const ST: Record<string, { label: string; tone: "pending" | "neutral" | "confirm
 };
 
 export default async function Inbox({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "agenda.manage");
   const all = (await searchParams).alle === "1";
   const rows = await getDb().select().from(inquiries).where(all ? undefined : ne(inquiries.status, "closed")).orderBy(desc(inquiries.createdAt)).limit(200);
   return (

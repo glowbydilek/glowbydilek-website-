@@ -1,0 +1,9 @@
+✓ first visit: banner with Alles accepteren / Alles weigeren / Voorkeuren instellen, identical button styles, 0 Google requests, 0 _ga cookies
+✓ reject all: banner closes, remembered after refresh, booking form works, 0 Google requests; record = {analytics:false, marketing:false, at, policy}
+✓ accept all (gtag): 1 loader (www.googletagmanager.com/gtag/js?id=G-77V0DM6Y7B), consent default=denied then update analytics=granted/ads=denied, page views /waxbehandelingen (no duplicates)
+✓ treatment page: view_treatment event (treatment_id/category_id only; no e-mail, phone or tokens in the data layer)
+✓ private page /agenda/login: no Google script, no request, no banner
+✓ withdraw via footer ‘Cookie-instellingen’: dialog shows current choice, ‘Alles weigeren’ removes _ga/_ga_* and reloads without any Google script
+✓ English: Accept all / Reject all / Customise preferences; analytics unticked by default; save without → 0 requests; switch on later → 1 loader
+✓ blocked storage (private mode): banner works, no page errors, 0 Google requests
+✓ phone 390×844: banner 299px high (of 664), 12px side margins, no horizontal overflow; preferences dialog opens

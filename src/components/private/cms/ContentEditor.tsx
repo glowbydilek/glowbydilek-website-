@@ -122,10 +122,18 @@ function Node({ k, v, path, onChange, depth }: { k: string; v: Json; path: strin
   );
 }
 
-export function Buttons({ op, children, variant, confirm }: { op: string; children: string; variant?: "primary" | "outline" | "gold" | "ghost" | "danger"; confirm?: string }) {
+export function Buttons({ op, children, short, variant, confirm, className }: { op: string; children: string; short?: string; variant?: "primary" | "outline" | "gold" | "ghost" | "danger"; confirm?: string; className?: string }) {
   return (
-    <SubmitButton name="op" value={op} variant={variant} confirm={confirm}>
-      {children}
+    // With a short phone label the full label stays the accessible name (it contains the visible text, WCAG 2.5.3).
+    <SubmitButton name="op" value={op} variant={variant} confirm={confirm} className={className} aria-label={short ? children : undefined}>
+      {short ? (
+        <>
+          <span className="sm:hidden">{short}</span>
+          <span className="hidden sm:inline">{children}</span>
+        </>
+      ) : (
+        children
+      )}
     </SubmitButton>
   );
 }
@@ -143,9 +151,10 @@ export function ContentEditor({ docKey, locale, initial, path, hasDraft, canRese
       <div onChange={() => setDirty(true)}>
         <Node k="root" v={value} path="root" depth={0} onChange={(v) => { setValue(v); setDirty(true); }} />
       </div>
-      <div className="sticky bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-10 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur">
-        <Buttons op="save" variant="outline">Concept opslaan</Buttons>
-        <Buttons op="preview" variant="outline">Voorbeeld bekijken</Buttons>
+      {/* Phones: one compact row (short labels) so the bar never covers half the form. */}
+      <div className="sticky-actions sticky z-20 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-2 shadow-lg backdrop-blur sm:p-3 [&>button]:max-sm:flex-1 [&>button]:max-sm:px-2">
+        <Buttons op="save" variant="outline" short="Opslaan">Concept opslaan</Buttons>
+        <Buttons op="preview" variant="outline" short="Voorbeeld">Voorbeeld bekijken</Buttons>
         <Buttons op="publish">Publiceren</Buttons>
         {hasDraft && !dirty && <Buttons op="discard" variant="ghost" confirm="Het concept verwijderen? De gepubliceerde versie blijft staan.">Concept verwijderen</Buttons>}
         {canReset && <Buttons op="reset" variant="ghost" confirm="De oorspronkelijke tekst terugzetten op de website? Je wijzigingen blijven in de geschiedenis.">Oorspronkelijke tekst</Buttons>}

@@ -59,12 +59,26 @@ export function AnalyticsEditor({ initial }: { initial: Analytics }) {
       <input type="hidden" name="locale" value="all" />
       <input type="hidden" name="path" value="/" />
       <input type="hidden" name="data" value={JSON.stringify(v)} />
+      <fieldset className="space-y-2">
+        <legend className="text-sm font-medium text-ink">Hoe wordt Google geladen?</legend>
+        <label className="flex min-h-11 items-start gap-3 text-sm">
+          <input type="radio" name="mode-ui" checked={v.mode === "gtag"} onChange={() => setV({ ...v, mode: "gtag" })} className="mt-1 h-5 w-5 accent-[var(--color-ink)]" />
+          <span><strong>Google Analytics direct</strong> — werkt meteen met de Measurement ID. Kies dit zolang Tag Manager nog niet is ingericht.</span>
+        </label>
+        <label className="flex min-h-11 items-start gap-3 text-sm">
+          <input type="radio" name="mode-ui" checked={v.mode === "gtm"} onChange={() => setV({ ...v, mode: "gtm" })} className="mt-1 h-5 w-5 accent-[var(--color-ink)]" />
+          <span><strong>Via Google Tag Manager</strong> — alleen kiezen als de GA4-tag in de container is ingericht en gepubliceerd (zie de handleiding). Er wordt dan nooit daarnaast GA4 direct geladen, zodat bezoeken niet dubbel worden geteld.</span>
+        </label>
+      </fieldset>
       <Field label="GA4 Measurement ID" hint="Google Analytics → Beheer → Gegevensstreams → je website. Begint met G-.">
         <Input value={v.measurementId} onChange={(e) => setV({ ...v, measurementId: e.target.value.trim() })} placeholder="G-XXXXXXXXXX" />
       </Field>
+      <Field label="Google Tag Manager-ID" hint="Tag Manager → je container. Begint met GTM-.">
+        <Input value={v.gtmId} onChange={(e) => setV({ ...v, gtmId: e.target.value.trim() })} placeholder="GTM-XXXXXXX" />
+      </Field>
       <label className="flex min-h-11 items-center gap-3 text-sm">
         <input type="checkbox" checked={v.enabled} onChange={(e) => setV({ ...v, enabled: e.target.checked })} className="h-5 w-5 accent-[var(--color-ink)]" />
-        Analytics aanzetten (bezoekers krijgen eerst de toestemmingsvraag)
+        Statistieken aanzetten (bezoekers krijgen eerst de cookievraag; zonder ‘ja’ wordt niets geladen)
       </label>
       <Buttons op="publish">Publiceren</Buttons>
     </ActionForm>

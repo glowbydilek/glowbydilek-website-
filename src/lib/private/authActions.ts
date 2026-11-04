@@ -18,7 +18,7 @@ import {
   verifyMfa,
 } from "../auth/service";
 import {
-  assertOwner,
+  assertSignedIn,
   clearSessionCookie,
   currentSession,
   requestContext,
@@ -154,7 +154,7 @@ export async function logoutAction(form: FormData) {
 
 /** Ends every session of the owner, including this one (lost or shared device). */
 export async function logoutEverywhereAction() {
-  const s = await assertOwner();
+  const s = await assertSignedIn();
   const db = getDb();
   await revokeAllSessions(db, s.user.id);
   await audit(db, { userId: s.user.id, action: "auth.logout_all" });
@@ -163,7 +163,7 @@ export async function logoutEverywhereAction() {
 }
 
 export async function changePasswordAction(_: FormState, form: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertSignedIn();
   const next = String(form.get("password") ?? "");
   if (next !== String(form.get("confirm") ?? "")) return { error: "De twee nieuwe wachtwoorden zijn niet gelijk." };
   const ctx = await requestContext();
@@ -184,20 +184,20 @@ export async function changePasswordAction(_: FormState, form: FormData): Promis
 }
 
 export async function startMfaAction(): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertSignedIn();
   const { uri, secret } = await startMfaEnrolment(getDb(), s.user);
   return { ok: true, data: { uri, secret } };
 }
 
 export async function confirmMfaAction(_: FormState, form: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertSignedIn();
   const r = await confirmMfaEnrolment(getDb(), s.user, String(form.get("code") ?? "").trim(), await requestContext());
   if (!r.ok) return { error: "Deze code klopt niet. Controleer de tijd op je telefoon en probeer de nieuwste code." };
   return { ok: true, data: { recoveryCodes: r.recoveryCodes } };
 }
 
 export async function disableMfaAction(_: FormState, form: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertSignedIn();
   const ok = await disableMfa(getDb(), s, String(form.get("password") ?? ""), await requestContext());
   return ok ? { ok: true, message: "Tweestapsverificatie is uitgeschakeld." } : { error: "Je wachtwoord klopt niet." };
 }

@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { AnalyticsEditor } from "@/components/private/cms/SocialAnalyticsForms";
 import { Card, PageHeader } from "@/components/private/ui";
 import { DEFAULT_ANALYTICS, validateAnalytics } from "@/lib/cms/menu";
@@ -7,6 +8,7 @@ import { getDb } from "@/lib/db/client";
 export const metadata = { title: "Analytics & cookies" };
 
 export default async function AnalyticsPage() {
+  await requireOwner("admin");
   const v = validateAnalytics((await editorValue(getDb(), "analytics", "all", DEFAULT_ANALYTICS)).value).value;
   return (
     <>

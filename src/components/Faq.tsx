@@ -13,7 +13,7 @@ export function Faq({ items, tone = "light" }: { items: FaqItem[]; tone?: "light
       {items.map((item, i) => (
         <details key={item.q} className="group">
           <summary className="faq-summary flex cursor-pointer items-baseline gap-4 py-6 text-left sm:gap-6">
-            <span className={`w-7 shrink-0 font-serif text-sm tabular-nums ${dark ? "text-glow/80" : "text-accent-deep"}`} aria-hidden="true">
+            <span className={`w-7 shrink-0 whitespace-nowrap font-serif text-sm tabular-nums ${dark ? "text-glow/80" : "text-accent-deep"}`} aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className={`min-w-0 flex-1 font-serif text-xl leading-snug transition-colors duration-300 sm:text-[1.65rem] ${dark ? "text-paper group-hover:text-glow" : "text-ink group-hover:text-accent-deep"}`}>{item.q}</span>

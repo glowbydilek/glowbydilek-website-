@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { assertOwner, UnauthorizedError } from "@/lib/auth/session";
+import { assertCan, UnauthorizedError } from "@/lib/auth/session";
 import { findMatches } from "@/lib/crm/service";
 import { matchLabel } from "@/lib/crm/normalize";
 import { getDb } from "@/lib/db/client";
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: Request) {
   try {
-    await assertOwner();
+    await assertCan("customers.view");
   } catch (e) {
     if (e instanceof UnauthorizedError) return new NextResponse("Unauthorized", { status: 401 });
     throw e;

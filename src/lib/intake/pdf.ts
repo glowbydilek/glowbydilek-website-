@@ -1,12 +1,13 @@
 import "server-only";
 import PDFDocument from "pdfkit";
+import { PDF_FONT, registerPdfFonts } from "../pdf/fonts";
 import { logoData } from "../../components/brand/logoData";
 import { ANSWERS, parseIntake, type IntakeBlock } from "./template";
 
 /**
  * A4 PDF of the intake & consent master form (blank, to print and sign).
- * pdfkit with the built-in Helvetica family: no font files, no native
- * modules, works on Hostinger Node.js.
+ * pdfkit with embedded Unicode fonts (lib/pdf/fonts.ts), so Dutch, English
+ * and Turkish render correctly; no native modules, works on Hostinger.
  */
 
 const INK = "#2B202B";
@@ -15,7 +16,7 @@ const LINE = "#BFA9B1";
 const ACCENT = "#8E4759";
 const LEFT = 56;
 const WIDTH = 483;
-const BOTTOM = 792;
+const BOTTOM = 808;
 
 export async function intakePdf(source: string, version: string, locale: "nl" | "en" | "tr"): Promise<Buffer> {
   const parsed = parseIntake(source, version, ANSWERS[locale]);
@@ -26,6 +27,8 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
     info: { Title: `${parsed.title} (${version})`, Author: "Glow by Dilek", Creator: "Glow by Dilek", Producer: "Glow by Dilek" },
     compress: true,
   });
+  registerPdfFonts(doc);
+  doc.font(PDF_FONT.body);
   const done = new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
     doc.on("data", (c: Buffer) => chunks.push(c));
@@ -41,7 +44,7 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
     doc.path(logoData.glint).fill(ACCENT);
     doc.translate(logoData.inline.x, 0).path(logoData.inline.by).fill(INK);
     doc.restore();
-    doc.fillColor(MUTED).font("Helvetica").fontSize(8).text(version, LEFT, 60, { width: WIDTH, align: "right" });
+    doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(8).text(version, LEFT, 60, { width: WIDTH, align: "right" });
     y = 96;
   };
   const ensure = (h: number) => {
@@ -51,7 +54,7 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
     }
   };
   const text = (s: string, opts: { size?: number; font?: string; color?: string; gap?: number; width?: number; x?: number } = {}) => {
-    doc.font(opts.font ?? "Helvetica").fontSize(opts.size ?? 9.5).fillColor(opts.color ?? INK);
+    doc.font(opts.font ?? PDF_FONT.body).fontSize(opts.size ?? 9.5).fillColor(opts.color ?? INK);
     const w = opts.width ?? WIDTH;
     const h = doc.heightOfString(s, { width: w, lineGap: 1.5 });
     ensure(h + (opts.gap ?? 4));
@@ -68,12 +71,12 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
   const draw = (b: IntakeBlock) => {
     switch (b.type) {
       case "title":
-        text(b.text, { size: 18, font: "Helvetica-Bold", color: INK, gap: 6 });
+        text(b.text, { size: 19, font: PDF_FONT.heading, color: INK, gap: 6 });
         break;
       case "heading":
         y += 6;
         ensure(40);
-        text(b.text, { size: 11.5, font: "Helvetica-Bold", color: ACCENT, gap: 2 });
+        text(b.text, { size: 11.5, font: PDF_FONT.bold, color: ACCENT, gap: 2 });
         writeLine(LEFT, WIDTH, y);
         y += 6;
         break;
@@ -81,7 +84,7 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
         text(b.text, { size: 9, color: MUTED, gap: 6 });
         break;
       case "note": {
-        doc.font("Helvetica-Oblique").fontSize(8.8);
+        doc.font(PDF_FONT.italic).fontSize(8.8);
         const h = doc.heightOfString(b.text, { width: WIDTH - 16, lineGap: 1.5 });
         ensure(h + 16);
         doc.rect(LEFT, y, WIDTH, h + 10).fill("#F5E6E7");
@@ -95,17 +98,17 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
           ensure(26);
           for (let j = 0; j < 2 && i + j < b.labels.length; j++) {
             const x = LEFT + j * (col + 24);
-            doc.font("Helvetica").fontSize(8.5).fillColor(MUTED).text(b.labels[i + j], x, y, { width: col });
+            doc.font(PDF_FONT.body).fontSize(8.5).fillColor(MUTED).text(b.labels[i + j], x, y, { width: col });
             writeLine(x, col, y + 22);
           }
-          y += 30;
+          y += 27;
         }
         break;
       }
       case "options": {
         ensure(20);
         let x = LEFT;
-        doc.font("Helvetica").fontSize(9).fillColor(INK);
+        doc.font(PDF_FONT.body).fontSize(9).fillColor(INK);
         for (const it of b.items) {
           const w = doc.widthOfString(it.label) + 18 + (it.line ? 90 : 0);
           if (x + w > LEFT + WIDTH) {
@@ -113,7 +116,17 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
             y += 18;
             ensure(18);
           }
-          box(x, y);
+          if (w > WIDTH) {
+            // Too long for one line: box + wrapped label on its own row.
+            const h = doc.heightOfString(it.label, { width: WIDTH - 14, lineGap: 1 });
+            ensure(h + 6);
+            box(x, y + 0.5);
+            doc.fillColor(INK).text(it.label, x + 14, y, { width: WIDTH - 14, lineGap: 1 });
+            y += h + 6;
+            x = LEFT;
+            continue;
+          }
+          box(x, y + 0.5);
           doc.fillColor(INK).text(it.label, x + 14, y, { lineBreak: false });
           if (it.line) writeLine(x + 16 + doc.widthOfString(it.label) + 4, 80, y + 9);
           x += w + 12;
@@ -122,43 +135,48 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
         break;
       }
       case "questions": {
-        const colW = 46;
-        const qW = WIDTH - colW * parsed.answers.length;
+        // Column per answer, sized to its label (max two lines), so the question text keeps the most room.
+        doc.font(PDF_FONT.bold).fontSize(7.5);
+        const colWs = parsed.answers.map((ans) => Math.min(84, Math.max(40, Math.ceil(doc.widthOfString(ans) / (doc.widthOfString(ans) > 70 ? 2 : 1)) + 14)));
+        const colX = (i: number) => LEFT + WIDTH - colWs.slice(i).reduce((n, w) => n + w, 0);
+        const qW = WIDTH - colWs.reduce((n, w) => n + w, 0);
         if (b.title) {
           ensure(40);
-          text(b.title, { size: 9.5, font: "Helvetica-Bold", gap: 3 });
+          text(b.title, { size: 9.5, font: PDF_FONT.bold, gap: 3 });
         }
-        ensure(18);
-        doc.font("Helvetica-Bold").fontSize(7.5).fillColor(MUTED);
-        parsed.answers.forEach((a, i) => doc.text(a, LEFT + qW + i * colW, y, { width: colW, align: "center" }));
-        y += 12;
+        // Reserve the full heading height so a wrapped answer label never overlaps a box.
+        doc.font(PDF_FONT.bold).fontSize(7.5).fillColor(MUTED);
+        const headH = Math.max(...parsed.answers.map((ans, i) => doc.heightOfString(ans, { width: colWs[i] - 6, align: "center" })));
+        ensure(headH + 24);
+        parsed.answers.forEach((ans, i) => doc.text(ans, colX(i) + 3, y, { width: colWs[i] - 6, align: "center" }));
+        y += headH + 5;
         for (const q of b.items) {
-          doc.font("Helvetica").fontSize(9);
+          doc.font(PDF_FONT.body).fontSize(9);
           const h = Math.max(14, doc.heightOfString(q, { width: qW - 10, lineGap: 1 }));
           ensure(h + 8);
           doc.fillColor(INK).text(q, LEFT, y, { width: qW - 10, lineGap: 1 });
-          parsed.answers.forEach((_, i) => box(LEFT + qW + i * colW + colW / 2 - 4.5, y + 1));
-          y += h + 4;
+          parsed.answers.forEach((_, i) => box(colX(i) + colWs[i] / 2 - 4.5, y + 1));
+          y += h + 3;
           writeLine(LEFT, WIDTH, y);
-          y += 4;
+          y += 3.5;
         }
         y += 4;
         break;
       }
       case "line":
-        ensure(30);
-        doc.font("Helvetica").fontSize(8.5).fillColor(MUTED).text(b.label, LEFT, y, { width: WIDTH });
-        writeLine(LEFT, WIDTH, y + 22);
-        y += 28;
+        ensure(28);
+        doc.font(PDF_FONT.body).fontSize(8.5).fillColor(MUTED).text(b.label, LEFT, y, { width: WIDTH });
+        writeLine(LEFT, WIDTH, y + 21);
+        y += 26;
         break;
       case "statements":
         for (const s of b.items) {
-          doc.font("Helvetica").fontSize(9);
+          doc.font(PDF_FONT.body).fontSize(9);
           const h = doc.heightOfString(s, { width: WIDTH - 18, lineGap: 1.5 });
           ensure(h + 8);
           box(LEFT, y + 1);
           doc.fillColor(INK).text(s, LEFT + 18, y, { width: WIDTH - 18, lineGap: 1.5 });
-          y += h + 8;
+          y += h + 6;
         }
         break;
       case "signature": {
@@ -167,7 +185,7 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
         const widths = n === 2 ? [WIDTH * 0.62, WIDTH * 0.38 - 20] : b.parts.map(() => (WIDTH - 20 * (n - 1)) / n);
         let x = LEFT;
         b.parts.forEach((p, i) => {
-          doc.font("Helvetica").fontSize(8.5).fillColor(MUTED).text(p, x, y, { width: widths[i] });
+          doc.font(PDF_FONT.body).fontSize(8.5).fillColor(MUTED).text(p, x, y, { width: widths[i] });
           writeLine(x, widths[i], y + 28);
           x += widths[i] + 20;
         });
@@ -188,7 +206,7 @@ export async function intakePdf(source: string, version: string, locale: "nl" | 
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);
     doc.page.margins.bottom = 0; // the footer sits below the text area
-    doc.fillColor(MUTED).font("Helvetica").fontSize(7.5).text(`Glow by Dilek  ·  ${version}  ·  ${i + 1}/${range.count}`, LEFT, 800, { width: WIDTH, align: "center", lineBreak: false });
+    doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(7.5).text(`Glow by Dilek  ·  ${version}  ·  ${i + 1}/${range.count}`, LEFT, 818, { width: WIDTH, align: "center", lineBreak: false });
   }
   doc.end();
   return done;

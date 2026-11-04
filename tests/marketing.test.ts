@@ -21,11 +21,15 @@ test("social links: only https profiles on the network's own domain; nothing sho
   assert.equal(publicSocial({ links: [{ network: "facebook", url: "https://www.facebook.com/glow", enabled: false }] }).length, 0);
 });
 
-test("analytics: only a valid GA4 Measurement ID can be enabled", () => {
-  assert.deepEqual(validateAnalytics({ measurementId: "g-abc123def4", enabled: true }).value, { measurementId: "G-ABC123DEF4", enabled: true });
+test("analytics: one loader only; valid IDs required; older settings mean GA4 direct", () => {
+  assert.deepEqual(validateAnalytics({ measurementId: "g-abc123def4", enabled: true }).value, { measurementId: "G-ABC123DEF4", gtmId: "", mode: "gtag", enabled: true });
+  assert.equal(validateAnalytics({ gtmId: "gtm-w9vrjf9x", mode: "gtm", enabled: true }).value.enabled, true);
+  assert.equal(validateAnalytics({ gtmId: "GTM-W9VRJF9X", mode: "gtm", enabled: true }).value.gtmId, "GTM-W9VRJF9X");
+  assert.equal(validateAnalytics({ measurementId: "G-ABC123DEF4", mode: "gtm", enabled: true }).value.enabled, false, "GTM mode needs a GTM ID");
+  assert.equal(validateAnalytics({ gtmId: "<x>", mode: "gtm", enabled: true }).errors.length >= 1, true);
   assert.equal(validateAnalytics({ measurementId: "UA-123", enabled: true }).value.enabled, false);
   assert.equal(validateAnalytics({ measurementId: "", enabled: true }).value.enabled, false);
-  assert.equal(validateAnalytics({ measurementId: "<script>", enabled: true }).errors.length, 1);
+  assert.ok(validateAnalytics({ measurementId: "<script>", enabled: true }).errors.length >= 1);
 });
 
 test("review validation: rating, length, no links, consent required", () => {
@@ -78,4 +82,19 @@ describe("reviews against MariaDB", { skip: skipDb }, () => {
     const b = await submitReview(db, { ...input, body: "Tweede poging met dezelfde link.", inviteToken: token });
     assert.equal(b.verified, false, "single use");
   });
+});
+
+test("cookie consent: versioned, expiring record; Consent Mode never grants ads without marketing consent", async () => {
+  const { parseConsent, consentModeState, isTrackablePath, CONSENT_POLICY_VERSION } = await import("../src/lib/analytics/consent.ts");
+  const now = Date.parse("2026-11-04T12:00:00Z");
+  const rec = (o: object) => JSON.stringify({ v: 2, analytics: true, marketing: false, at: "2026-11-04T10:00:00Z", policy: CONSENT_POLICY_VERSION, ...o });
+  assert.equal(parseConsent(rec({}), now)?.analytics, true);
+  assert.equal(parseConsent(rec({ policy: "old" }), now), null, "new policy version asks again");
+  assert.equal(parseConsent(rec({ at: "2025-10-01T00:00:00Z" }), now), null, "older than 12 months asks again");
+  assert.equal(parseConsent("granted", now), null, "v1 yes/no value is not valid consent");
+  assert.equal(parseConsent(null, now), null);
+  assert.deepEqual(consentModeState({ analytics: true, marketing: false }), { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  assert.deepEqual(consentModeState({ analytics: false, marketing: false }), { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  for (const p of ["/admin", "/agenda/klanten/3", "/login", "/offerte/abc", "/en/quote/abc", "/tr/teklif/abc", "/api/contact"]) assert.equal(isTrackablePath(p), false, p);
+  for (const p of ["/", "/waxbehandelingen", "/en/prices", "/afspraak-maken"]) assert.equal(isTrackablePath(p), true, p);
 });

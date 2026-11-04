@@ -82,14 +82,15 @@ test("educational pages exist in both languages", () => {
   assert.equal(routes.process.en, "/en/appointment-process");
 });
 
-test("sitemap lists every page in all three languages with hreflang alternates", async () => {
+test("sitemap lists every page in Dutch and English (Turkish is noindex) with reciprocal hreflang and real dates", async () => {
   const entries = await sitemap();
   // Besides the fixed pages: the massage landing page and its five massages, the facial landing
   // page with facial care with steam, and (of the legal pages) only the cookie policy.
-  assert.equal(entries.length, (allPages().length + 9) * 3);
-  assert.ok(entries.some((e) => e.url.endsWith("/tr/masajlar/tum-vucut-rahatlama-masaji")));
+  assert.equal(entries.length, (allPages().length + 9) * 2);
+  assert.ok(!entries.some((e) => e.url.includes("/tr/") || e.url.endsWith("/tr")), "no Turkish URLs");
+  assert.ok(!entries.some((e) => /\/(admin|agenda|login|api|offerte)(\/|$)|\/en\/quote\//.test(e.url)), "no private URLs");
+  assert.equal(new Set(entries.map((e) => e.url)).size, entries.length, "no duplicate URLs");
   assert.ok(entries.some((e) => e.url.endsWith("/gezichtsbehandelingen/gezichtsbehandeling-met-stoom")));
-  assert.ok(entries.some((e) => e.url.endsWith("/tr/cerez-politikasi")));
   assert.ok(entries.some((e) => e.url.endsWith("/cookiebeleid")));
   assert.ok(!entries.some((e) => e.url.endsWith("/algemene-voorwaarden")));
   assert.ok(entries.some((e) => e.url.endsWith("/behandelingen")));
@@ -98,6 +99,9 @@ test("sitemap lists every page in all three languages with hreflang alternates",
   for (const e of entries) {
     assert.ok(e.url.startsWith("https://"), e.url);
     const langs = e.alternates?.languages as Record<string, string>;
-    assert.ok(langs["nl-NL"] && langs.en && langs["tr-TR"], `alternates for ${e.url}`);
+    assert.ok(langs["nl-NL"] && langs.en && !langs["tr-TR"], `alternates for ${e.url}`);
+    assert.ok(Object.values(langs).includes(e.url), `self-referencing alternate for ${e.url}`);
+    const t = (e.lastModified as Date).getTime();
+    assert.ok(t <= Date.now() && t >= Date.parse("2026-01-01"), `real lastModified for ${e.url}`);
   }
 });

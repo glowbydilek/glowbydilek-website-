@@ -4,7 +4,7 @@ import { asLocale } from "../../i18n/config";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { assertOwner } from "../auth/session";
+import { assertCan, assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { audit } from "../db/audit";
 import { contentEntries, customPages, notificationTemplates, redirects, treatments } from "../db/schema";
@@ -37,12 +37,24 @@ function parseJson(raw: string): unknown {
 }
 
 /** Save draft / publish / discard / reset for one content document. */
+/**
+ * Page texts (dict:, guide:, category:, section:, treatment:, custom pages)
+ * may be edited as a draft with "cms.edit" and published with "cms.publish".
+ * Everything else — SEO, menu, business details, analytics, theme, legal
+ * texts, social links, photos — stays owner-only.
+ */
+const PAGE_TEXT = /^(dict|guide|category|section|treatment|custom):[\w-]+$/;
+async function assertContent(docKey: string, op: string) {
+  if (!PAGE_TEXT.test(docKey)) return assertOwner();
+  return assertCan(op === "save" || op === "preview" ? "cms.edit" : "cms.publish");
+}
+
 export async function contentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
-  const db = getDb();
   const docKey = str(f, "docKey");
   const locale = asLoc(str(f, "locale"));
   const op = str(f, "op");
+  const s = await assertContent(docKey, op);
+  const db = getDb();
   try {
     if (op === "save" || op === "publish" || op === "preview") {
       let data = parseJson(str(f, "data"));

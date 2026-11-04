@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { BusinessForm } from "@/components/private/cms/BusinessForm";
 import { Card, Notice, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
@@ -7,6 +8,7 @@ import { invoiceReadiness } from "@/lib/finance/invoice-core";
 export const metadata = { title: "Bedrijf & facturen" };
 
 export default async function Business() {
+  await requireOwner("admin");
   const v = await getInvoiceSettings(getDb());
   const missing = invoiceReadiness(v);
   return (

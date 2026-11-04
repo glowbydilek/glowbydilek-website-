@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { ThemeEditor } from "@/components/private/cms/ThemeEditor";
 import { Card, PageHeader } from "@/components/private/ui";
 import { editorValue } from "@/lib/cms/service";
@@ -7,6 +8,7 @@ import { getDb } from "@/lib/db/client";
 export const metadata = { title: "Thema & Design" };
 
 export default async function ThemePage() {
+  await requireOwner("admin");
   const ev = await editorValue(getDb(), "theme", "all", APPROVED_THEME);
   const { theme } = validateTheme(ev.value);
   return (

@@ -137,7 +137,18 @@ export function AppointmentForm({
     }`;
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate className="relative space-y-9">
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      onChangeCapture={() => {
+        if (formRef.current && !formRef.current.dataset.started) {
+          formRef.current.dataset.started = "1";
+          track("booking_start", { form: "request" });
+        }
+      }}
+      noValidate
+      className="relative space-y-9"
+    >
       <Honeypot value={honeypot} onChange={setHoneypot} />
 
       <fieldset className="min-w-0" aria-describedby={fe("treatments") ? "appt-treatments-error" : "appt-treatments-hint"}>

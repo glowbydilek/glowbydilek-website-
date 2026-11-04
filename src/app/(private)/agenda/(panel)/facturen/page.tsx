@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
@@ -13,6 +14,7 @@ export const metadata = { title: "Facturen & PDF" };
 const dateNl = (d: string | null) => (d ? d.split("-").reverse().join("-") : "—");
 
 export default async function Invoices({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "finance");
   const sp = await searchParams;
   const db = getDb();
   const [rows, settings] = await Promise.all([

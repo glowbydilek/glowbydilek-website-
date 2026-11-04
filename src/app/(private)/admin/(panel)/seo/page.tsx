@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { desc } from "drizzle-orm";
@@ -32,6 +33,7 @@ function defaultsFor(item: Item, locale: "nl" | "en" | "tr") {
 }
 
 export default async function SeoPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireOwner("admin");
   const sp = await searchParams;
   const item = items.find((i) => i.key === sp.pagina) ?? items[0];
   const locale = asLocale(sp.taal);

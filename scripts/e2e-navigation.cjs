@@ -56,6 +56,13 @@ async function step(name, fn) {
   const ctx = async (width, autoSolve = true) => {
     const c = await browser.newContext({ viewport: { width, height: 860 } });
     await c.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub(autoSolve) }));
+    // A returning visitor who already made a cookie choice (the banner itself is tested separately);
+    // otherwise Playwright scrolls links out from under the banner before clicking.
+    await c.addInitScript(() => {
+      try {
+        localStorage.setItem("glow-consent-v2", JSON.stringify({ v: 2, analytics: false, marketing: false, at: new Date().toISOString(), policy: "2026-11-04" }));
+      } catch {}
+    });
     return c;
   };
   const checked = (page) =>

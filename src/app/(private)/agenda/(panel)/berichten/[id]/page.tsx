@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { Card, PageHeader, SubmitButton } from "@/components/private/ui";
@@ -10,6 +11,7 @@ export const metadata = { title: "Bericht" };
 const TOPIC: Record<string, string> = { question: "Algemene vraag", treatment: "Vraag over een behandeling", appointment: "Afspraak", other: "Iets anders" };
 
 export default async function Message({ params }: { params: Promise<{ id: string }> }) {
+  await requireCan("agenda", "agenda.manage");
   const id = Number((await params).id);
   const db = getDb();
   const [m] = await db.select().from(inquiries).where(eq(inquiries.id, id));

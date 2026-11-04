@@ -1,4 +1,4 @@
-import { asLocale } from "../../i18n/config";
+import { mailLocale } from "../../i18n/config";
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, inArray } from "drizzle-orm";
@@ -53,7 +53,7 @@ export async function sendQuote(
     const expiresAt = new Date(now.getTime() + days * 86_400_000);
     const [res] = await tx.insert(priceQuotes).values({ appointmentId, amountCents: input.amountCents, message: input.message?.trim().slice(0, 1000) || null, tokenHash: hash(token), status: "sent", expiresAt, userId: ctx.userId });
     const quoteId = Number((res as { insertId: number }).insertId);
-    const locale = asLocale(row.appointments.locale);
+    const locale = mailLocale(row.appointments.locale);
     await queueAppointmentEmail(tx as Tx, appointmentId, "price_proposal", `price_proposal:${quoteId}`, {
       message: input.message,
       vars: { amount: formatCents(input.amountCents), link: `${site()}${quotePath(locale, token)}`, validUntil: formatLongDate(expiresAt, locale) },

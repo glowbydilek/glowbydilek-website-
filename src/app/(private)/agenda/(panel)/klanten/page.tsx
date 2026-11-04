@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { CustomerAvatar } from "@/components/private/CustomerAvatar";
 import { Card, Input, LinkButton, Notice, PageHeader, Stat } from "@/components/private/ui";
@@ -9,6 +10,7 @@ import { dayBoundsUtc, todayLocal } from "@/lib/time";
 export const metadata = { title: "Klanten" };
 
 export default async function Customers({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "customers.view");
   const q = ((await searchParams).q ?? "").slice(0, 80);
   const db = getDb();
   const today = todayLocal();

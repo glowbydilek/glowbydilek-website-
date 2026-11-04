@@ -43,11 +43,14 @@ test("titles and descriptions are unique and well-sized per language", () => {
   }
 });
 
-test("structured data never publishes an address, area or location", () => {
+test("structured data names the city (Amsterdam) but never a street address, map or coordinates", () => {
   for (const l of locales) {
-    const json = JSON.stringify(businessJsonLd(l));
-    for (const key of ["address", "geo", "areaServed", "hasMap", "latitude", "PostalAddress"]) {
+    const data = businessJsonLd(l) as Record<string, unknown>;
+    const json = JSON.stringify(data);
+    for (const key of ["streetAddress", "postalCode", "geo", "hasMap", "latitude", "longitude", "aggregateRating", "openingHours"]) {
       assert.ok(!json.includes(key), `${key} in business JSON-LD`);
     }
+    assert.equal(data["@type"], "BeautySalon");
+    assert.deepEqual(data.address, { "@type": "PostalAddress", addressLocality: "Amsterdam", addressCountry: "NL" });
   }
 });

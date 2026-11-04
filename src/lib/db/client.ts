@@ -25,7 +25,7 @@ export function getDb(): DB {
   if (!url) throw new DatabaseNotConfiguredError();
   const pool = mysql.createPool({
     uri: url,
-    connectionLimit: Number(process.env.DATABASE_POOL_SIZE || 5),
+    connectionLimit: poolSize(),
     connectTimeout: 5000,
     timezone: "Z",
     dateStrings: false,
@@ -35,6 +35,28 @@ export function getDb(): DB {
   globalForDb.__glowPool = pool;
   globalForDb.__glowDb = drizzle(pool, { schema, mode: "default" });
   return globalForDb.__glowDb;
+}
+
+/**
+ * `next build` renders the static pages in many parallel worker processes,
+ * each with its own pool. On shared hosting (Hostinger limits connections per
+ * database user) 5 connections per worker exceeded that limit, so the CMS
+ * queries failed during the build and freshly deployed pages showed the
+ * built-in content until the first revalidation. One connection per build
+ * worker is plenty for those short, sequential reads.
+ */
+function poolSize(): number {
+  if (process.env.NEXT_PHASE === "phase-production-build") return 1;
+  return Math.max(1, Number(process.env.DATABASE_POOL_SIZE) || 5);
+}
+
+/** Short, secret-free description of a database error (driver code + message, also from a wrapped `cause`). */
+export function describeDbError(err: unknown): string {
+  if (!(err instanceof Error)) return String(err).slice(0, 160);
+  const cause = (err as Error & { cause?: unknown }).cause;
+  const root = cause instanceof Error ? cause : err;
+  const code = (root as Error & { code?: string }).code;
+  return `${code ? code + ": " : ""}${root.message}`.slice(0, 200);
 }
 
 export class DatabaseNotConfiguredError extends Error {
@@ -50,7 +72,7 @@ export async function withDbOrFallback<T>(fn: (db: DB) => Promise<T>, fallback: 
   try {
     return await fn(getDb());
   } catch (err) {
-    console.error("[db] query failed, using fallback:", err instanceof Error ? err.message.slice(0, 160) : err);
+    console.error("[db] query failed, using fallback:", describeDbError(err));
     return fallback;
   }
 }

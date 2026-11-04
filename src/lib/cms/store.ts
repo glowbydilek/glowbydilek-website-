@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { draftMode } from "next/headers";
 import { cache } from "react";
 import { currentSession } from "../auth/session";
-import { databaseConfigured, getDb } from "../db/client";
+import { databaseConfigured, describeDbError, getDb } from "../db/client";
 import { contentEntries, media, packageItems, serviceGroups, serviceSections, treatments } from "../db/schema";
 import { EMPTY_SNAPSHOT, setSnapshotResolver, type MarketingSnapshot, type PhotoOverride, type Snapshot, type TreatmentLive } from "./current";
 
@@ -56,6 +56,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
   const db = getDb();
   const rows = await db.select().from(contentEntries).where(eq(contentEntries.status, "published"));
   const docs = new Map<string, unknown>(rows.map((r) => [`${r.docKey}|${r.locale}`, r.data]));
+  const docDates = new Map<string, Date>(rows.map((r) => [`${r.docKey}|${r.locale}`, r.updatedAt]));
   if (status === "draft") {
     const drafts = await db.select().from(contentEntries).where(eq(contentEntries.status, "draft"));
     for (const d of drafts) docs.set(`${d.docKey}|${d.locale}`, d.data);
@@ -74,7 +75,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
     }
   }
   const marketing = await loadMarketing(db);
-  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
+  return { docs, docDates, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**
@@ -102,7 +103,7 @@ export async function ensureContent(): Promise<Snapshot> {
     cacheState.published = { snap, at: Date.now() };
     return (store.snap = snap);
   } catch (err) {
-    console.error("[cms] content could not be loaded, using built-in content:", err instanceof Error ? err.message.slice(0, 160) : err);
+    console.error("[cms] content could not be loaded, using built-in content:", describeDbError(err));
     return (store.snap = cacheState.published?.snap ?? EMPTY_SNAPSHOT);
   }
 }

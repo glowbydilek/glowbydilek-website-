@@ -1,0 +1,14 @@
+Lighthouse 12.6.1, local production build (next start), Chromium headless, default throttling
+(mobile = simulated slow 4G + 4x CPU; desktop preset). Container CPU is shared, so values vary run to run.
+
+/ (mobile)                                     performance=74 accessibility=100 best-practices=100 seo=100 LCP=4.2 s CLS=0 TBT=460 ms
+/ (desktop)                                    performance=99 accessibility=100 best-practices=100 seo=100 LCP=0.9 s CLS=0 TBT=30 ms
+/waxbehandelingen/gezicht/wenkbrauwen-waxen (mobile)  performance=85 accessibility=100 best-practices=100 seo=100 LCP=3.3 s CLS=0 TBT=320 ms
+/waxbehandelingen/gezicht/wenkbrauwen-waxen (desktop) performance=100 accessibility=100 best-practices=100 seo=100 LCP=0.8 s CLS=0 TBT=40 ms
+/afspraak-maken (mobile)                       performance=86 accessibility=100 best-practices=100 seo=100 LCP=2.6 s CLS=0 TBT=430 ms
+/afspraak-maken (desktop)                      performance=100 accessibility=100 best-practices=96 seo=100 LCP=0.7 s CLS=0 TBT=10 ms
+/en/prices (mobile)                            performance=77 accessibility=100 best-practices=100 seo=100 LCP=3.9 s CLS=0 TBT=430 ms
+/en/prices (desktop)                           performance=100 accessibility=100 best-practices=100 seo=100 LCP=0.8 s CLS=0 TBT=20 ms
+
+Home (mobile) LCP element = hero image; load delay 0 ms, render delay 3.7 s (main thread: style & layout 1.3 s,
+script evaluation 1.1 s; one 690 ms chunk). Not fixed in this release (needs a careful JS/CSS reduction).

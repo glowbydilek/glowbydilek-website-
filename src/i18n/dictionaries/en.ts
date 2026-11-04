@@ -9,17 +9,17 @@ export const en: Dictionary = {
     tagline: "Beauty & relaxation",
     pages: {
       services: {
-        title: "All treatments",
+        title: "All treatments in Amsterdam",
         description:
           "All Glow by Dilek treatments in one place: relaxing massages, waxing and more personal beauty treatments for women. By appointment only.",
       },
       home: {
-        title: "Glow by Dilek — Beauty & relaxation for women",
+        title: "Glow by Dilek — Beauty salon for women in Amsterdam",
         description:
-          "Personal beauty treatments and relaxing massages for women, tailored to your wishes and comfort. By appointment only; request your appointment online.",
+          "Facials, relaxing massages and waxing for women in Amsterdam. Personal, calm and by appointment; clients from Amstelveen, Diemen and Haarlem are welcome too.",
       },
       treatments: {
-        title: "Face, body and bikini waxing",
+        title: "Waxing in Amsterdam — face, body and bikini",
         description:
           "Eyebrow, upper lip, underarm, arm, leg, back, bikini line, Brazilian and Hollywood waxing. Find out who each treatment suits, what to expect and how to prepare.",
       },
@@ -39,9 +39,9 @@ export const en: Dictionary = {
           "A question about a treatment or an appointment? Send a message through the form or email hello@glowbydilek.nl. Dilek replies personally.",
       },
       booking: {
-        title: "Request an appointment",
+        title: "Book an appointment in Amsterdam",
         description:
-          "Request your appointment online. Choose your treatment and a preferred time; Dilek reviews your request and confirms the appointment personally.",
+          "Request your appointment online at Glow by Dilek in Amsterdam. Choose your treatment and a preferred time; Dilek reviews your request and confirms the appointment personally.",
       },
       reviews: {
         title: "Client reviews",
@@ -574,12 +574,28 @@ export const en: Dictionary = {
     },
   },
   consent: {
-    title: "May I measure how the website is used?",
-    body: "With your permission I use Google Analytics to see which pages are viewed, so I can improve the website. No name, email address or other personal data, and no advertising. Declining does not affect the website.",
-    accept: "Accept",
-    decline: "No thanks",
-    more: "More in the privacy statement",
+    title: "Cookies on this website",
+    body: "Necessary cookies keep the website and its forms secure. With your permission we also measure, anonymously, how the website is used (Google Analytics) so we can improve it. No advertising, no names or contact details. Declining does not affect booking or getting in touch.",
+    accept: "Accept all",
+    decline: "Reject all",
+    customize: "Customise preferences",
+    save: "Save preferences",
+    close: "Close",
+    more: "Cookie policy",
+    privacy: "Privacy statement",
     settings: "Cookie settings",
+    prefsTitle: "Cookie preferences",
+    prefsIntro: "Choose per category. Optional cookies stay off until you switch them on. You can change your choice at any time via ‘Cookie settings’ at the bottom of every page.",
+    always: "Always on",
+    on: "On",
+    off: "Off",
+    notUsed: "Not in use",
+    saved: "Your cookie preferences have been saved.",
+    categories: {
+      necessary: { title: "Necessary", body: "Needed for security, the forms (Cloudflare Turnstile) and remembering your cookie choice. The website does not work properly without them." },
+      analytics: { title: "Statistics", body: "Google Analytics 4 counts, anonymously, which pages are viewed and whether a request succeeds. IP addresses are not stored; Google Signals and advertising features are off. Cookies: _ga, _ga_* (up to 13 months)." },
+      marketing: { title: "Marketing", body: "For advertising or measuring ad campaigns. This website currently uses no marketing cookies." },
+    },
   },
   privacy: {
     title: "Privacy statement",
@@ -615,7 +631,7 @@ export const en: Dictionary = {
       },
       {
         h: "Cookies and Google Analytics",
-        p: "This website sets no cookies without your permission. If Glow by Dilek uses Google Analytics, the website asks first. Only after ‘Accept’ is Google Analytics loaded, to see which pages are viewed and whether forms are sent. No names, email addresses, phone numbers, appointment details or health information are shared, advertising features are off, and you can change your choice at any time through ‘Cookie settings’ at the bottom of the page. The management area only uses a strictly necessary login cookie for the owner.",
+        p: "This website sets no cookies without your permission. If Glow by Dilek uses Google Analytics, the website asks first. Only after ‘Accept all’, or switching statistics on under ‘Customise preferences’, is Google Analytics loaded, to see which pages are viewed and whether forms are sent. No names, email addresses, phone numbers, appointment details or health information are shared, advertising features are off, and you can change your choice at any time through ‘Cookie settings’ at the bottom of the page. The management area only uses a strictly necessary login cookie for the owner.",
       },
       {
         h: "Spam protection (Cloudflare Turnstile)",

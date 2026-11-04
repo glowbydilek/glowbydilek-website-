@@ -2,7 +2,7 @@
 
 import { and, eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { assertOwner } from "../auth/session";
+import { assertCan } from "../auth/session";
 import { audit } from "../db/audit";
 import { getDb } from "../db/client";
 import { packageItems, priceHistory, serviceGroups, serviceSections, treatments } from "../db/schema";
@@ -43,7 +43,7 @@ function names(f: FormData): { nameNl: string; nameEn: string; nameTr: string | 
 // ────────────────────────────────────────────────────────────── Items
 
 export async function itemAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   const id = str(f, "id");
   const [t] = await db.select().from(treatments).where(eq(treatments.id, id));
@@ -109,7 +109,7 @@ export async function itemAction(_: FormState, f: FormData): Promise<FormState> 
 }
 
 export async function createItemAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   await ensureSeeded(db);
   const n = names(f);
@@ -151,7 +151,7 @@ export async function createItemAction(_: FormState, f: FormData): Promise<FormS
 }
 
 export async function packagePartsAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   const id = str(f, "id");
   const [pkg] = await db.select().from(treatments).where(eq(treatments.id, id));
@@ -176,7 +176,7 @@ export async function packagePartsAction(_: FormState, f: FormData): Promise<For
 // ─────────────────────────────────────────────── Sections & sub-categories
 
 export async function sectionAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   const id = str(f, "id");
   const [row] = await db.select().from(serviceSections).where(eq(serviceSections.id, id));
@@ -194,7 +194,7 @@ export async function sectionAction(_: FormState, f: FormData): Promise<FormStat
 }
 
 export async function createSectionAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   await ensureSeeded(db);
   const n = names(f);
@@ -213,7 +213,7 @@ export async function createSectionAction(_: FormState, f: FormData): Promise<Fo
 }
 
 export async function createGroupAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   await ensureSeeded(db);
   const n = names(f);
@@ -236,7 +236,7 @@ export async function createGroupAction(_: FormState, f: FormData): Promise<Form
 }
 
 export async function groupAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("cms.publish");
   const db = getDb();
   const id = str(f, "id");
   const [row] = await db.select().from(serviceGroups).where(eq(serviceGroups.id, id));

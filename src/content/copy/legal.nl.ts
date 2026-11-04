@@ -12,32 +12,41 @@ export type LegalKey = "cookies" | "terms" | "cancellation" | "reviews";
 export const legalNl: Record<LegalKey, LegalDoc> = {
   cookies: {
     title: "Cookiebeleid",
-    effectiveDate: "1 november 2026",
-    intro: "Op deze pagina lees je welke cookies en vergelijkbare technieken deze website gebruikt, waarvoor, en hoe je je keuze wijzigt.",
+    effectiveDate: "4 november 2026",
+    intro: "Op deze pagina lees je welke cookies en vergelijkbare technieken (zoals lokale opslag in je browser) deze website gebruikt, waarvoor, hoe lang, en hoe je je keuze wijzigt of intrekt. Optionele cookies worden pas geplaatst nadat je daar zelf ‘ja’ op hebt gezegd.",
     sections: [
       {
-        title: "Zonder toestemming: alleen wat nodig is",
+        title: "Je keuze",
         paragraphs: [
-          "Als bezoeker van de website plaatsen wij geen cookies voor advertenties of profielen. Je keuze voor statistieken (ja of nee) wordt in je eigen browser bewaard (lokale opslag, sleutel ‘glow-consent-v1’), zodat we het niet bij elk bezoek opnieuw vragen.",
-          "De beheeromgeving van de eigenaar gebruikt één noodzakelijke sessiecookie om ingelogd te blijven. Die geldt alleen voor de eigenaar, niet voor bezoekers.",
+          "Bij je eerste bezoek kies je ‘Alles accepteren’, ‘Alles weigeren’ of ‘Voorkeuren instellen’. Weigeren is net zo eenvoudig als accepteren en heeft geen invloed op afspraken maken, contact opnemen of het bekijken van de website. Niets is vooraf aangevinkt en doorscrollen telt niet als toestemming.",
+          "Je kunt je keuze altijd wijzigen of intrekken via ‘Cookie-instellingen’ onderaan elke pagina. Trek je toestemming in, dan worden de Google Analytics-cookies verwijderd en wordt Google Analytics niet meer geladen. Je keuze wordt na 12 maanden, of wanneer dit beleid inhoudelijk wijzigt, opnieuw gevraagd.",
+        ],
+      },
+      {
+        title: "Noodzakelijk (altijd aan)",
+        paragraphs: [
+          "glow-consent-v2 — Glow by Dilek (lokale opslag in je browser) — onthoudt je cookiekeuze, het tijdstip en de versie van dit beleid. Wordt niet naar ons verstuurd. Bewaartermijn: 12 maanden.",
+          "glow-lang — Glow by Dilek (lokale opslag) — onthoudt de taal die je zelf kiest. Bewaartermijn: tot je je browsergegevens wist.",
+          "Cloudflare Turnstile — Cloudflare, Inc. — beveiligt het contact-, afspraak- en beoordelingsformulier tegen robots. Turnstile plaatst geen cookies op glowbydilek.nl; Cloudflare verwerkt technische gegevens over je browser en verbinding alleen voor deze controle. Zie de privacyverklaring van Cloudflare.",
+          "__Host-glow_session — Glow by Dilek — houdt de eigenaar ingelogd in de beveiligde beheeromgeving. Alleen voor de eigenaar en medewerkers, niet voor bezoekers. Bewaartermijn: maximaal 30 dagen, of korter bij uitloggen.",
+          "__prerender_bypass — Glow by Dilek — alleen voor de eigenaar tijdens het bekijken van een conceptversie. Bewaartermijn: tot het einde van de browsersessie.",
         ],
       },
       {
         title: "Statistieken (alleen met jouw toestemming)",
         paragraphs: [
-          "Als de eigenaar statistieken heeft aangezet én jij toestemming geeft, gebruikt de website Google Analytics 4 om te zien hoe de site wordt gebruikt. Google plaatst dan cookies zoals ‘_ga’ en ‘_ga_…’. Advertentiefuncties staan uit en er worden geen namen, e-mailadressen, telefoonnummers of afspraakgegevens naar Google gestuurd.",
-          "Geef je geen toestemming, dan wordt Google Analytics niet geladen.",
+          "_ga en _ga_<code> — Google Ireland Ltd. (Google Analytics 4) — telt anoniem welke pagina's worden bekeken, welke behandelingen worden bekeken en of een aanvraag of bericht is verstuurd. Bewaartermijn: maximaal 13 maanden.",
+          "Wat we níet doen: geen namen, e-mailadressen, telefoonnummers, afspraakgegevens, gezondheidsinformatie of persoonlijke links naar Google sturen; geen advertentiefuncties, geen Google Signals, geen gepersonaliseerde advertenties. De beveiligde beheeromgeving en persoonlijke links (zoals een prijsvoorstel) worden nooit gemeten.",
+          "Google Consent Mode v2: zonder toestemming wordt geen Google-script geladen. Geef je toestemming, dan staan ‘analytics_storage’ alleen op ‘granted’ en ‘ad_storage’, ‘ad_user_data’ en ‘ad_personalization’ altijd op ‘denied’.",
         ],
       },
       {
-        title: "Beveiliging van formulieren",
-        paragraphs: [
-          "Bij het contact-, afspraak- en beoordelingsformulier gebruiken we Cloudflare Turnstile om misbruik door robots te voorkomen. Cloudflare verwerkt daarbij technische gegevens over je browser en verbinding. Meer informatie vind je in de privacyverklaring van Cloudflare.",
-        ],
+        title: "Marketing",
+        paragraphs: ["Deze website gebruikt geen marketing- of advertentiecookies. Als dat ooit verandert, wordt dit beleid aangepast en wordt je toestemming opnieuw gevraagd voordat er iets wordt geplaatst."],
       },
       {
-        title: "Je keuze wijzigen",
-        paragraphs: ["Via ‘Cookie-instellingen’ onderaan elke pagina kun je je keuze altijd wijzigen of intrekken. Je kunt cookies ook verwijderen via de instellingen van je browser."],
+        title: "Externe inhoud",
+        paragraphs: ["Er zijn geen ingesloten video's, kaarten of social-media-widgets. Links naar sociale media zijn gewone links: pas als je erop klikt, verlaat je deze website."],
       },
     ],
   },

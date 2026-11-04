@@ -1,5 +1,6 @@
 import "server-only";
 import PDFDocument from "pdfkit";
+import { PDF_FONT, registerPdfFonts } from "../pdf/fonts";
 import type { InvoiceSettings } from "../db/settings";
 import { formatCents } from "./money";
 import { formatRate, type ComputedLine, type VatRow } from "./invoice-core";
@@ -7,7 +8,7 @@ import { logoData } from "../../components/brand/logoData";
 
 /**
  * Server-side PDF generation (pdfkit, pure JavaScript, works on Hostinger
- * Node.js without native modules). Uses the built-in Helvetica family, so
+ * Node.js without native modules). Uses embedded Unicode fonts (see lib/pdf/fonts.ts), so
  * no font files are needed at runtime.
  */
 
@@ -27,7 +28,7 @@ function toBuffer(doc: PDFKit.PDFDocument): Promise<Buffer> {
 }
 
 function newDoc(title: string) {
-  return new PDFDocument({
+  const doc = new PDFDocument({
     size: "A4",
     bufferPages: true,
     margins: { top: 56, bottom: 64, left: 56, right: 56 },
@@ -35,6 +36,9 @@ function newDoc(title: string) {
     // Fixed dates keep a re-rendered PDF byte-identical for the same snapshot.
     compress: true,
   });
+  registerPdfFonts(doc);
+  doc.font(PDF_FONT.body);
+  return doc;
 }
 
 /** The 2026 logo (vector paths, same data as the website) + optional right-hand block. */
@@ -48,7 +52,7 @@ function brandHeader(doc: PDFKit.PDFDocument, right?: string) {
   doc.restore();
   let bottom = baseline + 12;
   if (right) {
-    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text(right, 300, 52, { width: 239, align: "right" });
+    doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(9).text(right, 300, 52, { width: 239, align: "right" });
     bottom = Math.max(bottom, doc.y + 6);
   }
   doc.moveTo(56, bottom).lineTo(539, bottom).lineWidth(0.6).strokeColor(LINE).stroke();
@@ -62,7 +66,7 @@ function footer(doc: PDFKit.PDFDocument, text: string) {
     doc.switchToPage(i);
     const bottom = doc.page.margins.bottom;
     doc.page.margins.bottom = 0;
-    doc.fillColor(MUTED).font("Helvetica").fontSize(7.5).text(`${text}   ·   ${i + 1}/${range.count}`, 56, 800, { width: 483, align: "center" });
+    doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(7.5).text(`${text}   ·   ${i + 1}/${range.count}`, 56, 800, { width: 483, align: "center" });
     doc.page.margins.bottom = bottom;
   }
 }
@@ -100,7 +104,7 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
   const s = inv.seller;
   const top = brandHeader(doc, [s.legalName, s.street, `${s.postcode} ${s.city}`.trim(), s.country !== "Nederland" ? s.country : "", s.email, s.phone].filter(Boolean).join("\n"));
 
-  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(20).text(inv.kind === "credit" ? "Creditfactuur" : "Factuur", 56, top + 28);
+  doc.fillColor(ACCENT).font(PDF_FONT.heading).fontSize(22).text(inv.kind === "credit" ? "Creditfactuur" : "Factuur", 56, top + 28);
   const metaTop = top + 64;
   const meta: [string, string][] = [
     [inv.kind === "credit" ? "Creditfactuurnummer" : "Factuurnummer", inv.number],
@@ -110,17 +114,17 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
   if (inv.dueDate && inv.kind === "invoice") meta.push(["Te betalen vóór", dateNl(inv.dueDate)]);
   if (inv.correctsNumber) meta.push(["Correctie op factuur", inv.correctsNumber]);
   meta.forEach(([k, v], i) => {
-    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text(k, 56, metaTop + i * 15, { width: 130 });
-    doc.fillColor(INK).font("Helvetica-Bold").fontSize(9).text(v, 186, metaTop + i * 15, { width: 140 });
+    doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(9).text(k, 56, metaTop + i * 15, { width: 130 });
+    doc.fillColor(INK).font(PDF_FONT.bold).fontSize(9).text(v, 186, metaTop + i * 15, { width: 140 });
   });
-  doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Factuur aan", 340, metaTop, { width: 199 });
-  doc.fillColor(INK).font("Helvetica-Bold").fontSize(10).text(inv.buyer.name, 340, metaTop + 15, { width: 199 });
-  doc.font("Helvetica").fontSize(9).text([inv.buyer.address, inv.buyer.email].filter(Boolean).join("\n"), 340, doc.y + 2, { width: 199 });
+  doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(9).text("Factuur aan", 340, metaTop, { width: 199 });
+  doc.fillColor(INK).font(PDF_FONT.bold).fontSize(10).text(inv.buyer.name, 340, metaTop + 15, { width: 199 });
+  doc.font(PDF_FONT.body).fontSize(9).text([inv.buyer.address, inv.buyer.email].filter(Boolean).join("\n"), 340, doc.y + 2, { width: 199 });
 
   // Lines
   let y = Math.max(doc.y, metaTop + meta.length * 15) + 28;
   const cols = { desc: 56, qty: 330, unit: 380, vat: 450, total: 480 };
-  doc.fillColor(MUTED).font("Helvetica").fontSize(8.5);
+  doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(8.5);
   doc.text("Omschrijving", cols.desc, y);
   doc.text("Aantal", cols.qty, y, { width: 40, align: "right" });
   doc.text("Prijs", cols.unit, y, { width: 60, align: "right" });
@@ -130,7 +134,7 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
   doc.moveTo(56, y).lineTo(539, y).lineWidth(0.6).strokeColor(LINE).stroke();
   y += 8;
   for (const l of inv.lines) {
-    doc.fillColor(INK).font("Helvetica").fontSize(9.5);
+    doc.fillColor(INK).font(PDF_FONT.body).fontSize(9.5);
     const h = doc.heightOfString(l.description, { width: 260 });
     if (y + h > 700) {
       doc.addPage();
@@ -157,13 +161,13 @@ export async function renderInvoicePdf(inv: InvoiceSnapshot): Promise<Buffer> {
         ]
       : [["Totaal", formatCents(inv.totalCents), true]];
   for (const [k, v, strong] of totals) {
-    doc.fillColor(strong ? INK : MUTED).font(strong ? "Helvetica-Bold" : "Helvetica").fontSize(strong ? 11 : 9.5);
+    doc.fillColor(strong ? INK : MUTED).font(strong ? PDF_FONT.bold : PDF_FONT.body).fontSize(strong ? 11 : 9.5);
     doc.text(k, 230, y, { width: 240, align: "right" });
     doc.text(v, 480, y, { width: 59, align: "right" });
     y += strong ? 18 : 15;
   }
   y += 10;
-  doc.fillColor(INK).font("Helvetica").fontSize(9);
+  doc.fillColor(INK).font(PDF_FONT.body).fontSize(9);
   const notes: string[] = [];
   if ((inv.vatMode === "exempt" || inv.vatMode === "kor") && s.exemptionText) notes.push(s.exemptionText);
   if (inv.paid && inv.paid.cents > 0) {
@@ -194,7 +198,7 @@ export type ReportBlock =
 export async function renderReportPdf(title: string, subtitle: string, blocks: ReportBlock[]): Promise<Buffer> {
   const doc = newDoc(title);
   const top = brandHeader(doc, subtitle);
-  doc.fillColor(ACCENT).font("Helvetica-Bold").fontSize(18).text(title, 56, top + 20, { width: 483 });
+  doc.fillColor(ACCENT).font(PDF_FONT.bold).fontSize(18).text(title, 56, top + 20, { width: 483 });
   doc.moveDown(0.6);
   const ensure = (h: number) => {
     if (doc.y + h > 740) doc.addPage();
@@ -202,18 +206,18 @@ export async function renderReportPdf(title: string, subtitle: string, blocks: R
   for (const b of blocks) {
     if (b.type === "heading") {
       ensure(40);
-      doc.moveDown(0.8).fillColor(INK).font("Helvetica-Bold").fontSize(11.5).text(b.text, 56, doc.y, { width: 483 });
+      doc.moveDown(0.8).fillColor(INK).font(PDF_FONT.bold).fontSize(11.5).text(b.text, 56, doc.y, { width: 483 });
       doc.moveDown(0.3);
     } else if (b.type === "text") {
       ensure(24);
-      doc.fillColor(MUTED).font("Helvetica").fontSize(9).text(b.text, 56, doc.y, { width: 483 });
+      doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(9).text(b.text, 56, doc.y, { width: 483 });
       doc.moveDown(0.4);
     } else if (b.type === "pairs") {
       for (const [k, v] of b.rows) {
         ensure(16);
         const y = doc.y;
-        doc.fillColor(MUTED).font("Helvetica").fontSize(9.5).text(k, 56, y, { width: 260 });
-        doc.fillColor(INK).font("Helvetica-Bold").fontSize(9.5).text(v, 316, y, { width: 223, align: "right" });
+        doc.fillColor(MUTED).font(PDF_FONT.body).fontSize(9.5).text(k, 56, y, { width: 260 });
+        doc.fillColor(INK).font(PDF_FONT.bold).fontSize(9.5).text(v, 316, y, { width: 223, align: "right" });
         doc.y = Math.max(doc.y, y + 15);
       }
     } else {
@@ -226,7 +230,7 @@ export async function renderReportPdf(title: string, subtitle: string, blocks: R
       }
       const widthOf = (i: number) => (b.columns[i].width / total) * 483 - 6;
       const row = (cells: string[], bold = false, color = INK) => {
-        doc.font(bold ? "Helvetica-Bold" : "Helvetica").fontSize(9);
+        doc.font(bold ? PDF_FONT.bold : PDF_FONT.body).fontSize(9);
         const h = Math.max(...cells.map((c, i) => doc.heightOfString(c || " ", { width: widthOf(i) })), 11);
         ensure(h + 8);
         const y = doc.y;

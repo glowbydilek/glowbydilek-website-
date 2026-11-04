@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { inArray } from "drizzle-orm";
 import { Card, PageHeader } from "@/components/private/ui";
@@ -9,6 +10,7 @@ import { CreateCustomPage } from "@/components/private/cms/CustomPageForms";
 export const metadata = { title: "Pagina's" };
 
 export default async function Pages() {
+  await requireCan("admin", "cms.edit");
   const keys = EDITOR_PAGES.flatMap((p) => p.docs.map((d) => d.key));
   const rows = await getDb().select({ docKey: contentEntries.docKey, locale: contentEntries.locale, status: contentEntries.status }).from(contentEntries).where(inArray(contentEntries.docKey, keys));
   const groups = [...new Set(EDITOR_PAGES.map((p) => p.group))];

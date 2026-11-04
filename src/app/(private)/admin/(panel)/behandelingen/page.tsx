@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { asc } from "drizzle-orm";
 import { CreateGroupForm, CreateItemForm, CreateSectionForm, GroupForm, ItemForm, PackagePartsForm, SectionForm, type ItemView } from "@/components/private/cms/CatalogueForms";
@@ -22,6 +23,7 @@ const euro = (c: number | null) => (c != null ? `€ ${(c / 100).toFixed(2).repl
  * Long-form page texts are edited under Pagina's.
  */
 export default async function TreatmentsAdmin() {
+  await requireCan("admin", "cms.publish");
   const db = getDb();
   await ensureSeeded(db);
   const [sections, groups, rows, parts] = await Promise.all([

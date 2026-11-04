@@ -10,7 +10,7 @@ export const legalTr: Record<LegalKey, LegalDoc> = {
       {
         title: "Onay olmadan: yalnızca gerekli olan",
         paragraphs: [
-          "Ziyaretçi olarak sana reklam veya profil oluşturma amaçlı çerez yerleştirmeyiz. İstatistiklerle ilgili tercihin (evet veya hayır), her ziyarette yeniden sormamak için kendi tarayıcında saklanır (yerel depolama, 'glow-consent-v1' anahtarı).",
+          "Ziyaretçi olarak sana reklam veya profil oluşturma amaçlı çerez yerleştirmeyiz. İstatistiklerle ilgili tercihin (evet veya hayır), her ziyarette yeniden sormamak için kendi tarayıcında saklanır (yerel depolama, 'glow-consent-v2' anahtarı, en fazla 12 ay). Seçimini sayfanın altındaki 'Çerez ayarları' ile istediğin zaman değiştirebilir veya geri çekebilirsin.",
           "Sahibin yönetim alanı, oturumun açık kalması için gerekli tek bir oturum çerezi kullanır. Bu yalnızca sahip için geçerlidir, ziyaretçiler için değil.",
         ],
       },

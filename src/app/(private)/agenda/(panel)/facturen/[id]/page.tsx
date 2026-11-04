@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { desc, eq } from "drizzle-orm";
@@ -17,6 +18,7 @@ const MAIL: Record<string, string> = { pending: "in de wachtrij", sending: "word
 const dateNl = (d: string | null) => (d ? d.split("-").reverse().join("-") : "—");
 
 export default async function InvoicePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "finance");
   const id = Number((await params).id);
   const sp = await searchParams;
   const db = getDb();

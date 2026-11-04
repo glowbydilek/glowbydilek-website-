@@ -3,7 +3,7 @@
 import { asLocale } from "../../i18n/config";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { assertOwner } from "../auth/session";
+import { assertCan, assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { activateDraft, createRevision, deleteDraft, deleteIntakeDocument, IntakeError, saveDraft, uploadSignedIntake } from "../intake/service";
 import type { FormState } from "./authActions";
@@ -52,7 +52,7 @@ export async function deleteDraftAction(_: FormState, f: FormData): Promise<Form
 }
 
 export async function uploadIntakeAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("health.view");
   const customerId = Number(f.get("customerId"));
   const file = f.get("file");
   if (!(file instanceof File) || file.size === 0) return { error: "Kies een foto of PDF van het ondertekende formulier." };
@@ -77,7 +77,7 @@ export async function uploadIntakeAction(_: FormState, f: FormData): Promise<For
 }
 
 export async function deleteIntakeDocumentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("health.view");
   const customerId = Number(f.get("customerId"));
   const r = await guard(() => deleteIntakeDocument(getDb(), customerId, Number(f.get("id")), str(f, "reason"), who(s)));
   if (r.error) return r;
