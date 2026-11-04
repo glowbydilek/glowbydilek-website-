@@ -1,0 +1,56 @@
+checked 92 loads at 200% text size; problems: 55
+390 / +40px 
+390 /en +20px 
+390 /behandelingen +40px A:Gezichtsbehandelingen1 | A:Massages5 | A:Waxbehandelingen13
+390 /en/treatments +20px A:Massages5 | A:Waxing13
+390 /tr/bakimlar +0px A:Masajlar5 | A:Ağda13
+390 /waxbehandelingen +40px 
+390 /en/waxing-treatments +20px 
+390 /prijzen +40px 
+390 /en/prices +20px 
+390 /over-dilek +40px 
+390 /en/about-dilek +20px 
+390 /contact +40px 
+390 /en/contact +20px 
+390 /afspraak-maken +40px 
+390 /en/book-appointment +20px 
+390 /hoe-werkt-een-afspraak +40px 
+390 /en/appointment-process +20px 
+390 /voorbereiding +40px 
+390 /en/preparation +20px 
+390 /nazorg +40px 
+390 /en/aftercare +20px 
+390 /veelgestelde-vragen +40px 
+390 /en/faq +20px 
+390 /beoordelingen +40px 
+390 /en/reviews +20px 
+390 /privacy +40px 
+390 /en/privacy +20px 
+390 /gezichtsbehandelingen +40px 
+390 /en/facial-treatments +20px 
+390 /massages +40px 
+390 /en/massages +20px 
+390 /waxbehandelingen/gezicht +40px 
+390 /waxbehandelingen/lichaam +40px 
+390 /waxbehandelingen/bikini-intiem +40px 
+390 /gezichtsbehandelingen/gezichtsbehandeling-met-stoom +40px 
+390 /waxbehandelingen/gezicht/wenkbrauwen-waxen +40px 
+390 /massages/ontspanningsmassage +40px 
+390 /massages/gezichtsmassage +40px 
+390 /waxbehandelingen/gezicht/bovenlip-waxen +40px 
+390 /waxbehandelingen/gezicht/kin-waxen +40px 
+390 /massages/hoofdmassage +40px 
+390 /waxbehandelingen/gezicht/volledig-gezicht-waxen +40px 
+390 /massages/handmassage +40px 
+390 /massages/voetmassage +40px 
+390 /waxbehandelingen/lichaam/oksels-waxen +40px 
+390 /waxbehandelingen/lichaam/onderarmen-waxen +40px 
+390 /waxbehandelingen/lichaam/hele-armen-waxen +40px 
+390 /waxbehandelingen/lichaam/onderbenen-waxen +40px 
+390 /waxbehandelingen/lichaam/hele-benen-waxen +40px 
+390 /waxbehandelingen/lichaam/rug-waxen +40px 
+390 /waxbehandelingen/bikini-intiem/bikinilijn-waxen +40px 
+390 /waxbehandelingen/bikini-intiem/brazilian-wax +40px 
+390 /waxbehandelingen/bikini-intiem/hollywood-wax +40px 
+390 /cookiebeleid +40px 
+390 /en/cookie-policy +20px 

@@ -1,0 +1,10 @@
+320 {"h1Bottom":370,"ctaBottom":656,"imgTop":895,"imgH":350,"sealTop":1153,"vh":568,"nextSectionTop":1285}
+360 {"h1Bottom":326,"ctaBottom":612,"imgTop":851,"imgH":400,"sealTop":1159,"vh":740,"nextSectionTop":1291}
+375 {"h1Bottom":327,"ctaBottom":582,"imgTop":821,"imgH":419,"sealTop":1147,"vh":667,"nextSectionTop":1279}
+390 {"h1Bottom":316,"ctaBottom":571,"imgTop":810,"imgH":438,"sealTop":1155,"vh":844,"nextSectionTop":1287}
+414 {"h1Bottom":339,"ctaBottom":594,"imgTop":805,"imgH":468,"sealTop":1181,"vh":896,"nextSectionTop":1313}
+430 {"h1Bottom":340,"ctaBottom":595,"imgTop":806,"imgH":488,"sealTop":1201,"vh":932,"nextSectionTop":1333}
+landscape-844 {"h1Bottom":508,"ctaBottom":734,"imgTop":387,"imgH":230,"sealTop":525,"vh":390,"nextSectionTop":955}
+tablet-768 {"h1Bottom":650,"ctaBottom":907,"imgTop":416,"imgH":369,"sealTop":693,"vh":1024,"nextSectionTop":1153}
+tablet-1024 {"h1Bottom":702,"ctaBottom":936,"imgTop":342,"imgH":477,"sealTop":727,"vh":1366,"nextSectionTop":1102}
+desktop-1440 {"h1Bottom":533,"ctaBottom":767,"imgTop":187,"imgH":600,"sealTop":695,"vh":900,"nextSectionTop":920}

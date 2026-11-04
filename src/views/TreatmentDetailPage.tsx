@@ -61,7 +61,7 @@ export function TreatmentDetailPage({
     onRequest: s.priceOnRequest,
   });
   const duration = itemDuration(item);
-  const portrait = ["zone-face", "hero", "aftercare", "contact"].includes(
+  const portrait = ["portrait", "aftercare", "contact"].includes(
     item.photo,
   );
   const parts =

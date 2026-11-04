@@ -16,7 +16,7 @@ export function Faq({ items, tone = "light" }: { items: FaqItem[]; tone?: "light
             <span className={`w-7 shrink-0 font-serif text-sm tabular-nums ${dark ? "text-glow/80" : "text-accent-deep"}`} aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <span className={`flex-1 font-serif text-xl leading-snug transition-colors duration-300 sm:text-[1.65rem] ${dark ? "text-paper group-hover:text-glow" : "text-ink group-hover:text-accent-deep"}`}>{item.q}</span>
+            <span className={`min-w-0 flex-1 font-serif text-xl leading-snug transition-colors duration-300 sm:text-[1.65rem] ${dark ? "text-paper group-hover:text-glow" : "text-ink group-hover:text-accent-deep"}`}>{item.q}</span>
             <span className={`faq-mark relative top-[-0.15em] h-5 w-5 shrink-0 self-center ${dark ? "text-glow" : "text-accent-deep"}`} aria-hidden="true">
               <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
               <span className="faq-mark-v absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-500 ease-[var(--ease-luxe)] group-open:scale-y-0" />

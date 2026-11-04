@@ -90,16 +90,16 @@ export function HomePage({ locale }: { locale: Locale }) {
       <>
         {/* 1 ─ Hero: luminous backdrop, arched mood portrait */}
         <section className="atelier-light pt-header relative overflow-hidden pb-[var(--space-section-tight)]">
-          <Container className="grid items-center gap-12 md:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+          <Container className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr] md:gap-12 lg:gap-20">
             <div>
               <p className="eyebrow rise">{t.hero.eyebrow}</p>
-              <h1 className="display rise mt-5 text-[2.75rem] [--rise-delay:80ms] min-[400px]:text-[3.1rem] sm:text-7xl lg:text-[5.6rem]">
+              <h1 className="display hero-title rise mt-4 [--rise-delay:80ms] sm:mt-5">
                 {t.hero.title}
                 <br />
                 <em>{t.hero.titleEm}</em>
               </h1>
-              <p className="lead rise mt-6 max-w-lg [--rise-delay:160ms]">{t.hero.subtitle}</p>
-              <div className="rise mt-8 flex flex-wrap items-center gap-3 [--rise-delay:240ms]">
+              <p className="lead hero-lead rise mt-5 max-w-lg [--rise-delay:160ms] sm:mt-6">{t.hero.subtitle}</p>
+              <div className="rise mt-6 flex flex-wrap items-center gap-3 [--rise-delay:240ms] sm:mt-8">
                 <ButtonLink href={href(locale, "booking")} arrow className="sheen">
                   {dict.cta.request}
                 </ButtonLink>
@@ -107,7 +107,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                   {dict.cta.explore}
                 </ButtonLink>
               </div>
-              <ul className="rise mt-9 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-ink-soft [--rise-delay:320ms]">
+              <ul className="rise mt-7 hidden flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-ink-soft [--rise-delay:320ms] md:flex">
                 {t.hero.facts.map((f) => (
                   <li key={f} className="flex items-center gap-2">
                     <Glint className="h-3 w-auto text-champagne" />
@@ -118,18 +118,25 @@ export function HomePage({ locale }: { locale: Locale }) {
             </div>
             <div className="rise [--rise-delay:120ms]">
               <div className={`relative mx-auto lg:ml-auto lg:mr-0 ${hasPhoto("hero") ? "hero-photo-w [--hero-max:30rem]" : "w-full max-w-[28rem]"}`}>
-                <div className="arch">
-                  <div className="arch-media">
-                    <HeroVisual photo="hero" locale={locale} />
-                  </div>
+                <div className="hero-media">
+                  <HeroVisual photo="hero" locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
                 </div>
-                <div className="seal absolute -bottom-6 -left-4 sm:-left-8" aria-hidden="true">
+                <div className="seal absolute -bottom-6 -left-4 hidden sm:-left-8 md:grid" aria-hidden="true">
                   <span>
                     <Glint className="mx-auto h-4 w-auto text-accent" />
                     <span className="mt-1.5 block px-3 font-serif text-[0.95rem] italic leading-tight text-ink">{dict.meta.tagline}</span>
                   </span>
                 </div>
               </div>
+              {/* Phones: the three facts sit under the photo, compact, so the first screen stays light. */}
+              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1.5 text-[0.86rem] text-ink-soft md:hidden">
+                {t.hero.facts.map((f) => (
+                  <li key={f} className="flex items-center gap-1.5">
+                    <Glint className="h-2.5 w-auto text-champagne" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
             </div>
           </Container>
         </section>
@@ -223,7 +230,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                       <p className="text-xs uppercase tracking-[0.2em] text-paper/80">
                         {g.names.length} {g.names.length === 1 ? t.treatments.countOne : t.treatments.count}
                       </p>
-                      <h3 className="mt-2 font-serif text-[2.1rem] leading-none text-paper sm:text-[2.6rem]">{g.label}</h3>
+                      <h3 className="mt-2 font-serif text-[1.5rem] leading-none text-paper min-[360px]:text-[1.75rem] min-[400px]:text-[2.1rem] sm:text-[2.6rem]">{g.label}</h3>
                       <p className="mt-3 max-w-md leading-relaxed text-paper/85">{g.intro}</p>
                       <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-paper">
                         <span className="sr-only">{t.treatments.more}: </span>

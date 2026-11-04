@@ -17,6 +17,7 @@ import { currentSnapshot } from "@/lib/cms/current";
  */
 export type PhotoId =
   | "hero"
+  | "portrait"
   | "zone-face"
   | "zone-body"
   | "zone-intimate"
@@ -68,26 +69,41 @@ export const photos: Record<PhotoId, Photo> = {
   hero: {
     id: "hero",
     file: "hero",
+    aspect: 2356 / 1571,
+    focus: { mobile: "66% 46%", desktop: "66% 46%" },
+    alt: {
+      nl: "Een vrouw ligt ontspannen onder een witte handdoek terwijl handen zacht haar schouders masseren",
+      en: "A woman lies relaxed under a white towel while hands gently massage her shoulders",
+      tr: "Beyaz bir havlunun altında rahatça uzanan bir kadının omuzlarına eller nazikçe masaj yapıyor",
+    },
+    brief: "Homepage opening image: calm, bright, draped massage (models, not Dilek or a client). Service-led, not a face portrait.",
+    credit: "Adobe Stock #361106012 — Adobe Stock (free collection), Standard License",
+  },
+  portrait: {
+    id: "portrait",
+    file: "portrait",
     aspect: 1571 / 1963,
     focus: { mobile: "50% 30%", desktop: "50% 30%" },
     alt: {
       nl: "Portret van een vrouw met een stralende, verzorgde huid tegen een lichte achtergrond",
-      en: "Portrait of a woman with radiant, well-cared-for skin against a light background", tr: "Açık bir arka planın önünde, ışıltılı ve bakımlı cilde sahip bir kadın portresi",
+      en: "Portrait of a woman with radiant, well-cared-for skin against a light background",
+      tr: "Açık bir arka planın önünde, ışıltılı ve bakımlı cilde sahip bir kadın portresi",
     },
-    brief: "Editorial beauty portrait (model).",
+    brief: "Beauty portrait (model) — only on the full-face waxing page; no longer the homepage hero (v14).",
     credit: "Adobe Stock #810843299 — Adobe Stock (free collection), Standard License",
   },
   "zone-face": {
     id: "zone-face",
     file: "zone-face",
-    aspect: 1256 / 1571,
-    focus: { mobile: "50% 35%", desktop: "50% 35%" },
+    aspect: 2356 / 1571,
+    focus: { mobile: "62% 40%", desktop: "60% 40%" },
     alt: {
-      nl: "Schoonheidsspecialiste met handschoenen brengt wax aan op een wenkbrauw",
-      en: "Beautician wearing gloves applying wax to an eyebrow", tr: "Eldivenli bir güzellik uzmanının kaşa ağda uygulaması",
+      nl: "Een waxstrip wordt zacht langs de wenkbrauw van een ontspannen vrouw met gesloten ogen aangebracht",
+      en: "A wax strip being gently applied along the eyebrow of a relaxed woman with closed eyes",
+      tr: "Gözleri kapalı, rahat bir kadının kaşı boyunca nazikçe ağda bandı uygulanıyor",
     },
-    brief: "Facial (brow) waxing in progress; cropped to the treatment.",
-    credit: "Adobe Stock #473675468 — Adobe Stock (free collection), Standard License",
+    brief: "Facial waxing (brows): bright and soft, no gloves (v14; replaces the darker #473675468). Model, not Dilek or a client.",
+    credit: "Adobe Stock #251752039 — Adobe Stock (free collection), Standard License",
   },
   "zone-body": {
     id: "zone-body",
@@ -268,18 +284,19 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Body treatments: towels, brush and bowls (no bodies).",
     credit: "Adobe Stock #242641713 — Adobe Stock (free collection), Standard License",
-  },  "massage-body": {
+  },
+  "massage-body": {
     id: "massage-body",
     file: "massage-body",
-    aspect: 3332 / 1111,
-    focus: { mobile: "30% 50%", desktop: "40% 50%" },
+    aspect: 3080 / 2054,
+    focus: { mobile: "62% 55%", desktop: "60% 55%" },
     alt: {
-      nl: "Vrouw ligt ontspannen met gesloten ogen op een massagetafel terwijl haar rug wordt gemasseerd",
-      en: "Woman lying relaxed with closed eyes on a massage table while her back is massaged",
-      tr: "Sırtına masaj yapılırken masaj masasında gözleri kapalı, rahat uzanan bir kadın",
+      nl: "Vrouw ligt ontspannen op een massagetafel met een handdoek over haar onderrug terwijl haar rug wordt gemasseerd, in daglicht",
+      en: "Woman lying relaxed on a massage table with a towel over her lower back while her back is massaged, in daylight",
+      tr: "Gün ışığında, belinin altı havluyla örtülü, masaj masasında rahatça uzanan bir kadının sırtına masaj yapılıyor",
     },
-    brief: "Full-body relaxation massage: back massage, calm mood. Model, not Dilek or a client.",
-    credit: "Adobe Stock #453749067 — Adobe Stock (free collection), Standard License",
+    brief: "Full-body relaxation massage: bright daylight, modestly draped (v14; replaces the darker #453749067). Models, not Dilek or a client.",
+    credit: "Adobe Stock #645035977 — Adobe Stock (free collection), Standard License",
   },
   "massage-head": {
     id: "massage-head",

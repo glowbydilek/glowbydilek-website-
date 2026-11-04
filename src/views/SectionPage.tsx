@@ -54,7 +54,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
       <section key="intro" className="section-tight border-t border-line/70">
         <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           {c.intro.title && (
-            <h2 className="display text-[2.1rem] sm:text-[2.8rem]" data-reveal>
+            <h2 className="display text-[1.7rem] min-[400px]:text-[2.1rem] sm:text-[2.8rem]" data-reveal>
               {c.intro.title}
             </h2>
           )}
@@ -81,7 +81,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
       <Container>
         <div className="max-w-2xl" data-reveal>
           <p className="eyebrow">{section.name[locale]}</p>
-          <h2 id="aanbod-title" className="display mt-4 text-[2.3rem] sm:text-5xl">
+          <h2 id="aanbod-title" className="display mt-4 text-[1.6rem] min-[360px]:text-[1.85rem] min-[400px]:text-[2.3rem] sm:text-5xl">
             {c.listTitle}
           </h2>
           {c.listIntro && <p className="lead mt-4">{c.listIntro}</p>}
@@ -124,7 +124,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
     blocks.push(
       <section key="faq" className="section">
         <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <h2 className="display text-[2rem] sm:text-[2.6rem]" data-reveal>
+          <h2 className="display text-[1.7rem] min-[400px]:text-[2rem] sm:text-[2.6rem]" data-reveal>
             {dict.service.faq}
           </h2>
           <div data-reveal>

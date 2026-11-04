@@ -51,7 +51,7 @@ export function PageHero({
         </div>
       )}
       <p className="eyebrow rise">{eyebrow}</p>
-      <h1 className="display rise mt-5 text-[2.5rem] [--rise-delay:80ms] sm:text-6xl lg:text-[4.4rem]">
+      <h1 className="display rise mt-5 text-[2.05rem] [--rise-delay:80ms] min-[400px]:text-[2.5rem] sm:text-6xl lg:text-[4.4rem]">
         {title}
         {titleEm && (
           <>

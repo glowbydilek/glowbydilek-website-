@@ -24,6 +24,16 @@ const stopAnyTime: Record<Locale, string> = {
   en: "During the treatment you can always ask for more or less pressure, a pause or to stop.",
   tr: "Uygulama sırasında baskının artırılmasını veya azaltılmasını, ara verilmesini ya da işlemin durdurulmasını istediğin zaman söyleyebilirsin.",
 };
+const comfort: Record<Locale, string> = {
+  nl: "Praten mag, stil zijn ook: jij bepaalt de sfeer. Heb je het snel koud, zeg het gerust, dan word je extra toegedekt.",
+  en: "Talking is fine, and so is silence: you set the mood. If you get cold easily, just say so and you will be covered a little more.",
+  tr: "Sohbet edebilirsin, sessiz de kalabilirsin: ortamı sen belirlersin. Kolay üşüyorsan söylemen yeterli; üzerin biraz daha örtülür.",
+};
+const expect: Record<Locale, string> = {
+  nl: "Wat je mag verwachten: een rustig moment van ontspanning en persoonlijke aandacht. Hoe je je achteraf voelt, verschilt per persoon; er worden geen resultaten beloofd.",
+  en: "What to expect: a calm moment of relaxation and personal attention. How you feel afterwards differs from person to person; no results are promised.",
+  tr: "Ne bekleyebilirsin: sakin bir rahatlama ve kişisel ilgi anı. Sonrasında nasıl hissedeceğin kişiden kişiye değişir; herhangi bir sonuç vaat edilmez.",
+};
 const takeItEasy: Record<Locale, string> = {
   nl: "Neem na afloop even de tijd voordat je verdergaat met je dag, en drink wat water.",
   en: "Take a moment afterwards before you carry on with your day, and drink some water.",
@@ -52,8 +62,8 @@ function massage(
     teaser: c.teaser,
     areaTitle: { nl: "Wat houdt de massage in?", en: "What does the massage involve?", tr: "Masaj neleri kapsar?" }[l],
     area: c.area,
-    appointment: [...c.appointment, stopAnyTime[l]],
-    know: c.know,
+    appointment: [...c.appointment, comfort[l], stopAnyTime[l]],
+    know: [...c.know, expect[l]],
     reactions: [notMedical[l]],
     aftercare: [takeItEasy[l]],
     recovery: {
@@ -82,7 +92,7 @@ export const wellnessTreatments: Record<string, T> = {
         "Meld vooraf klachten, blessures, een aandoening of zwangerschap.",
         "Kom bij voorkeur niet met een volle maag, en geef het aan als je het snel koud hebt.",
       ],
-      faq: { q: "Welke massagetechniek wordt gebruikt?", a: "Dat stem je vooraf samen af op wat jij prettig vindt. Op deze pagina worden geen technieken genoemd die (nog) niet bevestigd zijn." },
+      faq: { q: "Welke massagetechniek wordt gebruikt?", a: "Dat stemt Dilek vooraf met je af: rustige, ontspannende bewegingen, in een tempo en met een druk die voor jou prettig voelen. Heb je een voorkeur, vertel het gerust bij je aanvraag." },
     }),
     en: massage("en", {
       seoTitle: "Full-body relaxation massage",
@@ -96,7 +106,7 @@ export const wellnessTreatments: Record<string, T> = {
         "You then lie comfortably and covered; only the part being massaged is uncovered.",
       ],
       know: ["Mention complaints, injuries, a condition or pregnancy beforehand.", "Preferably don't come on a full stomach, and say so if you get cold easily."],
-      faq: { q: "Which massage technique is used?", a: "That is agreed together beforehand, based on what you enjoy. This page names no techniques that have not (yet) been confirmed." },
+      faq: { q: "Which massage technique is used?", a: "Dilek agrees this with you beforehand: calm, relaxing movements, at a pace and with a pressure that feel comfortable for you. If you have a preference, just mention it in your request." },
     }),
     tr: massage("tr", {
       seoTitle: "Tüm vücut rahatlama masajı",
@@ -110,7 +120,7 @@ export const wellnessTreatments: Record<string, T> = {
         "Ardından rahat ve üzeri örtülü şekilde uzanırsın; yalnızca masaj yapılan bölüm açıktır.",
       ],
       know: ["Şikâyet, sakatlık, bir rahatsızlık ya da hamileliği önceden belirt.", "Mümkünse tok karnına gelme; kolay üşüyorsan bunu da söyle."],
-      faq: { q: "Hangi masaj tekniği kullanılıyor?", a: "Bu, neyi sevdiğine göre önceden birlikte belirlenir. Bu sayfada henüz onaylanmamış teknikler anılmaz." },
+      faq: { q: "Hangi masaj tekniği kullanılıyor?", a: "Bunu Dilek seninle önceden konuşur: sana iyi gelen bir tempo ve baskıyla, sakin ve rahatlatıcı hareketler. Bir tercihin varsa talebinde belirtmen yeterli." },
     }),
   },
   "massage-face": {
@@ -231,7 +241,7 @@ export const wellnessTreatments: Record<string, T> = {
       area: "Een ontspannende massage van de voeten en, als je dat wilt, de onderbenen. Je deelt vooraf je wensen en eventuele gevoeligheden.",
       appointment: ["Vooraf vertel je wat je prettig vindt en of er plekken gevoelig of kietelig zijn.", "Je zit of ligt comfortabel, met je voeten warm en ondersteund."],
       know: ["Meld vooraf wondjes, blaren, een voetschimmel of andere klachten aan je voeten.", "Dit is geen pedicure of medische voetzorg."],
-      faq: { q: "Is dit voetreflexologie?", a: "Nee. Het is een ontspannende voetmassage. Er worden geen reflexzones of gezondheidseffecten genoemd." },
+      faq: { q: "Is dit voetreflexologie?", a: "Nee. Het is een ontspannende massage voor je voeten, zonder reflexzones en zonder beloftes over je gezondheid: gewoon een moment om tot rust te komen." },
     }),
     en: massage("en", {
       seoTitle: "Foot massage",
@@ -242,7 +252,7 @@ export const wellnessTreatments: Record<string, T> = {
       area: "A relaxing massage of the feet and, if you like, the lower legs. Beforehand you share your wishes and any sensitivities.",
       appointment: ["Beforehand you say what you enjoy and whether any areas are sensitive or ticklish.", "You sit or lie comfortably, with your feet warm and supported."],
       know: ["Mention small wounds, blisters, athlete's foot or other foot complaints beforehand.", "This is not a pedicure or medical foot care."],
-      faq: { q: "Is this reflexology?", a: "No. It is a relaxing foot massage. No reflex zones or health effects are claimed." },
+      faq: { q: "Is this reflexology?", a: "No. It is a relaxing massage for your feet, without reflex zones and without promises about your health: simply a moment to unwind." },
     }),
     tr: massage("tr", {
       seoTitle: "Ayak masajı",
@@ -253,7 +263,7 @@ export const wellnessTreatments: Record<string, T> = {
       area: "Ayaklar ve istersen bacakların alt kısmı için rahatlatıcı bir masaj. Tercihlerini ve varsa hassasiyetlerini önceden paylaşırsın.",
       appointment: ["Önceden neyi sevdiğini ve hassas ya da gıdıklanan bölgeler olup olmadığını söylersin.", "Ayakların sıcak ve desteklenmiş şekilde rahatça oturur ya da uzanırsın."],
       know: ["Ayaklarındaki küçük yaraları, su toplamalarını, mantarı veya başka şikâyetleri önceden belirt.", "Bu bir pedikür veya tıbbi ayak bakımı değildir."],
-      faq: { q: "Bu refleksoloji mi?", a: "Hayır. Bu rahatlatıcı bir ayak masajıdır. Refleks bölgeleri veya sağlık etkileri iddia edilmez." },
+      faq: { q: "Bu refleksoloji mi?", a: "Hayır. Bu, ayakların için rahatlatıcı bir masajdır; refleks bölgeleri ve sağlıkla ilgili vaatler yoktur: yalnızca dinlenmen için bir an." },
     }),
   },
   "facial-steam": {

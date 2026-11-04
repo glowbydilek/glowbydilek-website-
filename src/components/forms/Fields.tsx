@@ -13,7 +13,7 @@ type Base = { id: string; label: string; error?: string; hint?: string; optional
 
 function Label({ id, label, optionalLabel, required }: Base) {
   return (
-    <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
+    <label htmlFor={id} className="flex flex-wrap items-baseline justify-between gap-x-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
       <span>
         {label}
         {required && <span aria-hidden="true" className="text-accent-deep"> *</span>}

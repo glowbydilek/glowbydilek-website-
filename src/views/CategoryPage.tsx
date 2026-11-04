@@ -58,7 +58,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
         <section className="section-tight border-t border-line/70">
           <Container className="grid gap-10 md:grid-cols-2 lg:gap-16">
             <div data-reveal>
-              <h2 className="display text-[2.1rem] sm:text-[2.8rem]">{c.intro.title}</h2>
+              <h2 className="display text-[1.7rem] min-[400px]:text-[2.1rem] sm:text-[2.8rem]">{c.intro.title}</h2>
               {c.intro.paragraphs.map((p) => (
                 <p key={p} className="lead mt-5">
                   {p}
@@ -66,7 +66,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
               ))}
             </div>
             <div data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
-              <h2 className="display text-[2.1rem] sm:text-[2.8rem]">{c.involves.title}</h2>
+              <h2 className="display text-[1.7rem] min-[400px]:text-[2.1rem] sm:text-[2.8rem]">{c.involves.title}</h2>
               {c.involves.paragraphs.map((p) => (
                 <p key={p} className="mt-5 leading-relaxed text-ink-soft">
                   {p}
@@ -84,7 +84,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
           <Container>
             <div className="max-w-2xl" data-reveal>
               <p className="eyebrow">{c.label}</p>
-              <h2 id="behandelingen-title" className="display mt-4 text-[2.3rem] sm:text-5xl">
+              <h2 id="behandelingen-title" className="display mt-4 text-[1.6rem] min-[360px]:text-[1.85rem] min-[400px]:text-[2.3rem] sm:text-5xl">
                 {s.inThisArea}
               </h2>
               <p className="lead mt-4">{s.inThisAreaIntro}</p>
@@ -126,12 +126,12 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
           <Container className="grid gap-5 md:grid-cols-2">
             <article className="rounded-[var(--radius-card)] bg-paper p-6 sm:p-8" data-reveal>
               <Icon name="sparkle" className="h-6 w-6 text-accent-deep" />
-              <h2 className="mt-4 font-serif text-[1.9rem] leading-tight text-ink">{c.suitable.title}</h2>
+              <h2 className="mt-4 font-serif text-[1.6rem] leading-tight text-ink min-[400px]:text-[1.9rem]">{c.suitable.title}</h2>
               <CheckList items={c.suitable.items} className="mt-5" />
             </article>
             <article className="rounded-[var(--radius-card)] bg-paper p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "80ms" }}>
               <Icon name="calendar" className="h-6 w-6 text-accent-deep" />
-              <h2 className="mt-4 font-serif text-[1.9rem] leading-tight text-ink">{s.preparation}</h2>
+              <h2 className="mt-4 font-serif text-[1.6rem] leading-tight text-ink min-[400px]:text-[1.9rem]">{s.preparation}</h2>
               <CheckList items={c.preparation} className="mt-5" />
               <ButtonLink href={href(locale, "preparation")} variant="link" arrow className="mt-5">
                 {s.readPreparation}
@@ -139,7 +139,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
             </article>
             <article className="rounded-[var(--radius-card)] bg-paper p-6 sm:p-8" data-reveal>
               <Icon name="leaf" className="h-6 w-6 text-accent-deep" />
-              <h2 className="mt-4 font-serif text-[1.9rem] leading-tight text-ink">{s.aftercare}</h2>
+              <h2 className="mt-4 font-serif text-[1.6rem] leading-tight text-ink min-[400px]:text-[1.9rem]">{s.aftercare}</h2>
               <CheckList items={c.aftercare} className="mt-5" />
               <ButtonLink href={href(locale, "aftercare")} variant="link" arrow className="mt-5">
                 {s.readAftercare}
@@ -147,7 +147,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
             </article>
             <article className="rounded-[var(--radius-card)] border border-accent/50 bg-paper p-6 sm:p-8" data-reveal style={{ ["--reveal-delay" as string]: "80ms" }}>
               <Icon name="privacy" className="h-6 w-6 text-accent-deep" />
-              <h2 className="mt-4 font-serif text-[1.9rem] leading-tight text-ink">{s.precautions}</h2>
+              <h2 className="mt-4 font-serif text-[1.6rem] leading-tight text-ink min-[400px]:text-[1.9rem]">{s.precautions}</h2>
               <CheckList items={c.precautions} icon="info" className="mt-5" />
               <p className="mt-5 text-sm leading-relaxed text-muted">{s.medical}</p>
             </article>

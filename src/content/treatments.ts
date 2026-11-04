@@ -92,7 +92,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-face",
-        photo: "hero",
+        photo: "portrait",
         name: { nl: "Volledig gezicht", en: "Full face", tr: "Tüm yüz" },
         description: {
           nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",
@@ -213,7 +213,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "hollywood",
-        photo: "contact",
+        photo: "materials",
         name: { nl: "Hollywood", en: "Hollywood", tr: "Hollywood ağdası" },
         description: {
           nl: "Volledig glad, voor een frisse en verzorgde look.",

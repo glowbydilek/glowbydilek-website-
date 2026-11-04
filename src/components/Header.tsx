@@ -127,7 +127,7 @@ export function Header({
         {dict.nav.skipToContent}
       </a>
 
-      <div className="mx-auto flex h-16 max-w-[88rem] items-center justify-between gap-4 px-4 sm:px-8 lg:h-[4.75rem] lg:px-12">
+      <div className="mx-auto flex h-[64px] max-w-[88rem] items-center justify-between gap-4 px-4 sm:px-8 lg:h-[76px] lg:px-12">
         <Link
           href={href(locale, "home")}
           onClick={close}
@@ -135,7 +135,7 @@ export function Header({
           className="shrink-0"
           data-logo
         >
-          <LogoInline className="h-8 w-auto sm:h-9 lg:h-10" />
+          <LogoInline className="h-[32px] w-auto sm:h-[36px] lg:h-[40px]" />
         </Link>
 
         {/* Desktop navigation */}
@@ -211,7 +211,7 @@ export function Header({
           <button
             ref={toggleRef}
             type="button"
-            className="relative flex h-11 w-11 items-center justify-center rounded-full"
+            className="relative flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}

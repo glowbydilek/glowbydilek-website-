@@ -1,0 +1,34 @@
+h2: appointments  ← 1× e.g. 320/en
+p: e-posta  ← 6× e.g. 320/tr, 360/tr, 360/tr/randevu
+a: Gezichtsbehandeling  ← 2× e.g. 320/prijzen, 360/prijzen
+a: Ontspanningsmassage  ← 2× e.g. 320/prijzen, 360/prijzen
+a: Gezichtsmassage  ← 1× e.g. 320/prijzen
+a: relaxation  ← 1× e.g. 320/en/prices
+p: e-postayla  ← 3× e.g. 320/tr/randevu-sureci, 320/tr/sss, 320/tr/agda/bikini-bolgesi
+span: make-up  ← 8× e.g. 320/nazorg, 360/waxbehandelingen/gezicht, 360/gezichtsbehandelingen/gezichtsbehandeling-met-stoom
+h2: gezichtsbehandelingen  ← 1× e.g. 320/veelgestelde-vragen
+h1: Privacyverklaring  ← 1× e.g. 320/privacy
+p: e-mailadres  ← 2× e.g. 320/privacy, 360/privacy
+p: IP-adres  ← 1× e.g. 320/privacy
+h2: gezichtsbehandeling  ← 1× e.g. 320/waxbehandelingen/gezicht
+h2: lichaamsbehandeling  ← 1× e.g. 320/waxbehandelingen/lichaam
+p: nerve-racking  ← 1× e.g. 320/en/waxing-treatments/bikini-intimate
+h1: Gezichtsbehandeling  ← 1× e.g. 320/gezichtsbehandelingen/gezichtsbehandeling-met-stoom
+h1: Ontspanningsmassage  ← 1× e.g. 320/massages/ontspanningsmassage
+span: niet-comedogene  ← 2× e.g. 320/waxbehandelingen/gezicht/bovenlip-waxen, 360/waxbehandelingen/gezicht/bovenlip-waxen
+p: make-up-afspraak  ← 2× e.g. 320/waxbehandelingen/gezicht/bovenlip-waxen, 390/waxbehandelingen/gezicht/bovenlip-waxen
+span: non-comedogenic  ← 1× e.g. 320/en/waxing-treatments/face/upper-lip-waxing
+p: glow-consent-v1’  ← 5× e.g. 320/cookiebeleid, 360/cookiebeleid, 390/cookiebeleid
+p: e-mailadressen  ← 3× e.g. 320/cookiebeleid, 360/cookiebeleid, 430/privacy
+p: 'glow-consent-v1'  ← 2× e.g. 320/tr/cerez-politikasi, 430/tr/cerez-politikasi
+p: natural-looking  ← 2× e.g. 360/en/waxing-treatments, 390/en/waxing-treatments
+p: e-mail  ← 4× e.g. 360/veelgestelde-vragen, 390/hoe-werkt-een-afspraak, 390/veelgestelde-vragen
+p: Cookie-instellingen’  ← 3× e.g. 360/privacy, 390/privacy, 430/privacy
+p: make-up  ← 1× e.g. 360/waxbehandelingen/gezicht/volledig-gezicht-waxen
+span: acne-prone  ← 1× e.g. 360/en/waxing-treatments/face/full-face-waxing
+p: well-cared-for  ← 2× e.g. 360/en/waxing-treatments/bikini-intimate/hollywood-wax, 430/en/waxing-treatments/bikini-intimate/hollywood-wax
+p: e-mails  ← 2× e.g. 390/privacy, 430/privacy
+span: resurfacing’-producten  ← 1× e.g. 390/waxbehandelingen/gezicht
+p: E-posta  ← 1× e.g. 430/tr/gizlilik
+p: wax-resten  ← 1× e.g. 430/waxbehandelingen/lichaam
+span: long-handled  ← 1× e.g. 430/en/waxing-treatments/body/back-waxing

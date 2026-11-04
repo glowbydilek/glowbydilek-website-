@@ -19,7 +19,7 @@ export function CareTabs({ care }: { care: Dictionary["care"] }) {
 
   return (
     <div>
-      <div role="tablist" className="inline-flex rounded-full bg-ink/6 p-1.5">
+      <div role="tablist" className="inline-flex max-w-full flex-wrap rounded-[1.6rem] bg-ink/6 p-1.5">
         {tabs.map((t, i) => (
           <button
             key={t.title}

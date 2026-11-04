@@ -99,35 +99,9 @@ export const extraTreatmentsEn: Record<string, TreatmentCopy> = {
     recovery: "You can carry on with your day after the treatment.",
     faqs: [{ q: "Will a body wrap help me lose weight?", a: "No. A body wrap is a caring treatment for the skin. No promises are made about weight, detox or other effects." }],
   },
-  "massage-relaxation": {
-    seoTitle: "Relaxation massage",
-    seoDescription: "A calm relaxation massage to take a moment for yourself. Read how the appointment goes.",
-    title: "Relaxation massage",
-    lead: "A calm massage to take a moment entirely for yourself.",
-    teaser: "A quiet moment for yourself.",
-    areaTitle: "What does the treatment involve?",
-    area: "A relaxing massage with pressure and pace adjusted together. Which areas are massaged is discussed beforehand.",
-    appointment: ["You discuss your wishes beforehand and any areas you would rather skip.", "During the massage you can always ask for more or less pressure."],
-    know: ["Mention any complaints, injuries, health issues or pregnancy.", "A relaxation massage is not a medical or therapeutic treatment."],
-    reactions: ["Say so immediately if something does not feel right.", "Unsure whether a massage suits you? Check with your GP first."],
-    aftercare: ["Take it easy for a while afterwards and drink some water."],
-    recovery: "You can carry on with your day after the massage.",
-    faqs: [{ q: "Which massage technique is used?", a: "This is discussed with you beforehand. This page does not name techniques that are not (yet) offered." }],
-  },
 };
 
 export const extraSectionsEn: Record<string, SectionCopy> = {
-  facial: {
-    seoTitle: "Facial treatments",
-    seoDescription: "Facial treatments at Glow by Dilek: cleansing, exfoliation and masks, calm and personally adjusted. By appointment only.",
-    hero: { eyebrow: "Facial treatments", title: "Time for", titleEm: "your skin.", subtitle: "Cleansing, exfoliating and caring at a calm pace, adjusted to how your skin feels." },
-    intro: { title: "Calm and personal", paragraphs: ["Every facial starts with a short conversation about your skin and which products you use day to day. The treatment is then adjusted to that.", "A facial is a caring treatment, not a medical one. With skin conditions or doubts, check with your GP or dermatologist first."] },
-    listTitle: "Facial treatments",
-    listIntro: "Choose a treatment for all the details, or request an appointment straight away.",
-    teaser: "Cleansing, exfoliating and caring, without rush.",
-    faqs: [{ q: "Which treatment suits my skin?", a: "That is discussed beforehand. If in doubt, ask for advice in your request." }],
-    note: "No diagnoses are made and no medical results are promised.",
-  },
   bodycare: {
     seoTitle: "Body treatments",
     seoDescription: "Body treatments at Glow by Dilek: care for the skin of your body, with a moment of rest. By appointment only.",
@@ -136,16 +110,6 @@ export const extraSectionsEn: Record<string, SectionCopy> = {
     listTitle: "Body treatments",
     listIntro: "Choose a treatment for all the details.",
     teaser: "Care for the skin of your body.",
-    faqs: [],
-  },
-  massage: {
-    seoTitle: "Massages",
-    seoDescription: "Relaxation massage at Glow by Dilek: a quiet moment for yourself. By appointment only.",
-    hero: { eyebrow: "Massages", title: "A moment", titleEm: "of nothing at all.", subtitle: "A calm massage to come back to yourself." },
-    intro: { title: "Relaxation first", paragraphs: ["A relaxation massage is meant to help you unwind. It is not a medical or therapeutic treatment."] },
-    listTitle: "Massages",
-    listIntro: "Choose a massage for all the details.",
-    teaser: "A quiet moment for yourself.",
     faqs: [],
   },
   packages: {

@@ -168,7 +168,7 @@ export function DatePicker({
 
   return (
     <div className="relative">
-      <span id={`${id}-label`} className="flex items-baseline justify-between gap-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
+      <span id={`${id}-label`} className="flex flex-wrap items-baseline justify-between gap-x-3 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
         <span>
           {label}
           {required && <span aria-hidden="true" className="text-accent-deep"> *</span>}
