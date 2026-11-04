@@ -114,6 +114,8 @@ export function Analytics({
     const state = consentModeState(consent);
     if (!loaded.current) {
       if (!consent.analytics && !consent.marketing) return;
+      // Never start Google on a private or personal-token page (e.g. /offerte/<token>), even with consent.
+      if (!isTrackablePath(window.location.pathname)) return;
       loaded.current = true;
       w.dataLayer = w.dataLayer || [];
       w.gtag = function gtag() {
@@ -127,6 +129,9 @@ export function Analytics({
       const s = document.createElement("script");
       s.async = true;
       if (config.mode === "gtm") {
+        // Official GTM bootstrap (same as Google's snippet), but only after consent, with Consent
+        // Mode v2 defaults already in the dataLayer. Deliberately NO <noscript> iframe: without
+        // JavaScript a visitor cannot give consent, so a fallback request to Google is not allowed.
         w.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
         s.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmId)}`;
         w.glowTrack = (n, p) => w.dataLayer?.push({ event: n, ...p, locale });
@@ -140,7 +145,7 @@ export function Analytics({
     } else {
       w.gtag?.("consent", "update", state);
     }
-  }, [config, consent, locale]);
+  }, [config, consent, locale, pathname]);
 
   // Page views: path only (query strings can carry tokens); never private/token pages.
   useEffect(() => {

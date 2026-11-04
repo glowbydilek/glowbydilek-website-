@@ -99,9 +99,10 @@ test("cookie consent: versioned, expiring record; Consent Mode never grants ads 
   for (const p of ["/", "/waxbehandelingen", "/en/prices", "/afspraak-maken"]) assert.equal(isTrackablePath(p), true, p);
 });
 
-test("analytics default: GA4 G-77V0DM6Y7B direct and on when nothing is saved; a saved setting wins", async () => {
+test("analytics default: GTM-W9VRJF9X (GA4 inside GTM) and on when nothing is saved; a saved setting wins", async () => {
   const { liveAnalytics } = await import("../src/lib/cms/menu.ts");
-  assert.deepEqual(liveAnalytics(undefined), { measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtag", enabled: true });
+  assert.deepEqual(liveAnalytics(undefined), { measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtm", enabled: true });
+  assert.equal(liveAnalytics({ measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtag", enabled: true }).mode, "gtag");
   assert.equal(liveAnalytics({ measurementId: "G-77V0DM6Y7B", enabled: false }).enabled, false, "owner switched it off");
   assert.equal(liveAnalytics({ measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtm", enabled: true }).mode, "gtm");
 });

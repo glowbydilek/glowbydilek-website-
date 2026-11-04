@@ -1,0 +1,4 @@
+✓ Consent Mode order: default(denied) → update(analytics granted, ads denied) → gtm.js; 1 loader (gtm.js?id=GTM-W9VRJF9X), 0 gtag/js, 0 site-side config; glow_page_view: / → /waxbehandelingen → /prijzen
+✓ contact form sent → contact_submitted ×1 (params: {"event":"contact_submitted","form":"contact","locale":"nl"}); no e-mail/name in the dataLayer
+✓ token page /offerte/<token> with stored consent: 0 Google requests, GTM not started
+✓ returning visitor with consent on a normal page: GTM loads once without asking again
