@@ -49,7 +49,7 @@ Tarih: 4 Kasım 2026 · Hazır dal: `claude/happy-feynman-ars6eb` · Canlı sür
 | GTM konteynerini incelemek, GA4 etiketini kurmak, Preview / Tag Assistant, yayınlamak | Google Tag Manager API erişimi: `tagmanager.readonly`, `tagmanager.edit.containers`, `tagmanager.edit.containerversions`, `tagmanager.publish`. Bu oturumda bunu sağlayan bir bağlayıcı **yok** (claude.ai bağlayıcı dizininde ve Windsor.ai'de GTM yazma yok). |
 | GA4 yönetimi: anahtar olaylar (`booking_submitted`, `contact_submitted`), veri saklama, Signals kapalı, DebugView | GA4 Admin API, `analytics.edit` yetkisi. Windsor.ai GA4 bağlantısı yalnızca rapor okuyor; yazma eylemi yok. |
 | `G-77V0DM6Y7B`'nin 562355887 mülkünün web akışı olduğunu doğrulamak | Mülkte henüz veri yok. Yayından sonraki ilk olaylarla Windsor üzerinden doğrulanabilir (`stream_id`, `hostname`). |
-| Search Console (site haritası gönderimi, dizin durumu) | Yazma yetkisi (`webmasters`) olan bir bağlayıcı yok. Windsor `searchconsole` yalnızca okuma; bağlantı denemesi Windsor sunucu hatası (Bad Gateway) verdi. |
+| Search Console (site haritası gönderimi, dizin durumu) | Yazma yetkisi (`webmasters`) olan bir bağlayıcı yok. Windsor `searchconsole` yalnızca okuma; bağlantı bilgisi isteği iki kez başarısız oldu (Bad Gateway, ardından 60 sn zaman aşımı). Windsor GA4 `list_actions` = [] (yazma eylemi yok). |
 | Canlı siteyi test etmek | Claude Code ortamında izin verilen alan adlarına `glowbydilek.nl` (isteğe bağlı olarak `www.googletagmanager.com`) eklenmesi. |
 
 ## 5. Yayın ve sonrası (onayınızla)
