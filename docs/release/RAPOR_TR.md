@@ -79,7 +79,7 @@ Not: Headless test tarayıcısının ziyaretlerini GA4 bot olarak filtreliyor. B
 | sitemap.xml | **PASS**: 76 adres. Özel, teklif, API ve Türkçe adres yok. Yeni yayınlanan bir behandeling veritabanından **otomatik** eklenir (`src/app/sitemap.ts`). |
 | Ana sayfa Google'da | **PASS**: "Submitted and indexed"; Google'ın seçtiği canonical = `https://glowbydilek.nl/` |
 | `/en` Google'da | Henüz bilinmiyor (dizine alınmış **denemez**). Sitemap gönderilince taranacak. |
-| Sitemap'i Search Console'a gönderme | **BLOCKED**: yazma izni yok; Search Console'da kayıtlı sitemap: **0** |
+| Sitemap'i Search Console'a gönderme | **PASS**: 19:51 UTC'de gönderildi; Google hemen indirdi. 76 adres, 0 hata, 0 uyarı. Dizine alınmış: henüz 0 (Google birkaç gün içinde tarar). |
 | Canonical, hreflang (`nl-NL`, `en`, `x-default`); `/tr`, `/login`, `/agenda` noindex | **PASS** |
 | Yapılandırılmış veri | **PASS**: BeautySalon, Service, BreadcrumbList, FAQPage. Şehir Amsterdam; sokak adresi yok. |
 | Mobil performans (PageSpeed, `/en`) | **PASS**: 86/100, CLS 0, TBT 30 ms, LCP 3,7 sn (iyileştirilebilir) |
@@ -199,14 +199,11 @@ Kayıtlar: `docs/review/release/`. Canlı test betiği: `scripts/analytics/live-
    - **Anahtarları güvenli bir yere de kaydedin.** Kaybolursa şifreli belgeler açılamaz.
 4. **`OWNER_SETUP_TOKEN`'ı silin** (hPanel → Environment variables).
 5. **Yedek:** hPanel → Backups'tan güncel veritabanı yedeğini indirin. Turnstile düzelince ayrıca Admin → Systeem → **Back-up downloaden**.
-6. **Search Console:**
-   - Sitemaps → `https://glowbydilek.nl/sitemap.xml` → Gönder.
-   - Ya da bağlayıcıya yazma izni verin: https://mcpsearchconsole.com/connect/write
-7. **GA4:**
+6. **GA4:**
    - Olaylar ilk kez geldikten sonra Yönetici → Olaylar'da `booking_submitted` ve `contact_submitted`'ı **anahtar olay** yapın.
    - Veri saklamayı 14 ay yapın.
    - Google Signals kapalı kalsın.
-8. **İsteğe bağlı:**
+7. **İsteğe bağlı:**
    - Online saat seçimi için Agenda → Werktijden'e çalışma saatlerini girin.
    - Birkaç hafta sonra DMARC'ı `p=quarantine` yapın.
    - Stape GTM bağlayıcı adresini `https://gtm-mcp.stape.io/mcp` olarak değiştirin.
