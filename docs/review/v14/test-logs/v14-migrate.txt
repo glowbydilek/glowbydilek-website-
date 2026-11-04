@@ -1,0 +1,3 @@
+[db-migrate] database schema is up to date
+exit=0
+50 5 

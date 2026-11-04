@@ -1,0 +1,9 @@
+✓ owner signs in and turns on two-step verification
+✓ without the AVG confirmations the upload stays off and says why
+✓ owner confirms the AVG conditions in Admin → Privacy & consultatie
+✓ master form: active v2 in three languages, A4 print view and PDF download
+✓ a revision is a draft, needs a change note, and keeps v2 as history
+✓ upload a signed photo: stored encrypted, EXIF/GPS removed, history kept
+✓ a disguised file is refused
+✓ documents are private: no access without a session, never cached
+✓ deleting wipes the file and keeps a record without health data

@@ -1,0 +1,8 @@
+✓ status page (no secrets): GLOW BY DILEK — BEHEER Systeemstatus 1 onderdeel werkt nog niet. Inloggen lukt pas als database, sessiesleutel en het eigenaarsaccount in orde zijn. Sessiesleutel (AUTH_SECRET) — In orde Ingesteld. Database — In orde Verbonden. Klok server en database — In orde Loopt gelijk. Databasestructuur (migraties) — In orde 5 van 5 migraties uitgevoerd. Eigenaarsaccount — Aandacht nodig Account bestaat voor
+✓ wrong setup code: De code of het e-mailadres klopt niet, of er is al een wachtwoord ingesteld. | De waarde van OWNER_SETUP_TOKEN die je zelf in Hostinger hebt ingesteld. | Minimaal 12 tekens. Een zin van een paar woord
+✓ right setup code → /agenda/login : GLOW BY DILEK — AGENDA Inloggen Je wachtwoord is opgeslagen. Log in met je nieuwe wachtwoord. E-mailadres Wachtwoord Inloggen Wachtwoord vergeten?
+✓ login submitted → /login : GLOW BY DILEK — BEHEER Waar wil je naartoe? Websitebeheer Teksten, behandelingen, prijzen, foto's, thema en instellingen van de website. Agenda Afspraken, aanvr
+✓ httpOnly cookies: __Host-glow_session sameSite=Lax secure=true path=/
+✓ agenda opens with the session → /agenda
+✓ setup code reused after a password exists: GLOW BY DILEK — BEHEER Eerste wachtwoord instellen De code of het e-mailadres klopt niet, of er is al een wachtwoord ingesteld. E-mailadres van het eigenaarsaccount Eenmalige instelcode De waarde van OWNER_SETUP_TOKEN di
+✓ old password still the only valid one (reuse had no effect)

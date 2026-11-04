@@ -81,19 +81,19 @@ Takip edilen dosyalar: önce 662 dosya / 13,71 MB, sonra 641 dosya / 13,09 MB. `
 | Temel durum ve veri | PASS | Dosya envanteri §3. Şema değişmedi. Bundle + etiket yedek. ID ve rotalar korundu (E2E). |
 | Hero | PASS (emülasyon) | 320/360/375/390/414/430, yatay 844, tablet 768/1024 ve masaüstü 1440 için önce/sonra (ilk ekran ve bir kaydırma): `docs/review/v14/hero/`. Ölçümler: `metrics-v13.txt` / `metrics-v14.txt`. Not: yatay telefonda (844×390) butonlar ilk ekranın hemen altında. |
 | Görsel QA | PASS | 29 slot × 4 boyut incelendi; tablo, lisans, ALT metin (3 dil): `docs/PHOTOGRAPHY.md`. Sahte kişi ya da stüdyo iddiası yok. |
-| Tipografi | PASS / KISMEN | Kelime bölünmesi dedektörü 360–430 px'te gövde metninde 0 bölünme buldu (`logs/wordbreak-3.log`). Kalan 3 durum: dar fiyat sütunu ve bir `dd` etiketi. %200 metin boyutunda içerik ekranda kalıyor, ancak 55 sayfa 20–40 px yana kaydırılabiliyor (görünmeyen bir dekoratif öğe; `logs/zoom200.log`). Tarayıcı yakınlaştırması (reflow) 320 px'te sorunsuz. |
+| Tipografi | PASS / KISMEN | Kelime bölünmesi dedektörü 360–430 px'te gövde metninde 0 bölünme buldu (`docs/review/v14/test-logs/wordbreak-3.txt`). Kalan 3 durum: dar fiyat sütunu ve bir `dd` etiketi. %200 metin boyutunda içerik ekranda kalıyor, ancak 55 sayfa 20–40 px yana kaydırılabiliyor (görünmeyen bir dekoratif öğe; `docs/review/v14/test-logs/zoom200.txt`). Tarayıcı yakınlaştırması (reflow) 320 px'te sorunsuz. |
 | Görsel tutarlılık | PASS | Palet korundu. Gün, saat, sekme parıltıları ve onay kıvılcımı v13'teki gibi; reduced-motion'da kapanıyor. |
 | Tam navigasyon | PASS | E2E navigasyon 13/13: mega menü, mobil akordeon, dil menüsü NL→EN→TR, footer, tüm bağlantılar. |
 | Envanter | PASS | 13 ağda + 5 masaj + 1 buharlı yüz bakımı yayında; 10 taslak taslak kaldı (`docs/v13/HIZMET_ENVANTERI.md`). |
-| Randevu | PASS (test ortamı) | Talep ve saat seçimi akışları, ön seçim (3 dil), çift randevu engeli, DST testleri, bekleyen/onaylı ayrımı, iptal/erteleme e-postaları (`logs/v14-e2e-private.log`). |
-| Sahip girişi | PASS (test ortamı) / BLOCKED (canlı) | İlk şifre, gerçek giriş, `__Host-` oturum çerezi, sıfırlama e-postası, çıkış, MFA (`logs/v14-e2e-setup.log`, `-private`, `-intake`). Canlı: veritabanı ve ortam değişkenleri yok. |
+| Randevu | PASS (test ortamı) | Talep ve saat seçimi akışları, ön seçim (3 dil), çift randevu engeli, DST testleri, bekleyen/onaylı ayrımı, iptal/erteleme e-postaları (`docs/review/v14/test-logs/v14-e2e-private.txt`). |
+| Sahip girişi | PASS (test ortamı) / BLOCKED (canlı) | İlk şifre, gerçek giriş, `__Host-` oturum çerezi, sıfırlama e-postası, çıkış, MFA (`docs/review/v14/test-logs/v14-e2e-setup.txt`, `-private`, `-intake`). Canlı: veritabanı ve ortam değişkenleri yok. |
 | CRM ve finans | PASS (test ortamı) | Müşteri arama, genel avatarlar, geçmiş, fiyat düzenleme, KDV, fatura PDF ve e-posta, raporlar, gider CSV (E2E). |
-| Intake | PASS (test ortamı) | v2 master form 3 dilde, A4/PDF, revizyon, şifreli yükleme, EXIF silme, erişim kontrolü, silme kaydı (`logs/v14-e2e-intake.log`). |
+| Intake | PASS (test ortamı) | v2 master form 3 dilde, A4/PDF, revizyon, şifreli yükleme, EXIF silme, erişim kontrolü, silme kaydı (`docs/review/v14/test-logs/v14-e2e-intake.txt`). |
 | E-posta teslimi | PASS (yerel SMTP) / BLOCKED (gerçek posta kutusu) | Gerçek SMTP şifresi ve DNS (SPF/DKIM) erişimi yok. |
 | Güvenlik ve gizlilik | PASS | Turnstile, oran sınırları, CSRF (server actions), gizli bilgi göstermeyen durum sayfası, belge erişim logu, `npm audit` 0. Logda gizli bilgi taraması temiz. |
-| Erişilebilirlik | PASS | axe WCAG 2.2 AA: 0 ihlal (`logs/v14-axe.log`); Lighthouse erişilebilirlik 100. |
+| Erişilebilirlik | PASS | axe WCAG 2.2 AA: 0 ihlal (`docs/review/v14/test-logs/v14-axe.txt`); Lighthouse erişilebilirlik 100. |
 | SEO ve içerik | PASS | Sitemap 3 dilde, hreflang/canonical, uydurma fiyat veya iddia yok. Lighthouse SEO 100. |
-| Responsive QA | PASS (emülasyon) / BLOCKED (gerçek cihaz) | 320–1920 px, 456 yüklemede taşma 0 (`logs/widths-v14.log`). Gerçek iPhone Safari, Android Chrome, Firefox/Edge/Safari matrisi için cihaz veya cihaz çiftliği erişimi yok. |
+| Responsive QA | PASS (emülasyon) / BLOCKED (gerçek cihaz) | 320–1920 px, 456 yüklemede taşma 0 (`docs/review/v14/test-logs/widths-v14.txt`). Gerçek iPhone Safari, Android Chrome, Firefox/Edge/Safari matrisi için cihaz veya cihaz çiftliği erişimi yok. |
 | Temizlik | PASS | Kullanım grafiği → yalnızca kanıtlı kullanılmayanlar → önce/sonra boyut (§3). |
 | Teslim | PASS / BLOCKED (staging URL) | Commit + ZIP, kurulum, migration/geri alma, ekran görüntüleri, loglar. Staging URL için Hostinger erişimi gerekiyor. |
 

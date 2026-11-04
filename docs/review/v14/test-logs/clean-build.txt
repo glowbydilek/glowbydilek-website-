@@ -1,0 +1,209 @@
+
+> glowbydilek-website@0.1.0 prebuild
+> node scripts/prepare-swc-wasm.mjs && node scripts/db-migrate.mjs --on-build
+
+[prepare-swc-wasm] SWC WebAssembly fallback 16.4.2 installed.
+[db-migrate] skipped (DB_MIGRATE_ON_BUILD is not true)
+
+> glowbydilek-website@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.2 (webpack)
+✓ Running next.config.mjs took 19ms
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 44s
+  Running TypeScript ...
+  Finished TypeScript in 17.4s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/111) ...
+  Generating static pages using 3 workers (27/111) 
+  Generating static pages using 3 workers (55/111) 
+  Generating static pages using 3 workers (83/111) 
+✓ Generating static pages using 3 workers (111/111) in 4.8s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)                                        Revalidate  Expire
+┌ ○ /                                                      5m      1y
+├ ○ /_not-found
+├ ƒ /[...rest]
+├ ƒ /admin
+├ ƒ /admin/acties
+├ ƒ /admin/analytics
+├ ƒ /admin/bedrijf
+├ ƒ /admin/behandelingen
+├ ƒ /admin/behandelingen/prijslijst
+├ ƒ /admin/beoordelingen
+├ ƒ /admin/beveiliging
+├ ƒ /admin/e-mails
+├ ƒ /admin/juridisch
+├ ƒ /admin/login
+├ ƒ /admin/login/verificatie
+├ ƒ /admin/media
+├ ƒ /admin/navigatie
+├ ƒ /admin/over-dilek
+├ ƒ /admin/paginas
+├ ƒ /admin/paginas/[id]
+├ ƒ /admin/privacy
+├ ƒ /admin/producten
+├ ƒ /admin/seo
+├ ƒ /admin/social
+├ ƒ /admin/systeem
+├ ƒ /admin/systeem/backup
+├ ƒ /admin/thema
+├ ƒ /admin/wachtwoord-herstellen
+├ ƒ /admin/wachtwoord-vergeten
+├ ○ /afspraak-maken                                        5m      1y
+├ ƒ /agenda
+├ ƒ /agenda/aanvragen
+├ ƒ /agenda/afspraak/[id]
+├ ƒ /agenda/afspraak/[id]/pdf
+├ ƒ /agenda/afspraak/nieuw
+├ ƒ /agenda/berichten
+├ ƒ /agenda/berichten/[id]
+├ ƒ /agenda/facturen
+├ ƒ /agenda/facturen/[id]
+├ ƒ /agenda/facturen/[id]/pdf
+├ ƒ /agenda/financien
+├ ƒ /agenda/financien/export
+├ ƒ /agenda/financien/rapport
+├ ƒ /agenda/historie
+├ ƒ /agenda/historie/rapport
+├ ƒ /agenda/instellingen
+├ ƒ /agenda/intake
+├ ƒ /agenda/intake-afdruk/[id]
+├ ƒ /agenda/intake/[id]
+├ ƒ /agenda/intake/[id]/pdf
+├ ƒ /agenda/kalender
+├ ƒ /agenda/klanten
+├ ƒ /agenda/klanten/[id]
+├ ƒ /agenda/klanten/[id]/consultatie
+├ ƒ /agenda/klanten/[id]/consultatie/export
+├ ƒ /agenda/klanten/[id]/export
+├ ƒ /agenda/klanten/[id]/intake/[docId]
+├ ƒ /agenda/klanten/[id]/rapport
+├ ƒ /agenda/klanten/dubbel
+├ ƒ /agenda/klanten/zoeken
+├ ƒ /agenda/login
+├ ƒ /agenda/login/verificatie
+├ ○ /agenda/manifest.webmanifest
+├ ƒ /agenda/uitgaven
+├ ƒ /agenda/uitgaven/bon/[id]
+├ ƒ /agenda/wachtwoord-herstellen
+├ ƒ /agenda/wachtwoord-vergeten
+├ ƒ /agenda/werktijden
+├ ○ /algemene-voorwaarden                                  5m      1y
+├ ○ /annuleringsbeleid                                     5m      1y
+├ ƒ /api/appointment
+├ ƒ /api/booking/availability
+├ ƒ /api/booking/closed-days
+├ ƒ /api/booking/request
+├ ƒ /api/contact
+├ ƒ /api/cron/tick
+├ ƒ /api/preview
+├ ƒ /api/reviews
+├ ƒ /api/reviews/report
+├ ○ /apple-icon.png
+├ ○ /behandelingen                                         5m      1y
+├ ○ /beoordelingen                                         5m      1y
+├ ○ /beoordelingsbeleid                                    5m      1y
+├ ○ /contact                                               5m      1y
+├ ○ /cookiebeleid                                          5m      1y
+├ ○ /en                                                    5m      1y
+├ ƒ /en/[...rest]
+├ ○ /en/about-dilek                                        5m      1y
+├ ○ /en/aftercare                                          5m      1y
+├ ○ /en/appointment-process                                5m      1y
+├ ○ /en/book-appointment                                   5m      1y
+├ ○ /en/cancellation-policy                                5m      1y
+├ ○ /en/contact                                            5m      1y
+├ ○ /en/cookie-policy                                      5m      1y
+├ ○ /en/faq                                                5m      1y
+├ ƒ /en/info/[slug]
+├ ○ /en/preparation                                        5m      1y
+├ ○ /en/prices                                             5m      1y
+├ ○ /en/privacy                                            5m      1y
+├ ○ /en/products                                           5m      1y
+├ ƒ /en/quote/[token]
+├ ○ /en/review-policy                                      5m      1y
+├ ○ /en/reviews                                            5m      1y
+├ ○ /en/terms                                              5m      1y
+├ ○ /en/treatments                                         5m      1y
+├ ○ /en/waxing-treatments                                  5m      1y
+├   /en/waxing-treatments/[category]
+│ ├ ● /en/waxing-treatments/face                           5m      1y
+│ ├ ● /en/waxing-treatments/body                           5m      1y
+│ └ ● /en/waxing-treatments/bikini-intimate                5m      1y
+├   /en/waxing-treatments/[category]/[treatment]
+│ ├ ● /en/waxing-treatments/face/eyebrow-waxing            5m      1y
+│ ├ ● /en/waxing-treatments/face/upper-lip-waxing          5m      1y
+│ ├ ● /en/waxing-treatments/face/chin-waxing               5m      1y
+│ └ ● [+10 more paths]
+├ ○ /hoe-werkt-een-afspraak                                5m      1y
+├ ○ /icon.svg
+├ ƒ /info/[slug]
+├ ƒ /login
+├ ƒ /login/eerste-wachtwoord
+├ ƒ /login/status
+├ ○ /manifest.webmanifest
+├ ƒ /media/[id]/[w]
+├ ○ /merkidentiteit                                        5m      1y
+├ ○ /nazorg                                                5m      1y
+├ ƒ /offerte/[token]
+├ ○ /over-dilek                                            5m      1y
+├ ○ /prijzen                                               5m      1y
+├ ○ /privacy                                               5m      1y
+├ ○ /producten                                             5m      1y
+├ ○ /robots.txt
+├ ○ /sitemap.xml                                           1h      1y
+├ ○ /tr                                                    5m      1y
+├ ƒ /tr/[...rest]
+├ ○ /tr/agda                                               5m      1y
+├   /tr/agda/[category]
+│ ├ ● /tr/agda/yuz                                         5m      1y
+│ ├ ● /tr/agda/vucut                                       5m      1y
+│ └ ● /tr/agda/bikini-bolgesi                              5m      1y
+├   /tr/agda/[category]/[treatment]
+│ ├ ● /tr/agda/yuz/kas-agdasi                              5m      1y
+│ ├ ● /tr/agda/yuz/ust-dudak-agdasi                        5m      1y
+│ ├ ● /tr/agda/yuz/cene-agdasi                             5m      1y
+│ └ ● [+10 more paths]
+├ ○ /tr/bakim-sonrasi                                      5m      1y
+├ ○ /tr/bakimlar                                           5m      1y
+├ ƒ /tr/bilgi/[slug]
+├ ○ /tr/cerez-politikasi                                   5m      1y
+├ ○ /tr/dilek-hakkinda                                     5m      1y
+├ ○ /tr/fiyatlar                                           5m      1y
+├ ○ /tr/genel-kosullar                                     5m      1y
+├ ○ /tr/gizlilik                                           5m      1y
+├ ○ /tr/hazirlik                                           5m      1y
+├ ○ /tr/iletisim                                           5m      1y
+├ ○ /tr/iptal-politikasi                                   5m      1y
+├ ○ /tr/randevu                                            5m      1y
+├ ○ /tr/randevu-sureci                                     5m      1y
+├ ○ /tr/sss                                                5m      1y
+├ ƒ /tr/teklif/[token]
+├ ○ /tr/urunler                                            5m      1y
+├ ○ /tr/yorum-politikasi                                   5m      1y
+├ ○ /tr/yorumlar                                           5m      1y
+├ ○ /veelgestelde-vragen                                   5m      1y
+├ ○ /voorbereiding                                         5m      1y
+├ ○ /waxbehandelingen                                      5m      1y
+├   /waxbehandelingen/[category]
+│ ├ ● /waxbehandelingen/gezicht                            5m      1y
+│ ├ ● /waxbehandelingen/lichaam                            5m      1y
+│ └ ● /waxbehandelingen/bikini-intiem                      5m      1y
+└   /waxbehandelingen/[category]/[treatment]
+  ├ ● /waxbehandelingen/gezicht/wenkbrauwen-waxen          5m      1y
+  ├ ● /waxbehandelingen/gezicht/bovenlip-waxen             5m      1y
+  ├ ● /waxbehandelingen/gezicht/kin-waxen                  5m      1y
+  └ ● [+10 more paths]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
