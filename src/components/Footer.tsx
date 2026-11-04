@@ -19,7 +19,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
   const biz = validateBusiness(override("business", "all")).value;
   const social = publicSocial(override("social", "all"));
   const analytics = validateAnalytics(override("analytics", "all")).value;
-  const linkCls = "inline-flex min-h-10 items-center text-paper/75 transition-colors hover:text-glow sm:min-h-0 sm:py-1";
+  const linkCls = "inline-flex min-h-10 max-w-full items-center text-paper/75 transition-colors hover:text-glow sm:min-h-0 sm:py-1";
   const heading = "text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-glow";
 
   return (
@@ -138,8 +138,8 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                   {/* Phones: compact accordion */}
                   <details className="group border-b border-paper/10 md:hidden">
                     <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                      <span className="font-serif text-[1.3rem] leading-tight text-paper">{c.label}</span>
-                      <span className="flex items-center gap-2 text-xs text-paper/60">
+                      <span className="min-w-0 font-serif text-[1.3rem] leading-tight text-paper [hyphens:auto]">{c.label}</span>
+                      <span className="flex shrink-0 items-center gap-2 text-xs text-paper/60">
                         {c.treatments.length}
                         <Icon name="chevron" className="h-3.5 w-3.5 rotate-90 text-glow transition-transform duration-300 group-open:-rotate-90" />
                       </span>
@@ -148,7 +148,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                   </details>
                   {/* Larger screens: always visible columns */}
                   <div className="hidden md:block">
-                    <p className="font-serif text-[1.3rem] leading-tight text-paper">{c.label}</p>
+                    <p className="min-w-0 font-serif text-[1.3rem] leading-tight text-paper [hyphens:auto]">{c.label}</p>
                     {body}
                   </div>
                 </div>

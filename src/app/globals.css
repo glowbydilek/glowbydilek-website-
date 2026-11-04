@@ -137,6 +137,12 @@
   summary {
     list-style: none;
   }
+  /* Grid columns may shrink below their content's widest word or button,
+     so large text sizes never widen the page. */
+  main .grid > *,
+  footer .grid > * {
+    min-width: 0;
+  }
   summary::-webkit-details-marker {
     display: none;
   }
@@ -215,6 +221,10 @@
   /* Buttons */
   .btn {
     display: inline-flex;
+    /* With large text (Android text scaling, 200 %) a label wraps instead of
+       pushing the page sideways. */
+    max-width: 100%;
+    text-align: center;
     min-height: 3rem;
     align-items: center;
     justify-content: center;
@@ -860,6 +870,21 @@ html.glow-nav main {
   h2,
   h3,
   .display {
+    hyphens: auto;
+    -webkit-hyphenate-limit-before: 5;
+    -webkit-hyphenate-limit-after: 5;
+    hyphenate-limit-chars: 12 5 5;
+  }
+}
+
+/* Running text on phones: very long compounds ("schoonheidsbehandelingen")
+   may hyphenate so large text sizes (Android text scaling) never widen the
+   page. Words under 12 letters are never split. */
+@media (max-width: 479px) {
+  p,
+  li,
+  dd,
+  summary span {
     hyphens: auto;
     -webkit-hyphenate-limit-before: 5;
     -webkit-hyphenate-limit-after: 5;

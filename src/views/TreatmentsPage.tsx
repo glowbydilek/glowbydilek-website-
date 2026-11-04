@@ -70,9 +70,9 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                       <Photo id={g.photo} locale={locale} ratio={4 / 3} sizes="(min-width: 768px) 28vw, 96px" />
                     </div>
                   )}
-                  <span className="md:px-1 md:pb-1">
+                  <span className="min-w-0 md:px-1 md:pb-1">
                     <span className="flex items-center justify-between gap-3 font-serif text-[1.6rem] leading-tight text-ink">
-                      {g.label}
+                      <span className="min-w-0 [hyphens:auto]">{g.label}</span>
                       <Icon name="arrow" className="h-4 w-4 shrink-0 text-accent-deep transition-transform duration-500 group-hover:translate-x-1" />
                     </span>
                     <span className="mt-1 block text-sm leading-relaxed text-ink-soft">{g.teaser}</span>

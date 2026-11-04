@@ -73,7 +73,7 @@ export function ReviewForm({ locale, t, forms, privacyHref, email, turnstileSite
       {token && <p className="rounded-xl bg-[var(--color-surface-muted)] px-4 py-3 text-sm">{t.invited}</p>}
       <fieldset>
         <legend className="mb-2 text-sm font-medium">{t.rating}</legend>
-        <div role="radiogroup" aria-label={t.rating} className="flex gap-1">
+        <div role="radiogroup" aria-label={t.rating} className="flex flex-wrap gap-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <label key={n} className="cursor-pointer">
               <input type="radio" name="rating" value={n} checked={rating === n} onChange={() => setRating(n)} className="peer sr-only" aria-label={t.stars[n - 1]} />
