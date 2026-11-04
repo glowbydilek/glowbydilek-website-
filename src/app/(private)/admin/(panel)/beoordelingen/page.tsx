@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { ModerateButtons, ReplyForm, ReviewSettingsForm } from "@/components/private/cms/ReviewForms";
@@ -17,6 +18,7 @@ const TABS = [
 ] as const;
 
 export default async function Reviews({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireOwner("admin");
   const sp = await searchParams;
   const requested = sp.s;
   const done: Record<string, string> = { publish: "Gepubliceerd op de website.", reject: "Afgewezen: niet zichtbaar op de website.", remove: "Offline gehaald.", pending: "Teruggezet naar ‘te beoordelen’." };

@@ -182,3 +182,12 @@ export function pick<T>(locale: Locale, v: Record<Locale, T>): T {
 export function asLocale(v: unknown): Locale {
   return v === "en" || v === "tr" ? v : "nl";
 }
+
+/**
+ * Language of transactional emails: Dutch or English only (owner decision,
+ * 4 Nov 2026). Turkish visitors receive Dutch emails; the Turkish templates
+ * are kept but not sent.
+ */
+export function mailLocale(v: unknown): "nl" | "en" {
+  return v === "en" ? "en" : "nl";
+}

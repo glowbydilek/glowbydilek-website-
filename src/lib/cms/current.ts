@@ -23,6 +23,8 @@ export type MarketingSnapshot = {
  */
 export type TreatmentLive = {
   id: string;
+  /** Last change of the row (sitemap lastmod); absent for built-in data. */
+  updatedAt?: Date;
   priceCents: number | null;
   priceFrom: boolean;
   durationMinutes: number | null;
@@ -58,6 +60,8 @@ export type PhotoOverride = { mediaId: number; version: number; width: number; h
 export type Snapshot = {
   /** `${docKey}|${locale}` → owner override */
   docs: Map<string, unknown>;
+  /** `${docKey}|${locale}` → when the published override was last saved (sitemap lastmod). */
+  docDates?: Map<string, Date>;
   treatments: Map<string, TreatmentLive>;
   /** Sections, groups and package contents (null without a database). */
   catalogue: CatalogueRows | null;

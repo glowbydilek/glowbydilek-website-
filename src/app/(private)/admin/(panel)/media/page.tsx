@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { desc } from "drizzle-orm";
 import { MediaItem, SlotForm, UploadForm } from "@/components/private/cms/MediaForms";
 import { Card, PageHeader } from "@/components/private/ui";
@@ -10,6 +11,7 @@ import { mediaUsage } from "@/lib/private/mediaActions";
 export const metadata = { title: "Media" };
 
 export default async function MediaPage() {
+  await requireOwner("admin");
   const db = getDb();
   const [items, slotsEv] = await Promise.all([db.select().from(media).orderBy(desc(media.createdAt)), editorValue(db, "photos", "all", {})]);
   const slots = (slotsEv.value ?? {}) as Record<string, number>;

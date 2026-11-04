@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { desc } from "drizzle-orm";
 import { Card, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
@@ -7,6 +8,7 @@ import { formatLocal } from "@/lib/time";
 export const metadata = { title: "Systeem & logboek" };
 
 export default async function SystemPage() {
+  await requireOwner("admin");
   const log = await getDb().select().from(auditLogs).orderBy(desc(auditLogs.createdAt)).limit(150);
   return (
     <>

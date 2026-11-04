@@ -1,3 +1,4 @@
+import { mailLocale } from "@/i18n/config";
 import "server-only";
 import { NextResponse, type NextRequest } from "next/server";
 import { mailConfigured, ownerAddress, sendMail } from "../mail/send";
@@ -162,7 +163,7 @@ export async function handleForm<T extends { email: string; name: string }>(req:
   // The acknowledgement is best-effort: the inquiry itself has been delivered.
   let acknowledged = true;
   try {
-    await sendMail({ to: data.email, replyTo: ownerAddress(), ...h.customerMail(data) });
+    await sendMail({ to: data.email, replyTo: ownerAddress(), ...h.customerMail({ ...data, locale: mailLocale((data as { locale?: unknown }).locale) }) });
   } catch (err) {
     acknowledged = false;
     console.error(`[${h.kind}] Failed to send acknowledgement: ${errorCode(err)}`);

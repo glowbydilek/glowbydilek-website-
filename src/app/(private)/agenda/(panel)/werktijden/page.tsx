@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import { asc, gte } from "drizzle-orm";
 import { BlockForm, OverrideForm, WeeklyHoursForm, type DayHours } from "@/components/private/agenda/HoursForms";
 import { Card, Notice, PageHeader, SubmitButton } from "@/components/private/ui";
@@ -9,6 +10,7 @@ import { dayBoundsUtc, formatLocal, localToUtc, minutesToHHMM, todayLocal } from
 export const metadata = { title: "Werktijden" };
 
 export default async function Hours() {
+  await requireCan("agenda", "hours.manage");
   const db = getDb();
   const today = todayLocal();
   const [weekly, ovs, ivs, bl] = await Promise.all([

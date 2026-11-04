@@ -98,7 +98,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
 
       {errors.length > 0 && <Notice tone="error">{errors.join(" ")} Pas de kleuren aan; publiceren is pas mogelijk als alles leesbaar is.</Notice>}
 
-      <div className="sticky bottom-2 z-10 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur">
+      <div className="sticky-actions sticky z-20 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur">
         <Buttons op="save" variant="outline">Concept opslaan</Buttons>
         <Buttons op="preview" variant="outline">Voorbeeld op de website</Buttons>
         {errors.length === 0 && <Buttons op="publish">Publiceren</Buttons>}

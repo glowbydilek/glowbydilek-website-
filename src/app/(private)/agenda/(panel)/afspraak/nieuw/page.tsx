@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import { eq } from "drizzle-orm";
 import { ownerTreatments } from "@/lib/catalogue/owner";
 import { NewAppointmentForm } from "@/components/private/agenda/NewAppointmentForm";
@@ -9,6 +10,7 @@ import { hhmmToMinutes, isLocalDate, todayLocal } from "@/lib/time";
 export const metadata = { title: "Nieuwe afspraak" };
 
 export default async function NewAppointment({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "agenda.manage");
   const sp = await searchParams;
   const db = getDb();
   const rows = await ownerTreatments(db);

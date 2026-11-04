@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { Card, PageHeader, Stat } from "@/components/private/ui";
 import { customerMetrics } from "@/lib/crm/service";
@@ -19,6 +20,7 @@ const TABS = [
 const dateNl = (d: string) => d.split("-").reverse().join("-");
 
 export default async function Finance({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "finance");
   const sp = await searchParams;
   const kind = TABS.some(([k]) => k === sp.p) ? sp.p! : "month";
   const today = todayLocal();

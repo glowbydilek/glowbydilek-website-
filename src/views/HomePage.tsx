@@ -281,7 +281,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             <ol className="mt-block grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
               {t.experience.steps.map((s, i) => (
                 <li key={s.title} className="relative border-t border-paper/20 pt-6" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                  <span className="font-serif text-5xl italic leading-none text-champagne">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="shrink-0 whitespace-nowrap font-serif text-5xl italic leading-none text-champagne">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="mt-4 font-serif text-[1.6rem] leading-tight text-paper">{s.title}</h3>
                   <p className="mt-2 leading-relaxed text-paper/80">{s.body}</p>
                 </li>

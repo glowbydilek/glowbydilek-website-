@@ -89,15 +89,34 @@ export function publicSocial(input: unknown): SocialLink[] {
 
 // ──────────────────────────────────────────────────────── Analytics (GA4)
 
-export type Analytics = { measurementId: string; enabled: boolean };
-export const DEFAULT_ANALYTICS: Analytics = { measurementId: "", enabled: false };
+/**
+ * Measurement settings. Exactly ONE loader is ever active, so page views are
+ * never counted twice:
+ * - mode "gtm":  only Google Tag Manager loads; GA4 must be configured inside
+ *   the GTM container (Google tag with this measurement ID).
+ * - mode "gtag": GA4 loads directly with the measurement ID (no GTM).
+ * Nothing loads until the visitor gives consent (see components/analytics).
+ */
+export type AnalyticsMode = "gtm" | "gtag";
+export type Analytics = { measurementId: string; gtmId: string; mode: AnalyticsMode; enabled: boolean };
+/** The owner's own Google IDs (public identifiers, not secrets). Off until switched on in the admin. */
+export const DEFAULT_ANALYTICS: Analytics = { measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtag", enabled: false };
 
-/** GA4 Measurement ID ("G-…"); tracking only when enabled AND the visitor consents. */
 export function validateAnalytics(input: unknown): { value: Analytics; errors: string[] } {
   const v = (input ?? {}) as Partial<Analytics>;
   const id = String(v.measurementId ?? "").trim().toUpperCase();
+  const gtm = String(v.gtmId ?? "").trim().toUpperCase();
   const errors: string[] = [];
-  if (id && !/^G-[A-Z0-9]{6,12}$/.test(id)) errors.push("De Measurement ID ziet eruit als G-XXXXXXXXXX (te vinden in Google Analytics → Beheer → Gegevensstreams).");
-  const ok = !id || errors.length === 0;
-  return { value: { measurementId: ok ? id : "", enabled: Boolean(v.enabled) && ok && Boolean(id) }, errors };
+  const idOk = !id || /^G-[A-Z0-9]{6,12}$/.test(id);
+  const gtmOk = !gtm || /^GTM-[A-Z0-9]{4,10}$/.test(gtm);
+  if (!idOk) errors.push("De Measurement ID ziet eruit als G-XXXXXXXXXX (te vinden in Google Analytics → Beheer → Gegevensstreams).");
+  if (!gtmOk) errors.push("De Tag Manager-ID ziet eruit als GTM-XXXXXXX.");
+  // Older settings had no mode: they used GA4 directly.
+  const mode: AnalyticsMode = v.mode === "gtm" ? "gtm" : "gtag";
+  const measurementId = idOk ? id : "";
+  const gtmId = gtmOk ? gtm : "";
+  if (Boolean(v.enabled) && mode === "gtm" && !gtmId) errors.push("Voor de Tag Manager-modus is een GTM-ID nodig.");
+  if (Boolean(v.enabled) && mode === "gtag" && !measurementId) errors.push("Voor de directe GA4-modus is een Measurement ID nodig.");
+  const ready = mode === "gtm" ? Boolean(gtmId) : Boolean(measurementId);
+  return { value: { measurementId, gtmId, mode, enabled: Boolean(v.enabled) && ready }, errors };
 }

@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { asc, desc, eq } from "drizzle-orm";
 import { ProductForm, ProductsPublicForm, ProtocolForm, StockForm, type ProductView } from "@/components/private/cms/ProductForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
@@ -15,6 +16,7 @@ export const metadata = { title: "Producten & materialen" };
 const FLAG: Record<string, string> = { out: "Op", low: "Bijna op", expired: "Over datum", expiring: "Bijna over datum" };
 
 export default async function ProductsAdmin({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireOwner("admin");
   const sp = await searchParams;
   const db = getDb();
   await ensureSeeded(db);

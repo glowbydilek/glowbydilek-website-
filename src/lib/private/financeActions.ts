@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { assertOwner } from "../auth/session";
+import { assertCan, assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { audit } from "../db/audit";
 import { defaultInvoiceSettings, setSetting, type InvoiceSettings } from "../db/settings";
@@ -32,7 +32,7 @@ function refresh() {
 }
 
 export async function recordPaymentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const customerId = int(f, "customerId");
   const amount = parseEuroToCents(str(f, "amount"));
   if (!customerId) return { error: "Klant ontbreekt." };
@@ -60,7 +60,7 @@ export async function recordPaymentAction(_: FormState, f: FormData): Promise<Fo
 }
 
 export async function voidPaymentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const id = int(f, "id");
   if (!id) return { error: "Betaling ontbreekt." };
   try {
@@ -73,7 +73,7 @@ export async function voidPaymentAction(_: FormState, f: FormData): Promise<Form
 }
 
 export async function createInvoiceAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const customerId = int(f, "customerId");
   if (!customerId) return { error: "Klant ontbreekt." };
   let id: number;
@@ -87,7 +87,7 @@ export async function createInvoiceAction(_: FormState, f: FormData): Promise<Fo
 }
 
 export async function saveInvoiceAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const id = int(f, "id");
   if (!id) return { error: "Factuur ontbreekt." };
   const desc = f.getAll("lineDescription").map(String);
@@ -119,7 +119,7 @@ export async function saveInvoiceAction(_: FormState, f: FormData): Promise<Form
 }
 
 export async function invoiceOpAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const id = int(f, "id");
   if (!id) return { error: "Factuur ontbreekt." };
   const db = getDb();
@@ -197,7 +197,7 @@ export async function saveInvoiceSettingsAction(_: FormState, f: FormData): Prom
 // ───────────────────────────────────────────────────────────── Expenses
 
 export async function expenseAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const { validateExpense } = await import("../expenses/core");
   const { addReceipt, ReceiptError } = await import("../expenses/service");
   const { expenses } = await import("../db/schema");
@@ -230,7 +230,7 @@ export async function expenseAction(_: FormState, f: FormData): Promise<FormStat
 }
 
 export async function deleteReceiptAction(f: FormData) {
-  const s = await assertOwner();
+  const s = await assertCan("finance");
   const { deleteReceipt } = await import("../expenses/service");
   const id = int(f, "receiptId");
   if (id) await deleteReceipt(getDb(), id);

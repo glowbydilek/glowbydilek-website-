@@ -4,11 +4,12 @@
  * Any field left `undefined` is hidden on the website and omitted from
  * structured data, so nothing unconfirmed is ever shown.
  *
- * Location policy: treatments are by appointment only. No address, city,
- * district, service area or map is published anywhere (pages, metadata,
- * structured data, emails). Practical location details are shared
- * personally after an appointment is confirmed. Keep `address` and `region`
- * undefined unless the owner explicitly decides otherwise.
+ * Location policy (owner decision, 4 Nov 2026): the salon is in Amsterdam and
+ * the city may be named publicly. The street address stays private — it is
+ * shared personally after an appointment is confirmed — so `address` stays
+ * undefined. `welcomesFrom` lists places clients come from (owner-provided);
+ * it is used in natural copy and structured data, never for separate
+ * city landing pages.
  */
 export type SiteConfig = {
   name: string;
@@ -21,8 +22,10 @@ export type SiteConfig = {
     phone?: string;
     instagram?: string;
     address?: { street: string; postalCode: string; city: string };
-    /** Confirmed city/region for local SEO, e.g. "Rotterdam". */
+    /** Confirmed city for local SEO. */
     region?: string;
+    /** Places clients come from (owner-confirmed). */
+    welcomesFrom?: string[];
   };
 };
 
@@ -36,7 +39,8 @@ export const siteConfig: SiteConfig = {
     phone: undefined,
     instagram: undefined,
     address: undefined,
-    region: undefined,
+    region: "Amsterdam",
+    welcomesFrom: ["Amsterdam", "Amstelveen", "Diemen", "Haarlem", "Hoofddorp", "Zaandam", "Zaanstad"],
   },
 };
 

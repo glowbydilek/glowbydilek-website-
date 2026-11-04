@@ -11,17 +11,17 @@ export const nl = {
     tagline: "Beauty & relaxation",
     pages: {
       services: {
-        title: "Alle behandelingen",
+        title: "Alle behandelingen in Amsterdam",
         description:
           "Alle behandelingen van Glow by Dilek op één plek: ontspannende massages, waxen en meer persoonlijke schoonheidsbehandelingen voor vrouwen. Uitsluitend op afspraak.",
       },
       home: {
-        title: "Glow by Dilek — Beauty & relaxation voor vrouwen",
+        title: "Glow by Dilek — Schoonheidssalon voor vrouwen in Amsterdam",
         description:
-          "Persoonlijke schoonheidsbehandelingen en ontspannende massages voor vrouwen, met aandacht voor jouw wensen en comfort. Uitsluitend op afspraak; vraag online je afspraak aan.",
+          "Gezichtsbehandelingen, ontspannende massages en waxen voor vrouwen in Amsterdam. Persoonlijk, rustig en op afspraak; ook welkom uit Amstelveen, Diemen en Haarlem.",
       },
       treatments: {
-        title: "Waxen voor gezicht, lichaam en bikinizone",
+        title: "Waxen in Amsterdam — gezicht, lichaam en bikinizone",
         description:
           "Waxen (harsen) voor gezicht, lichaam en bikinizone: van wenkbrauwen tot Brazilian. Lees per zone wat je kunt verwachten en hoe je je voorbereidt.",
       },
@@ -41,9 +41,9 @@ export const nl = {
           "Een vraag over een behandeling of een afspraak? Stuur een bericht via het formulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
       },
       booking: {
-        title: "Afspraak aanvragen",
+        title: "Afspraak aanvragen in Amsterdam",
         description:
-          "Vraag online je afspraak aan. Kies je behandeling en voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
+          "Vraag online je afspraak aan bij Glow by Dilek in Amsterdam. Kies je behandeling en voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
       },
       reviews: {
         title: "Beoordelingen van klanten",
@@ -577,12 +577,28 @@ export const nl = {
     },
   },
   consent: {
-    title: "Mag ik meten hoe de website wordt gebruikt?",
-    body: "Met jouw toestemming gebruik ik Google Analytics om te zien welke pagina's worden bekeken, zodat ik de website kan verbeteren. Zonder naam, e-mailadres of andere persoonsgegevens, en zonder advertenties. Weigeren heeft geen invloed op de website.",
-    accept: "Akkoord",
-    decline: "Liever niet",
-    more: "Meer in de privacyverklaring",
+    title: "Cookies op deze website",
+    body: "Noodzakelijke cookies zorgen dat de website en formulieren veilig werken. Met jouw toestemming meten we daarnaast anoniem hoe de website wordt gebruikt (Google Analytics), zodat we hem kunnen verbeteren. Geen advertenties, geen namen of contactgegevens. Weigeren heeft geen invloed op afspraken maken of contact opnemen.",
+    accept: "Alles accepteren",
+    decline: "Alles weigeren",
+    customize: "Voorkeuren instellen",
+    save: "Voorkeuren opslaan",
+    close: "Sluiten",
+    more: "Cookiebeleid",
+    privacy: "Privacyverklaring",
     settings: "Cookie-instellingen",
+    prefsTitle: "Cookievoorkeuren",
+    prefsIntro: "Kies per categorie. Optionele cookies staan uit totdat je ze zelf aanzet. Je kunt je keuze altijd wijzigen via ‘Cookie-instellingen’ onderaan elke pagina.",
+    always: "Altijd aan",
+    on: "Aan",
+    off: "Uit",
+    notUsed: "Niet in gebruik",
+    saved: "Je cookievoorkeuren zijn opgeslagen.",
+    categories: {
+      necessary: { title: "Noodzakelijk", body: "Nodig voor beveiliging, formulieren (Cloudflare Turnstile) en het onthouden van je cookiekeuze. Zonder deze cookies werkt de website niet goed." },
+      analytics: { title: "Statistieken", body: "Google Analytics 4 telt anoniem welke pagina's worden bekeken en of een aanvraag lukt. IP-adressen worden niet opgeslagen; Google Signals en advertentiefuncties staan uit. Cookies: _ga, _ga_* (maximaal 13 maanden)." },
+      marketing: { title: "Marketing", body: "Voor advertenties of het meten van advertentiecampagnes. Deze website gebruikt op dit moment geen marketingcookies." },
+    },
   },
   privacy: {
     title: "Privacyverklaring",
@@ -618,7 +634,7 @@ export const nl = {
       },
       {
         h: "Cookies en Google Analytics",
-        p: "Deze website plaatst geen cookies zonder jouw toestemming. Als Glow by Dilek Google Analytics gebruikt, vraagt de website eerst of dat mag. Alleen na ‘Akkoord’ wordt Google Analytics geladen om te zien welke pagina's worden bekeken en of formulieren worden verstuurd. Er worden geen namen, e-mailadressen, telefoonnummers, afspraakgegevens of gezondheidsinformatie gedeeld, advertentiefuncties staan uit en je kunt je keuze altijd wijzigen via ‘Cookie-instellingen’ onderaan de pagina. Het beheergedeelte gebruikt alleen een noodzakelijke inlogcookie voor de eigenaar.",
+        p: "Deze website plaatst geen cookies zonder jouw toestemming. Als Glow by Dilek Google Analytics gebruikt, vraagt de website eerst of dat mag. Alleen na ‘Alles accepteren’ of als je statistieken zelf aanzet bij ‘Voorkeuren instellen’ wordt Google Analytics geladen om te zien welke pagina's worden bekeken en of formulieren worden verstuurd. Er worden geen namen, e-mailadressen, telefoonnummers, afspraakgegevens of gezondheidsinformatie gedeeld, advertentiefuncties staan uit en je kunt je keuze altijd wijzigen via ‘Cookie-instellingen’ onderaan de pagina. Het beheergedeelte gebruikt alleen een noodzakelijke inlogcookie voor de eigenaar.",
       },
       {
         h: "Beveiliging tegen spam (Cloudflare Turnstile)",

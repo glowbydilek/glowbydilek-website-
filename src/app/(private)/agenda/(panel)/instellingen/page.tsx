@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { SettingsForm } from "@/components/private/agenda/SettingsForm";
 import { Card, PageHeader, SubmitButton } from "@/components/private/ui";
@@ -15,6 +16,7 @@ import { formatLocal } from "@/lib/time";
 export const metadata = { title: "Instellingen" };
 
 export default async function Settings() {
+  await requireOwner("agenda");
   const db = getDb();
   const [b, p, bookable, problems, cron] = await Promise.all([
     getSetting(db, "booking", defaultBookingSettings),

@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { SocialEditor } from "@/components/private/cms/SocialAnalyticsForms";
 import { Card, PageHeader } from "@/components/private/ui";
 import { DEFAULT_SOCIAL, validateBusiness, validateSocial } from "@/lib/cms/menu";
@@ -7,6 +8,7 @@ import { getDb } from "@/lib/db/client";
 export const metadata = { title: "Social media" };
 
 export default async function SocialPage() {
+  await requireOwner("admin");
   const db = getDb();
   const [social, biz] = await Promise.all([editorValue(db, "social", "all", DEFAULT_SOCIAL), editorValue(db, "business", "all", {})]);
   const value = validateSocial(social.value).value;

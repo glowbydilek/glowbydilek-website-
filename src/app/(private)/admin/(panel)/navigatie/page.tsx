@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { BusinessForm, MenuEditor } from "@/components/private/cms/MenuEditor";
 import { Card, PageHeader } from "@/components/private/ui";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -8,6 +9,7 @@ import { getDb } from "@/lib/db/client";
 export const metadata = { title: "Menu & footer" };
 
 export default async function NavPage() {
+  await requireOwner("admin");
   const db = getDb();
   const [menu, biz] = await Promise.all([editorValue(db, "menu", "all", DEFAULT_MENU), editorValue(db, "business", "all", {})]);
   const dict = getDictionary("nl");

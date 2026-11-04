@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import Link from "next/link";
 import { LegalToggle } from "@/components/private/cms/LegalForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
@@ -10,6 +11,7 @@ import { DEFAULT_LEGAL_STATUS, hasPlaceholder, LEGAL_KEYS, LEGAL_LABELS, LEGAL_P
 export const metadata = { title: "Juridische pagina's" };
 
 export default async function LegalAdmin() {
+  await requireOwner("admin");
   const statusRow = await getPublishedEntry("legal-status", "all");
   const status = { ...DEFAULT_LEGAL_STATUS, ...((statusRow?.data as object) ?? {}) } as Record<string, boolean>;
   const rows = await Promise.all(

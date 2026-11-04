@@ -7,6 +7,21 @@ import type { CategoryId, TreatmentId } from "@/content/slugs";
 import { categoryHref, localeLabels, locales, routes, treatmentHref, type Locale, type RouteKey } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
+/**
+ * Languages that search engines may index. Turkish stays reachable for
+ * visitors (language menu) but is noindex and not in the sitemap until the
+ * owner approves it for search (decision 4 Nov 2026).
+ */
+export const INDEXED_LOCALES: readonly Locale[] = ["nl", "en"];
+export const isIndexedLocale = (l: Locale) => INDEXED_LOCALES.includes(l);
+
+/**
+ * Date of the last release that changed the built-in (code) content. Used as
+ * the sitemap's last-modified date for pages without a newer owner edit —
+ * a real date, never "now". Update it when built-in page copy changes.
+ */
+export const BUILTIN_CONTENT_DATE = new Date("2026-11-04T00:00:00Z");
+
 export function absoluteUrl(path: string): string {
   return `${siteConfig.url}${path === "/" ? "" : path}`;
 }
@@ -38,12 +53,14 @@ export function buildMetadata(input: MetaInput): Metadata {
   const { locale, paths, absolute } = input;
   const title = o.title?.trim() || input.title;
   const description = o.description?.trim() || input.description;
-  const noindex = o.noindex ?? input.noindex;
+  const noindex = Boolean(o.noindex ?? input.noindex) || !isIndexedLocale(locale);
   const dict = getDictionary(locale);
   const path = paths[locale];
+  // hreflang only between indexable versions of this page (reciprocal, same set on every version).
+  const indexable = locales.filter((l) => paths[l] && isIndexedLocale(l) && !(seoOverride(input.seoKey, l).noindex ?? input.noindex));
   const languages: Record<string, string> = {};
-  for (const l of locales) if (paths[l]) languages[localeLabels[l].hrefLang] = paths[l];
-  languages["x-default"] = paths.nl;
+  for (const l of indexable) languages[localeLabels[l].hrefLang] = paths[l]!;
+  if (indexable.includes("nl")) languages["x-default"] = paths.nl;
 
   const fullTitle = absolute ? title : `${title} | ${siteConfig.name}`;
   const ogImage = o.ogImage
@@ -64,7 +81,7 @@ export function buildMetadata(input: MetaInput): Metadata {
       description: ogDescription,
       url: path,
       locale: localeLabels[locale].ogLocale,
-      alternateLocale: locales.filter((l) => l !== locale).map((l) => localeLabels[l].ogLocale),
+      alternateLocale: indexable.filter((l) => l !== locale).map((l) => localeLabels[l].ogLocale),
       images: [ogImage],
     },
     twitter: {
@@ -126,14 +143,15 @@ export function rootMetadata(locale: Locale): Metadata {
     applicationName: siteConfig.name,
     authors: [{ name: siteConfig.name }],
     formatDetection: { telephone: false, email: false, address: false },
-    robots: { index: true, follow: true },
+    robots: isIndexedLocale(locale) ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
 /**
- * Schema.org business data. Only confirmed details are included. By policy
- * no address, city, area served or geo data is published (location details
- * are shared personally after confirmation) — see src/content/site.ts.
+ * Schema.org business data. Only confirmed details are included: the city
+ * (Amsterdam) but never the street address, no geo coordinates, no opening
+ * hours (treatments are by appointment only), no ratings — see
+ * src/content/site.ts.
  */
 export function businessJsonLd(locale: Locale) {
   const dict = getDictionary(locale);
@@ -141,7 +159,7 @@ export function businessJsonLd(locale: Locale) {
   const sameAs = c.instagram ? [`https://www.instagram.com/${c.instagram.replace(/^@/, "")}`] : undefined;
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": c.region ? "BeautySalon" : "Organization",
     "@id": `${siteConfig.url}/#business`,
     name: siteConfig.name,
     url: absoluteUrl(routes.home[locale]),
@@ -150,7 +168,8 @@ export function businessJsonLd(locale: Locale) {
     description: dict.meta.pages.home.description,
     email: c.email,
     ...(c.phone && { telephone: c.phone }),
-    ...(c.region && { areaServed: { "@type": "City", name: c.region } }),
+    ...(c.welcomesFrom?.length && { areaServed: c.welcomesFrom.map((name) => ({ "@type": "City", name })) }),
+    ...(c.region && !c.address && { address: { "@type": "PostalAddress", addressLocality: c.region, addressCountry: siteConfig.country } }),
     ...(c.address && {
       address: {
         "@type": "PostalAddress",

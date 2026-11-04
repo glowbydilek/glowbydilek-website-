@@ -50,6 +50,8 @@ const nextConfig = {
   experimental: { serverActions: { bodySizeLimit: "14mb" }, cpus: Math.max(1, Number(process.env.BUILD_WORKERS) || 4) },
   // pdfkit reads its font metrics from node_modules at runtime; keep it unbundled.
   serverExternalPackages: ["pdfkit"],
+  // Embedded PDF fonts are read from disk at runtime (lib/pdf/fonts.ts).
+  outputFileTracingIncludes: { "/**": ["./assets/pdf-fonts/**"] },
   poweredByHeader: false,
   /**
    * Convenience redirects for short or guessable URLs. No existing page URL

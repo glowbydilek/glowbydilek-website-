@@ -56,6 +56,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
   const db = getDb();
   const rows = await db.select().from(contentEntries).where(eq(contentEntries.status, "published"));
   const docs = new Map<string, unknown>(rows.map((r) => [`${r.docKey}|${r.locale}`, r.data]));
+  const docDates = new Map<string, Date>(rows.map((r) => [`${r.docKey}|${r.locale}`, r.updatedAt]));
   if (status === "draft") {
     const drafts = await db.select().from(contentEntries).where(eq(contentEntries.status, "draft"));
     for (const d of drafts) docs.set(`${d.docKey}|${d.locale}`, d.data);
@@ -74,7 +75,7 @@ async function load(status: "published" | "draft"): Promise<Snapshot> {
     }
   }
   const marketing = await loadMarketing(db);
-  return { docs, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
+  return { docs, docDates, treatments: tmap, catalogue: { sections, groups, parts }, marketing, photos, preview: status === "draft", version: cacheState.version };
 }
 
 /**

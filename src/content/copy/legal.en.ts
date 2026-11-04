@@ -4,30 +4,41 @@ import type { LegalDoc, LegalKey } from "./legal.nl";
 export const legalEn: Record<LegalKey, LegalDoc> = {
   cookies: {
     title: "Cookie policy",
-    effectiveDate: "1 November 2026",
-    intro: "This page explains which cookies and similar techniques this website uses, what for, and how to change your choice.",
+    effectiveDate: "4 November 2026",
+    intro: "This page explains which cookies and similar techniques (such as local storage in your browser) this website uses, what for, for how long, and how to change or withdraw your choice. Optional cookies are only placed after you say ‘yes’.",
     sections: [
       {
-        title: "Without consent: only what is necessary",
+        title: "Your choice",
         paragraphs: [
-          "As a visitor we do not place cookies for advertising or profiling. Your choice about statistics (yes or no) is stored in your own browser (local storage, key ‘glow-consent-v1’) so we do not ask again on every visit.",
-          "The owner’s management area uses one necessary session cookie to stay signed in. It applies to the owner only, not to visitors.",
+          "On your first visit you choose ‘Accept all’, ‘Reject all’ or ‘Customise preferences’. Rejecting is as easy as accepting and does not affect booking, getting in touch or browsing the website. Nothing is pre-ticked and scrolling does not count as consent.",
+          "You can change or withdraw your choice at any time via ‘Cookie settings’ at the bottom of every page. If you withdraw consent, the Google Analytics cookies are removed and Google Analytics is no longer loaded. You are asked again after 12 months or when this policy changes materially.",
+        ],
+      },
+      {
+        title: "Necessary (always on)",
+        paragraphs: [
+          "glow-consent-v2 — Glow by Dilek (local storage in your browser) — remembers your cookie choice, its time and the version of this policy. Not sent to us. Retention: 12 months.",
+          "glow-lang — Glow by Dilek (local storage) — remembers the language you chose. Retention: until you clear your browser data.",
+          "Cloudflare Turnstile — Cloudflare, Inc. — protects the contact, appointment and review forms against bots. Turnstile places no cookies on glowbydilek.nl; Cloudflare processes technical data about your browser and connection for this check only. See Cloudflare’s privacy policy.",
+          "__Host-glow_session — Glow by Dilek — keeps the owner signed in to the secure management area. For the owner and staff only, not for visitors. Retention: up to 30 days, or shorter when signing out.",
+          "__prerender_bypass — Glow by Dilek — only for the owner while previewing a draft. Retention: until the end of the browser session.",
         ],
       },
       {
         title: "Statistics (only with your consent)",
         paragraphs: [
-          "If the owner has switched statistics on and you give consent, the website uses Google Analytics 4 to see how the site is used. Google then places cookies such as ‘_ga’ and ‘_ga_…’. Advertising features are off, and no names, email addresses, phone numbers or appointment details are sent to Google.",
-          "Without your consent, Google Analytics is not loaded.",
+          "_ga and _ga_<code> — Google Ireland Ltd. (Google Analytics 4) — counts, anonymously, which pages and treatments are viewed and whether a request or message was sent. Retention: up to 13 months.",
+          "What we do not do: send names, email addresses, phone numbers, appointment details, health information or personal links to Google; use advertising features, Google Signals or personalised ads. The secure management area and personal links (such as a price proposal) are never measured.",
+          "Google Consent Mode v2: without consent no Google script is loaded. With consent, only ‘analytics_storage’ is ‘granted’; ‘ad_storage’, ‘ad_user_data’ and ‘ad_personalization’ always stay ‘denied’.",
         ],
       },
       {
-        title: "Form security",
-        paragraphs: ["The contact, appointment and review forms use Cloudflare Turnstile to prevent abuse by bots. Cloudflare processes technical data about your browser and connection for this. See Cloudflare’s privacy policy for details."],
+        title: "Marketing",
+        paragraphs: ["This website uses no marketing or advertising cookies. If that ever changes, this policy will be updated and your consent asked again before anything is placed."],
       },
       {
-        title: "Changing your choice",
-        paragraphs: ["Use ‘Cookie settings’ at the bottom of every page to change or withdraw your choice at any time. You can also delete cookies in your browser settings."],
+        title: "External content",
+        paragraphs: ["There are no embedded videos, maps or social media widgets. Links to social media are ordinary links: you only leave this website when you click them."],
       },
     ],
   },

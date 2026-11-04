@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { PanelShell } from "@/components/private/PanelShell";
-import { requireOwner } from "@/lib/auth/session";
+import { currentPermissions, requireCan } from "@/lib/auth/session";
+import { AGENDA_PAGE_PERM } from "@/lib/auth/permissions";
 import { getDb } from "@/lib/db/client";
 import { appointments, inquiries } from "@/lib/db/schema";
 import { ensureSeeded } from "@/lib/db/seed";
@@ -15,7 +16,12 @@ export const metadata: Metadata = {
 };
 
 export default async function AgendaLayout({ children }: { children: ReactNode }) {
-  await requireOwner("agenda");
+  const session = await requireCan("agenda", "agenda.view");
+  const perms = await currentPermissions();
+  const allowed = (href: string) => {
+    const need = AGENDA_PAGE_PERM[href] ?? "owner";
+    return need === "owner" ? session.user.role === "owner" : perms.has(need);
+  };
   const db = getDb();
   await ensureSeeded(db);
   const [[p], [m]] = await Promise.all([
@@ -24,7 +30,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
   ]);
   const pending = Number(p.n);
   const unread = Number(m.n);
-  const nav = [
+  const allNav = [
     { href: "/agenda", label: "Vandaag", icon: "today" },
     { href: "/agenda/kalender", label: "Kalender", icon: "calendar" },
     { href: "/agenda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
@@ -38,8 +44,10 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/historie", label: "Overzichten", icon: "history" },
     { href: "/agenda/werktijden", label: "Werktijden", icon: "clock" },
     { href: "/agenda/instellingen", label: "Instellingen", icon: "settings" },
+    ...(session.user.role !== "owner" ? [{ href: "/admin/beveiliging", label: "Mijn account", icon: "settings" }] : []),
   ];
-  const tabs = [
+  const nav = allNav.filter((n) => allowed(n.href));
+  const allTabs = [
     { href: "/agenda", label: "Vandaag", icon: "today" },
     { href: "/agenda/kalender", label: "Kalender", icon: "calendar" },
     { href: "/agenda/afspraak/nieuw", label: "Nieuw", icon: "plus" },
@@ -47,6 +55,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/klanten", label: "Klanten", icon: "users" },
     { href: "/agenda/intake", label: "Intake", icon: "invoice" },
   ];
+  const tabs = allTabs.filter((t) => allowed(t.href));
   return (
     <PanelShell area="agenda" nav={nav} tabs={tabs}>
       {children}

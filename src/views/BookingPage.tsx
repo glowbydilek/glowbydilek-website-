@@ -49,7 +49,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
         <ol className="grid gap-4 sm:grid-cols-3">
           {t.steps.map((s, i) => (
             <li key={s.title} className="border-t border-ink/15 pt-3">
-              <span className="font-serif text-xl italic text-accent-deep">0{i + 1}</span>
+              <span className="shrink-0 whitespace-nowrap font-serif text-xl italic tabular-nums text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
               <p className="mt-1 text-sm font-medium text-ink">{s.title}</p>
               <p className="mt-1 text-sm leading-snug text-muted">{s.body}</p>
             </li>

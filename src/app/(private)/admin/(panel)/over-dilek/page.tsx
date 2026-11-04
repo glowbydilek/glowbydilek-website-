@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import Link from "next/link";
 import { desc } from "drizzle-orm";
 import { ProfileForm } from "@/components/private/cms/ProfileForm";
@@ -10,6 +11,7 @@ import { parseProfile } from "@/lib/profile";
 export const metadata = { title: "Over Dilek" };
 
 export default async function ProfileAdmin() {
+  await requireOwner("admin");
   const [row, mediaRows] = await Promise.all([
     getPublishedEntry("profile", "all"),
     getDb().select({ id: media.id, name: media.filename }).from(media).orderBy(desc(media.createdAt)).limit(100),

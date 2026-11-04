@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import { asLocale } from "@/i18n/config";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,11 +16,15 @@ import { CustomPageSettings } from "@/components/private/cms/CustomPageForms";
 import { restoreVersionAction } from "@/lib/private/cmsActions";
 import { formatLocal } from "@/lib/time";
 
+
+/** One label per language (Turkish is reachable but not shown in Google). */
+const LANG_LABEL = { nl: "Nederlands", en: "Engels", tr: "Turks" } as const;
 export const metadata = { title: "Pagina bewerken" };
 
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 export default async function EditPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("admin", "cms.edit");
   const { id } = await params;
   const sp = await searchParams;
   let page = EDITOR_PAGES.find((p) => p.id === id);
@@ -68,7 +73,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       <PageHeader
         title={page.label}
         subtitle={`Op de website: ${page.paths.nl} · ${page.paths.en}`}
-        actions={<a href={locale === "en" ? page.paths.en : page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">Bekijk live ↗</a>}
+        actions={<a href={(locale !== "nl" && page.paths[locale]) || page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">Bekijk live ↗</a>}
       />
       {sp.hersteld && <div className="mb-4"><Notice tone="success">Eerdere versie teruggezet als concept. Controleer en klik op Publiceren.</Notice></div>}
       <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -79,7 +84,7 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       <div className="mb-4 inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Taal">
         {(["nl", "en", "tr"] as const).map((l) => (
           <Link key={l} href={href(docKey, l)} role="tab" aria-selected={l === locale} className={`min-h-10 rounded-full px-4 py-2 text-sm ${l === locale ? "bg-ink text-paper" : ""}`}>
-            {l === "nl" ? "Nederlands" : "Engels"}
+            {LANG_LABEL[l]}
             {ts[l].draft && " · concept"}
             {ts[l].empty > 0 && ` · ${ts[l].empty} leeg`}
           </Link>

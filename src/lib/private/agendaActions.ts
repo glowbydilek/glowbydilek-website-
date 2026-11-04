@@ -4,7 +4,7 @@ import { asLocale } from "../../i18n/config";
 import { and, eq, inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { assertOwner } from "../auth/session";
+import { assertCan, assertOwner } from "../auth/session";
 import {
   anonymizeCustomer,
   approve,
@@ -57,7 +57,7 @@ function refresh() {
 // ───────────────────────────────────────────────────────── Appointments
 
 export async function createAppointmentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("agenda.manage");
   const when = dayAndTime(f);
   const treatmentIds = f.getAll("treatments").map(String).filter(Boolean);
   const firstName = str(f, "firstName");
@@ -100,7 +100,7 @@ export async function createAppointmentAction(_: FormState, f: FormData): Promis
 }
 
 export async function appointmentAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("agenda.manage");
   const db = getDb();
   const id = Number(f.get("id"));
   const op = str(f, "op");
@@ -185,11 +185,12 @@ export async function appointmentAction(_: FormState, f: FormData): Promise<Form
 // ─────────────────────────────────────────────────────────── Customers
 
 export async function customerAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("customers.manage");
   const id = Number(f.get("id"));
   const op = str(f, "op");
   try {
     if (op === "anonymize") {
+      await assertCan("customers.export");
       await anonymizeCustomer(getDb(), id, { userId: s.user.id });
       refresh();
       return { ok: true, message: "De persoonsgegevens zijn verwijderd. De anonieme afspraakgeschiedenis blijft bewaard." };
@@ -212,7 +213,7 @@ export async function customerAction(_: FormState, f: FormData): Promise<FormSta
 // ────────────────────────────────────────────────────────── Working hours
 
 export async function saveWeeklyHoursAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("hours.manage");
   const rows: { weekday: number; kind: string; startMinute: number; endMinute: number }[] = [];
   const days = ["", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag", "zondag"];
   try {
@@ -250,7 +251,7 @@ export async function saveWeeklyHoursAction(_: FormState, f: FormData): Promise<
 }
 
 export async function saveOverrideAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("hours.manage");
   const day = str(f, "day");
   if (!isLocalDate(day)) return { error: "Kies een geldige datum." };
   const mode = str(f, "mode"); // closed | hours | breaks
@@ -291,7 +292,7 @@ export async function saveOverrideAction(_: FormState, f: FormData): Promise<For
 }
 
 export async function deleteOverrideAction(f: FormData) {
-  const s = await assertOwner();
+  const s = await assertCan("hours.manage");
   const day = str(f, "day");
   if (!isLocalDate(day)) return;
   const db = getDb();
@@ -302,7 +303,7 @@ export async function deleteOverrideAction(f: FormData) {
 }
 
 export async function saveBlockAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("hours.manage");
   const fromDay = str(f, "fromDay");
   const toDay = str(f, "toDay") || fromDay;
   const fromT = hhmmToMinutes(str(f, "fromTime") || "00:00");
@@ -319,7 +320,7 @@ export async function saveBlockAction(_: FormState, f: FormData): Promise<FormSt
 }
 
 export async function deleteBlockAction(f: FormData) {
-  const s = await assertOwner();
+  const s = await assertCan("hours.manage");
   const db = getDb();
   await db.delete(blocks).where(eq(blocks.id, Number(f.get("id"))));
   await audit(db, { userId: s.user.id, action: "schedule.block_deleted", entityId: Number(f.get("id")) });
@@ -355,7 +356,7 @@ export async function saveBookingSettingsAction(_: FormState, f: FormData): Prom
 // ─────────────────────────────────────────────────────────── Inbox & mail
 
 export async function inquiryAction(f: FormData) {
-  const s = await assertOwner();
+  const s = await assertCan("agenda.manage");
   const id = Number(f.get("id"));
   const status = str(f, "status");
   const db = getDb();
@@ -372,7 +373,7 @@ export async function inquiryAction(f: FormData) {
 }
 
 export async function resendEmailAction(f: FormData) {
-  const s = await assertOwner();
+  const s = await assertCan("agenda.manage");
   const db = getDb();
   await resend(db, Number(f.get("id")));
   await audit(db, { userId: s.user.id, action: "email.resend", entityId: Number(f.get("id")) });
@@ -382,14 +383,14 @@ export async function resendEmailAction(f: FormData) {
 }
 
 export async function bulkInquiryAction(f: FormData) {
-  await assertOwner();
+  await assertCan("agenda.manage");
   const ids = f.getAll("ids").map(Number).filter(Boolean);
   if (ids.length) await getDb().update(inquiries).set({ status: "closed" }).where(and(inArray(inquiries.id, ids)));
   refresh();
 }
 
 export async function mergeCustomersAction(_: FormState, f: FormData): Promise<FormState> {
-  const s = await assertOwner();
+  const s = await assertCan("customers.manage");
   const fromId = Number(f.get("fromId"));
   const intoId = Number(f.get("intoId"));
   if (!Number.isInteger(fromId) || !Number.isInteger(intoId)) return { error: "Kies twee klanten." };

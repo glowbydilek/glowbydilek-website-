@@ -208,7 +208,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
           <ol className="mt-block grid gap-px overflow-hidden rounded-[var(--radius-card)] bg-line sm:grid-cols-2 lg:grid-cols-4">
             {t.expect.items.map((s, i) => (
               <li key={s.title} className="bg-surface p-6 sm:p-7" data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
-                <span className="font-serif text-4xl italic text-accent-deep">0{i + 1}</span>
+                <span className="block whitespace-nowrap tabular-nums font-serif text-4xl italic text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="mt-3 font-serif text-[1.6rem] text-ink">{s.title}</h3>
                 <p className="mt-2 leading-relaxed text-ink-soft">{s.body}</p>
               </li>

@@ -3,7 +3,7 @@ import { ChangePasswordForm, MfaSetup } from "@/components/private/SecurityForms
 import { Card, PageHeader, SubmitButton } from "@/components/private/ui";
 import { logoutEverywhereAction } from "@/lib/private/authActions";
 import { remainingRecoveryCodes } from "@/lib/auth/service";
-import { requireOwner } from "@/lib/auth/session";
+import { requireSignedIn } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { auditLogs, sessions } from "@/lib/db/schema";
 import { formatLocal } from "@/lib/time";
@@ -25,7 +25,7 @@ const ACTION_NL: Record<string, string> = {
 };
 
 export default async function Security() {
-  const s = await requireOwner("admin");
+  const s = await requireSignedIn("admin");
   const db = getDb();
   const [remaining, active, log] = await Promise.all([
     remainingRecoveryCodes(db, s.user.id),
@@ -34,7 +34,7 @@ export default async function Security() {
   ]);
   return (
     <>
-      <PageHeader title="Beveiliging" subtitle={`Account: ${s.user.email}. Dit account geeft toegang tot zowel Admin als Agenda.`} />
+      <PageHeader title="Beveiliging" subtitle={`Account: ${s.user.email}.`} />
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <Card title="Tweestapsverificatie"><MfaSetup enabled={s.user.mfaEnabled} remaining={remaining} /></Card>
         <Card title="Wachtwoord wijzigen"><ChangePasswordForm /></Card>

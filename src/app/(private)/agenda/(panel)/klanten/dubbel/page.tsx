@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { MergeForm } from "@/components/private/agenda/MergeForm";
 import { Card, PageHeader } from "@/components/private/ui";
@@ -8,6 +9,7 @@ import { getDb } from "@/lib/db/client";
 export const metadata = { title: "Dubbele klanten" };
 
 export default async function Duplicates({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "customers.manage");
   const focus = Number((await searchParams).a) || null;
   const all = await findDuplicates(getDb(), 100);
   const pairs = focus ? all.filter((p) => p.a.id === focus || p.b.id === focus) : all;

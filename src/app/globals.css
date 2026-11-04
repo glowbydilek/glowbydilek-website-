@@ -885,5 +885,23 @@ main li,
 main dd,
 main summary span,
 footer p {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+}
+
+/* Admin: sticky Save / Preview / Publish bar. On phones it sits above the
+   fixed bottom menu (instead of underneath it), and focused fields scroll
+   clear of it so the bar never hides what you are typing. */
+.sticky-actions {
+  bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+.panel-has-tabs .sticky-actions {
+  bottom: calc(env(safe-area-inset-bottom) + 4.25rem);
+}
+@media (min-width: 1024px) {
+  .panel-has-tabs .sticky-actions {
+    bottom: 0.5rem;
+  }
+}
+:root:has(.sticky-actions) {
+  scroll-padding-bottom: 10rem;
 }

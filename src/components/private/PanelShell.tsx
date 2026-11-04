@@ -106,7 +106,7 @@ export function PanelShell({
           </div>
         )}
 
-        <main className={`mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:py-8 ${tabs ? "pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8" : ""}`}>
+        <main className={`mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:py-8 ${tabs ? "panel-has-tabs pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8" : ""}`}>
           {banner}
           {children}
         </main>

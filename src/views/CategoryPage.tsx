@@ -109,7 +109,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
             <ol className="mt-block grid gap-px overflow-hidden rounded-[var(--radius-card)] bg-line sm:grid-cols-2 lg:grid-cols-4">
               {c.expect.steps.map((step, i) => (
                 <li key={step.title} className="bg-paper p-6 sm:p-7" data-reveal style={{ ["--reveal-delay" as string]: `${i * 80}ms` }}>
-                  <span className="font-serif text-4xl italic text-accent-deep">0{i + 1}</span>
+                  <span className="block whitespace-nowrap tabular-nums font-serif text-4xl italic text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="mt-3 font-serif text-[1.55rem] leading-tight text-ink">{step.title}</h3>
                   <p className="mt-2 leading-relaxed text-ink-soft">{step.body}</p>
                 </li>

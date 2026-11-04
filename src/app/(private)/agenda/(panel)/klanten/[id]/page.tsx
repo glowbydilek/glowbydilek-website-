@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CustomerAvatar } from "@/components/private/CustomerAvatar";
 import { IntakeCard } from "@/components/private/intake/IntakeCard";
-import { requireOwner } from "@/lib/auth/session";
+import { currentPermissions, requireCan } from "@/lib/auth/session";
 import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { AppointmentCard } from "@/components/private/agenda/AppointmentCard";
@@ -26,7 +26,11 @@ const day = (d: Date | null) => (d ? formatLocal(d, "nl", { day: "numeric", mont
 
 export default async function CustomerPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const id = Number((await params).id);
-  const session = await requireOwner("agenda", `/agenda/klanten/${id}`);
+  const session = await requireCan("agenda", "customers.view", `/agenda/klanten/${id}`);
+  // Least privilege: finance, health and export parts are only loaded and shown with their own permission.
+  const perms = await currentPermissions();
+  const fin = perms.has("finance");
+  const health = perms.has("health.view");
   const sp = await searchParams;
   const db = getDb();
   const [c] = await db.select().from(customers).where(eq(customers.id, id));
@@ -35,8 +39,8 @@ export default async function CustomerPage({ params, searchParams }: { params: P
   const [appts, stats, pays, invs, dups, consult] = await Promise.all([
     customerAppointments(db, id),
     customerStats(db, id),
-    customerPayments(db, id),
-    invoicesForCustomer(db, id),
+    fin ? customerPayments(db, id) : Promise.resolve([] as Awaited<ReturnType<typeof customerPayments>>),
+    fin ? invoicesForCustomer(db, id) : Promise.resolve([] as Awaited<ReturnType<typeof invoicesForCustomer>>),
     c.anonymizedAt ? Promise.resolve([]) : findMatches(db, { email: c.email, phone: c.phone, firstName: c.firstName, lastName: c.lastName }, { excludeId: id }),
     consultationEnabled(db),
   ]);
@@ -53,10 +57,12 @@ export default async function CustomerPage({ params, searchParams }: { params: P
         actions={
           c.anonymizedAt ? undefined : (
             <>
-              <LinkButton href={`/agenda/afspraak/nieuw?klant=${c.id}`} variant="primary">
-                ＋ Afspraak
-              </LinkButton>
-              <NewInvoiceButton customerId={c.id} />
+              {perms.has("agenda.manage") && (
+                <LinkButton href={`/agenda/afspraak/nieuw?klant=${c.id}`} variant="primary">
+                  ＋ Afspraak
+                </LinkButton>
+              )}
+              {fin && <NewInvoiceButton customerId={c.id} />}
             </>
           )
         }
@@ -75,7 +81,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
         <Stat label="Eerste bezoek" value={<span className="text-xl">{day(stats.firstVisit)}</span>} />
         <Stat label="Laatste bezoek" value={<span className="text-xl">{day(stats.lastVisit)}</span>} />
         <Stat label="Afspraken" value={stats.total} hint={`${stats.completed} afgerond · ${stats.cancelled} geannuleerd · ${stats.noShows} niet verschenen`} />
-        <Stat label="Betaald (vastgelegd)" value={formatCents(stats.receivedCents)} hint={stats.invoicedCents ? `Gefactureerd: ${formatCents(stats.invoicedCents)}` : "Alleen geregistreerde betalingen"} />
+        {fin && <Stat label="Betaald (vastgelegd)" value={formatCents(stats.receivedCents)} hint={stats.invoicedCents ? `Gefactureerd: ${formatCents(stats.invoicedCents)}` : "Alleen geregistreerde betalingen"} />}
       </div>
 
       <div className="mt-5 grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
@@ -85,10 +91,21 @@ export default async function CustomerPage({ params, searchParams }: { params: P
               <CustomerAvatar size={48} />
               <p className="text-sm text-muted">Klantnummer {c.id}</p>
             </div>
-            {c.anonymizedAt ? <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice> : <CustomerForm c={c} />}
+            {c.anonymizedAt ? (
+              <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice>
+            ) : perms.has("customers.manage") ? (
+              <CustomerForm c={c} />
+            ) : (
+              <dl className="grid gap-1 text-sm">
+                <dt className="text-muted">E-mail</dt>
+                <dd>{c.email ?? "—"}</dd>
+                <dt className="mt-2 text-muted">Telefoon</dt>
+                <dd>{c.phone ?? "—"}</dd>
+              </dl>
+            )}
           </Card>
-          {!c.anonymizedAt && <IntakeCard db={db} customerId={c.id} mfa={session.user.mfaEnabled && session.mfaPassed} />}
-          {!c.anonymizedAt && (
+          {!c.anonymizedAt && health && <IntakeCard db={db} customerId={c.id} mfa={session.user.mfaEnabled && session.mfaPassed} />}
+          {!c.anonymizedAt && session.user.role === "owner" && (
             <Card title="Consultatie (vertrouwelijk)">
               {consult.enabled ? (
                 <LinkButton href={`/agenda/klanten/${c.id}/consultatie`}>Consultatieformulier openen</LinkButton>
@@ -111,6 +128,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             ) : (
               <p className="text-sm text-muted">Nog geen afgeronde behandelingen.</p>
             )}
+            {session.user.role === "owner" && (
             <form action={`/agenda/klanten/${c.id}/rapport`} target="_blank" className="mt-4 flex flex-wrap items-end gap-2 border-t border-line pt-4 text-sm">
               <label>
                 Van <input type="date" name="van" className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
@@ -120,7 +138,8 @@ export default async function CustomerPage({ params, searchParams }: { params: P
               </label>
               <button className="min-h-11 rounded-full border border-ink/25 px-4">Behandeloverzicht (PDF)</button>
             </form>
-            {!c.anonymizedAt && (
+            )}
+            {!c.anonymizedAt && perms.has("customers.export") && (
               <a href={`/agenda/klanten/${c.id}/export`} className="mt-3 inline-block text-xs text-muted underline">
                 Alle persoonsgegevens exporteren (AVG-inzageverzoek, JSON, zonder consultatie en intakeformulieren)
               </a>
@@ -134,6 +153,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
           <Card title={`Geschiedenis (${past.length})`}>
             {past.length ? <ul className="space-y-2">{past.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-sm text-muted">Nog geen eerdere afspraken.</p>}
           </Card>
+          {fin && (
           <Card title="Betalingen">
             {pays.length > 0 && (
               <ul className="mb-4 divide-y divide-line text-sm">
@@ -151,6 +171,8 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             )}
             {!c.anonymizedAt && <PaymentForm customerId={c.id} appointments={apptOptions} invoices={issued} today={todayLocal()} />}
           </Card>
+          )}
+          {fin && (
           <Card title={`Facturen (${invs.length})`}>
             {invs.length ? (
               <ul className="divide-y divide-line text-sm">
@@ -170,6 +192,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
               <p className="text-sm text-muted">Nog geen facturen.</p>
             )}
           </Card>
+          )}
         </div>
       </div>
     </>

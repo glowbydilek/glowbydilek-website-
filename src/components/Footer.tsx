@@ -2,7 +2,7 @@ import Link from "next/link";
 import { mailto, siteConfig, whatsappLink } from "@/content/site";
 import { href, type Locale, pick } from "@/i18n/config";
 import { currentSnapshot, override } from "@/lib/cms/current";
-import { publicSocial, validateAnalytics, validateBusiness } from "@/lib/cms/menu";
+import { publicSocial, validateBusiness } from "@/lib/cms/menu";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { CookieSettingsLink } from "./analytics/Analytics";
 import { Glint, LogoStacked } from "./brand/Logo";
@@ -18,7 +18,6 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
   const wa = whatsappLink(dict.whatsapp.message);
   const biz = validateBusiness(override("business", "all")).value;
   const social = publicSocial(override("social", "all"));
-  const analytics = validateAnalytics(override("analytics", "all")).value;
   const linkCls = "inline-flex min-h-10 max-w-full items-center text-paper/75 transition-colors hover:text-glow sm:min-h-0 sm:py-1";
   const heading = "text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-glow";
 
@@ -174,7 +173,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                 {l.label}
               </Link>
             ))}
-            {analytics.enabled && <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />}
+            <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />
             <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" placement="up" />
             {/* Discreet owner entrance; the private areas are noindex and login-protected.
                 A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}

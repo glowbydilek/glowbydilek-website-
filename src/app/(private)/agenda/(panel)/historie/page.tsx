@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { AppointmentCard } from "@/components/private/agenda/AppointmentCard";
 import { Card, PageHeader } from "@/components/private/ui";
@@ -18,6 +19,7 @@ const TABS = [
 ] as const;
 
 export default async function Overviews({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "finance");
   const tab = (await searchParams).lijst ?? "komend";
   const db = getDb();
   const tomorrow = addDays(todayLocal(), 1);

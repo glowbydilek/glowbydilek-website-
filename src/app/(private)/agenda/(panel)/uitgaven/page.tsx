@@ -1,3 +1,4 @@
+import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { ExpenseForm, type ExpenseView } from "@/components/private/finance/ExpenseForm";
 import { Badge, Card, Notice, PageHeader, Stat } from "@/components/private/ui";
@@ -15,6 +16,7 @@ const TABS: [string, string][] = [["month", "Maand"], ["year", "Jaar"]];
 const dateNl = (d: string) => d.split("-").reverse().join("-");
 
 export default async function Expenses({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  await requireCan("agenda", "finance");
   const sp = await searchParams;
   const kind = sp.p === "year" || sp.p === "custom" ? sp.p : "month";
   const period = periodFor(kind, todayLocal(), { from: sp.van, to: sp.tot });

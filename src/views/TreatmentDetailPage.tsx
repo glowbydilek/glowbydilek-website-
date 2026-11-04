@@ -25,6 +25,7 @@ import {
 import { getDictionary } from "@/i18n/dictionaries";
 import { arrangeSections } from "@/lib/cms/sections";
 import { singleServiceJsonLd } from "@/lib/seo";
+import { TrackView } from "@/components/analytics/TrackView";
 
 /**
  * Service detail page for any catalogue item (waxing treatment, facial, body,
@@ -361,5 +362,10 @@ export function TreatmentDetailPage({
     ),
   };
 
-  return <>{arrangeSections("treatment", sections)}</>;
+  return (
+    <>
+      {arrangeSections("treatment", sections)}
+      <TrackView event="view_treatment" treatmentId={id} categoryId={item.sectionId} />
+    </>
+  );
 }

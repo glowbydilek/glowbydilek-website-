@@ -52,8 +52,8 @@ export function CareTabs({ care }: { care: Dictionary["care"] }) {
           <ol className="mt-6 space-y-4">
             {t.items.map((item, n) => (
               <li key={item} className="flex gap-4 border-b border-ink/10 pb-4 leading-relaxed text-ink-soft last:border-0">
-                <span className="font-serif text-xl italic text-accent-deep">{String(n + 1).padStart(2, "0")}</span>
-                <span className="pt-0.5">{item}</span>
+                <span className="w-8 shrink-0 whitespace-nowrap font-serif text-xl italic tabular-nums text-accent-deep" aria-hidden="true">{String(n + 1).padStart(2, "0")}</span>
+                <span className="min-w-0 flex-1 pt-0.5">{item}</span>
               </li>
             ))}
           </ol>

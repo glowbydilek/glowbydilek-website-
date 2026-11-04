@@ -1,0 +1,1 @@
+all 19 pages × 7 widths: HTTP 200, no horizontal overflow, numbered lists intact

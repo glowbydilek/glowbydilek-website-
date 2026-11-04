@@ -1,3 +1,4 @@
+import { requireOwner } from "@/lib/auth/session";
 import { asc, desc } from "drizzle-orm";
 import { CampaignForm, PromotionForm, type CampaignView, type PromoView } from "@/components/private/cms/MarketingForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
@@ -15,6 +16,7 @@ export const metadata = { title: "Acties & kortingen" };
 const day = (d: Date | null) => (d ? toLocalParts(d).date : "");
 
 export default async function MarketingAdmin() {
+  await requireOwner("admin");
   const db = getDb();
   await ensureSeeded(db);
   const [promoRows, campaignRows, sections, items, mediaRows] = await Promise.all([
