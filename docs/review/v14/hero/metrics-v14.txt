@@ -1,0 +1,10 @@
+320 {"h1Bottom":295,"ctaBottom":538,"imgTop":628,"imgH":187,"sealTop":0,"vh":568,"nextSectionTop":953}
+360 {"h1Bottom":309,"ctaBottom":527,"imgTop":617,"imgH":213,"sealTop":0,"vh":740,"nextSectionTop":969}
+375 {"h1Bottom":310,"ctaBottom":528,"imgTop":618,"imgH":223,"sealTop":0,"vh":667,"nextSectionTop":979}
+390 {"h1Bottom":299,"ctaBottom":491,"imgTop":581,"imgH":233,"sealTop":0,"vh":844,"nextSectionTop":924}
+414 {"h1Bottom":316,"ctaBottom":559,"imgTop":649,"imgH":249,"sealTop":0,"vh":896,"nextSectionTop":1008}
+430 {"h1Bottom":316,"ctaBottom":559,"imgTop":649,"imgH":260,"sealTop":0,"vh":932,"nextSectionTop":1019}
+landscape-844 {"h1Bottom":268,"ctaBottom":471,"imgTop":251,"imgH":230,"sealTop":389,"vh":390,"nextSectionTop":683}
+tablet-768 {"h1Bottom":355,"ctaBottom":612,"imgTop":265,"imgH":369,"sealTop":542,"vh":1024,"nextSectionTop":850}
+tablet-1024 {"h1Bottom":547,"ctaBottom":781,"imgTop":260,"imgH":477,"sealTop":645,"vh":1366,"nextSectionTop":939}
+desktop-1440 {"h1Bottom":521,"ctaBottom":755,"imgTop":177,"imgH":600,"sealTop":685,"vh":900,"nextSectionTop":899}

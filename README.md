@@ -9,7 +9,7 @@ Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS 4** and *
 - **`/agenda`**: mobile calendar and CRM (day/week/month/list, requests, appointments, returning customers, profiles with generic avatars, duplicates), working hours and closures, finance with VAT 0/9/21, invoices with PDF, expenses, versioned intake & consent form with an encrypted document vault, inbox.
 - **`/login/status`**: non-secret system check (database, migrations, session key, clock, owner account, SMTP). **`/login/eerste-wachtwoord`**: one-time first password with `OWNER_SETUP_TOKEN`.
 
-More: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Hostinger, owner-login repair, migrations, backups, rollback), [`docs/SECURITY.md`](docs/SECURITY.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/BRAND.md`](docs/BRAND.md), [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md), [`docs/INTAKE.md`](docs/INTAKE.md), [`docs/FINANCE.md`](docs/FINANCE.md), [`docs/EMAIL.md`](docs/EMAIL.md). Latest status report (Turkish): [`docs/v13/RAPOR_TR.md`](docs/v13/RAPOR_TR.md); service list: [`docs/v13/HIZMET_ENVANTERI.md`](docs/v13/HIZMET_ENVANTERI.md).
+More: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Hostinger, owner-login repair, migrations, backups, rollback), [`docs/SECURITY.md`](docs/SECURITY.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/BRAND.md`](docs/BRAND.md), [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md), [`docs/INTAKE.md`](docs/INTAKE.md), [`docs/FINANCE.md`](docs/FINANCE.md), [`docs/EMAIL.md`](docs/EMAIL.md). Latest status report (Turkish): [`docs/v14/RAPOR_TR.md`](docs/v14/RAPOR_TR.md) (previous: [`docs/v13/RAPOR_TR.md`](docs/v13/RAPOR_TR.md)); service list: [`docs/v13/HIZMET_ENVANTERI.md`](docs/v13/HIZMET_ENVANTERI.md).
 
 ## Services (built-in catalogue)
 
