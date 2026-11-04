@@ -512,6 +512,7 @@ html.glow-nav main {
     transition: clip-path 1.2s var(--ease-luxe);
     transition-delay: var(--reveal-delay, 0ms);
   }
+  html.js [data-reveal]:focus-within,
   html.js [data-reveal][data-visible] {
     opacity: 1;
     transform: none;

@@ -4,7 +4,7 @@
  * health information. Calls are no-ops unless GA4 is enabled by the owner
  * AND the visitor consented.
  */
-export type TrackEvent = "view_treatment" | "booking_start" | "booking_submitted" | "contact_submitted" | "cta_booking_click" | "review_submitted";
+export type TrackEvent = "view_treatment" | "booking_started" | "booking_submitted" | "contact_submitted" | "cta_booking_click" | "review_submitted";
 type Params = { treatment_id?: string; category_id?: string; form?: "online" | "request" | "contact"; source?: string; locale?: "nl" | "en" | "tr" };
 
 const SAFE = /^[a-z0-9_/-]{1,80}$/i;

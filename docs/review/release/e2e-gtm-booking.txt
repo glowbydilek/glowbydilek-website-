@@ -1,0 +1,1 @@
+✓ request form: booking_started ×1 ({"event":"booking_started","form":"request","locale":"nl"}) → after successful submit booking_submitted ×1 ({"event":"booking_submitted","form":"request","locale":"nl"}); no name/e-mail in the dataLayer; GTM loaded once
