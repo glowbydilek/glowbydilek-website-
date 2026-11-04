@@ -106,35 +106,9 @@ export const extraTreatmentsNl: Record<string, TreatmentCopy> = {
     recovery: "Je kunt na de behandeling gewoon verder met je dag.",
     faqs: [{ q: "Val ik af van een lichaamspakking?", a: "Nee. Een lichaamspakking is een verzorgende behandeling voor de huid. Er worden geen beloftes gedaan over gewicht, ontgiften of andere effecten." }],
   },
-  "massage-relaxation": {
-    seoTitle: "Ontspanningsmassage",
-    seoDescription: "Een rustige ontspanningsmassage om even tot jezelf te komen. Lees hoe de afspraak verloopt.",
-    title: "Ontspanningsmassage",
-    lead: "Een rustige massage om even helemaal tot jezelf te komen.",
-    teaser: "Een rustig moment voor jezelf.",
-    areaTitle: "Wat houdt de behandeling in?",
-    area: "Een ontspannende massage waarbij druk en tempo in overleg worden afgestemd. Welke delen worden gemasseerd, bespreek je vooraf.",
-    appointment: ["Je bespreekt vooraf je wensen en of er plekken zijn die je liever overslaat.", "Tijdens de massage kun je altijd aangeven als je meer of minder druk wilt."],
-    know: ["Vertel het als je klachten, blessures of gezondheidsklachten hebt, of zwanger bent.", "Een ontspanningsmassage is geen medische of therapeutische behandeling."],
-    reactions: ["Laat het direct weten als iets niet prettig voelt.", "Twijfel je of een massage voor jou geschikt is? Overleg dan eerst met je huisarts."],
-    aftercare: ["Neem het na afloop even rustig aan en drink wat water."],
-    recovery: "Je kunt na de massage gewoon verder met je dag.",
-    faqs: [{ q: "Welke massagetechniek wordt gebruikt?", a: "Dat wordt vooraf met je besproken. Op deze pagina worden geen technieken genoemd die (nog) niet worden aangeboden." }],
-  },
 };
 
 export const extraSectionsNl: Record<string, SectionCopy> = {
-  facial: {
-    seoTitle: "Gezichtsbehandelingen",
-    seoDescription: "Gezichtsbehandelingen bij Glow by Dilek: reiniging, peeling en masker, rustig en persoonlijk afgestemd. Uitsluitend op afspraak.",
-    hero: { eyebrow: "Gezichtsbehandelingen", title: "Tijd voor", titleEm: "je huid.", subtitle: "Reinigen, peelen en verzorgen in een rustig tempo, afgestemd op hoe je huid aanvoelt." },
-    intro: { title: "Rustig en persoonlijk", paragraphs: ["Elke gezichtsbehandeling begint met een kort gesprek over je huid en wat je dagelijks voor je huid gebruikt. Daarna wordt de behandeling daarop afgestemd.", "Een gezichtsbehandeling is een verzorgende behandeling, geen medische. Bij huidaandoeningen of twijfel wordt eerst overleg met je huisarts of dermatoloog aangeraden."] },
-    listTitle: "Gezichtsbehandelingen",
-    listIntro: "Kies een behandeling voor alle details, of vraag direct een afspraak aan.",
-    teaser: "Reinigen, peelen en verzorgen, in alle rust.",
-    faqs: [{ q: "Welke behandeling past bij mijn huid?", a: "Dat bespreek je vooraf. Twijfel je, vraag dan gerust advies bij je aanvraag." }],
-    note: "Er worden geen diagnoses gesteld en geen medische resultaten beloofd.",
-  },
   bodycare: {
     seoTitle: "Lichaamsbehandelingen",
     seoDescription: "Lichaamsbehandelingen bij Glow by Dilek: verzorging voor de huid van je lichaam, met een moment van rust. Uitsluitend op afspraak.",
@@ -143,16 +117,6 @@ export const extraSectionsNl: Record<string, SectionCopy> = {
     listTitle: "Lichaamsbehandelingen",
     listIntro: "Kies een behandeling voor alle details.",
     teaser: "Verzorging voor de huid van je lichaam.",
-    faqs: [],
-  },
-  massage: {
-    seoTitle: "Massages",
-    seoDescription: "Ontspanningsmassage bij Glow by Dilek: een rustig moment voor jezelf. Uitsluitend op afspraak.",
-    hero: { eyebrow: "Massages", title: "Even", titleEm: "helemaal niets.", subtitle: "Een rustige massage om tot jezelf te komen." },
-    intro: { title: "Ontspanning voorop", paragraphs: ["Een ontspanningsmassage is bedoeld om tot rust te komen. Het is geen medische of therapeutische behandeling."] },
-    listTitle: "Massages",
-    listIntro: "Kies een massage voor alle details.",
-    teaser: "Een rustig moment voor jezelf.",
     faqs: [],
   },
   packages: {

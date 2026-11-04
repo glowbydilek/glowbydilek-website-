@@ -2,6 +2,17 @@
 
 These items cannot be completed from the codebase without the owner's facts, assets, credentials or decisions. Most text, photos and prices can now be changed by the owner in `/admin` without a developer. Nothing below has been invented on the website. Nothing on this list is shown publicly.
 
+## Current owner actions (v14, 4 November 2026)
+
+1. **Production login** (blocks everything in `/admin` and `/agenda`): create the MySQL database and enter the environment variables in hPanel, then approve the deploy. Step by step: `docs/DEPLOYMENT.md` §2e. Afterwards `/login/status` must show "In orde" everywhere.
+2. **Diploma wording**: confirm the exact title ("Schoonheidsspecialiste niveau 3"?) and whether a copy can be shown.
+3. **Prices and durations** for the five massages and facial care with steam (now "op aanvraag"), and which treatments may be booked online with a chosen time.
+4. **Drafts**: which of the ten draft treatments/packages you really offer (Admin → Behandelingen; nothing is published without your confirmation).
+5. **Photos**: approve the v14 opening image (draped shoulder massage) and the new massage/brow photos, or send your own studio photos. Alternatives are listed in `docs/PHOTOGRAPHY.md`.
+6. **Logo**: choose A, B (recommended) or C from `docs/review/v13/logo-candidates.png`, or ask for new options. The live logo stays unchanged until you choose.
+7. **Turkish texts**: ask a native Turkish speaker to read the `/tr` pages.
+8. **Real-device check**: open the site on your own iPhone (Safari) and an Android phone after the deploy; we can only emulate them here.
+
 ## Location policy (privacy)
 
 The website never names or hints at where treatments take place. Everywhere (pages, footer, FAQs, emails, metadata, structured data) it uses only:
@@ -15,7 +26,7 @@ There is no address, city, district, service area, map or walk-in information. `
 
 - [ ] **Hostinger setup** (`docs/DEPLOYMENT.md`): production database, environment variables (database, `AUTH_SECRET`, `CRON_SECRET`, SMTP), cron job.
 - [ ] **Rotate the Turnstile secret** (it appeared in a screenshot) and set the production keys **before** the build (`docs/SECURITY.md`). Without them the public forms show "temporarily unavailable" in production.
-- [ ] **First login** via "Wachtwoord vergeten?", then enable **two-step verification** and store the recovery codes offline.
+- [ ] **First login** via "Wachtwoord vergeten?" (needs SMTP) or once via `/login/eerste-wachtwoord` with `OWNER_SETUP_TOKEN`; then enable **two-step verification**, store the recovery codes offline and remove `OWNER_SETUP_TOKEN`.
 - [ ] **Working hours, breaks and days off** in Agenda → Werktijden.
 - [ ] **Private location details** for confirmation emails in Agenda → Instellingen (never shown on the website).
 - [ ] **Retention period** in the privacy statement: the text now proposes "no longer than 24 months after the last appointment or contact". Confirm or change it. Anonymising old customers is a manual action in Agenda → Klanten.
@@ -23,7 +34,7 @@ There is no address, city, district, service area, map or walk-in information. `
 
   | # | Statement (NL) | Where |
   | --- | --- | --- |
-  | 1 | "Ik heb Glow by Dilek opgericht omdat ik geloof dat waxen meer aandacht verdient…" | Home |
+  | 1 | ~~"…waxen meer aandacht verdient…"~~ — no longer on the site (v13 copy is beauty & relaxation) | Home |
   | 2 | Quote: "Jouw comfort en vertrouwen gaan bij mij voor alles." | Home |
   | 3 | Quote: "Ik werk liever met minder klanten en meer aandacht." | About |
   | 4 | About story: "met één wens…", "een werkwijze die elke keer hetzelfde is" | About |
@@ -32,7 +43,7 @@ There is no address, city, district, service area, map or walk-in information. `
   | 7 | "Afspraken worden ruim ingepland." | About |
   | 8 | "Dilek vertelt wat ze gaat doen voordat ze het doet" / "leest elk bericht zelf" | Standards, Contact, process |
   | 9 | "Is waxen niet verstandig voor je huid, dan zeg ik dat" | About |
-  | 10 | Tagline "Professional Waxing" (English in the logo) | Logo |
+  | 10 | ~~Tagline "Professional Waxing"~~ — removed; the logo is "Glow ✦ by Dilek" | Logo |
 
 - [ ] **Approval: treatment and category page details** (`src/content/copy/*.ts`). These describe common professional practice; please confirm they match how Dilek works, or tell us what to change:
 
@@ -47,7 +58,7 @@ There is no address, city, district, service area, map or walk-in information. `
   | T7 | Period policy: "let us know; you can choose to reschedule" | Intimate pages, FAQ |
   | T8 | Suggested rhythms (every 3–5 / 4–6 weeks) and "smooth for 3–5 weeks" | Several |
   | T9 | Cancellation: "let us know as soon as possible" (no formal policy published) | Process |
-  | T10 | Who the treatments are for (no gender restrictions stated) | All |
+  | T10 | ~~Who the treatments are for~~ — settled: **women only** (v13), stated on every language version | All |
   | T11 | Wax type is deliberately not named (warm/hard/strip) | All |
 
 - [ ] **Privacy statement review** (Admin → Pagina's → Privacy, or `privacy` in both dictionaries), including storage at Hostinger, appointment emails and reminders, retention, Cloudflare Turnstile and abuse prevention. A legal review is recommended; the text is written in good faith and does not guarantee legal compliance.

@@ -1,61 +1,46 @@
 # Glow by Dilek — website, admin and agenda
 
-The official website for **Glow by Dilek**, a premium waxing and beauty business in the Netherlands.
+The website of **Glow by Dilek**: personal beauty and relaxation treatments for **women only**, by appointment, in the Netherlands. Dilek is a qualified *schoonheidsspecialiste* (level 3; exact diploma wording pending the owner's confirmation).
 
 Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS 4** and **MySQL/MariaDB** (Drizzle ORM), served by `next start` on **Hostinger Node.js Web Apps**.
 
-- **Public website** (NL/EN).
-- **`/admin`** ("Admin Glow by Dilek"): pages and sections, drafts, preview and history, theme, header/footer, media library, treatments and prices, SEO and redirects, email templates, security and audit log, backup.
-- **`/agenda`** ("Glow by Dilek — Agenda"): mobile calendar and CRM: today, day/week/month/list, overviews (tomorrow, upcoming, completed, cancelled), requests, appointments with returning-customer recognition, customer profiles (visits, treatments, payments, invoices, duplicate merge), **Financiën**, **Facturen & PDF**, optional encrypted consultation form, inbox, working hours, settings. It can be added to the iPhone home screen.
-- **Admin additions**: Bedrijf & facturen, Beoordelingen (moderation), Social media, Analytics & cookies (GA4 with consent), Privacy & consultatie.
+- **Public website in three languages**: Dutch (default, no prefix), English (`/en`) and Turkish (`/tr`), with translated URLs, `hreflang`, and an accessible language menu that keeps you on the same page and treatment.
+- **`/admin`**: pages and sections with drafts, preview and history; theme; header/footer; media; treatments, categories and prices (NL/EN/TR names, "Vertaling nodig (TR)" marker); SEO and redirects; email templates; promotions; legal pages; security, audit log and backup.
+- **`/agenda`**: mobile calendar and CRM (day/week/month/list, requests, appointments, returning customers, profiles with generic avatars, duplicates), working hours and closures, finance with VAT 0/9/21, invoices with PDF, expenses, versioned intake & consent form with an encrypted document vault, inbox.
+- **`/login/status`**: non-secret system check (database, migrations, session key, clock, owner account, SMTP). **`/login/eerste-wachtwoord`**: one-time first password with `OWNER_SETUP_TOKEN`.
 
-More: [`docs/FINANCE.md`](docs/FINANCE.md), [`docs/CONSULTATION.md`](docs/CONSULTATION.md), [`docs/ANALYTICS.md`](docs/ANALYTICS.md), [`docs/BRAND.md`](docs/BRAND.md).
+More: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Hostinger, owner-login repair, migrations, backups, rollback), [`docs/SECURITY.md`](docs/SECURITY.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/BRAND.md`](docs/BRAND.md), [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md), [`docs/INTAKE.md`](docs/INTAKE.md), [`docs/FINANCE.md`](docs/FINANCE.md), [`docs/EMAIL.md`](docs/EMAIL.md). Latest status report (Turkish): [`docs/v13/RAPOR_TR.md`](docs/v13/RAPOR_TR.md); service list: [`docs/v13/HIZMET_ENVANTERI.md`](docs/v13/HIZMET_ENVANTERI.md).
 
-Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Deployment, backups and rollback: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Security: [`docs/SECURITY.md`](docs/SECURITY.md).
+## Services (built-in catalogue)
+
+**19 published**: 13 waxing treatments (face: eyebrows, upper lip, chin, full face; body: underarms, half arms, full arms, half legs, full legs, back; bikini & intimate: bikini line, Brazilian, Hollywood), 5 massages (full-body relaxation, face, head, hands, feet) and facial care with steam. **10 drafts** (facial cleansing/exfoliation/mask/complete facial, brush cleansing, body wrap, four packages) stay hidden until the owner confirms them in Admin → Behandelingen. Prices and durations show "op aanvraag" until the owner enters them; nothing is invented. Every published treatment is linked from the mega menu, the mobile category menu, the footer, "Alle behandelingen", the prices page, the booking form and the sitemap.
 
 ## Features
 
-- Dutch is the default language (no URL prefix). English lives under `/en`. Pages have translated slugs, `hreflang` alternates and a language switcher that keeps you on the same page.
-- Pages: Home, Waxing Treatments, Prices, About Dilek, Contact, Request Appointment, Privacy, plus an internal brand page at `/merkidentiteit` (not indexed).
-- Brand identity based on the approved logo (champagne-gold "Glow", script "by Dilek", lotus symbol) as pure-vector SVGs. Palette: ivory, nude, stone, champagne gold and charcoal. Type: Cormorant Garamond, Jost and Parisienne (signature only). Responsive spacing tokens and a header safe-zone; subtle reveals with no hero parallax, respecting reduced motion. See [`docs/BRAND.md`](docs/BRAND.md) and [`docs/RESEARCH.md`](docs/RESEARCH.md).
-- **Contact form** and **appointment-request form**, stored in the database (Agenda) and sent server-side to `hello@glowbydilek.nl` (Reply-To set to the customer) with a customer acknowledgement in Dutch or English. Optional **online booking** with live availability (off by default), always pending the owner's approval. Protected by Cloudflare Turnstile (server-side Siteverify), a honeypot, timing and link-spam checks, rate limits per IP/email/site, duplicate detection and validation. See [`docs/EMAIL.md`](docs/EMAIL.md) and [`docs/SECURITY.md`](docs/SECURITY.md).
-- **Service pages:** 3 category pages and 13 treatment pages per language, generated from `src/content/` with localised slugs; treatment CTAs preselect the treatment in the request form. Plus preparation, aftercare, FAQ and appointment-process pages.
-- **Location privacy:** no address or location is published anywhere; only "Treatments are available by appointment only. Practical location details are shared personally after confirmation." (enforced by `tests/content.test.ts`).
-- **WhatsApp** button: hidden until `NEXT_PUBLIC_WHATSAPP_NUMBER` is set.
-- Expandable service architecture: laser, skin care, beauty and retail are prepared but **unpublished**. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-- SEO: per-page metadata, canonical and hreflang tags, Open Graph images, `sitemap.xml`, `robots.txt`, and JSON-LD (Organization, Service, FAQPage, BreadcrumbList), using only confirmed business information.
-- Performance: pages are cached and regenerated at most every 5 minutes (immediately after a publish), self-hosted fonts, no third-party scripts except Turnstile on the form pages, and pre-optimised responsive WebP photos (`npm run photos`).
+- Brand "Luminous Beauty Atelier": pearl, soft rose, deep plum, rosewood and champagne; headings in Newsreader Medium, text in Instrument Sans (self-hosted, with Latin Extended files for Turkish İ ğ ş); vector logo. Restrained glow interactions (selection sheen, calendar-day and time-slot glints, confirmation sparkle) that switch off with reduced motion.
+- **Booking**: one page with "choose a time" (online-bookable treatments, when switched on) and "send a request" (every published treatment, including massages and anything on request). Treatment links preselect the treatment in all three languages. Dilek confirms every appointment personally; the engine prevents double bookings and handles Europe/Amsterdam DST.
+- **Forms** stored in the database and emailed server-side (Reply-To the customer), with acknowledgements in NL/EN/TR. Protected by Cloudflare Turnstile (server-side Siteverify), honeypot, timing, rate limits, duplicate detection and validation.
+- **Location privacy**: no address is published; practical details are shared personally after confirmation (enforced by `tests/content.test.ts`).
+- SEO: per-page metadata, canonical and `hreflang` (nl-NL, en, tr-TR, x-default), Open Graph images, `sitemap.xml` in three languages (untranslated items are left out of `/tr`), `robots.txt`, JSON-LD with confirmed facts only.
+- Performance: cached pages regenerated after a publish, self-hosted fonts, pre-optimised responsive WebP photos (`npm run photos`; 29 licensed slots, see `docs/PHOTOGRAPHY.md`).
 
-| Page | Dutch (default) | English |
-| --- | --- | --- |
-| Home | `/` | `/en` |
-| Waxing treatments | `/waxbehandelingen` | `/en/waxing-treatments` |
-| Categories | `/waxbehandelingen/gezicht`, `/lichaam`, `/bikini-intiem` | `/en/waxing-treatments/face`, `/body`, `/bikini-intimate` |
-| Treatments (13) | `/waxbehandelingen/{category}/{treatment}` | `/en/waxing-treatments/{category}/{treatment}` |
-| Appointment process | `/hoe-werkt-een-afspraak` | `/en/appointment-process` |
-| Preparation | `/voorbereiding` | `/en/preparation` |
-| Aftercare | `/nazorg` | `/en/aftercare` |
-| FAQ | `/veelgestelde-vragen` | `/en/faq` |
-| Prices | `/prijzen` | `/en/prices` |
-| About Dilek | `/over-dilek` | `/en/about-dilek` |
-| Contact | `/contact` | `/en/contact` |
-| Request appointment | `/afspraak-maken` | `/en/book-appointment` |
-| Privacy | `/privacy` | `/en/privacy` |
+| Page | Dutch (default) | English | Turkish |
+| --- | --- | --- | --- |
+| Home | `/` | `/en` | `/tr` |
+| All treatments | `/behandelingen` | `/en/treatments` | `/tr/bakimlar` |
+| Waxing | `/waxbehandelingen` (+ `/gezicht`, `/lichaam`, `/bikini-intiem`) | `/en/waxing-treatments` | `/tr/agda` |
+| Massages | `/massages` | `/en/massages` | `/tr/masajlar` |
+| Facial treatments | `/gezichtsbehandelingen` | `/en/facial-treatments` | `/tr/yuz-bakimlari` |
+| Prices | `/prijzen` | `/en/prices` | `/tr/fiyatlar` |
+| About Dilek | `/over-dilek` | `/en/about-dilek` | `/tr/dilek-hakkinda` |
+| Contact | `/contact` | `/en/contact` | `/tr/iletisim` |
+| Book / request | `/afspraak-maken` | `/en/book-appointment` | `/tr/randevu` |
+| Process, preparation, aftercare, FAQ | `/hoe-werkt-een-afspraak`, `/voorbereiding`, `/nazorg`, `/veelgestelde-vragen` | `/en/appointment-process`, `/en/preparation`, `/en/aftercare`, `/en/faq` | `/tr/randevu-sureci`, `/tr/hazirlik`, `/tr/bakim-sonrasi`, `/tr/sss` |
+| Privacy | `/privacy` | `/en/privacy` | `/tr/gizlilik` |
 
 ## Owner checklist
 
-| What | Where |
-| --- | --- |
-| **Hostinger setup**: database, environment variables, cron job | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) |
-| **SMTP environment variables** (required for the forms) | Hostinger → Environment variables; see [`docs/EMAIL.md`](docs/EMAIL.md) |
-| **Turnstile keys** (`NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`) — production pending | [`docs/SECURITY.md`](docs/SECURITY.md) |
-| Photography: 16 licensed Adobe Stock photos in place; real portrait of Dilek optional | [`docs/PHOTOGRAPHY.md`](docs/PHOTOGRAPHY.md) |
-| Production release steps | [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md) |
-| Review of first-person copy, and the full list of open items | [`docs/OWNER-CHECKLIST.md`](docs/OWNER-CHECKLIST.md) |
-| WhatsApp number (optional) | `NEXT_PUBLIC_WHATSAPP_NUMBER` |
-| Confirmed prices and durations | Admin → Behandelingen |
-| Real portrait of Dilek, personal story, city/region | `src/content/media.ts`, dictionaries, `src/content/site.ts` |
-| Review of the privacy statement | `src/i18n/dictionaries/*.ts` → `privacy` |
+The current list of owner actions and open questions is in [`docs/OWNER-CHECKLIST.md`](docs/OWNER-CHECKLIST.md). The production login needs a database and environment variables first: [`docs/DEPLOYMENT.md` §2e](docs/DEPLOYMENT.md).
 
 ## Development
 
@@ -77,7 +62,7 @@ cp .env.example .env.local
 npm run db:migrate
 ```
 
-Checks:
+Checks (the test suite needs Node ≥ 22.6; production runs on Node 20):
 
 ```bash
 npm run lint && npm run typecheck && npm test && npm run build
@@ -109,8 +94,19 @@ The full owner journey (login, password reset by email, agenda, double-booking r
 CRON_SECRET=<dev value> MAIL_DIR=/path/to/sink npm run test:e2e:private -- http://localhost:3000
 ```
 
+First-password route (owner without a password, `OWNER_SETUP_TOKEN` set on the test server) and intake/two-step verification:
+
 ```bash
-# optional: re-optimise photos after replacing originals
+OWNER_SETUP_TOKEN=<test value> node scripts/e2e-setup.cjs http://localhost:3000
+```
+
+```bash
+OWNER_PASSWORD=<test value> node scripts/e2e-intake.cjs http://localhost:3000 <customerId>
+```
+
+Re-optimise photos after replacing originals in `assets/photos/` (originals are not committed; re-download them by the Adobe Stock IDs in `docs/PHOTOGRAPHY.md`):
+
+```bash
 npm run photos
 ```
 
@@ -141,14 +137,17 @@ src/
   app/
     (nl)/            Dutch root layout and pages (default language, no prefix)
     (en)/en/         English root layout and pages
+    (tr)/tr/         Turkish root layout and pages
+    (private)/       /login, /admin, /agenda
     sitemap.ts, robots.ts, manifest.ts, icon.svg, globals.css
   components/        Header, footer, logo, UI kit, request composer
-  views/             Page content shared by both languages
-  content/           Business details, services, treatments, photo manifest
+  views/             Page content shared by all languages
+  content/           Business details, treatments, copy (NL/EN/TR), photo manifest
   i18n/              Locale config, localised routes, dictionaries
   lib/seo.ts         Metadata and structured-data helpers
   views/BrandPage    Internal brand review page
-  lib/booking/       Types and feature flag for the future booking system
+  lib/               Catalogue, booking engine, auth, CMS, finance, intake, notifications, db (Drizzle)
+drizzle/                       SQL migrations 0000–0004 (additive)
 scripts/prepare-swc-wasm.mjs   Offline SWC WebAssembly fallback for Hostinger builds
 scripts/optimize-photos.mjs    Converts assets/photos/* to responsive WebP
 scripts/brand/                 Logo generator (SVG) and PNG renderer
