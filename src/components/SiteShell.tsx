@@ -15,7 +15,7 @@ import { navModel } from "./navModel";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { Analytics } from "./analytics/Analytics";
 import { GlowTransition } from "./GlowTransition";
-import { validateAnalytics } from "@/lib/cms/menu";
+import { liveAnalytics } from "@/lib/cms/menu";
 import { href, routes } from "@/i18n/config";
 import { LEGAL_PATHS } from "@/lib/legal";
 
@@ -27,7 +27,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
   const themeOverride = override("theme", "all");
   const css = themeOverride ? themeCss(validateTheme(themeOverride).theme) : "";
   const nav = navModel(locale);
-  const analytics = validateAnalytics(override("analytics", "all")).value;
+  const analytics = liveAnalytics(override("analytics", "all"));
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={fontVariables}>
       <body className="flex min-h-dvh flex-col">

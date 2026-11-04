@@ -207,7 +207,7 @@ export function BookingJourney({
             <>
               <div className="mt-4 flex gap-2 overflow-x-auto pb-1" role="listbox" aria-label={t.step2}>
                 {(days ?? []).map((d) => (
-                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_start", { form: "online" }); setDate(d.date); setTime(null); }} data-selected={date === d.date ? "true" : undefined} className={`sheen relative min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize transition-colors duration-300 ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
+                  <button key={d.date} type="button" role="option" aria-selected={date === d.date} onClick={() => { if (!date) track("booking_started", { form: "online" }); setDate(d.date); setTime(null); }} data-selected={date === d.date ? "true" : undefined} className={`sheen relative min-h-14 shrink-0 rounded-2xl border px-4 text-sm capitalize transition-colors duration-300 ${date === d.date ? "border-ink bg-ink text-paper" : "border-ink/15 bg-surface hover:border-ink/40"}`}>
                     {fmtDay(d.date)}
                     {date === d.date && <span aria-hidden="true" className="pick-star absolute right-1.5 top-1.5" />}
                   </button>

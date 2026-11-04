@@ -1,0 +1,1 @@
+✓ 5 pages client-side: 1 loader (www.googletagmanager.com/gtag/js?id=G-77V0DM6Y7B), 0 GTM, 1 gtag config (send_page_view=false, signals off), page_view per page: / → /waxbehandelingen → /prijzen → /contact → /afspraak-maken, 1 script element

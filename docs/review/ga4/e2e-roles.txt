@@ -1,0 +1,5 @@
+✓ C. Tuesday hours changed to 13:00–15:00 → the booking calendar offers only those times
+✓ D. A blocked date (whole day) offers no times; removing the block restores them
+✓ F1. Owner invites a staff member (role: Medewerker); the invitation email contains a one-time link
+✓ F2. Staff can use the calendar, but not finance, intake, settings, website management or staff admin
+✓ F3. Disabling the account signs the staff member out immediately

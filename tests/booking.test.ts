@@ -184,6 +184,41 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
     assert.ok(sent.at(-1)!.startsWith("Herinnering"));
   });
 
+  test("24h reminder: sent exactly once, not before 24 hours ahead, in the customer's language (NL/EN; Turkish → Dutch)", async () => {
+    const start = localToUtc(DAY, 600).getTime();
+    const ids = {
+      nl: await createManual(db, { ...customer, email: "nl@example.com", phone: "0611111111", treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx),
+      en: await createManual(db, { ...customer, firstName: "Emma", email: "en@example.com", phone: "0622222222", locale: "en", treatmentIds: ["eyebrows"], day: DAY, minute: 660 }, ctx),
+      tr: await createManual(db, { ...customer, firstName: "Ayşe", email: "tr@example.com", phone: "0633333333", locale: "tr", treatmentIds: ["brazilian"], day: "2027-03-02", minute: 600 }, ctx),
+    };
+    const sent: { to: string; subject: string }[] = [];
+    const sender = async (m: { to: string; subject: string }) => void sent.push({ to: m.to, subject: m.subject });
+    await processOutbox(db, sender, { now: new Date(start - 30 * 3600_000) }); // confirmations
+    const reminders = () => sent.filter((m) => /herinnering|reminder/i.test(m.subject));
+    assert.equal(reminders().length, 0, "no reminder 30 hours before");
+    // Hourly cron runs from 25 h before until 1 h after the start, twice per hour (a double run must not duplicate).
+    for (let h = 25; h >= -1; h--) {
+      const now = new Date(start - h * 3600_000);
+      await processOutbox(db, sender, { now });
+      await processOutbox(db, sender, { now });
+      if (h === 25) assert.equal(reminders().length, 0, "nothing at 25 h before");
+    }
+    const nl = reminders().filter((m) => m.to === "nl@example.com");
+    const en = reminders().filter((m) => m.to === "en@example.com");
+    assert.equal(nl.length, 1, "NL reminder exactly once");
+    assert.equal(en.length, 1, "EN reminder exactly once");
+    assert.match(nl[0].subject, /^Herinnering/, "Dutch subject");
+    assert.match(en[0].subject, /^Reminder/i, "English subject");
+    const nlRow = (await db.select().from(outbox)).find((r) => r.kind === "reminder" && r.appointmentId === ids.nl)!;
+    const lead = (start - nlRow.sendAfter.getTime()) / 3600_000;
+    assert.ok(Math.abs(lead - 24) < 0.01, `scheduled 24 h before (got ${lead} h)`);
+    // The Turkish customer's reminder is queued once and in Dutch, never in Turkish.
+    const trRows = (await db.select().from(outbox)).filter((r) => r.kind === "reminder" && r.appointmentId === ids.tr);
+    assert.equal(trRows.length, 1);
+    assert.match(trRows[0].subject, /^Herinnering/, "Turkish customers get Dutch emails");
+    assert.ok(reminders().filter((m) => m.to === "tr@example.com").length <= 1);
+  });
+
   test("customer search, GDPR export and anonymisation", async () => {
     const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
     const [c] = await db.select().from(customers);

@@ -1,0 +1,28 @@
+✓ private pages require login and are noindex
+✓ forgot password (neutral message) → email link → new password
+✓ wrong password is refused with a neutral message
+✓ login opens the agenda on Today
+✓ set weekly working hours (Mon–Fri 09:00–12:00)
+✓ create an appointment with first/last name, phone, email and time
+✓ double booking the same time is refused
+✓ reschedule and cancel always email the customer (material changes)
+✓ customer search by phone
+✓ CMS: edit the homepage title, publish, see it live, restore the original
+✓ CMS: draft preview is visible to the owner only
+✓ Theme: publish a preset, then restore the approved theme
+✓ Prices: set price and duration; shown on the prices page
+✓ Online booking: enable, customer chooses an exact time, request appears in Agenda, approve sends confirmation
+✓ Contact messages appear in the inbox
+✓ Media: upload, describe, place on the homepage, restore the original photo
+✓ CRM: a returning customer is recognised by phone in another notation and reused
+✓ Invoices: blocked until business details exist; issue, PDF and email with the PDF attached
+✓ Finance shows recorded revenue only; customer profile shows visits and payments
+✓ Reviews: a submitted review is only public after moderation
+✓ Social media: a link appears in the footer only after it is set and enabled
+✓ central /login: a signed-in owner chooses Websitebeheer or Agenda; /ajanda redirects
+✓ catalogue: a draft is published only after confirmation, and unpublishing hides it again
+✓ price on request: proposal email, customer accepts via the personal link, agreed price recorded
+✓ promotions: an active public offer shows on the prices page; a slide appears on the homepage
+✓ expenses: add an expense with a receipt; finance shows it; CSV export lists it; the receipt is private
+✓ Overal uitloggen ends the sessions on every device
+✓ admin uses the same login; logout ends the session

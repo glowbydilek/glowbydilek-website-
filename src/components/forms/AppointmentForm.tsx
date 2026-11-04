@@ -143,7 +143,7 @@ export function AppointmentForm({
       onChangeCapture={() => {
         if (formRef.current && !formRef.current.dataset.started) {
           formRef.current.dataset.started = "1";
-          track("booking_start", { form: "request" });
+          track("booking_started", { form: "request" });
         }
       }}
       noValidate

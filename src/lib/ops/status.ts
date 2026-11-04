@@ -110,7 +110,7 @@ export async function systemStatus(origin: string | null): Promise<Check[]> {
   const cron = process.env.CRON_SECRET ?? "";
   out.push(
     cron.length >= 24
-      ? { id: "cron", label: "Geplande taken (CRON_SECRET)", state: "ok", hint: "Ingesteld. Controleer in Hostinger dat de cronjob elke 5 minuten draait." }
+      ? { id: "cron", label: "Geplande taken (CRON_SECRET)", state: "ok", hint: "Ingesteld. Controleer in Hostinger dat de cronjob minstens elk uur draait (bijv. 0 * * * *)." }
       : { id: "cron", label: "Geplande taken (CRON_SECRET)", state: "warn", hint: "Ontbreekt: herinneringen en opnieuw versturen van mails werken niet." },
   );
 
