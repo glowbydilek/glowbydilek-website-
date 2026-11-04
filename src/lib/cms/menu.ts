@@ -99,8 +99,19 @@ export function publicSocial(input: unknown): SocialLink[] {
  */
 export type AnalyticsMode = "gtm" | "gtag";
 export type Analytics = { measurementId: string; gtmId: string; mode: AnalyticsMode; enabled: boolean };
-/** The owner's own Google IDs (public identifiers, not secrets). Off until switched on in the admin. */
-export const DEFAULT_ANALYTICS: Analytics = { measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtag", enabled: false };
+/**
+ * The owner's own Google IDs (public identifiers, not secrets). On by default
+ * (owner instruction, 4 Nov 2026): GA4 loads directly — never together with
+ * GTM — and only after a visitor gives consent. A setting saved in
+ * Admin → Analytics & cookies always takes precedence (also "off").
+ * Switch to mode "gtm" only once the GTM container has a published GA4 tag.
+ */
+export const DEFAULT_ANALYTICS: Analytics = { measurementId: "G-77V0DM6Y7B", gtmId: "GTM-W9VRJF9X", mode: "gtag", enabled: true };
+
+/** The live measurement settings: the owner's saved setting, or the default above. */
+export function liveAnalytics(saved: unknown): Analytics {
+  return validateAnalytics(saved ?? DEFAULT_ANALYTICS).value;
+}
 
 export function validateAnalytics(input: unknown): { value: Analytics; errors: string[] } {
   const v = (input ?? {}) as Partial<Analytics>;
