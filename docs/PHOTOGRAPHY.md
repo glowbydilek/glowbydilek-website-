@@ -1,9 +1,37 @@
 # Photography
 
-**Status: 28 photo slots, all filled** (11 service-specific slots added on 3 November 2026 for v13, see below) (3 added on 1 November 2026 for the new facial, body and massage categories) with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
+**Status: 29 photo slots, all filled** (v14 audit of every slot on 4 November 2026, see the first section) (3 added on 1 November 2026 for the new facial, body and massage categories) with licensed photos from the **Adobe Stock free collection** (licensed on 31 October 2026 through the connected Adobe account, downloaded at ~2400 px).
 
 **Review for the service-page rebuild (October 2026).** The existing 12 slots and their 48 WebP files were reviewed again: none were weak enough to replace (no watermarks, no bad crops at the current focal points, all on-palette). Instead, **4 slots were added** for the new category, treatment and guide pages so the same image is not repeated on every page. They come from assets that had already been licensed in the same session but were not used yet — no new licences or paid services were needed. Unsplash could not be used (the connected account's email is unconfirmed); Firefly / Figma image generation was not used (no AI people, and paid credits would be required).
 
+
+
+## v14 slot-by-slot audit (4 November 2026)
+
+Every slot was reviewed at all four sizes (640/1024/1600/2200 WebP, 5.2 MB in total) on a contact sheet and in the live pages at 320–1440 px. Criteria: relevance to the real service on that page, natural anatomy, white/rose/champagne light, crop at every breakpoint, alt text in NL/EN/TR, licence. Nothing implies a person is Dilek, a client or her studio.
+
+| Slot | Shows | Used on (published unless marked) | Verdict |
+| --- | --- | --- | --- |
+| `hero` | Draped shoulder massage, bright (#361106012) | Homepage opening image | **Replaced v14** — was a large face portrait that filled the phone screen |
+| `portrait` | Beauty portrait (model, #810843299) | Volledig gezicht (full-face waxing) only | Moved from `hero`; kept for one face page |
+| `massage-body` | Back massage, daylight, towel over lower back (#645035977) | Massages section, Ontspanningsmassage | **Replaced v14** — #453749067 was dark/warm and off-palette |
+| `massage-face` / `-head` / `-hand` / `-foot` | The specific massage | The four massage pages | Keep — service-specific, on palette |
+| `facial-steam` | Facial steamer, eye pads (#1218786696) | Gezichtsbehandeling met stoom; **now also the Gezichtsbehandelingen section card** | Keep; equipment type only, not the studio's device, no ozone claim |
+| `facial` | Clay powder still life | Draft facial items only | Kept for drafts; no longer the published section card |
+| `zone-face` | Wax strip on a brow, bright, no gloves (#251752039) | Gezicht zone card, Wenkbrauwen | **Replaced v14** — #473675468 had black gloves on a dark background |
+| `wax-lip` | Wax on the upper lip (close-up) | Bovenlip, Kin (detail pages only) | Keep on detail pages; the zone card now uses the softer `zone-face` |
+| `wax-underarm` / `wax-arms` / `wax-legs` / `wax-back` | The specific zone | Oksels; Onderarmen, Hele armen; Onderbenen; Rug | Keep |
+| `zone-body` | Legs on a couch | Lichaam zone card | Keep |
+| `treatments-hero` | Smooth legs with a feather | Waxing section/overview hero, Hele benen | Keep |
+| `zone-intimate` | Towels and candle still life | Bikini & intiem zone, Bikinilijn | Keep — intimate pages deliberately show no bodies |
+| `linen` | Linen towels still life | Brazilian; Voorbereiding guide | Keep (no bodies) |
+| `materials` | Warm wax pot and spatula | Home standards, booking aside; **now Hollywood** | Hollywood moved from the unrelated vase (`contact`) to the wax pot |
+| `experience` | Treatment room (labelled "Sfeerbeeld") | Closing band, booking hero, guides | Keep, always with the mood-image label |
+| `interior`, `contact`, `vase` | Dried flowers / vases | About, Contact, FAQ (decorative, not treatment pages) | Keep as page atmosphere only; no treatment uses them any more |
+| `botanical`, `dropper`, `aftercare`, `bodycare` | Product still lifes | About, aftercare guide, prices hero; drafts | Keep (guides and drafts) |
+| `massage` | Oil and stones still life | Not referenced by the built-in catalogue | Unused; files kept (licensed, CMS can still select it). Candidate for removal after owner OK |
+
+**Licensed on 3–4 November 2026, not used** (free collection, no cost; kept out of the site after review): #160905856, #123114656, #198178896 (facial masks — would suggest mask treatments that are still drafts), #210392565, #226351954 (undraped / looking into the camera), #329588113 (dark), #279766205 (black gloves). These are **alternative options** for the owner, e.g. #160905856 as a facial-care opening image once facial treatments are confirmed.
 
 ## v13 service-specific photos (3 November 2026)
 
@@ -11,7 +39,7 @@ The v13 brief asked for images that show the actual service instead of repeated 
 
 | Slot | Adobe Stock ID | Shows | Used on |
 | --- | --- | --- | --- |
-| `massage-body` | 453749067 | Back massage, woman relaxing | Massages section, Ontspanningsmassage (hele lichaam) |
+| `massage-body` | ~~453749067~~ → 645035977 (v14) | Back massage, woman relaxing | Massages section, Ontspanningsmassage (hele lichaam) |
 | `massage-head` | 461978663 | Scalp massage | Hoofdmassage |
 | `massage-face` | 626852054 | Female masseuse's hands on the forehead | Gezichtsmassage |
 | `massage-hand` | 382951621 | Hand and finger massage (no face) | Handmassage |
@@ -37,8 +65,9 @@ Bikini, Brazilian and Hollywood pages deliberately keep still lifes (no bodies).
 
 | Slot | Adobe Stock ID | Original title (Adobe) | Used on | Edits |
 | --- | --- | --- | --- | --- |
-| `hero` | 810843299 | Beautiful young woman with flawless skin and elegant pose… | Home hero | 4:5 crop from the top |
-| `zone-face` | 473675468 | Removing eyebrows with hot wax | Home index (Gezicht), Waxing: face | 4:5 crop around the face |
+| `hero` | ~~810843299~~ → 361106012 (v14) | v14: draped shoulder massage (the portrait moved to `portrait`) | Home hero | 3:2 on phones, arched 4:5 from tablet |
+| `portrait` | 810843299 | Beautiful young woman with flawless skin and elegant pose… | Volledig gezicht | 4:5 crop from the top |
+| `zone-face` | ~~473675468~~ → 251752039 (v14) | Wax strip on the brow, bright | Home index (Gezicht), Waxing: face, Wenkbrauwen | 3:2 |
 | `zone-body` | 461751709 | Beautiful legs of a woman on a couch in a cosmetology salon | Home index (Lichaam), Waxing: body | — |
 | `treatments-hero` | 513816117 | Young Black Woman Touching Her Smooth Skin On Legs With Feather | Waxing hero | — |
 | `zone-intimate` | 1883849843 | Spa still life | Home index (Bikini), Waxing: bikini | — |
@@ -61,7 +90,7 @@ The new categories are still drafts; their photos only appear once the owner pub
 
 ### Where each treatment page takes its image
 
-Eyebrows `zone-face` · Upper lip `wax-lip` · Chin `wax-lip` · Full face `hero` · Underarms `wax-underarm` · Half arms `wax-arms` · Full arms `wax-arms` · Half legs `wax-legs` · Full legs `treatments-hero` · Back `wax-back` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `contact`. Intimate pages deliberately use still lifes only — no bodies.
+Eyebrows `zone-face` · Upper lip `wax-lip` · Chin `wax-lip` · Full face `portrait` · Underarms `wax-underarm` · Half arms `wax-arms` · Full arms `wax-arms` · Half legs `wax-legs` · Full legs `treatments-hero` · Back `wax-back` · Bikini line `zone-intimate` · Brazilian `linen` · Hollywood `materials`. Intimate pages deliberately use still lifes only — no bodies.
 
 **Direction (2026 identity):** one portrait (the calm `hero` image) on the homepage; everywhere else still lifes, textures and materials in warm natural light. The two additional model portraits were removed (November 2026) so that no page suggests a person is Dilek or a client, and the image style stays consistent.
 

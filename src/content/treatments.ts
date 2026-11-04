@@ -213,7 +213,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "hollywood",
-        photo: "contact",
+        photo: "materials",
         name: { nl: "Hollywood", en: "Hollywood", tr: "Hollywood ağdası" },
         description: {
           nl: "Volledig glad, voor een frisse en verzorgde look.",
