@@ -45,7 +45,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/afspraak/nieuw", label: "Nieuw", icon: "plus" },
     { href: "/agenda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
     { href: "/agenda/klanten", label: "Klanten", icon: "users" },
-    { href: "/agenda/intake", label: "Intakeformulier", icon: "invoice" },
+    { href: "/agenda/intake", label: "Intake", icon: "invoice" },
   ];
   return (
     <PanelShell area="agenda" nav={nav} tabs={tabs}>

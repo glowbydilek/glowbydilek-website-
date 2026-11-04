@@ -877,17 +877,13 @@ html.glow-nav main {
   }
 }
 
-/* Running text on phones: very long compounds ("schoonheidsbehandelingen")
-   may hyphenate so large text sizes (Android text scaling) never widen the
-   page. Words under 12 letters are never split. */
-@media (max-width: 479px) {
-  p,
-  li,
-  dd,
-  summary span {
-    hyphens: auto;
-    -webkit-hyphenate-limit-before: 5;
-    -webkit-hyphenate-limit-after: 5;
-    hyphenate-limit-chars: 12 5 5;
-  }
+/* Running text never hyphenates at normal sizes. With very large text
+   (Android text scaling, 200 %) a single word that is wider than the line
+   may wrap, so the page never scrolls sideways. */
+main p,
+main li,
+main dd,
+main summary span,
+footer p {
+  overflow-wrap: anywhere;
 }
