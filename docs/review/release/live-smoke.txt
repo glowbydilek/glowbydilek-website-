@@ -1,0 +1,12 @@
+✓ first visit: banner=true, Google requests before consent=0
+✓ no _ga cookies before consent
+✓ reject: banner gone, Google requests=0
+✓ accept: gtm.js loads=2 (one per full page load), gtag/js loaded by GTM=2
+✓ GA4 collect requests: 2 → page_view@G-77V0DM6Y7B gcs=G101, page_view@G-77V0DM6Y7B gcs=G101
+✓ page_view per page (no duplicate per page)
+✓ consent default before gtm.js: consent:default → set:ads_data_redaction → set:url_passthrough → consent:update → gtm.js → glow_page_view
+✓ after consent: _ga cookies _ga,_ga_77V0DM6Y7B
+✓ private /login with consent: Google requests=0
+✓ token page /offerte/* with consent: Google requests=0
+✓ withdraw: stored={"v":2,"analytics":false,"marketing":false,"at":"2026-11-04T…, Google requests on next page=0
+✗ EN iPhone: English banner=false, Google before consent=0, horizontal overflow=0px
