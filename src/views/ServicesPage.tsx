@@ -63,7 +63,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
           <Container>
             <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-end">
               <div>
-                <h2 id={`${anchor}-h`} className="font-serif text-[clamp(2rem,4vw,2.9rem)] leading-tight text-ink">
+                <h2 id={`${anchor}-h`} className="font-serif text-[clamp(1.6rem,1.1rem+2.6vw,2.9rem)] leading-tight text-ink">
                   {s.name[locale]}
                 </h2>
                 {teaser && <p className="mt-3 max-w-xl text-[1.05rem] leading-relaxed text-ink-soft">{teaser}</p>}

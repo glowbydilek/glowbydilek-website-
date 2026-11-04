@@ -92,7 +92,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-face",
-        photo: "hero",
+        photo: "portrait",
         name: { nl: "Volledig gezicht", en: "Full face", tr: "Tüm yüz" },
         description: {
           nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",

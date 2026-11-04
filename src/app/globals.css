@@ -107,14 +107,18 @@
     font-variation-settings: "opsz" 60;
     letter-spacing: -0.02em;
     text-wrap: balance;
-    /* Long Dutch compounds ("Privacyverklaring") must never widen a 320 px screen. */
+    /* Headings never hyphenate automatically ("hele-maal" looked broken on
+       iPhone). Only a single word too long for the line may still wrap, so a
+       long Dutch compound ("Privacyverklaring") never widens a 320 px screen;
+       below 360 px the browser may hyphenate words of 12+ letters. */
     overflow-wrap: break-word;
-    hyphens: auto;
+    hyphens: manual;
   }
 
   p {
     text-wrap: pretty;
   }
+
 
   ::selection {
     background-color: var(--color-glow);
@@ -167,7 +171,7 @@
   /* Editorial display type */
   .display {
     overflow-wrap: break-word;
-    hyphens: auto;
+    hyphens: manual;
     font-family: var(--font-serif);
     font-weight: var(--heading-weight);
     font-variation-settings: "opsz" 72;
@@ -600,6 +604,74 @@ html.glow-nav main {
     border-radius: 999px 999px var(--radius-media) var(--radius-media);
     opacity: 0.75;
   }
+  /* Home hero image. Phones: a calm landscape frame (3:2) under the text and
+     buttons, so the first screen shows the promise and both actions, and
+     services start one short scroll later. Tablet/desktop: the arched 4:5
+     portrait with a champagne hairline offset behind it. */
+  .hero-media {
+    position: relative;
+    isolation: isolate;
+  }
+  .hero-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    border-radius: 1.75rem 1.75rem var(--radius-media) var(--radius-media);
+    background: var(--color-line);
+  }
+  .hero-media::before {
+    content: "";
+    position: absolute;
+    inset: -0.55rem 0.55rem 0.55rem -0.55rem;
+    z-index: -1;
+    border: 1px solid var(--color-champagne);
+    border-radius: 1.75rem 1.75rem var(--radius-media) var(--radius-media);
+    opacity: 0.7;
+  }
+  @media (min-width: 768px) {
+    .hero-frame {
+      aspect-ratio: 4 / 5;
+      border-radius: 999px 999px var(--radius-media) var(--radius-media);
+    }
+    .hero-media::before {
+      inset: -0.9rem 0.9rem 0.9rem -0.9rem;
+      border-radius: 999px 999px var(--radius-media) var(--radius-media);
+    }
+  }
+  /* Hero headline and lead: art-directed per width instead of one scaled size. */
+  .hero-title {
+    font-size: 2.3rem;
+    line-height: 1.04;
+  }
+  @media (min-width: 360px) {
+    .hero-title { font-size: 2.5rem; }
+  }
+  @media (min-width: 400px) {
+    .hero-title { font-size: 2.75rem; }
+  }
+  @media (min-width: 640px) {
+    .hero-title { font-size: 3.5rem; }
+  }
+  @media (min-width: 768px) {
+    .hero-title { font-size: 3.15rem; }
+  }
+  @media (min-width: 1024px) {
+    .hero-title { font-size: 4.6rem; }
+  }
+  /* Phones held sideways: little height, so a calmer headline and image. */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .hero-title { font-size: 2.4rem; }
+    .hero-lead { font-size: 1rem; line-height: 1.55; }
+  }
+  @media (min-width: 1280px) {
+    .hero-title { font-size: 5.2rem; }
+  }
+  @media (max-width: 399px) {
+    .hero-lead {
+      font-size: 1.0rem;
+      line-height: 1.6;
+    }
+  }
   /* Seal on the hero image: tells the visitor the photo is a mood image. */
   .seal {
     display: grid;
@@ -778,4 +850,19 @@ html.glow-nav main {
   0% { opacity: 0; transform: scale(0.4) rotate(-30deg); }
   60% { opacity: 1; transform: scale(1.15) rotate(8deg); }
   100% { opacity: 1; transform: none; }
+}
+
+/* Narrow phones (< 360 px): a heading word that cannot fit may be hyphenated,
+   but only words of 12+ letters, never closer than 5 letters to either end.
+   Unlayered so it wins over .display (components layer). */
+@media (max-width: 359px) {
+  h1,
+  h2,
+  h3,
+  .display {
+    hyphens: auto;
+    -webkit-hyphenate-limit-before: 5;
+    -webkit-hyphenate-limit-after: 5;
+    hyphenate-limit-chars: 12 5 5;
+  }
 }
