@@ -2,7 +2,7 @@ import type { TreatmentCopySet } from "./types";
 
 export const treatmentsNl: TreatmentCopySet = {
   eyebrows: {
-    seoTitle: "Wenkbrauwen waxen",
+    seoTitle: "Wenkbrauwen waxen in Amsterdam",
     seoDescription:
       "Wenkbrauwen laten waxen in een natuurlijke vorm die bij je gezicht past. Lees hoe de behandeling verloopt, hoe je je voorbereidt en wat je erna doet.",
     title: "Wenkbrauwen waxen",
@@ -43,7 +43,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "upper-lip": {
-    seoTitle: "Bovenlip waxen",
+    seoTitle: "Bovenlip waxen in Amsterdam",
     seoDescription:
       "Bovenlip waxen voor een gladde huid zonder scheren of epileren. Lees hoe het gaat, wat je moet weten bij een koortslip en hoe je je huid verzorgt.",
     title: "Bovenlip waxen",
@@ -84,7 +84,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   chin: {
-    seoTitle: "Kin waxen",
+    seoTitle: "Kin waxen in Amsterdam",
     seoDescription:
       "Kin en kaaklijn laten waxen voor een gladde huid. Lees hoe het gaat, hoe je ingegroeide haartjes voorkomt en wanneer je beter eerst je huisarts raadpleegt.",
     title: "Kin waxen",
@@ -125,7 +125,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "full-face": {
-    seoTitle: "Volledig gezicht waxen",
+    seoTitle: "Volledig gezicht waxen in Amsterdam",
     seoDescription:
       "Wenkbrauwen, bovenlip, kin en wangen in één afspraak laten waxen. Lees hoe een volledige gezichtsbehandeling verloopt en hoe je je huid erna verzorgt.",
     title: "Volledig gezicht waxen",
@@ -166,7 +166,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   underarms: {
-    seoTitle: "Oksels waxen",
+    seoTitle: "Oksels waxen in Amsterdam",
     seoDescription:
       "Oksels laten waxen voor een gladde huid zonder stoppels en scheerirritatie. Lees hoe het gaat, wat je vooraf moet weten en wat je doet met deodorant.",
     title: "Oksels waxen",
@@ -207,7 +207,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "half-arms": {
-    seoTitle: "Onderarmen waxen",
+    seoTitle: "Onderarmen waxen in Amsterdam",
     seoDescription:
       "Onderarmen laten waxen, van pols tot elleboog, voor zachte armen zonder stoppels. Lees wat je kunt verwachten, hoe je je voorbereidt en hoe je je huid verzorgt.",
     title: "Onderarmen waxen",
@@ -248,7 +248,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "full-arms": {
-    seoTitle: "Hele armen waxen",
+    seoTitle: "Hele armen waxen in Amsterdam",
     seoDescription:
       "Hele armen laten waxen, van pols tot schouder. Lees hoe de behandeling verloopt, hoe je je huid voorbereidt en wat je de dagen erna beter kunt vermijden.",
     title: "Hele armen waxen",
@@ -289,7 +289,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "half-legs": {
-    seoTitle: "Onderbenen waxen",
+    seoTitle: "Onderbenen waxen in Amsterdam",
     seoDescription:
       "Onderbenen laten waxen, van enkel tot knie, voor zijdezachte benen zonder stoppels. Lees hoe het gaat en hoe je ingegroeide haartjes voorkomt.",
     title: "Onderbenen waxen",
@@ -330,7 +330,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "full-legs": {
-    seoTitle: "Hele benen waxen",
+    seoTitle: "Hele benen waxen in Amsterdam",
     seoDescription:
       "Hele benen laten waxen, van enkel tot bovenbeen. Lees hoe de behandeling verloopt, hoe je je voorbereidt en hoe je je huid de dagen erna verzorgt.",
     title: "Hele benen waxen",
@@ -371,7 +371,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   back: {
-    seoTitle: "Rug waxen",
+    seoTitle: "Rug waxen in Amsterdam",
     seoDescription:
       "Rug laten waxen voor een gladde huid op een plek die je zelf moeilijk bereikt. Lees hoe het gaat, wat je vooraf moet weten en hoe je de huid erna verzorgt.",
     title: "Rug waxen",
@@ -412,7 +412,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   "bikini-line": {
-    seoTitle: "Bikinilijn waxen",
+    seoTitle: "Bikinilijn waxen in Amsterdam",
     seoDescription:
       "Bikinilijn laten waxen: een nette lijn langs je bikini of ondergoed. Lees discreet hoe de behandeling verloopt en hoe je irritatie voorkomt.",
     title: "Bikinilijn waxen",
@@ -453,7 +453,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   brazilian: {
-    seoTitle: "Brazilian wax",
+    seoTitle: "Brazilian wax in Amsterdam",
     seoDescription:
       "Brazilian wax: bijna alles verwijderd, met naar wens een smal strookje of driehoekje. Lees discreet hoe de behandeling verloopt en hoe je je voorbereidt.",
     title: "Brazilian wax",
@@ -495,7 +495,7 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   hollywood: {
-    seoTitle: "Hollywood wax",
+    seoTitle: "Hollywood wax in Amsterdam",
     seoDescription:
       "Hollywood wax: volledig glad in de intieme zone. Lees discreet wat de behandeling inhoudt, hoe je je voorbereidt en hoe je je huid erna verzorgt.",
     title: "Hollywood wax",

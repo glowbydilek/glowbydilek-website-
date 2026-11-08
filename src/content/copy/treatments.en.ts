@@ -2,7 +2,7 @@ import type { TreatmentCopySet } from "./types";
 
 export const treatmentsEn: TreatmentCopySet = {
   eyebrows: {
-    seoTitle: "Eyebrow waxing",
+    seoTitle: "Eyebrow waxing in Amsterdam",
     seoDescription:
       "Eyebrow waxing for a natural shape that suits your face. Read how the appointment works, how to prepare and how to care for your skin afterwards.",
     title: "Eyebrow waxing",
@@ -43,7 +43,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "upper-lip": {
-    seoTitle: "Upper lip waxing",
+    seoTitle: "Upper lip waxing in Amsterdam",
     seoDescription:
       "Upper lip waxing for smooth skin without shaving or tweezing. Read how it works, what to know if you get cold sores and how to care for your skin.",
     title: "Upper lip waxing",
@@ -84,7 +84,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   chin: {
-    seoTitle: "Chin waxing",
+    seoTitle: "Chin waxing in Amsterdam",
     seoDescription:
       "Chin and jawline waxing for smooth skin. Read how it works, how to prevent ingrown hairs and when it is wise to see your GP first.",
     title: "Chin waxing",
@@ -125,7 +125,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "full-face": {
-    seoTitle: "Full face waxing",
+    seoTitle: "Full face waxing in Amsterdam",
     seoDescription:
       "Eyebrows, upper lip, chin and cheeks waxed in one appointment. Read how a full face treatment works and how to care for your skin afterwards.",
     title: "Full face waxing",
@@ -166,7 +166,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   underarms: {
-    seoTitle: "Underarm waxing",
+    seoTitle: "Underarm waxing in Amsterdam",
     seoDescription:
       "Underarm waxing for smooth skin without stubble or razor irritation. Read how it works, what to know beforehand and what to do about deodorant.",
     title: "Underarm waxing",
@@ -207,7 +207,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "half-arms": {
-    seoTitle: "Half arm waxing",
+    seoTitle: "Half arm waxing in Amsterdam",
     seoDescription:
       "Half arm waxing, from wrist to elbow, for soft arms without stubble. Read what to expect, how to prepare and how to care for your skin.",
     title: "Half arm waxing",
@@ -248,7 +248,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "full-arms": {
-    seoTitle: "Full arm waxing",
+    seoTitle: "Full arm waxing in Amsterdam",
     seoDescription:
       "Full arm waxing, from wrist to shoulder. Read how the treatment works, how to prepare your skin and what to avoid in the days afterwards.",
     title: "Full arm waxing",
@@ -289,7 +289,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "half-legs": {
-    seoTitle: "Half leg waxing",
+    seoTitle: "Half leg waxing in Amsterdam",
     seoDescription:
       "Half leg waxing, from ankle to knee, for silky legs without stubble. Read how it works and how to prevent ingrown hairs.",
     title: "Half leg waxing",
@@ -330,7 +330,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "full-legs": {
-    seoTitle: "Full leg waxing",
+    seoTitle: "Full leg waxing in Amsterdam",
     seoDescription:
       "Full leg waxing, from ankle to upper thigh. Read how the treatment works, how to prepare and how to care for your skin in the days afterwards.",
     title: "Full leg waxing",
@@ -371,7 +371,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   back: {
-    seoTitle: "Back waxing",
+    seoTitle: "Back waxing in Amsterdam",
     seoDescription:
       "Back waxing for smooth skin in a place that is hard to reach yourself. Read how it works, what to know beforehand and how to care for the skin afterwards.",
     title: "Back waxing",
@@ -412,7 +412,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   "bikini-line": {
-    seoTitle: "Bikini line waxing",
+    seoTitle: "Bikini line waxing in Amsterdam",
     seoDescription:
       "Bikini line waxing: a neat line along your bikini or underwear. Read discreetly how the treatment works and how to prevent irritation.",
     title: "Bikini line waxing",
@@ -453,7 +453,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   brazilian: {
-    seoTitle: "Brazilian wax",
+    seoTitle: "Brazilian wax in Amsterdam",
     seoDescription:
       "Brazilian wax: almost everything removed, leaving a small strip or triangle if you like. Read discreetly how the treatment works and how to prepare.",
     title: "Brazilian wax",
@@ -495,7 +495,7 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   hollywood: {
-    seoTitle: "Hollywood wax",
+    seoTitle: "Hollywood wax in Amsterdam",
     seoDescription:
       "Hollywood wax: completely smooth in the intimate area. Read discreetly what the treatment involves, how to prepare and how to care for your skin afterwards.",
     title: "Hollywood wax",

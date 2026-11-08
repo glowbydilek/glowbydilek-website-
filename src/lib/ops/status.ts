@@ -8,6 +8,7 @@ import { users } from "../db/schema";
 import { getMailConfig } from "../mail/config";
 import { ownerEmail } from "../auth/service";
 import { DB_HINT, dbErrorKind } from "./errors";
+import { cleanKey, siteKeyShape } from "../forms/turnstile";
 
 /**
  * Operator status checks for /login/status. Shows only green/amber/red and
@@ -114,15 +115,20 @@ export async function systemStatus(origin: string | null): Promise<Check[]> {
       : { id: "cron", label: "Geplande taken (CRON_SECRET)", state: "warn", hint: "Ontbreekt: herinneringen en opnieuw versturen van mails werken niet." },
   );
 
-  const site = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
-  const tsSecret = process.env.TURNSTILE_SECRET_KEY ?? "";
+  const site = cleanKey(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const tsSecret = cleanKey(process.env.TURNSTILE_SECRET_KEY);
+  const shape = siteKeyShape(site);
   const testKey = /^1x0000|^2x0000|^3x0000/.test(site) || /^1x0000|^2x0000|^3x0000/.test(tsSecret);
   out.push(
     !site || !tsSecret
       ? { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "fail", hint: "Sleutels ontbreken: openbare formulieren weigeren aanvragen." }
       : testKey && process.env.NODE_ENV === "production" && process.env.TURNSTILE_ALLOW_TEST_KEYS !== "true"
         ? { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "fail", hint: "Er staan testsleutels: vervang ze door de productiesleutels." }
-        : { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "ok", hint: "Sleutels ingesteld." },
+        : shape === "looks-like-secret"
+          ? { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "fail", hint: "NEXT_PUBLIC_TURNSTILE_SITE_KEY lijkt een secret key. Kopieer de Site Key uit Cloudflare → Turnstile en bouw opnieuw." }
+          : shape === "unexpected"
+            ? { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "fail", hint: `NEXT_PUBLIC_TURNSTILE_SITE_KEY heeft niet de gebruikelijke vorm (0x4… en 24 tekens; nu ${site.length}). Kopieer de Site Key opnieuw uit Cloudflare en bouw opnieuw.` }
+            : { id: "turnstile", label: "Spambeveiliging (Turnstile)", state: "ok", hint: "Sleutels ingesteld." },
   );
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
