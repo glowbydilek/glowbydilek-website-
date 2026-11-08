@@ -32,13 +32,36 @@ export type TurnstileConfig = { secret: string; mode: TurnstileMode; hostnames: 
 export type TurnstileFailure = "missing" | "invalid" | "expired" | "replayed" | "hostname" | "action" | "unavailable";
 export type TurnstileResult = { ok: true } | { ok: false; reason: TurnstileFailure; codes?: string[] };
 
+/**
+ * Normalise a key pasted into the hosting panel: surrounding quotes,
+ * whitespace and invisible characters (zero-width space, BOM, NBSP) are
+ * common copy-paste artefacts that `.trim()` alone does not remove, and turn
+ * a valid key into an "invalid sitekey" for Cloudflare.
+ */
+export function cleanKey(value: string | undefined): string {
+  return (value ?? "")
+    .replace(/[\u200B-\u200D\u2060\uFEFF\u00A0]/g, "")
+    .trim()
+    .replace(/^["'`]+|["'`]+$/g, "")
+    .trim();
+}
+
+/** Shape of a Cloudflare Turnstile site key (no secret involved). */
+export function siteKeyShape(value: string): "ok" | "empty" | "test" | "looks-like-secret" | "unexpected" {
+  if (!value) return "empty";
+  if (/^[123]x0000/.test(value)) return "test";
+  if (/^0x4[A-Za-z0-9_-]{21}$/.test(value)) return "ok";
+  if (/^0x4[A-Za-z0-9_-]{30,}$/.test(value)) return "looks-like-secret";
+  return "unexpected";
+}
+
 /** Tokens are valid for 300 s; remember used ones a little longer. */
 const TOKEN_TTL_MS = 300_000;
 const REPLAY_TTL_MS = 10 * 60_000;
 const MAX_TOKEN_LENGTH = 2048;
 
 export function turnstileConfig(env: Record<string, string | undefined> = process.env): TurnstileConfig {
-  const secret = env.TURNSTILE_SECRET_KEY?.trim();
+  const secret = cleanKey(env.TURNSTILE_SECRET_KEY);
   const site = (env.NEXT_PUBLIC_SITE_URL || "https://glowbydilek.nl").trim();
   let host = "glowbydilek.nl";
   try {
@@ -49,7 +72,7 @@ export function turnstileConfig(env: Record<string, string | undefined> = proces
   const fromEnv = env.TURNSTILE_ALLOWED_HOSTNAMES?.split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
   const bare = host.replace(/^www\./, "");
   const hostnames = fromEnv?.length ? fromEnv : [bare, `www.${bare}`];
-  const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+  const siteKey = cleanKey(env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   if (secret) {
     // A live secret with the public TEST site key (or no site key) can never verify.
     if (!siteKey || siteKey === TURNSTILE_TEST_SITE_KEY) return { secret, mode: "missing", hostnames, verifyUrl: SITEVERIFY_URL };
@@ -72,13 +95,17 @@ export function turnstileStatus(env: Record<string, string | undefined> = proces
   problem?: string;
 } {
   const cfg = turnstileConfig(env);
-  const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
-  const secretSet = Boolean(env.TURNSTILE_SECRET_KEY?.trim());
+  const siteKey = cleanKey(env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const secretSet = Boolean(cleanKey(env.TURNSTILE_SECRET_KEY));
   let problem: string | undefined;
   if (cfg.mode === "missing") {
     problem = secretSet
       ? "TURNSTILE_SECRET_KEY is set, but NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing or is the Cloudflare test key."
       : "Live Turnstile keys are missing: public forms refuse submissions until they are set.";
+  } else if (cfg.mode === "live") {
+    const shape = siteKeyShape(siteKey);
+    if (shape === "looks-like-secret") problem = "NEXT_PUBLIC_TURNSTILE_SITE_KEY looks like a secret key. Copy the Site Key (not the Secret Key) from Cloudflare.";
+    else if (shape === "unexpected") problem = `NEXT_PUBLIC_TURNSTILE_SITE_KEY does not have the usual shape (0x4… and 24 characters; this one has ${siteKey.length}). Copy it again from Cloudflare → Turnstile and rebuild.`;
   }
   return { mode: cfg.mode, siteKeySet: Boolean(siteKey && siteKey !== TURNSTILE_TEST_SITE_KEY), secretSet, problem };
 }
@@ -87,7 +114,7 @@ export function turnstileStatus(env: Record<string, string | undefined> = proces
 export function turnstileSiteKey(env: Record<string, string | undefined> = process.env): string {
   // "" = not configured in production: the widget shows "temporarily unavailable" instead of a test widget.
   if (turnstileConfig(env).mode === "missing") return "";
-  return env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || TURNSTILE_TEST_SITE_KEY;
+  return cleanKey(env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) || TURNSTILE_TEST_SITE_KEY;
 }
 
 /** Used-token memory (hashes only), so a token can never be accepted twice by this server. */
