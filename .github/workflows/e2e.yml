@@ -11,7 +11,9 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  # write is only used to push screenshots to the separate e2e-previews
+  # branch (never main, never deployed by Hostinger).
+  contents: write
 
 concurrency:
   group: e2e-${{ github.ref }}
@@ -73,6 +75,22 @@ jobs:
         run: |
           tail -n 80 server.log || true
           tail -n 20 sink.log || true
+      - name: Report in job summary
+        if: always()
+        run: |
+          { echo '```'; cat /tmp/shots/report.txt 2>/dev/null || echo "no report"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish screenshots to e2e-previews branch (preview only, not deployed)
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd /tmp/shots
+          git init -q -b e2e-previews
+          git config user.name "e2e-preview"
+          git config user.email "e2e-preview@users.noreply.github.com"
+          git add -A
+          git commit -qm "Preview screenshots for ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" e2e-previews
       - uses: actions/upload-artifact@v4
         if: always()
         with:
