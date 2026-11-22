@@ -28,12 +28,13 @@ export function Header({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
-  // Mobile menu: the category that contains the current page starts open.
-  const [expanded, setExpanded] = useState<string | null>(null);
+  // Mobile menu: "Behandelingen" opens as a short list of categories (never
+  // the whole catalogue). It starts open when the current page is a treatment page.
+  const [treatOpen, setTreatOpen] = useState(false);
   const toggleMenu = () => {
     if (!open) {
-      const here = nav.categories.find((c) => pathname === c.href || pathname.startsWith(`${c.href}/`) || c.treatments.some((t) => t.href === pathname));
-      setExpanded(here?.href ?? null);
+      const inCatalogue = pathname === nav.allHref || nav.categories.some((c) => pathname === c.href || pathname.startsWith(`${c.href}/`) || c.treatments.some((t) => t.href === pathname));
+      setTreatOpen(inCatalogue);
     }
     setOpen((v) => !v);
   };
@@ -202,13 +203,15 @@ export function Header({
 
         {/* Mobile controls */}
         <div className="flex items-center gap-1 lg:hidden">
-          <Link
-            href={href(locale, "booking")}
-            onClick={close}
-            className="btn btn-primary hidden min-h-10 whitespace-nowrap px-4 py-2 text-[0.8125rem] min-[400px]:inline-flex"
-          >
-            {dict.cta.request}
-          </Link>
+          {!open && (
+            <Link
+              href={href(locale, "booking")}
+              onClick={close}
+              className="btn btn-primary hidden min-h-10 whitespace-nowrap px-4 py-2 text-[0.8125rem] min-[400px]:inline-flex"
+            >
+              {dict.cta.request}
+            </Link>
+          )}
           <button
             ref={toggleRef}
             type="button"
@@ -228,57 +231,47 @@ export function Header({
         </div>
       </div>
 
-      {/* Desktop mega menu: every published treatment, grouped by category */}
+      {/* Desktop mega menu: the categories (with waxing zones), never the full list */}
       {mega && (
         <div
           id="mega-menu"
           className="mega-panel absolute inset-x-0 top-full hidden max-h-[calc(100dvh-5rem)] overflow-y-auto border-b border-line bg-paper shadow-[var(--shadow-soft)] lg:block"
         >
-          <div className="mx-auto grid max-w-[88rem] grid-cols-[repeat(auto-fit,minmax(11.5rem,1fr))] gap-x-10 gap-y-8 px-12 py-10">
-            {nav.categories.map((c) => (
-              <div key={c.href} className={c.groups.length > 1 ? "col-span-full xl:col-span-3" : ""}>
-                <Link
-                  href={c.href}
-                  onClick={close}
-                  className="group inline-flex items-center gap-2 font-serif text-[1.55rem] leading-tight text-ink hover:text-accent-deep"
-                >
-                  {c.label}
-                  <Icon name="arrow" className="h-4 w-4 text-accent-deep transition-transform duration-500 group-hover:translate-x-1" />
-                </Link>
-                {c.teaser && <p className="mt-1 text-sm leading-relaxed text-muted">{c.teaser}</p>}
-                <div className={c.groups.length > 1 ? "mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-3" : "mt-4"}>
-                  {c.groups.map((g, gi) => (
-                    <div key={g.href ?? gi}>
-                      {g.label &&
-                        (g.href ? (
-                          <Link href={g.href} onClick={close} className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep hover:text-ink">
+          <div className="mx-auto grid max-w-[88rem] grid-cols-[1fr_15rem] gap-10 px-12 py-9">
+            <ul className="grid grid-cols-2 gap-x-10 gap-y-1 xl:grid-cols-3">
+              {nav.categories.map((c) => (
+                <li key={c.href} className="border-b border-line py-4">
+                  <Link
+                    href={c.href}
+                    onClick={close}
+                    aria-current={pathname === c.href ? "page" : undefined}
+                    className="group flex items-baseline justify-between gap-3"
+                  >
+                    <span className="font-serif text-[1.45rem] leading-tight text-ink group-hover:text-accent-deep">{c.label}</span>
+                    <span className="shrink-0 text-xs tabular-nums text-muted">{c.treatments.length}</span>
+                  </Link>
+                  {c.teaser && <p className="mt-1 text-sm leading-snug text-muted">{c.teaser}</p>}
+                  {c.groups.some((g) => g.href && g.label) && (
+                    <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                      {c.groups
+                        .filter((g) => g.href && g.label)
+                        .map((g) => (
+                          <Link key={g.href} href={g.href!} onClick={close} className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-accent-deep hover:text-ink">
                             {g.label}
                           </Link>
-                        ) : (
-                          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">{g.label}</p>
                         ))}
-                      <ul className={`${g.label ? "mt-2" : ""} space-y-1`}>
-                        {g.items.map((t) => (
-                          <li key={t.href}>
-                            <Link
-                              href={t.href}
-                              onClick={close}
-                              aria-current={pathname === t.href ? "page" : undefined}
-                              className="nav-item inline-flex min-h-8 items-center text-[0.95rem] text-ink-soft hover:text-ink"
-                            >
-                              {t.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="border-line xl:border-l xl:pl-8">
-              <p className="eyebrow">{dict.nav.info}</p>
-              <ul className="mt-4 space-y-2">
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <div className="border-l border-line pl-8">
+              <Link href={nav.allHref} onClick={close} className="btn btn-outline min-h-11 w-full px-4 py-2 text-sm">
+                {dict.nav.allTreatments}
+                <Icon name="arrow" className="h-3.5 w-3.5" />
+              </Link>
+              <p className="eyebrow mt-7">{dict.nav.info}</p>
+              <ul className="mt-3 space-y-2">
                 {nav.info.map((l) => (
                   <li key={l.href}>
                     <Link href={l.href} onClick={close} className="link-underline text-ink-soft hover:text-ink">
@@ -287,10 +280,6 @@ export function Header({
                   </li>
                 ))}
               </ul>
-              <Link href={nav.allHref} onClick={close} className="btn btn-outline mt-6 min-h-11 px-4 py-2 text-sm">
-                {dict.nav.allTreatments}
-                <Icon name="arrow" className="h-3.5 w-3.5" />
-              </Link>
             </div>
           </div>
         </div>
@@ -310,109 +299,81 @@ export function Header({
             className="mx-auto flex min-h-full max-w-xl flex-col px-5 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4 sm:px-8"
           >
             <ul>
-              {[
-                {
-                  key: "home",
-                  label: dict.nav.home,
-                  href: href(locale, "home"),
-                },
-                ...nav.primary,
-              ].map((l) => (
-                <li key={l.href} className="border-b border-line">
-                  <Link
-                    href={l.href}
-                    onClick={close}
-                    aria-current={pathname === l.href ? "page" : undefined}
-                    className={`flex items-center justify-between py-3.5 font-serif text-[1.85rem] leading-tight ${pathname === l.href ? "text-accent" : "text-ink"}`}
-                  >
-                    {l.label}
-                    {pathname === l.href ? <Glint className="h-4 w-auto text-accent" /> : <Icon name="arrow" className="h-4 w-4 text-muted" />}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <p className="eyebrow mt-8">{dict.nav.categories}</p>
-            <ul className="mt-3 border-t border-line">
-              {nav.categories.map((c, ci) => {
-                const openCat = expanded === c.href;
-                const panelId = `mcat-${ci}`;
-                return (
-                  <li key={c.href} className="border-b border-line">
-                    <div className="flex items-center justify-between gap-2">
-                      <Link
-                        href={c.href}
-                        onClick={close}
-                        aria-current={pathname === c.href ? "page" : undefined}
-                        className="min-w-0 flex-1 py-3"
-                      >
-                        <span className="block font-serif text-[1.4rem] leading-tight text-ink">{c.label}</span>
-                        {c.teaser && <span className="mt-0.5 block text-sm leading-snug text-muted">{c.teaser}</span>}
-                      </Link>
-                      <button
-                        type="button"
-                        aria-expanded={openCat}
-                        aria-controls={panelId}
-                        aria-label={`${c.label}: ${c.treatments.length} ${dict.home.treatments.count}`}
-                        onClick={() => setExpanded(openCat ? null : c.href)}
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink"
-                      >
-                        <Icon name="chevron" className={`h-3.5 w-3.5 transition-transform duration-300 ${openCat ? "-rotate-90" : "rotate-90"}`} />
-                      </button>
-                    </div>
-                    <div id={panelId} hidden={!openCat} className="mcat-panel pb-4">
-                      {c.groups.map((g, gi) => (
-                        <div key={g.href ?? gi} className="mt-2">
-                          {g.label &&
-                            (g.href ? (
-                              <Link href={g.href} onClick={close} className="inline-flex min-h-10 items-center text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">
-                                {g.label}
-                              </Link>
-                            ) : (
-                              <p className="py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-accent-deep">{g.label}</p>
-                            ))}
-                          <ul className="grid grid-cols-1 gap-x-4 min-[400px]:grid-cols-2">
-                            {g.items.map((t) => (
-                              <li key={t.href}>
-                                <Link
-                                  href={t.href}
-                                  onClick={close}
-                                  aria-current={pathname === t.href ? "page" : undefined}
-                                  className={`flex min-h-11 items-center text-[0.98rem] ${pathname === t.href ? "text-accent-deep" : "text-ink-soft"}`}
-                                >
-                                  {t.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  </li>
-                );
-              })}
-              <li>
-                <Link href={nav.allHref} onClick={close} className="flex min-h-12 items-center justify-between font-medium text-accent-deep">
-                  {dict.nav.allTreatments}
-                  <Icon name="arrow" className="h-4 w-4" />
+              <li className="border-b border-line">
+                <Link
+                  href={href(locale, "home")}
+                  onClick={close}
+                  aria-current={pathname === href(locale, "home") ? "page" : undefined}
+                  className={`flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === href(locale, "home") ? "text-accent" : "text-ink"}`}
+                >
+                  {dict.nav.home}
                 </Link>
               </li>
+              {nav.primary.map((l) =>
+                l.key === "treatments" ? (
+                  <li key={l.key} className="border-b border-line">
+                    <button
+                      type="button"
+                      aria-expanded={treatOpen}
+                      aria-controls="mobile-treatments"
+                      onClick={() => setTreatOpen((v) => !v)}
+                      className={`flex min-h-14 w-full items-center justify-between text-left font-serif text-[1.7rem] leading-tight ${isActive(treatmentsBase) ? "text-accent" : "text-ink"}`}
+                    >
+                      {l.label}
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/15">
+                        <Icon name="chevron" className={`h-3.5 w-3.5 text-ink transition-transform duration-300 ${treatOpen ? "-rotate-90" : "rotate-90"}`} />
+                      </span>
+                    </button>
+                    <ul id="mobile-treatments" hidden={!treatOpen} className="pb-3">
+                      {nav.categories.map((c) => (
+                        <li key={c.href}>
+                          <Link
+                            href={c.href}
+                            onClick={close}
+                            aria-current={pathname === c.href ? "page" : undefined}
+                            className={`flex min-h-12 items-center justify-between gap-3 rounded-xl px-3 text-[1.05rem] ${pathname === c.href ? "bg-glow-soft text-accent-deep" : "text-ink-soft"}`}
+                          >
+                            {c.label}
+                            <span className="text-xs tabular-nums text-muted">{c.treatments.length}</span>
+                          </Link>
+                        </li>
+                      ))}
+                      <li>
+                        <Link href={nav.allHref} onClick={close} className="flex min-h-12 items-center gap-2 px-3 text-[0.95rem] font-medium text-accent-deep">
+                          {dict.nav.allTreatments}
+                          <Icon name="arrow" className="h-3.5 w-3.5" />
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                ) : (
+                  <li key={l.key} className="border-b border-line">
+                    <Link
+                      href={l.href}
+                      onClick={close}
+                      aria-current={pathname === l.href ? "page" : undefined}
+                      className={`flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === l.href ? "text-accent" : "text-ink"}`}
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
 
-            <p className="eyebrow mt-8">{dict.nav.info}</p>
-            <ul className="mt-3 grid grid-cols-1 gap-x-4 min-[400px]:grid-cols-2">
-              {nav.info.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    onClick={close}
-                    className="flex min-h-11 items-center text-ink-soft"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {nav.info.some((l) => !nav.primary.some((p) => p.href === l.href)) && (
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-1">
+                {nav.info
+                  .filter((l) => !nav.primary.some((p) => p.href === l.href))
+                  .map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href} onClick={close} className="inline-flex min-h-11 items-center text-[0.95rem] text-ink-soft">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            )}
 
             <div className="mt-auto pt-8">
               <Link
