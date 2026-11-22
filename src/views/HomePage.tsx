@@ -14,7 +14,7 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
-import { mailto, siteConfig } from "@/content/site";
+import { phoneDisplay, telHref } from "@/content/site";
 import { treatmentGroups } from "@/content/treatments";
 import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
@@ -418,9 +418,11 @@ export function HomePage({ locale }: { locale: Locale }) {
               <ButtonLink href={href(locale, "contact")} variant="outline" arrow>
                 {dict.cta.sendMessage}
               </ButtonLink>
-              <ButtonLink href={mailto(dict.forms.topics.question)} variant="link">
-                {siteConfig.contact.email}
-              </ButtonLink>
+              {telHref() && (
+                <ButtonLink href={telHref()!} variant="link">
+                  {phoneDisplay()}
+                </ButtonLink>
+              )}
             </div>
           </Container>
         </section>

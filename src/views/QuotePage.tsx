@@ -1,7 +1,7 @@
 import { Container } from "@/components/Container";
 import { QuoteResponse } from "@/components/forms/QuoteResponse";
 import { Glint } from "@/components/brand/Logo";
-import { mailto } from "@/content/site";
+import { ProtectedEmail } from "@/components/ProtectedEmail";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { quoteByToken } from "@/lib/booking/quotes";
@@ -66,9 +66,7 @@ export function QuotePage({ locale, q, token }: { locale: Locale; q: Q | null; t
         )}
         <p className="mt-8 text-sm text-muted">
           {t.questions}{" "}
-          <a href={mailto(t.title)} className="underline underline-offset-4">
-            hello@glowbydilek.nl
-          </a>
+          <ProtectedEmail subject={t.title} className="underline underline-offset-4" />
         </p>
       </Container>
     </section>

@@ -5,7 +5,6 @@ import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
 import { OfferBadge } from "@/components/OfferBadge";
 import { Icon } from "@/components/ui/Icon";
-import { mailto } from "@/content/site";
 import { groupCopy } from "@/content/copy";
 import { href, type Locale } from "@/i18n/config";
 import { groupHref, itemDuration, itemHref, priceLabel, publicGroups, publicItems, publicSections, sectionHref, type Item } from "@/lib/catalogue";
@@ -32,7 +31,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
   return (
     <>
       <PageHero locale={locale} photo="aftercare" {...t.hero}>
-        <ButtonLink href={mailto(t.notice.subject)} arrow>
+        <ButtonLink href={href(locale, "contact")} arrow>
           {t.notice.cta}
         </ButtonLink>
       </PageHero>
@@ -102,7 +101,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                 <Icon name="mail" className="h-6 w-6 text-accent" />
                 <h2 className="mt-5 font-serif text-3xl text-paper">{t.notice.title}</h2>
                 <p className="mt-4 leading-relaxed text-paper/75">{t.notice.body}</p>
-                <ButtonLink href={mailto(t.notice.subject)} variant="gold" className="mt-8 w-full" arrow>
+                <ButtonLink href={href(locale, "contact")} variant="gold" className="mt-8 w-full" arrow>
                   {t.notice.cta}
                 </ButtonLink>
               </div>

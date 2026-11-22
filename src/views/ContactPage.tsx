@@ -5,7 +5,8 @@ import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { mailto, siteConfig, whatsappLink } from "@/content/site";
+import { phoneDisplay, telHref, whatsappLink } from "@/content/site";
+import { ProtectedEmail } from "@/components/ProtectedEmail";
 import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
@@ -21,9 +22,11 @@ export function ContactPage({ locale }: { locale: Locale }) {
           <ButtonLink href="#bericht" arrow>
             {dict.cta.sendMessage}
           </ButtonLink>
-          <ButtonLink href={mailto(dict.forms.topics.question)} variant="outline">
-            {siteConfig.contact.email}
-          </ButtonLink>
+          {telHref() && (
+            <ButtonLink href={telHref()!} variant="outline">
+              {phoneDisplay()}
+            </ButtonLink>
+          )}
         </div>
       </PageHero>
 
@@ -38,16 +41,19 @@ export function ContactPage({ locale }: { locale: Locale }) {
           </div>
 
           <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
-            <a
-              href={mailto(dict.forms.topics.question)}
-              className="group block rounded-[1.75rem] bg-glow-soft p-7 transition-colors duration-500 hover:bg-glow"
-              data-reveal
-            >
+            {telHref() && (
+              <a href={telHref()!} className="group block rounded-[1.75rem] bg-glow-soft p-7 transition-colors duration-500 hover:bg-glow" data-reveal>
+                <Icon name="phone" className="h-6 w-6 text-accent-deep" />
+                <p className="mt-4 text-xs uppercase tracking-[0.18em] text-muted">{t.phoneLabel}</p>
+                <p className="mt-1 font-serif text-2xl text-ink">{phoneDisplay()}</p>
+              </a>
+            )}
+            <div className="rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
               <Icon name="mail" className="h-6 w-6 text-accent-deep" />
               <p className="mt-4 text-xs uppercase tracking-[0.18em] text-muted">{t.emailLabel}</p>
-              <p className="mt-1 break-all font-serif text-2xl text-ink">{siteConfig.contact.email}</p>
+              <ProtectedEmail subject={dict.forms.topics.question} className="mt-1 break-all text-left font-serif text-2xl text-ink underline-offset-4 hover:underline" />
               <p className="mt-2 text-sm text-ink-soft">{t.emailNote}</p>
-            </a>
+            </div>
             {wa && (
               <a href={wa} target="_blank" rel="noopener noreferrer" className="block rounded-[1.75rem] bg-glow-soft p-7" data-reveal>
                 <Icon name="whatsapp" className="h-6 w-6 text-accent-deep" />

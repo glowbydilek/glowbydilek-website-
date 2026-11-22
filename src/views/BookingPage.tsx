@@ -6,7 +6,7 @@ import { currentSnapshot } from "@/lib/cms/current";
 import { getCatalogue, groupById, itemById, priceLabel, publicItems, sectionById } from "@/lib/catalogue";
 import { BookingJourney } from "@/components/forms/BookingJourney";
 import { BookingModes } from "@/components/forms/BookingModes";
-import { siteConfig } from "@/content/site";
+import { emailDisplay } from "@/content/site";
 import { onlineBookingStatus, requestCalendar } from "@/lib/booking/public";
 import { amsterdamToday } from "@/lib/forms/validation";
 import { withDbOrFallback } from "@/lib/db/client";
@@ -93,7 +93,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
                         };
                       })}
                       privacyHref={href(locale, "privacy")}
-                      email={siteConfig.contact.email}
+                      email={emailDisplay}
                       turnstileSiteKey={turnstileSiteKey()}
                       promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
                     />
