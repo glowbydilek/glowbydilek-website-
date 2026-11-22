@@ -5,10 +5,12 @@ import { Card, PageHeader } from "@/components/private/ui";
 import { findDuplicates } from "@/lib/crm/service";
 import { matchLabel } from "@/lib/crm/normalize";
 import { getDb } from "@/lib/db/client";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Dubbele klanten" };
 
 export default async function Duplicates({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "customers.manage");
   const focus = Number((await searchParams).a) || null;
   const all = await findDuplicates(getDb(), 100);
@@ -16,7 +18,7 @@ export default async function Duplicates({ searchParams }: { searchParams: Promi
   const label = (c: { firstName: string; lastName: string; id: number }) => `${c.firstName} ${c.lastName}`.trim() + ` (#${c.id})`;
   return (
     <>
-      <PageHeader title="Mogelijk dubbele klanten" subtitle="Profielen met hetzelfde telefoonnummer, e-mailadres of dezelfde naam. Samenvoegen gebeurt alleen als jij dat kiest." />
+      <PageHeader title={t("Mogelijk dubbele klanten")} subtitle="Profielen met hetzelfde telefoonnummer, e-mailadres of dezelfde naam. Samenvoegen gebeurt alleen als jij dat kiest." />
       {pairs.length ? (
         <ul className="space-y-4">
           {pairs.map((p) => (
@@ -38,7 +40,7 @@ export default async function Duplicates({ searchParams }: { searchParams: Promi
         </ul>
       ) : (
         <Card>
-          <p className="text-sm text-muted">Geen dubbele profielen gevonden.</p>
+          <p className="text-sm text-muted">{t("Geen dubbele profielen gevonden.")}</p>
         </Card>
       )}
     </>
