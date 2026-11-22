@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
-import { LogoSymbol } from "@/components/brand/Logo";
+import { useEffect, useState, type ReactNode } from "react";
+import { PanelMonogram } from "./PanelMonogram";
 import { logoutAction } from "@/lib/private/authActions";
 import { PanelIcon } from "./PanelIcon";
 import { pt, type PanelLang } from "@/lib/private/panelLang";
@@ -13,7 +13,7 @@ export type NavItem = { href: string; label: string; icon?: string; badge?: numb
 
 /**
  * Shared shell for /admin and /agenda. Desktop: sidebar. Mobile: compact top
- * bar; the agenda additionally shows a bottom tab bar for one-tap access.
+ * bar plus a bottom tab bar for one-tap access to the daily tasks.
  */
 export function PanelShell({
   area,
@@ -32,6 +32,21 @@ export function PanelShell({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // While typing (on-screen keyboard open) the bottom tab bar steps aside, so it
+  // never covers a field or a Save button on iPhone.
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    const isField = (el: EventTarget | null) =>
+      el instanceof HTMLElement && (el.isContentEditable || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || (el.tagName === "INPUT" && !["checkbox", "radio", "button", "submit", "reset", "file", "range", "color"].includes((el as HTMLInputElement).type)));
+    const onIn = (e: FocusEvent) => setTyping(isField(e.target));
+    const onOut = () => setTyping(false);
+    document.addEventListener("focusin", onIn);
+    document.addEventListener("focusout", onOut);
+    return () => {
+      document.removeEventListener("focusin", onIn);
+      document.removeEventListener("focusout", onOut);
+    };
+  }, []);
   const active = (href: string) => (href === `/${area}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
   const t = (k: string) => pt(lang, k);
   const title = area === "admin" ? t("titleAdmin") : t("titleAgenda");
@@ -86,7 +101,7 @@ export function PanelShell({
       {technical.length > 0 && (
         <details className="mt-3 border-t border-line pt-2" open={technicalOpen}>
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl px-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted hover:bg-ink/6 [&::-webkit-details-marker]:hidden">
-            {lang === "tr" ? "Teknik yönetim" : "Technisch beheer"}
+            {lang === "tr" ? "Web sitesi ve teknik yönetim" : "Websitebeheer & technisch"}
             <span aria-hidden="true">›</span>
           </summary>
           <ul className="mt-1 space-y-0.5">{technical.map(item)}</ul>
@@ -116,7 +131,7 @@ export function PanelShell({
       <aside className="hidden border-r border-line bg-white p-4 lg:flex lg:min-h-dvh lg:flex-col lg:justify-between">
         <div>
           <Link href={`/${area}`} className="mb-6 flex items-center gap-3 px-2">
-            <LogoSymbol className="h-10 w-auto" />
+            <PanelMonogram className="h-10 w-10" />
             <span className="font-serif text-lg leading-tight text-ink">{title}</span>
           </Link>
           <nav aria-label={title}>{links}</nav>
@@ -127,7 +142,7 @@ export function PanelShell({
       <div className="min-w-0">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-white/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur lg:hidden">
           <Link href={`/${area}`} className="flex min-h-14 items-center gap-2">
-            <LogoSymbol className="h-8 w-auto" />
+            <PanelMonogram className="h-8 w-8" />
             <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : lang === "tr" ? "Ajanda" : "Agenda"}</span>
           </Link>
           <div className="ml-auto mr-1">{langSwitch(true)}</div>
@@ -154,7 +169,11 @@ export function PanelShell({
         </main>
 
         {tabs && (
-          <nav aria-label={t("quickMenu")} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/97 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          <nav
+            aria-label={t("quickMenu")}
+            aria-hidden={typing || undefined}
+            className={`fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/97 pb-[env(safe-area-inset-bottom)] backdrop-blur motion-safe:transition-transform motion-safe:duration-200 lg:hidden ${typing ? "pointer-events-none translate-y-full" : ""}`}
+          >
             <ul className="grid" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}>
               {tabs.map((t) => (
                 <li key={t.href}>
