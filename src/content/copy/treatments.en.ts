@@ -4,7 +4,7 @@ export const treatmentsEn: TreatmentCopySet = {
   eyebrows: {
     seoTitle: "Eyebrow waxing in Amsterdam",
     seoDescription:
-      "Eyebrow waxing for a natural shape that suits your face. Read how the appointment works, how to prepare and how to care for your skin afterwards.",
+      "Eyebrow waxing in Amsterdam, shaped naturally to suit your face. Women only. Read how the appointment works and request your appointment online.",
     title: "Eyebrow waxing",
     lead: "A groomed brow line that suits your face — built calmly from your natural shape, without taking away too much.",
     teaser: "A natural, groomed shape that suits your features.",
@@ -32,6 +32,18 @@ export const treatmentsEn: TreatmentCopySet = {
       "You can carry on with your day straight after the appointment; any redness usually disappears quickly. To keep the shape, every three to five weeks is a comfortable rhythm. Ideally don’t tweeze in between, so the line can grow back evenly.",
     faqs: [
       {
+        q: "How often should you get your eyebrows waxed?",
+        a: "Usually every three to five weeks. By then enough has grown back to tidy the shape neatly without losing the line.",
+      },
+      {
+        q: "Is waxing or tweezing better for eyebrows?",
+        a: "Wax removes several hairs at once, so the line becomes quick and even. Tweezers are for single stray hairs. That is why both are combined: wax first, then tweezers where needed.",
+      },
+      {
+        q: "How much does eyebrow waxing cost?",
+        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+      },
+      {
         q: "Can I have my brows tinted too?",
         a: "Brow tinting is not offered at the moment. Treatments only appear on the website once they are genuinely available.",
       },
@@ -45,7 +57,7 @@ export const treatmentsEn: TreatmentCopySet = {
   "upper-lip": {
     seoTitle: "Upper lip waxing in Amsterdam",
     seoDescription:
-      "Upper lip waxing for smooth skin without shaving or tweezing. Read how it works, what to know if you get cold sores and how to care for your skin.",
+      "Upper lip waxing in Amsterdam for smooth skin without shaving or tweezing. Women only. Read how it works and request your appointment online.",
     title: "Upper lip waxing",
     lead: "Quick, precise removal of upper lip hair for smooth, polished skin — without stubble or shadow.",
     teaser: "Smooth and polished, without the shadow shaving leaves.",
@@ -250,7 +262,7 @@ export const treatmentsEn: TreatmentCopySet = {
   "full-arms": {
     seoTitle: "Full arm waxing in Amsterdam",
     seoDescription:
-      "Full arm waxing, from wrist to shoulder. Read how the treatment works, how to prepare your skin and what to avoid in the days afterwards.",
+      "Full arm waxing in Amsterdam, from wrist to shoulder. Women only. Read how the treatment works and request your appointment online.",
     title: "Full arm waxing",
     lead: "Smooth arms from wrist to shoulder in one careful treatment — ideal if you love sleeveless clothing or simply want to stay smooth for longer.",
     teaser: "The complete arms, from wrist to shoulder.",
@@ -291,7 +303,7 @@ export const treatmentsEn: TreatmentCopySet = {
   "half-legs": {
     seoTitle: "Half leg waxing in Amsterdam",
     seoDescription:
-      "Half leg waxing, from ankle to knee, for silky legs without stubble. Read how it works and how to prevent ingrown hairs.",
+      "Half leg waxing in Amsterdam, from ankle to knee, for silky legs. Women only. Read how it works and request your appointment online.",
     title: "Half leg waxing",
     lead: "Silky legs from ankle to knee for weeks — without shaving every day, and without stubble that is back before the weekend.",
     teaser: "From ankle to knee, for silky smooth legs.",
@@ -373,7 +385,7 @@ export const treatmentsEn: TreatmentCopySet = {
   back: {
     seoTitle: "Back waxing in Amsterdam",
     seoDescription:
-      "Back waxing for smooth skin in a place that is hard to reach yourself. Read how it works, what to know beforehand and how to care for the skin afterwards.",
+      "Back waxing in Amsterdam for smooth skin in a place that is hard to reach yourself. Women only. Request your appointment online.",
     title: "Back waxing",
     lead: "A smooth back, in the one place you can barely reach yourself — thorough, comfortable and without rushing.",
     teaser: "A smooth back, thorough and comfortable.",
@@ -483,6 +495,18 @@ export const treatmentsEn: TreatmentCopySet = {
     recovery:
       "Ideally don’t book a Brazilian on the day of a beach visit or special evening, but a few days before. Every four to five weeks keeps the result at its best and often makes hair growth more even.",
     faqs: [
+      {
+        q: "How long does the hair need to be for a Brazilian wax?",
+        a: "At least 0.5 cm, about the length of a grain of rice. That is usually two to four weeks after shaving. If it is much longer, it is trimmed a little beforehand.",
+      },
+      {
+        q: "When can I exercise, swim or be intimate again?",
+        a: "After 24 hours. For the first 24 hours avoid swimming pools, sauna, sun, intense exercise and intimate contact, so the skin can settle.",
+      },
+      {
+        q: "How much does a Brazilian wax cost?",
+        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+      },
       {
         q: "What if I feel uncomfortable during the treatment?",
         a: "Just say so. A pause is always possible, and you can stop the treatment at any moment.",
