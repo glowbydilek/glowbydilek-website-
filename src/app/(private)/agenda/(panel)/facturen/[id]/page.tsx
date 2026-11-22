@@ -11,6 +11,7 @@ import { invoiceReadiness, type ComputedLine, type InvoiceLine } from "@/lib/fin
 import { formatCents } from "@/lib/finance/money";
 import { METHODS } from "@/lib/finance/service";
 import { formatLocal, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Factuur" };
 
@@ -18,6 +19,7 @@ const MAIL: Record<string, string> = { pending: "in de wachtrij", sending: "word
 const dateNl = (d: string | null) => (d ? d.split("-").reverse().join("-") : "—");
 
 export default async function InvoicePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "finance");
   const id = Number((await params).id);
   const sp = await searchParams;
@@ -62,35 +64,35 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
   return (
     <>
       <PageHeader
-        title={`${credit ? "Creditfactuur" : "Factuur"} ${inv.number ?? "(concept)"}`}
+        title={`${t(credit ? "Creditfactuur" : "Factuur")} ${inv.number ?? "(concept)"}`}
         subtitle={`${c?.firstName ?? ""} ${c?.lastName ?? ""}`.trim()}
         actions={<Badge tone={draft ? "neutral" : credit ? "cancelled" : open <= 0 ? "confirmed" : "pending"}>{draft ? "Concept" : credit ? "Credit" : open <= 0 ? "Betaald" : "Open"}</Badge>}
       />
       {sp.melding === "uitgegeven" && inv.status === "issued" && (
         <div className="mb-4">
           <Notice tone="success">
-            ✓ {credit ? "Creditfactuur" : "Factuur"} {inv.number} is uitgegeven. Je kunt hem nu downloaden of mailen.
+            ✓ {t(credit ? "Creditfactuur" : "Factuur")} {inv.number} is uitgegeven. Je kunt hem nu downloaden of mailen.
           </Notice>
         </div>
       )}
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.2fr_1fr]">
         <div className="space-y-5">
           {draft ? (
-            <Card title="Concept bewerken">
+            <Card title={t("Concept bewerken")}>
               <InvoiceEditor id={id} kind={credit ? "credit" : "invoice"} lines={inv.lines as InvoiceLine[]} buyer={buyer} supplyDate={inv.supplyDate} note={inv.note} vatPerLine={settings.vatMode === "standard"} catalogue={catalogue} />
             </Card>
           ) : (
-            <Card title="Factuur">
+            <Card title={t("Factuur")}>
               <dl className="grid grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words gap-x-3 gap-y-2 text-sm">
-                <dt className="text-muted">Nummer</dt>
+                <dt className="text-muted">{t("Nummer")}</dt>
                 <dd>{inv.number}</dd>
-                <dt className="text-muted">Factuurdatum</dt>
+                <dt className="text-muted">{t("Factuurdatum")}</dt>
                 <dd>{dateNl(inv.issueDate)}</dd>
-                <dt className="text-muted">Klant</dt>
+                <dt className="text-muted">{t("Klant")}</dt>
                 <dd className="break-words">{buyer.name}{buyer.email ? ` · ${buyer.email}` : ""}</dd>
                 {!credit && (
                   <>
-                    <dt className="text-muted">Te betalen vóór</dt>
+                    <dt className="text-muted">{t("Te betalen vóór")}</dt>
                     <dd>{dateNl(inv.dueDate)}</dd>
                   </>
                 )}
@@ -118,13 +120,13 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
             </a>
           </Card>
           {draft ? (
-            <Card title="Uitgeven">
+            <Card title={t("Uitgeven")}>
               {missing.length > 0 ? (
                 <Notice tone="warning">
-                  Nog niet mogelijk. Vul eerst aan: {missing.join(" · ")}. <Link href="/admin/bedrijf" className="underline">Bedrijfsgegevens</Link>
+                  Nog niet mogelijk. Vul eerst aan: {missing.join(" · ")}. <Link href="/admin/bedrijf" className="underline">{t("Bedrijfsgegevens")}</Link>
                 </Notice>
               ) : (
-                <p className="mb-3 text-sm text-muted">Bij uitgeven krijgt de factuur het volgende nummer en worden alle gegevens vastgelegd. Sla eerst je wijzigingen op.</p>
+                <p className="mb-3 text-sm text-muted">{t("Bij uitgeven krijgt de factuur het volgende nummer en worden alle gegevens vastgelegd. Sla eerst je wijzigingen op.")}</p>
               )}
               <IssueForm id={id} kind={credit ? "credit" : "invoice"} ready={missing.length === 0} today={todayLocal()} />
               <div className="mt-4 border-t border-line pt-3">
@@ -133,11 +135,11 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
             </Card>
           ) : (
             <>
-              <Card title="Versturen">
+              <Card title={t("Versturen")}>
                 {buyer.email ? (
                   <InvoiceOpButton id={id} op="email" label={`PDF mailen naar ${buyer.email}`} variant="primary" />
                 ) : (
-                  <p className="text-sm text-muted">Geen e-mailadres op de factuur: download de PDF en geef hem zelf mee.</p>
+                  <p className="text-sm text-muted">{t("Geen e-mailadres op de factuur: download de PDF en geef hem zelf mee.")}</p>
                 )}
                 {mails.length > 0 && (
                   <ul className="mt-3 space-y-1 text-sm">
@@ -172,14 +174,14 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
                 </Card>
               )}
               {!credit && (
-                <Card title="Corrigeren">
-                  <p className="mb-3 text-sm text-muted">Een uitgegeven factuur wijzig je niet. Maak een creditfactuur; daarna kun je zo nodig een nieuwe factuur maken.</p>
+                <Card title={t("Corrigeren")}>
+                  <p className="mb-3 text-sm text-muted">{t("Een uitgegeven factuur wijzig je niet. Maak een creditfactuur; daarna kun je zo nodig een nieuwe factuur maken.")}</p>
                   <InvoiceOpButton id={id} op="credit" label="Creditfactuur maken" confirm="Een creditfactuur (concept) maken voor deze factuur?" />
                 </Card>
               )}
             </>
           )}
-          <Link href={`/agenda/klanten/${inv.customerId}`} className="inline-block text-sm text-accent-deep underline">Naar het klantprofiel</Link>
+          <Link href={`/agenda/klanten/${inv.customerId}`} className="inline-block text-sm text-accent-deep underline">{t("Naar het klantprofiel")}</Link>
         </div>
       </div>
     </>
