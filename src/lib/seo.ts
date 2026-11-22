@@ -166,7 +166,6 @@ export function businessJsonLd(locale: Locale) {
     logo: `${siteConfig.url}/brand/icon-512.png`,
     image: `${siteConfig.url}/images/og-${locale}.png`,
     description: dict.meta.pages.home.description,
-    email: c.email,
     ...(c.phone && { telephone: c.phone }),
     ...(c.welcomesFrom?.length && { areaServed: c.welcomesFrom.map((name) => ({ "@type": "City", name })) }),
     ...(c.region && !c.address && { address: { "@type": "PostalAddress", addressLocality: c.region, addressCountry: siteConfig.country } }),
