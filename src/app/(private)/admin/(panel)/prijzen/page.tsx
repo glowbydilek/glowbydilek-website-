@@ -26,8 +26,12 @@ const L: Record<"nl" | "tr", QuickPriceLabels & { title: string; subtitle: strin
     saving: "…",
     draft: "Concept (niet op de website)",
     hidden: "Verborgen",
-    earlier: "Eerder",
+    earlier: "Eerdere prijzen",
     restore: "Terugzetten",
+    restoreTitle: "Welke eerdere prijs wil je terugzetten?",
+    confirm: "Bevestigen en opslaan",
+    cancel: "Annuleren",
+    changedOn: "gewijzigd op",
   },
   tr: {
     title: "Fiyatları yönet",
@@ -43,8 +47,12 @@ const L: Record<"nl" | "tr", QuickPriceLabels & { title: string; subtitle: strin
     saving: "…",
     draft: "Taslak (sitede değil)",
     hidden: "Gizli",
-    earlier: "Önceki",
+    earlier: "Önceki fiyatlar",
     restore: "Geri al",
+    restoreTitle: "Hangi önceki fiyatı geri almak istiyorsun?",
+    confirm: "Onayla ve kaydet",
+    cancel: "Vazgeç",
+    changedOn: "değişiklik tarihi",
   },
 };
 
@@ -82,9 +90,19 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
       };
     })
     .map((i) => {
-      // The most recent earlier price that differs from today's, to put back with one tap.
-      const prev = history.find((h) => h.itemId === i.id && (h.pricingMode !== i.mode || h.priceCents !== i.priceCents));
-      return { ...i, previous: prev ? { mode: prev.pricingMode as "on_request" | "fixed" | "from", priceCents: prev.priceCents, at: prev.createdAt } : null };
+      // Earlier prices (newest first, without repeats of today's price), to review and put back.
+      const seen = new Set<string>([`${i.mode}:${i.priceCents}`]);
+      const earlier = history
+        .filter((h) => h.itemId === i.id)
+        .filter((h) => {
+          const k = `${h.pricingMode}:${h.priceCents}`;
+          if (seen.has(k)) return false;
+          seen.add(k);
+          return true;
+        })
+        .slice(0, 6)
+        .map((h) => ({ mode: h.pricingMode as "on_request" | "fixed" | "from", priceCents: h.priceCents, at: h.createdAt }));
+      return { ...i, earlier };
     })
     .filter((i) => !q || i.search.includes(q));
   const secName = (s: (typeof sections)[number]) => (lang === "tr" ? s.nameTr || s.nameNl : s.nameNl);
@@ -120,7 +138,7 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
                     priceCents={i.priceCents}
                     status={i.status}
                     visible={i.visible}
-                    previous={i.previous ? { mode: i.previous.mode, priceCents: i.previous.priceCents, date: i.previous.at.toLocaleDateString(lang === "tr" ? "tr-NL" : "nl-NL", { timeZone: "Europe/Amsterdam", day: "numeric", month: "short", year: "numeric" }) } : null}
+                    earlier={i.earlier.map((e) => ({ mode: e.mode, priceCents: e.priceCents, date: e.at.toLocaleDateString(lang === "tr" ? "tr-NL" : "nl-NL", { timeZone: "Europe/Amsterdam", day: "numeric", month: "short", year: "numeric" }) }))}
                     labels={t}
                   />
                 ))}
