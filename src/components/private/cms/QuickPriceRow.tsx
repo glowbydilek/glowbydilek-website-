@@ -15,6 +15,10 @@ export type QuickPriceLabels = {
   hidden: string;
   earlier: string;
   restore: string;
+  restoreTitle: string;
+  confirm: string;
+  cancel: string;
+  changedOn: string;
 };
 
 type Mode = "on_request" | "fixed" | "from";
@@ -34,7 +38,7 @@ export function QuickPriceRow({
   priceCents,
   status,
   visible,
-  previous,
+  earlier = [],
   labels,
 }: {
   id: string;
@@ -43,8 +47,8 @@ export function QuickPriceRow({
   priceCents: number | null;
   status: string;
   visible: boolean;
-  /** The last earlier price (from the price history), to restore with one tap. */
-  previous?: { mode: Mode; priceCents: number | null; date: string } | null;
+  /** Earlier prices from the price history (newest first), to review and restore. */
+  earlier?: { mode: Mode; priceCents: number | null; date: string }[];
   labels: QuickPriceLabels;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
@@ -63,22 +67,25 @@ export function QuickPriceRow({
     ...(initialMode === "from" ? [{ v: "from" as Mode, label: labels.from }] : []),
   ];
   const showMsg = !dirty && !pending && (state.ok || state.error);
-  const restore = () => {
-    if (!previous) return;
+  // Restore flow: open the list, pick an earlier price, review, confirm. Nothing is saved before "Bevestigen".
+  const [restoring, setRestoring] = useState(false);
+  const [pick, setPick] = useState<number | null>(null);
+  const fmt = (e: { mode: Mode; priceCents: number | null }) =>
+    e.mode === "on_request" || e.priceCents == null ? labels.onRequest : `${e.mode === "from" ? `${labels.from} ` : ""}€ ${toInput(e.priceCents)}`;
+  const confirmRestore = () => {
+    const e = pick != null ? earlier[pick] : null;
+    if (!e) return;
     const fd = new FormData();
     fd.set("id", id);
-    fd.set("pricingMode", previous.mode);
-    fd.set("price", previous.mode === "on_request" ? "" : toInput(previous.priceCents));
-    setMode(previous.mode === "from" && initialMode !== "from" ? "fixed" : previous.mode);
-    setPrice(previous.mode === "on_request" ? price : toInput(previous.priceCents));
+    fd.set("pricingMode", e.mode);
+    fd.set("price", e.mode === "on_request" ? "" : toInput(e.priceCents));
+    setMode(e.mode === "from" && initialMode !== "from" ? "fixed" : e.mode);
+    if (e.mode !== "on_request") setPrice(toInput(e.priceCents));
     setDirty(false);
+    setRestoring(false);
+    setPick(null);
     startTransition(() => run(fd));
   };
-  const prevLabel = previous
-    ? previous.mode === "on_request" || previous.priceCents == null
-      ? labels.onRequest
-      : `${previous.mode === "from" ? `${labels.from} ` : ""}€ ${toInput(previous.priceCents)}`
-    : "";
 
   return (
     <li className="border-b border-line py-3 last:border-0">
@@ -137,13 +144,47 @@ export function QuickPriceRow({
         >
           {pending ? labels.saving : labels.ok}
         </button>
-        {previous && (
+        {earlier.length > 0 && !restoring && (
           <p className="col-span-2 text-xs text-muted sm:col-span-4">
-            {labels.earlier}: {prevLabel} ({previous.date}){" "}
-            <button type="button" onClick={restore} disabled={pending} className="ml-1 min-h-8 rounded-full px-2 font-medium text-accent-deep underline disabled:opacity-60">
+            {labels.earlier}: {fmt(earlier[0])} ({earlier[0].date}){earlier.length > 1 ? ` +${earlier.length - 1}` : ""}{" "}
+            <button type="button" onClick={() => setRestoring(true)} disabled={pending} className="ml-1 min-h-8 rounded-full px-2 font-medium text-accent-deep underline disabled:opacity-60">
               {labels.restore}
             </button>
           </p>
+        )}
+        {restoring && (
+          <fieldset className="col-span-2 rounded-2xl border border-line bg-surface p-3 text-sm sm:col-span-4">
+            <legend className="px-1 font-medium">{labels.restoreTitle}</legend>
+            <ul className="mt-1 space-y-1">
+              {earlier.map((e, k) => (
+                <li key={k}>
+                  <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 hover:bg-white">
+                    <input type="radio" name={`restore-${id}`} checked={pick === k} onChange={() => setPick(k)} className="h-5 w-5" />
+                    <span className="font-medium tabular-nums">{fmt(e)}</span>
+                    <span className="text-xs text-muted">
+                      {labels.changedOn} {e.date}
+                    </span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button type="button" onClick={confirmRestore} disabled={pick == null || pending} className="min-h-11 rounded-full bg-ink px-4 font-semibold text-white disabled:opacity-40">
+                {labels.confirm}
+                {pick != null ? `: ${fmt(earlier[pick])}` : ""}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRestoring(false);
+                  setPick(null);
+                }}
+                className="min-h-11 rounded-full border border-ink/25 px-4"
+              >
+                {labels.cancel}
+              </button>
+            </div>
+          </fieldset>
         )}
         <div aria-live="polite" className="col-span-2 sm:col-span-4">
           {showMsg && state.ok && <p className="text-sm text-[#2f4b2d]">✓ {state.message}</p>}
