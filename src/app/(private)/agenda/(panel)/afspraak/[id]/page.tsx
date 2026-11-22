@@ -18,6 +18,7 @@ import { promotions } from "@/lib/db/schema";
 import { getReviewSettings } from "@/lib/reviews/service";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { formatLocal, formatLongDate, minutesToHHMM, todayLocal, toLocalParts } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Afspraak" };
 
@@ -68,6 +69,7 @@ const QUOTE_STATUS: Record<string, { label: string; tone: "pending" | "done" | "
 };
 
 export default async function AppointmentPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   const id = Number((await params).id);
   const sp = await searchParams;
   const db = getDb();
@@ -105,13 +107,13 @@ export default async function AppointmentPage({ params, searchParams }: { params
         subtitle={appt.startAt ? `${formatLongDate(appt.startAt, "nl")} · ${time(appt.startAt)}–${time(appt.endAt)}` : `Voorkeur: ${appt.requestedDate ?? "—"} (${TIME_RANGE_NL[appt.requestedTimeRange ?? ""] ?? "—"})`}
         actions={<Badge tone={st?.tone}>{st?.label ?? appt.status}</Badge>}
       />
-      {sp.opgeslagen && <div className="mb-4"><Notice tone="success">✓ Afspraak opgeslagen.</Notice></div>}
+      {sp.opgeslagen && <div className="mb-4"><Notice tone="success">{t("✓ Afspraak opgeslagen.")}</Notice></div>}
       {sp.melding && DONE[sp.melding] && <div className="mb-4"><Notice tone="success">✓ {DONE[sp.melding]}</Notice></div>}
       {sp.factuur && INVOICE_RESULT[sp.factuur] && <div className="mb-4"><Notice tone={sp.factuur === "blocked" || sp.factuur === "fout" ? "warning" : "info"}>{INVOICE_RESULT[sp.factuur]}{sp.nazorg ? " Het nazorgbericht staat klaar." : ""}</Notice></div>}
       {sp.mail === "0" && (
         <div className="mb-4">
           <Notice tone="warning">
-            <strong>De klant is niet gemaild:</strong> er is geen e-mailadres bekend. Laat de wijziging de klant zelf weten
+            <strong>{t("De klant is niet gemaild:")}</strong> er is geen e-mailadres bekend. Laat de wijziging de klant zelf weten
             {customer.phone ? (
               <>
                 {" "}
@@ -124,39 +126,39 @@ export default async function AppointmentPage({ params, searchParams }: { params
       )}
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-5">
-          <Card title="Gegevens">
+          <Card title={t("Gegevens")}>
             <dl className="grid grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words gap-x-3 gap-y-2 text-sm">
-              <dt className="text-muted">Behandeling</dt>
+              <dt className="text-muted">{t("Behandeling")}</dt>
               <dd>{items.map((i) => i.nameNl).join(", ") || "—"}</dd>
-              <dt className="text-muted">Duur</dt>
+              <dt className="text-muted">{t("Duur")}</dt>
               <dd>{appt.durationMinutes ? `${appt.durationMinutes} min${appt.bufferMinutes ? ` (+${appt.bufferMinutes} min opruimen)` : ""}` : "nog niet vastgesteld"}</dd>
-              <dt className="text-muted">Prijs</dt>
+              <dt className="text-muted">{t("Prijs")}</dt>
               <dd>{appt.priceCents != null ? formatCents(appt.priceCents) : "niet vastgelegd"}</dd>
-              <dt className="text-muted">Telefoon</dt>
+              <dt className="text-muted">{t("Telefoon")}</dt>
               <dd>{customer.phone ? <a className="underline" href={`tel:${customer.phone.replace(/\s/g, "")}`}>{customer.phone}</a> : "—"}</dd>
-              <dt className="text-muted">E-mail</dt>
+              <dt className="text-muted">{t("E-mail")}</dt>
               <dd className="break-all">{customer.email ? <a className="underline" href={`mailto:${customer.email}`}>{customer.email}</a> : "—"}</dd>
-              <dt className="text-muted">Bron</dt>
+              <dt className="text-muted">{t("Bron")}</dt>
               <dd>{appt.source === "manual" ? "Door jou ingevoerd" : "Aanvraag via de website"}</dd>
               {appt.requestedAlternative && (
                 <>
-                  <dt className="text-muted">Ook mogelijk</dt>
+                  <dt className="text-muted">{t("Ook mogelijk")}</dt>
                   <dd>{appt.requestedAlternative}</dd>
                 </>
               )}
               {appt.customerNote && (
                 <>
-                  <dt className="text-muted">Opmerking klant</dt>
+                  <dt className="text-muted">{t("Opmerking klant")}</dt>
                   <dd className="whitespace-pre-wrap">{appt.customerNote}</dd>
                 </>
               )}
-              <dt className="text-muted">Aangemaakt</dt>
+              <dt className="text-muted">{t("Aangemaakt")}</dt>
               <dd>{formatLocal(appt.createdAt, "nl", { dateStyle: "medium", timeStyle: "short" })}</dd>
             </dl>
-            <Link href={`/agenda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-accent-deep underline">Klantkaart openen</Link>
+            <Link href={`/agenda/klanten/${customer.id}`} className="mt-4 inline-block text-sm text-accent-deep underline">{t("Klantkaart openen")}</Link>
           </Card>
           {["requested", "proposed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (appt.priceCents == null || quotes.length > 0) && (
-            <Card title="Prijsvoorstel">
+            <Card title={t("Prijsvoorstel")}>
               {quotes.length > 0 && (
                 <ul className="mb-4 divide-y divide-line text-sm">
                   {quotes.map((q) => (
@@ -173,46 +175,46 @@ export default async function AppointmentPage({ params, searchParams }: { params
               {openQuote && (
                 <form action={withdrawQuoteAction} className="mb-4">
                   <input type="hidden" name="appointmentId" value={appt.id} />
-                  <button className="min-h-11 text-sm text-[#8e2f24] underline">Openstaand voorstel intrekken</button>
+                  <button className="min-h-11 text-sm text-[#8e2f24] underline">{t("Openstaand voorstel intrekken")}</button>
                 </form>
               )}
               {customer.email ? (
                 <QuoteForm appointmentId={appt.id} hasOpen={Boolean(openQuote)} />
               ) : (
-                <Notice tone="warning">Deze klant heeft geen e-mailadres. Bespreek de prijs persoonlijk en leg hem vast bij de afspraak (Wijzigen → Afgesproken prijs).</Notice>
+                <Notice tone="warning">{t("Deze klant heeft geen e-mailadres. Bespreek de prijs persoonlijk en leg hem vast bij de afspraak (Wijzigen → Afgesproken prijs).")}</Notice>
               )}
             </Card>
           )}
           {!customer.anonymizedAt && (appliedPromo || (running.length > 0 && appt.priceCents != null && ["requested", "proposed", "confirmed"].includes(appt.status))) && (
-            <Card title="Actie">
+            <Card title={t("Actie")}>
               {appliedPromo ? (
                 <form action={removePromotionAction} className="flex flex-wrap items-center justify-between gap-3 text-sm">
                   <input type="hidden" name="appointmentId" value={appt.id} />
                   <span>
                     <strong>{appliedPromo.nameNl}</strong> · korting {formatCents(appt.discountCents ?? 0)}
                   </span>
-                  <button className="min-h-11 text-[#8e2f24] underline">Actie verwijderen</button>
+                  <button className="min-h-11 text-[#8e2f24] underline">{t("Actie verwijderen")}</button>
                 </form>
               ) : (
                 <form action={applyPromotionAction} className="flex flex-wrap items-end gap-3">
                   <input type="hidden" name="appointmentId" value={appt.id} />
                   <label className="w-full min-w-0 text-sm sm:w-auto">
-                    <span className="mb-1 block text-muted">Lopende actie</span>
+                    <span className="mb-1 block text-muted">{t("Lopende actie")}</span>
                     <select name="promotionId" className="min-h-11 w-full max-w-full rounded-xl border border-ink/20 bg-white px-3 sm:w-auto">
                       {running.map((p) => (
                         <option key={p.id} value={p.id}>{p.nameNl}{p.code ? ` (${p.code})` : ""}</option>
                       ))}
                     </select>
                   </label>
-                  <button className="min-h-11 rounded-full border border-ink/25 px-5 text-sm">Toepassen</button>
+                  <button className="min-h-11 rounded-full border border-ink/25 px-5 text-sm">{t("Toepassen")}</button>
                 </form>
               )}
             </Card>
           )}
           {["completed", "confirmed"].includes(appt.status) && !customer.anonymizedAt && (
-            <Card title="Betaling & factuur">
+            <Card title={t("Betaling & factuur")}>
               <p className="mb-3 text-sm">
-                Betaald: <strong>{formatCents(paidHere)}</strong>
+                {t("Betaald:")} <strong>{formatCents(paidHere)}</strong>
                 {appt.priceCents != null ? ` van ${formatCents(appt.priceCents)} afgesproken` : ""}
               </p>
               {apptInvoices.length > 0 && (
@@ -228,30 +230,30 @@ export default async function AppointmentPage({ params, searchParams }: { params
               )}
               <form action={invoiceModeAction} className="mb-3 flex flex-wrap items-center gap-2 text-sm">
                 <input type="hidden" name="appointmentId" value={appt.id} />
-                <label htmlFor="invoiceMode" className="text-muted">Factuur bij afronden:</label>
+                <label htmlFor="invoiceMode" className="text-muted">{t("Factuur bij afronden:")}</label>
                 <select id="invoiceMode" name="invoiceMode" defaultValue={appt.invoiceMode ?? ""} className="min-h-11 rounded-xl border border-ink/20 bg-white px-3">
-                  <option value="">Volg instellingen</option>
-                  <option value="manual">Handmatig</option>
-                  <option value="none">Geen factuur</option>
+                  <option value="">{t("Volg instellingen")}</option>
+                  <option value="manual">{t("Handmatig")}</option>
+                  <option value="none">{t("Geen factuur")}</option>
                 </select>
-                <button className="min-h-11 rounded-full border border-ink/25 px-4">Opslaan</button>
+                <button className="min-h-11 rounded-full border border-ink/25 px-4">{t("Opslaan")}</button>
               </form>
               <div className="mb-4 flex flex-wrap gap-2">
                 <NewInvoiceButton customerId={customer.id} appointmentId={appt.id} />
                 {appt.status === "completed" && customer.email && reviewSettings.invitesEnabled && <InviteButton appointmentId={appt.id} />}
                 <a href={`/agenda/afspraak/${appt.id}/pdf`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
-                  Behandeloverzicht (PDF)
+                  {t("Behandeloverzicht (PDF)")}
                 </a>
               </div>
               <details>
-                <summary className="cursor-pointer text-sm font-medium">Betaling vastleggen</summary>
+                <summary className="cursor-pointer text-sm font-medium">{t("Betaling vastleggen")}</summary>
                 <div className="mt-3">
                   <PaymentForm customerId={customer.id} appointments={[{ id: appt.id, label: "Deze afspraak" }]} defaultAppointmentId={appt.id} defaultAmount={appt.priceCents != null ? Math.max(0, appt.priceCents - paidHere) || null : null} today={todayLocal()} />
                 </div>
               </details>
             </Card>
           )}
-          <Card title="E-mails">
+          <Card title={t("E-mails")}>
             {mails.length ? (
               <ul className="divide-y divide-line text-sm">
                 {mails.map((m) => (
@@ -266,10 +268,10 @@ export default async function AppointmentPage({ params, searchParams }: { params
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">Nog geen e-mails.</p>
+              <p className="text-sm text-muted">{t("Nog geen e-mails.")}</p>
             )}
           </Card>
-          <Card title="Geschiedenis">
+          <Card title={t("Geschiedenis")}>
             <ol className="space-y-1.5 text-sm">
               {events.map((e) => (
                 <li key={e.id} className="flex justify-between gap-3">
