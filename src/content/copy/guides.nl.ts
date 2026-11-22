@@ -54,7 +54,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
       {
         title: "Kun je toch niet?",
         paragraphs: [
-          "Laat het dan zo snel mogelijk weten door te antwoorden op je bevestigingsmail of te mailen naar hello@glowbydilek.nl. Zo kan het moment aan iemand anders worden gegeven.",
+          "Laat het dan zo snel mogelijk weten door te antwoorden op je bevestigingsmail of te mailen naar hello [at] glowbydilek.nl. Zo kan het moment aan iemand anders worden gegeven.",
         ],
       },
     ],
@@ -69,7 +69,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Kan ik ook eerst een vraag stellen?",
-        a: "Natuurlijk. Gebruik het contactformulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
+        a: "Natuurlijk. Gebruik het contactformulier of mail naar hello [at] glowbydilek.nl. Dilek antwoordt persoonlijk.",
       },
     ],
   },

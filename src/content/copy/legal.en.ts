@@ -50,7 +50,7 @@ export const legalEn: Record<LegalKey, LegalDoc> = {
       { title: "Appointments", paragraphs: ["An appointment is only final after personal confirmation by email.", "[INVULLEN: how far ahead appointments can be made, and whether a deposit applies — or remove this line.]"] },
       { title: "Prices and payment", paragraphs: ["Prices include VAT. For ‘price on request’ you first receive a price proposal that you accept yourself.", "[INVULLEN: accepted payment methods.]"] },
       { title: "Health and safety", paragraphs: ["Please mention medication, skin conditions, allergies or pregnancy beforehand. If in doubt, a treatment may not go ahead; this is in your interest.", "A beauty treatment is not a medical treatment."] },
-      { title: "Complaints", paragraphs: ["Not happy with something? Let us know as soon as possible via hello@glowbydilek.nl and we will look for a solution together.", "[INVULLEN: period within which a complaint can be reported.]"] },
+      { title: "Complaints", paragraphs: ["Not happy with something? Let us know as soon as possible via hello [at] glowbydilek.nl and we will look for a solution together.", "[INVULLEN: period within which a complaint can be reported.]"] },
       { title: "Liability", paragraphs: ["[INVULLEN: have the liability clause drafted or checked by a lawyer or your trade association.]"] },
     ],
   },
@@ -59,7 +59,7 @@ export const legalEn: Record<LegalKey, LegalDoc> = {
     effectiveDate: "[INVULLEN: effective date]",
     intro: "Can’t make it after all? Please let us know as soon as possible so someone else can have your spot.",
     sections: [
-      { title: "Cancelling or rescheduling", paragraphs: ["Cancel or reschedule by replying to your confirmation email or by emailing hello@glowbydilek.nl.", "[INVULLEN: until how many hours beforehand cancelling or rescheduling is free of charge.]"] },
+      { title: "Cancelling or rescheduling", paragraphs: ["Cancel or reschedule by replying to your confirmation email or by emailing hello [at] glowbydilek.nl.", "[INVULLEN: until how many hours beforehand cancelling or rescheduling is free of charge.]"] },
       { title: "Late or no-show", paragraphs: ["[INVULLEN: what happens with late cancellation or a no-show — for example no charge, or a fixed amount. Only mention charges you actually apply.]"] },
       { title: "If Glow by Dilek has to cancel", paragraphs: ["If an appointment has to be cancelled due to illness or circumstances beyond our control, you will hear as soon as possible and we will plan a new time together. No charges apply."] },
     ],
