@@ -8,12 +8,14 @@ import { getInvoiceSettings } from "@/lib/finance/invoices";
 import { invoiceReadiness } from "@/lib/finance/invoice-core";
 import { formatCents } from "@/lib/finance/money";
 import { paidByInvoice } from "@/lib/finance/service";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Facturen & PDF" };
 
 const dateNl = (d: string | null) => (d ? d.split("-").reverse().join("-") : "—");
 
 export default async function Invoices({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "finance");
   const sp = await searchParams;
   const db = getDb();
@@ -30,17 +32,17 @@ export default async function Invoices({ searchParams }: { searchParams: Promise
   const missing = invoiceReadiness(settings);
   return (
     <>
-      <PageHeader title="Facturen & PDF" subtitle="Een factuur maak je vanuit een afspraak of klantprofiel. Uitgegeven facturen worden nooit meer gewijzigd." />
-      {sp.verwijderd && <div className="mb-4"><Notice tone="success">✓ Concept verwijderd.</Notice></div>}
+      <PageHeader title={t("Facturen & PDF")} subtitle="Een factuur maak je vanuit een afspraak of klantprofiel. Uitgegeven facturen worden nooit meer gewijzigd." />
+      {sp.verwijderd && <div className="mb-4"><Notice tone="success">{t("✓ Concept verwijderd.")}</Notice></div>}
       {missing.length > 0 && (
         <div className="mb-4">
           <Notice tone="warning">
             Facturen uitgeven kan pas als je bedrijfsgegevens compleet zijn: {missing.join(" · ")}.{" "}
-            <Link href="/admin/bedrijf" className="underline">Gegevens invullen</Link>
+            <Link href="/admin/bedrijf" className="underline">{t("Gegevens invullen")}</Link>
           </Notice>
         </div>
       )}
-      <Card title="Overzichten als PDF">
+      <Card title={t("Overzichten als PDF")}>
         <ul className="flex flex-wrap gap-2 text-sm">
           {[
             ["/agenda/financien/rapport?p=month", "Financieel overzicht (deze maand)"],
@@ -53,7 +55,7 @@ export default async function Invoices({ searchParams }: { searchParams: Promise
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-muted">Andere periodes: kies ze in Financiën of Overzichten. Een behandeloverzicht per klant maak je in het klantprofiel.</p>
+        <p className="mt-3 text-xs text-muted">{t("Andere periodes: kies ze in Financiën of Overzichten. Een behandeloverzicht per klant maak je in het klantprofiel.")}</p>
       </Card>
       <Card title={`Facturen (${rows.length})`} className="mt-5">
         {rows.length ? (
@@ -79,7 +81,7 @@ export default async function Invoices({ searchParams }: { searchParams: Promise
             })}
           </ul>
         ) : (
-          <p className="text-sm text-muted">Nog geen facturen.</p>
+          <p className="text-sm text-muted">{t("Nog geen facturen.")}</p>
         )}
       </Card>
     </>

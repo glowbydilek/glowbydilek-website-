@@ -5,6 +5,7 @@ import { Card, PageHeader } from "@/components/private/ui";
 import { addDays, listByStatus, listHistory, listRange, listUpcoming } from "@/lib/booking/service";
 import { getDb } from "@/lib/db/client";
 import { todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Overzichten" };
 
@@ -19,6 +20,7 @@ const TABS = [
 ] as const;
 
 export default async function Overviews({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "finance");
   const tab = (await searchParams).lijst ?? "komend";
   const db = getDb();
@@ -41,17 +43,17 @@ export default async function Overviews({ searchParams }: { searchParams: Promis
   return (
     <>
       <PageHeader
-        title="Overzichten"
+        title={t("Overzichten")}
         subtitle="Komende, afgeronde, geannuleerde en eerdere afspraken."
         actions={
           // PDF download from a route handler, not a page: a plain link is intended.
           // eslint-disable-next-line @next/next/no-html-link-for-pages
           <a href="/agenda/historie/rapport?p=month" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
-            Activiteiten (PDF)
+            {t("Activiteiten (PDF)")}
           </a>
         }
       />
-      <nav aria-label="Lijst" className="mb-4 flex flex-wrap gap-1 rounded-2xl bg-white p-1 text-sm shadow-sm">
+      <nav aria-label={t("Lijst")} className="mb-4 flex flex-wrap gap-1 rounded-2xl bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/agenda/historie?lijst=${k}`} aria-current={k === current[0] ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === current[0] ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>
             {l}

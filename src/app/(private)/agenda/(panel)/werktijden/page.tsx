@@ -6,10 +6,12 @@ import { getDb } from "@/lib/db/client";
 import { blocks, dateOverrides, overrideIntervals, weeklyHours } from "@/lib/db/schema";
 import { deleteBlockAction, deleteOverrideAction } from "@/lib/private/agendaActions";
 import { dayBoundsUtc, formatLocal, localToUtc, minutesToHHMM, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Openingstijden & beschikbaarheid" };
 
 export default async function Hours() {
+  const t = await panelT();
   await requireCan("agenda", "hours.manage");
   const db = getDb();
   const today = todayLocal();
@@ -27,14 +29,14 @@ export default async function Hours() {
   const fmtDay = (d: string) => formatLocal(localToUtc(d, 720), "nl", { weekday: "long", day: "numeric", month: "long" });
   return (
     <>
-      <PageHeader title="Openingstijden & beschikbaarheid" subtitle="Je vaste weekrooster (de tijden waarop klanten op afspraak kunnen komen), uitzonderingen op een datum en vakantie of vrije periodes. Alle tijden in Nederlandse tijd. Bestaande afspraken veranderen nooit automatisch." />
+      <PageHeader title={t("Openingstijden & beschikbaarheid")} subtitle="Je vaste weekrooster (de tijden waarop klanten op afspraak kunnen komen), uitzonderingen op een datum en vakantie of vrije periodes. Alle tijden in Nederlandse tijd. Bestaande afspraken veranderen nooit automatisch." />
       <div className="space-y-5">
-        {!weekly.length && <Notice tone="warning">Er zijn nog geen werktijden ingesteld. Zolang dit leeg is, kunnen klanten online geen tijdstip kiezen.</Notice>}
-        <Card title="Vast weekrooster">
+        {!weekly.length && <Notice tone="warning">{t("Er zijn nog geen werktijden ingesteld. Zolang dit leeg is, kunnen klanten online geen tijdstip kiezen.")}</Notice>}
+        <Card title={t("Vast weekrooster")}>
           <WeeklyHoursForm initial={initial} />
         </Card>
-        <Card title="Uitzondering op een datum">
-          <p className="mb-3 text-sm text-muted">Bijvoorbeeld: een normaal gesloten dag openen, een dag sluiten, of op één datum 09:00–13:00 werken. Het vaste rooster blijft voor andere weken gelijk.</p>
+        <Card title={t("Uitzondering op een datum")}>
+          <p className="mb-3 text-sm text-muted">{t("Bijvoorbeeld: een normaal gesloten dag openen, een dag sluiten, of op één datum 09:00–13:00 werken. Het vaste rooster blijft voor andere weken gelijk.")}</p>
           <OverrideForm defaultDay={today} />
           {ovs.length > 0 && (
             <ul className="mt-5 divide-y divide-line border-t border-line">
@@ -51,7 +53,7 @@ export default async function Hours() {
                     </span>
                     <form action={deleteOverrideAction}>
                       <input type="hidden" name="day" value={o.day} />
-                      <SubmitButton variant="ghost" confirm="Deze uitzondering verwijderen?">Verwijderen</SubmitButton>
+                      <SubmitButton variant="ghost" confirm="Deze uitzondering verwijderen?">{t("Verwijderen")}</SubmitButton>
                     </form>
                   </li>
                 );
@@ -59,8 +61,8 @@ export default async function Hours() {
             </ul>
           )}
         </Card>
-        <Card title="Geblokkeerde periodes">
-          <p className="mb-3 text-sm text-muted">Vakantie, een persoonlijke afspraak of tijdelijk niet beschikbaar.</p>
+        <Card title={t("Geblokkeerde periodes")}>
+          <p className="mb-3 text-sm text-muted">{t("Vakantie, een persoonlijke afspraak of tijdelijk niet beschikbaar.")}</p>
           <BlockForm defaultDay={today} />
           {bl.length > 0 && (
             <ul className="mt-5 divide-y divide-line border-t border-line">
@@ -72,7 +74,7 @@ export default async function Hours() {
                   </span>
                   <form action={deleteBlockAction}>
                     <input type="hidden" name="id" value={b.id} />
-                    <SubmitButton variant="ghost" confirm="Deze blokkade verwijderen?">Verwijderen</SubmitButton>
+                    <SubmitButton variant="ghost" confirm="Deze blokkade verwijderen?">{t("Verwijderen")}</SubmitButton>
                   </form>
                 </li>
               ))}

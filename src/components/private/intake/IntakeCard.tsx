@@ -5,6 +5,7 @@ import { INTAKE_ACCEPT } from "@/lib/intake/files";
 import { intakeDocumentsFor, intakeStorageStatus, listTemplates } from "@/lib/intake/service";
 import { deleteIntakeDocumentAction, uploadIntakeAction } from "@/lib/private/intakeActions";
 import { formatLocal, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 const STATUS = { current: ["Huidig", "confirmed"], superseded: ["Eerdere versie", "neutral"], deleted: ["Bestand verwijderd", "cancelled"] } as const;
 const kb = (n: number) => (n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} kB`);
@@ -12,6 +13,7 @@ const dateNl = (d: string) => d.split("-").reverse().join("-");
 
 /** Signed intake & consent forms for one customer (metadata only; files via the private route). */
 export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: number; mfa: boolean }) {
+  const t = await panelT();
   const [docs, status, templates] = await Promise.all([intakeDocumentsFor(db, customerId), intakeStorageStatus(db, mfa), listTemplates(db)]);
   const versions = templates.filter((t) => t.status !== "draft");
   const active = templates.filter((t) => t.status === "active");
@@ -40,20 +42,20 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
                 <p className="mt-1 text-xs text-muted">Reden: {d.deleteReason}</p>
               ) : (
                 <div className="mt-2 flex flex-wrap items-end gap-3">
-                  {status.enabled && <a href={`/agenda/klanten/${customerId}/intake/${d.id}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">Downloaden</a>}
+                  {status.enabled && <a href={`/agenda/klanten/${customerId}/intake/${d.id}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">{t("Downloaden")}</a>}
                   <details className="text-xs">
-                    <summary className="flex min-h-11 cursor-pointer items-center text-muted underline">Bestand verwijderen</summary>
+                    <summary className="flex min-h-11 cursor-pointer items-center text-muted underline">{t("Bestand verwijderen")}</summary>
                     <ActionForm action={deleteIntakeDocumentAction} className="mt-2 flex flex-wrap items-end gap-2">
                       <input type="hidden" name="customerId" value={customerId} />
                       <input type="hidden" name="id" value={d.id} />
                       <Field label="Reden" htmlFor={`reason-${d.id}`}>
                         <Select id={`reason-${d.id}`} name="reason" defaultValue="Toestemming ingetrokken">
-                          <option>Toestemming ingetrokken</option>
-                          <option>Bewaartermijn verstreken</option>
-                          <option>Verkeerd bestand geüpload</option>
+                          <option>{t("Toestemming ingetrokken")}</option>
+                          <option>{t("Bewaartermijn verstreken")}</option>
+                          <option>{t("Verkeerd bestand geüpload")}</option>
                         </Select>
                       </Field>
-                      <SubmitButton variant="outline" pending="Verwijderen…" confirm="Het bestand wordt definitief verwijderd. Doorgaan?">Verwijderen</SubmitButton>
+                      <SubmitButton variant="outline" pending="Verwijderen…" confirm="Het bestand wordt definitief verwijderd. Doorgaan?">{t("Verwijderen")}</SubmitButton>
                     </ActionForm>
                   </details>
                 </div>
@@ -62,7 +64,7 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
           ))}
         </ul>
       )}
-      {!docs.length && <p className="mt-4 text-sm text-muted">Nog geen ondertekend formulier bewaard.</p>}
+      {!docs.length && <p className="mt-4 text-sm text-muted">{t("Nog geen ondertekend formulier bewaard.")}</p>}
 
       <div className="mt-5 border-t border-line pt-4">
         {status.enabled ? (
@@ -90,19 +92,19 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
             </Field>
             <label className="flex items-start gap-3 text-sm">
               <input type="checkbox" name="consent" className="mt-1 h-5 w-5" required />
-              <span>De klant heeft op het formulier aangekruist dat ze toestemming geeft om het ondertekende formulier te bewaren.</span>
+              <span>{t("De klant heeft op het formulier aangekruist dat ze toestemming geeft om het ondertekende formulier te bewaren.")}</span>
             </label>
-            <SubmitButton pending="Versleutelen en opslaan…">Versleuteld opslaan</SubmitButton>
+            <SubmitButton pending="Versleutelen en opslaan…">{t("Versleuteld opslaan")}</SubmitButton>
           </ActionForm>
         ) : (
           <Notice tone="warning">
-            Ondertekende formulieren bewaren is nog niet beschikbaar:
+            {t("Ondertekende formulieren bewaren is nog niet beschikbaar:")}
             <ul className="mt-1 list-disc pl-5">
               {status.reasons.map((r) => (
                 <li key={r}>{r}</li>
               ))}
             </ul>
-            Tot die tijd: bewaar geen foto&apos;s van formulieren op je telefoon en zet geen gezondheidsinformatie in gewone notities.
+            {t("Tot die tijd: bewaar geen foto's van formulieren op je telefoon en zet geen gezondheidsinformatie in gewone notities.")}
           </Notice>
         )}
       </div>

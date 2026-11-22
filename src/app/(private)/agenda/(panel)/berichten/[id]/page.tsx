@@ -6,11 +6,13 @@ import { getDb } from "@/lib/db/client";
 import { inquiries } from "@/lib/db/schema";
 import { inquiryAction } from "@/lib/private/agendaActions";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Bericht" };
 const TOPIC: Record<string, string> = { question: "Algemene vraag", treatment: "Vraag over een behandeling", appointment: "Afspraak", other: "Iets anders" };
 
 export default async function Message({ params }: { params: Promise<{ id: string }> }) {
+  const t = await panelT();
   await requireCan("agenda", "agenda.manage");
   const id = Number((await params).id);
   const db = getDb();
@@ -24,16 +26,16 @@ export default async function Message({ params }: { params: Promise<{ id: string
       <PageHeader title={m.name} subtitle={`${TOPIC[m.topic] ?? m.topic} · ${formatLocal(m.createdAt, "nl", { dateStyle: "long", timeStyle: "short" })}`} />
       <Card>
         <dl className="mb-4 grid grid-cols-[6rem_1fr] gap-2 text-sm">
-          <dt className="text-muted">E-mail</dt>
+          <dt className="text-muted">{t("E-mail")}</dt>
           <dd className="break-all">{m.email}</dd>
-          <dt className="text-muted">Telefoon</dt>
+          <dt className="text-muted">{t("Telefoon")}</dt>
           <dd>{m.phone ?? "—"}</dd>
-          <dt className="text-muted">Taal</dt>
+          <dt className="text-muted">{t("Taal")}</dt>
           <dd>{m.locale === "en" ? "Engels" : "Nederlands"}</dd>
         </dl>
         <p className="whitespace-pre-wrap rounded-xl bg-surface p-4 leading-relaxed">{m.message}</p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <a href={`mailto:${m.email}?subject=${subject}`} className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm text-paper">Beantwoorden per e-mail</a>
+          <a href={`mailto:${m.email}?subject=${subject}`} className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm text-paper">{t("Beantwoorden per e-mail")}</a>
           {[["replied", "Markeer als beantwoord"], ["closed", "Afgehandeld"], ["new", "Markeer als ongelezen"]].map(([s, l]) => (
             <form key={s} action={inquiryAction}>
               <input type="hidden" name="id" value={m.id} />
@@ -44,7 +46,7 @@ export default async function Message({ params }: { params: Promise<{ id: string
           <form action={inquiryAction}>
             <input type="hidden" name="id" value={m.id} />
             <input type="hidden" name="status" value="delete" />
-            <SubmitButton variant="danger" confirm="Dit bericht definitief verwijderen?">Verwijderen</SubmitButton>
+            <SubmitButton variant="danger" confirm="Dit bericht definitief verwijderen?">{t("Verwijderen")}</SubmitButton>
           </form>
         </div>
       </Card>

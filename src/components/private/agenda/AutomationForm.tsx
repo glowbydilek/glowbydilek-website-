@@ -5,9 +5,11 @@ import type { AftercareSettings, InvoiceAutomation } from "@/lib/db/settings";
 import { automationSettingsAction } from "@/lib/private/agendaActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, SubmitButton } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 /** Invoice automation (all off by default) and the optional aftercare email. */
 export function AutomationForm({ a, c, ready }: { a: InvoiceAutomation; c: AftercareSettings; ready: boolean }) {
+  const t = useT();
   const [draft, setDraft] = useState(a.autoDraft);
   const [issue, setIssue] = useState(a.autoIssue);
   const box = (name: string, label: string, hint: string, checked: boolean, onChange?: (v: boolean) => void, disabled = false) => (
@@ -33,7 +35,7 @@ export function AutomationForm({ a, c, ready }: { a: InvoiceAutomation; c: After
         {box("aftercare", "Na een afgeronde afspraak een nazorgbericht mailen", "Tekst aanpasbaar onder Admin → E-mailteksten.", c.enabled)}
         <Field label="Hoeveel uur na afronding"><Input name="delayHours" type="number" min={0} max={72} defaultValue={c.delayHours} className="w-28" /></Field>
       </fieldset>
-      <SubmitButton>Opslaan</SubmitButton>
+      <SubmitButton>{t("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }

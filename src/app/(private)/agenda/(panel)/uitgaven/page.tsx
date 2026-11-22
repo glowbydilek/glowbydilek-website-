@@ -9,6 +9,7 @@ import { centsToInput, formatCents } from "@/lib/finance/money";
 import { periodFor } from "@/lib/finance/service";
 import { deleteReceiptAction } from "@/lib/private/financeActions";
 import { todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Uitgaven" };
 
@@ -16,6 +17,7 @@ const TABS: [string, string][] = [["month", "Maand"], ["year", "Jaar"]];
 const dateNl = (d: string) => d.split("-").reverse().join("-");
 
 export default async function Expenses({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "finance");
   const sp = await searchParams;
   const kind = sp.p === "year" || sp.p === "custom" ? sp.p : "month";
@@ -37,8 +39,8 @@ export default async function Expenses({ searchParams }: { searchParams: Promise
   });
   return (
     <>
-      <PageHeader title="Uitgaven" subtitle="Inkoop en kosten met btw en bon. Alleen wat je zelf invoert; er wordt niets geschat." />
-      <nav aria-label="Periode" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
+      <PageHeader title={t("Uitgaven")} subtitle="Inkoop en kosten met btw en bon. Alleen wat je zelf invoert; er wordt niets geschat." />
+      <nav aria-label={t("Periode")} className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/agenda/uitgaven?p=${k}`} aria-current={k === kind ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === kind ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>{l}</Link>
         ))}
@@ -50,10 +52,10 @@ export default async function Expenses({ searchParams }: { searchParams: Promise
         <Stat label="Nog te betalen" value={formatCents(sum.openCents)} />
       </div>
       <div className="space-y-5">
-        <Card title="Nieuwe uitgave">
+        <Card title={t("Nieuwe uitgave")}>
           <ExpenseForm e={{ id: null, spentOn: todayLocal(), category: "products", vendor: "", description: "", amount: "", vatRate: "", vatAmount: "", status: "paid", notes: "" }} />
         </Card>
-        <Card title="Uitgaven in deze periode">
+        <Card title={t("Uitgaven in deze periode")}>
           {rows.length ? (
             <div className="space-y-3">
               {rows.map((r) => (
@@ -63,7 +65,7 @@ export default async function Expenses({ searchParams }: { searchParams: Promise
                     <span className="flex items-center gap-2 text-sm">
                       <strong>{formatCents(r.amountCents)}</strong>
                       {r.status !== "paid" && <Badge tone={r.status === "open" ? "pending" : "cancelled"}>{r.status === "open" ? "Open" : "Vervallen"}</Badge>}
-                      {receipts.some((x) => x.expenseId === r.id) && <Badge tone="done">Bon</Badge>}
+                      {receipts.some((x) => x.expenseId === r.id) && <Badge tone="done">{t("Bon")}</Badge>}
                     </span>
                   </summary>
                   <div className="mt-3 space-y-3">
@@ -73,7 +75,7 @@ export default async function Expenses({ searchParams }: { searchParams: Promise
                         <input type="hidden" name="receiptId" value={x.id} />
                         <a href={`/agenda/uitgaven/bon/${x.id}`} target="_blank" rel="noopener" className="underline">{x.filename}</a>
                         <span className="text-muted">{Math.ceil(x.size / 1024)} kB</span>
-                        <button className="min-h-11 text-[#8e2f24] underline">Bon verwijderen</button>
+                        <button className="min-h-11 text-[#8e2f24] underline">{t("Bon verwijderen")}</button>
                       </form>
                     ))}
                   </div>
@@ -81,10 +83,10 @@ export default async function Expenses({ searchParams }: { searchParams: Promise
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted">Nog geen uitgaven in deze periode.</p>
+            <p className="text-sm text-muted">{t("Nog geen uitgaven in deze periode.")}</p>
           )}
         </Card>
-        <Notice tone="info">Bonnen worden privé in de database bewaard (niet via een openbare link) en zitten in de databaseback-up. Bewaar ze ook volgens de fiscale bewaarplicht (7 jaar).</Notice>
+        <Notice tone="info">{t("Bonnen worden privé in de database bewaard (niet via een openbare link) en zitten in de databaseback-up. Bewaar ze ook volgens de fiscale bewaarplicht (7 jaar).")}</Notice>
       </div>
     </>
   );

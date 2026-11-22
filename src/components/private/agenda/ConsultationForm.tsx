@@ -4,10 +4,12 @@ import { deleteConsultationAction, saveConsultationAction } from "@/lib/private/
 import type { ConsultationAnswers } from "@/lib/consultation/service";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 type Q = { key: keyof ConsultationAnswers; note?: keyof ConsultationAnswers; nl: string; why: string };
 
 export function ConsultationForm({ customerId, questions, answers, consentText }: { customerId: number; questions: Q[]; answers: ConsultationAnswers | null; consentText: string }) {
+  const t = useT();
   return (
     <ActionForm action={saveConsultationAction} className="space-y-5">
       <input type="hidden" name="customerId" value={customerId} />
@@ -34,34 +36,35 @@ export function ConsultationForm({ customerId, questions, answers, consentText }
         <Textarea name="precautions" rows={2} maxLength={600} defaultValue={answers?.precautions ?? ""} />
       </Field>
       <div className="space-y-3 rounded-2xl bg-surface p-4 text-sm">
-        <p className="font-medium">Toestemmingsverklaring (lees voor of laat lezen)</p>
+        <p className="font-medium">{t("Toestemmingsverklaring (lees voor of laat lezen)")}</p>
         <p className="leading-relaxed">{consentText}</p>
         <Field label="Hoe is de toestemming gegeven?">
           <Select name="consentMethod" defaultValue="in_person">
             <option value="in_person">Mondeling, in persoon, na voorlezen</option>
-            <option value="written">Schriftelijk ondertekend</option>
+            <option value="written">{t("Schriftelijk ondertekend")}</option>
             <option value="digital">Digitaal (bijv. per e-mail bevestigd)</option>
           </Select>
         </Field>
         <label className="flex min-h-11 items-center gap-3">
           <input type="checkbox" name="consent" required className="h-5 w-5 accent-[var(--color-ink)]" />
-          De klant heeft uitdrukkelijk toestemming gegeven voor deze verklaring.
+          {t("De klant heeft uitdrukkelijk toestemming gegeven voor deze verklaring.")}
         </label>
       </div>
-      <SubmitButton pending="Versleutelen en opslaan…">Versleuteld opslaan</SubmitButton>
+      <SubmitButton pending="Versleutelen en opslaan…">{t("Versleuteld opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function DeleteConsultation({ customerId }: { customerId: number }) {
+  const t = useT();
   return (
     <ActionForm action={deleteConsultationAction} className="space-y-3">
       <input type="hidden" name="customerId" value={customerId} />
-      <Select name="reason" defaultValue="withdrawn" aria-label="Reden">
-        <option value="withdrawn">De klant trekt de toestemming in</option>
-        <option value="owner">Niet meer nodig</option>
+      <Select name="reason" defaultValue="withdrawn" aria-label={t("Reden")}>
+        <option value="withdrawn">{t("De klant trekt de toestemming in")}</option>
+        <option value="owner">{t("Niet meer nodig")}</option>
       </Select>
-      <SubmitButton variant="danger" confirm="De consultatiegegevens definitief verwijderen?">Gegevens verwijderen</SubmitButton>
+      <SubmitButton variant="danger" confirm="De consultatiegegevens definitief verwijderen?">{t("Gegevens verwijderen")}</SubmitButton>
     </ActionForm>
   );
 }

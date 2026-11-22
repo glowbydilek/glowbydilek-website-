@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { formatCents } from "@/lib/finance/money";
 import { financeReport, METHODS, periodFor } from "@/lib/finance/service";
 import { dayBoundsUtc, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Financiën" };
 
@@ -20,6 +21,7 @@ const TABS = [
 const dateNl = (d: string) => d.split("-").reverse().join("-");
 
 export default async function Finance({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "finance");
   const sp = await searchParams;
   const kind = TABS.some(([k]) => k === sp.p) ? sp.p! : "month";
@@ -31,7 +33,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
   return (
     <>
       <PageHeader
-        title="Financiën"
+        title={t("Financiën")}
         subtitle="Alleen bedragen die je echt hebt vastgelegd. Er wordt nooit een omzet geschat of verzonnen."
         actions={
           <div className="flex flex-wrap gap-2">
@@ -39,12 +41,12 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               CSV
             </a>
             <a href={`/agenda/financien/rapport?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
-              PDF-rapport
+              {t("PDF-rapport")}
             </a>
           </div>
         }
       />
-      <nav aria-label="Periode" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
+      <nav aria-label={t("Periode")} className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/agenda/financien?p=${k}`} aria-current={k === kind ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === kind ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>
             {l}
@@ -55,14 +57,14 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
         <form className="mb-4 flex flex-wrap items-end gap-2" action="/agenda/financien">
           <input type="hidden" name="p" value="custom" />
           <label className="text-sm">
-            Van
+            {t("Van")}
             <input type="date" name="van" defaultValue={period.from} className="ml-2 min-h-11 rounded-xl border border-ink/20 bg-white px-3" />
           </label>
           <label className="text-sm">
-            Tot en met
+            {t("Tot en met")}
             <input type="date" name="tot" defaultValue={period.to} className="ml-2 min-h-11 rounded-xl border border-ink/20 bg-white px-3" />
           </label>
-          <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">Toon</button>
+          <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">{t("Toon")}</button>
         </form>
       )}
       <p className="mb-4 text-sm text-muted">
@@ -82,7 +84,7 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
       </div>
 
       <div className="mt-5 grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
-        <Card title="Per behandeling">
+        <Card title={t("Per behandeling")}>
           {r.byTreatment.length ? (
             <ul className="divide-y divide-line text-sm">
               {r.byTreatment.map((t) => (
@@ -95,17 +97,17 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               ))}
               {r.unlinkedCents !== 0 && (
                 <li className="flex justify-between gap-3 py-2 text-muted">
-                  <span>Niet aan een afspraak gekoppeld</span>
+                  <span>{t("Niet aan een afspraak gekoppeld")}</span>
                   <span>{formatCents(r.unlinkedCents)}</span>
                 </li>
               )}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Geen betalingen in deze periode.</p>
+            <p className="text-sm text-muted">{t("Geen betalingen in deze periode.")}</p>
           )}
-          <p className="mt-3 text-xs text-muted">Een betaling telt bij één behandeling als de afspraak één behandeling had; anders staat hij onder &quot;Combinatie&quot;. Er wordt niets verdeeld of geschat.</p>
+          <p className="mt-3 text-xs text-muted">{t("Een betaling telt bij één behandeling als de afspraak één behandeling had; anders staat hij onder \"Combinatie\". Er wordt niets verdeeld of geschat.")}</p>
         </Card>
-        <Card title="Per categorie">
+        <Card title={t("Per categorie")}>
           {r.bySection.length ? (
             <ul className="divide-y divide-line text-sm">
               {r.bySection.map((x) => (
@@ -113,15 +115,15 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Nog geen betalingen in deze periode.</p>
+            <p className="text-sm text-muted">{t("Nog geen betalingen in deze periode.")}</p>
           )}
           {r.discountsCents > 0 && <p className="mt-3 text-sm text-muted">Verleende kortingen (acties): {formatCents(r.discountsCents)}</p>}
         </Card>
-        <Card title="Uitgaven & btw">
+        <Card title={t("Uitgaven & btw")}>
           <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-2 text-sm">
-            <dt className="text-muted">Uitgaven (incl. btw)</dt>
+            <dt className="text-muted">{t("Uitgaven (incl. btw)")}</dt>
             <dd className="text-right font-medium">{formatCents(r.expenses.totalCents)}</dd>
-            <dt className="text-muted">Btw op uitgaven (volgens bonnen)</dt>
+            <dt className="text-muted">{t("Btw op uitgaven (volgens bonnen)")}</dt>
             <dd className="text-right">{formatCents(r.expenses.vatCents)}</dd>
             {r.vatSummary.flatMap((v) => [
               <dt key={`${v.label}-t`} className="text-muted">{v.label} op facturen (grondslag {formatCents(v.baseCents)})</dt>,
@@ -131,9 +133,9 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
             <dd className="text-right font-medium">{formatCents(r.balanceCents)}</dd>
           </dl>
           <p className="mt-3 text-xs text-muted">Geen winstberekening en geen aangifte: laat btw en resultaat controleren door je boekhouder.{r.expenses.withoutVat ? ` ${r.expenses.withoutVat} uitgave(n) zonder btw-bedrag.` : ""}</p>
-          <Link href={`/agenda/uitgaven?${q}`} className="mt-3 inline-block text-sm text-accent-deep underline">Uitgaven bekijken en toevoegen</Link>
+          <Link href={`/agenda/uitgaven?${q}`} className="mt-3 inline-block text-sm text-accent-deep underline">{t("Uitgaven bekijken en toevoegen")}</Link>
         </Card>
-        <Card title="Per betaalmethode">
+        <Card title={t("Per betaalmethode")}>
           {r.byMethod.length ? (
             <ul className="divide-y divide-line text-sm">
               {r.byMethod.map((x) => (
@@ -146,10 +148,10 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Geen betalingen in deze periode.</p>
+            <p className="text-sm text-muted">{t("Geen betalingen in deze periode.")}</p>
           )}
         </Card>
-        <Card title="Openstaande facturen">
+        <Card title={t("Openstaande facturen")}>
           {r.openInvoices.length ? (
             <ul className="divide-y divide-line text-sm">
               {r.openInvoices.map((i) => (
@@ -164,10 +166,10 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Geen openstaande facturen.</p>
+            <p className="text-sm text-muted">{t("Geen openstaande facturen.")}</p>
           )}
         </Card>
-        <Card title="Afgerond, nog geen betaling vastgelegd">
+        <Card title={t("Afgerond, nog geen betaling vastgelegd")}>
           {r.unpaidAppointments.length ? (
             <ul className="divide-y divide-line text-sm">
               {r.unpaidAppointments.map((u) => (
@@ -182,13 +184,13 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Alles met een afgesproken prijs is betaald of gefactureerd.</p>
+            <p className="text-sm text-muted">{t("Alles met een afgesproken prijs is betaald of gefactureerd.")}</p>
           )}
           {r.completedWithoutPrice > 0 && <p className="mt-3 text-xs text-muted">{r.completedWithoutPrice} afgeronde afspraak/afspraken zonder afgesproken prijs: die tellen nergens mee tot je een betaling vastlegt.</p>}
         </Card>
       </div>
       {r.byDay.length > 1 && (
-        <Card title="Per dag" className="mt-5">
+        <Card title={t("Per dag")} className="mt-5">
           <ul className="grid gap-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
             {r.byDay.map((d) => (
               <li key={d.day} className="flex justify-between gap-3 rounded-lg px-2 py-1 odd:bg-surface">

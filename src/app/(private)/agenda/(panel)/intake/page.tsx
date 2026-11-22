@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db/client";
 import { listTemplates } from "@/lib/intake/service";
 import { newRevisionAction } from "@/lib/private/intakeActions";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Intakeformulier" };
 
@@ -13,19 +14,20 @@ const LANG = { nl: "Nederlands", en: "English", tr: "Türkçe" } as const;
 const STATUS = { active: ["Actief", "confirmed"], draft: ["Concept", "pending"], retired: ["Vorige versie", "neutral"] } as const;
 
 export default async function IntakeTemplatesPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireOwner("agenda", "/agenda/intake");
   const sp = await searchParams;
   const rows = await listTemplates(getDb());
   return (
     <>
       <PageHeader
-        title="Intake & toestemming"
+        title={t("Intake & toestemming")}
         subtitle="Eén formulier per taal voor alle behandelingen. Print het, laat de klant tekenen en bewaar de ondertekende versie bij de klant."
       />
-      {sp.verwijderd && <div className="mb-4"><Notice tone="success">✓ Het concept is verwijderd.</Notice></div>}
+      {sp.verwijderd && <div className="mb-4"><Notice tone="success">{t("✓ Het concept is verwijderd.")}</Notice></div>}
       <div className="mb-5">
         <Notice tone="warning">
-          Dit formulier is een concept van de eigenaar en is <strong>niet juridisch gecontroleerd</strong>. Laat de tekst en de bewaartermijn beoordelen (AVG, gezondheidsgegevens) voordat je ondertekende formulieren gaat bewaren.
+          {t("Dit formulier is een concept van de eigenaar en is")} <strong>niet juridisch gecontroleerd</strong>. Laat de tekst en de bewaartermijn beoordelen (AVG, gezondheidsgegevens) voordat je ondertekende formulieren gaat bewaren.
         </Notice>
       </div>
       <div className="grid gap-5 lg:grid-cols-2">
@@ -36,9 +38,9 @@ export default async function IntakeTemplatesPage({ searchParams }: { searchPara
             <Card key={locale} title={LANG[locale]}>
               {active && (
                 <div className="flex flex-wrap gap-2">
-                  <LinkButton href={`/agenda/intake-afdruk/${active.id}`} variant="primary">Afdrukken (A4)</LinkButton>
+                  <LinkButton href={`/agenda/intake-afdruk/${active.id}`} variant="primary">{t("Afdrukken (A4)")}</LinkButton>
                   {/* No prefetch: it would generate the PDF on every visit. */}
-                  <LinkButton href={`/agenda/intake/${active.id}/pdf`} prefetch={false}>PDF downloaden</LinkButton>
+                  <LinkButton href={`/agenda/intake/${active.id}/pdf`} prefetch={false}>{t("PDF downloaden")}</LinkButton>
                 </div>
               )}
               <ul className="mt-4 divide-y divide-line text-sm">
