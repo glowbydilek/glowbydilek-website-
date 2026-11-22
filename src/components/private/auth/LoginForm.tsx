@@ -18,7 +18,7 @@ export function LoginForm({ area, next, siteKey, captcha, notice }: { area: "adm
       {notice && <Notice tone="success">{notice}</Notice>}
       {state.error && <Notice tone="error">{state.error}</Notice>}
       <Field label="E-mailadres" htmlFor="email">
-        <Input id="email" name="email" type="email" autoComplete="username" required inputMode="email" defaultValue="hello@glowbydilek.nl" />
+        <Input id="email" name="email" type="email" autoComplete="username" required inputMode="email" />
       </Field>
       <Field label="Wachtwoord" htmlFor="password">
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
