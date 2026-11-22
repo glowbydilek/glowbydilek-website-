@@ -6,6 +6,8 @@ import { useState, type ReactNode } from "react";
 import { LogoSymbol } from "@/components/brand/Logo";
 import { logoutAction } from "@/lib/private/authActions";
 import { PanelIcon } from "./PanelIcon";
+import { pt, type PanelLang } from "@/lib/private/panelLang";
+import { setPanelLangAction } from "@/lib/private/panelLangActions";
 
 export type NavItem = { href: string; label: string; icon?: string; badge?: number };
 
@@ -19,7 +21,9 @@ export function PanelShell({
   tabs,
   children,
   banner,
+  lang = "nl",
 }: {
+  lang?: PanelLang;
   area: "admin" | "agenda";
   nav: NavItem[];
   tabs?: NavItem[];
@@ -29,8 +33,30 @@ export function PanelShell({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const active = (href: string) => (href === `/${area}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
-  const title = area === "admin" ? "Admin Glow by Dilek" : "Glow by Dilek — Agenda";
-  const other = area === "admin" ? { href: "/agenda", label: "Naar Agenda" } : { href: "/admin", label: "Naar Admin" };
+  const t = (k: string) => pt(lang, k);
+  const title = area === "admin" ? t("titleAdmin") : t("titleAgenda");
+  const other = area === "admin" ? { href: "/agenda", label: t("toAgenda") } : { href: "/admin", label: t("toAdmin") };
+
+  /* NL / TR switch: a small form per option, so it also works before JavaScript loads. */
+  const langSwitch = (compact: boolean) => (
+    <div role="group" aria-label={t("language")} className={`flex items-center gap-1 ${compact ? "" : "px-3"}`}>
+      {(["nl", "tr"] as const).map((l) => (
+        <form key={l} action={setPanelLangAction}>
+          <input type="hidden" name="lang" value={l} />
+          <button
+            type="submit"
+            aria-pressed={lang === l}
+            lang={l}
+            className={`min-h-9 min-w-11 rounded-full px-3 text-xs font-semibold tracking-wide transition-colors ${
+              lang === l ? "bg-ink text-paper" : "text-muted hover:bg-ink/6 hover:text-ink"
+            }`}
+          >
+            {l === "nl" ? "NL" : "TR"}
+          </button>
+        </form>
+      ))}
+    </div>
+  );
 
   const links = (
     <ul className="space-y-0.5">
@@ -57,15 +83,16 @@ export function PanelShell({
 
   const footer = (
     <div className="space-y-2 border-t border-line pt-3 text-sm">
+      {langSwitch(false)}
       <Link href={other.href} className="flex min-h-11 items-center rounded-xl px-3 text-accent-deep hover:bg-ink/6">
         {other.label} →
       </Link>
       <a href="/" target="_blank" rel="noopener" className="flex min-h-11 items-center rounded-xl px-3 text-muted hover:bg-ink/6">
-        Website bekijken ↗
+        {t("viewSite")} ↗
       </a>
       <form action={logoutAction}>
         <input type="hidden" name="area" value={area} />
-        <button className="flex min-h-11 w-full items-center rounded-xl px-3 text-left text-muted hover:bg-ink/6">Uitloggen</button>
+        <button className="flex min-h-11 w-full items-center rounded-xl px-3 text-left text-muted hover:bg-ink/6">{t("logout")}</button>
       </form>
     </div>
   );
@@ -87,8 +114,9 @@ export function PanelShell({
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-white/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur lg:hidden">
           <Link href={`/${area}`} className="flex min-h-14 items-center gap-2">
             <LogoSymbol className="h-8 w-auto" />
-            <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : "Agenda"}</span>
+            <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : lang === "tr" ? "Ajanda" : "Agenda"}</span>
           </Link>
+          <div className="ml-auto mr-1">{langSwitch(true)}</div>
           <button
             type="button"
             className="flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-medium text-ink"
@@ -96,7 +124,7 @@ export function PanelShell({
             aria-controls="panel-menu"
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? "Sluiten" : "Menu"}
+            {open ? t("close") : t("menu")}
           </button>
         </header>
         {open && (
@@ -112,7 +140,7 @@ export function PanelShell({
         </main>
 
         {tabs && (
-          <nav aria-label="Snelmenu" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/97 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          <nav aria-label={t("quickMenu")} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/97 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
             <ul className="grid" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}>
               {tabs.map((t) => (
                 <li key={t.href}>
