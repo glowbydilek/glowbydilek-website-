@@ -1,11 +1,11 @@
 import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { desc, eq } from "drizzle-orm";
-import { InvoiceEditor, InvoiceOpButton, IssueForm, PaymentForm, VoidPaymentForm } from "@/components/private/finance/FinanceForms";
+import { asc, desc, eq, ne } from "drizzle-orm";
+import { type CatalogueOption, InvoiceEditor, InvoiceOpButton, IssueForm, PaymentForm, VoidPaymentForm } from "@/components/private/finance/FinanceForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
-import { customers, invoices, outbox } from "@/lib/db/schema";
+import { customers, invoices, outbox, serviceSections, treatments } from "@/lib/db/schema";
 import { getInvoiceSettings, invoicePaid, type Buyer } from "@/lib/finance/invoices";
 import { invoiceReadiness, type ComputedLine, type InvoiceLine } from "@/lib/finance/invoice-core";
 import { formatCents } from "@/lib/finance/money";
@@ -31,6 +31,30 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
     db.select().from(outbox).where(eq(outbox.attachmentRef, id)).orderBy(desc(outbox.createdAt)),
   ]);
   const missing = invoiceReadiness(settings);
+  // Treatments with the price saved right now (Prijzen beheren), for the Omschrijving picker.
+  // Issued invoices keep their own stored lines, so later price changes never touch them.
+  const catalogue: CatalogueOption[] =
+    inv.status === "draft"
+      ? await (async () => {
+          const [secs, rows] = await Promise.all([
+            db.select({ id: serviceSections.id, name: serviceSections.nameNl, sort: serviceSections.sort }).from(serviceSections),
+            db.select().from(treatments).where(ne(treatments.status, "archived")).orderBy(asc(treatments.sort)),
+          ]);
+          const sec = (id: string | null) => secs.find((x) => x.id === (id ?? "waxing"));
+          return rows
+            .map((r) => ({
+              id: r.id,
+              name: r.nameNl,
+              group: sec(r.sectionId)?.name ?? "Overig",
+              sort: (sec(r.sectionId)?.sort ?? 999) * 10000 + r.sort,
+              priceCents: r.priceCents,
+              mode: (r.pricingMode ?? (r.priceCents == null ? "on_request" : r.priceFrom ? "from" : "fixed")) as CatalogueOption["mode"],
+              vat: r.vatCategory,
+            }))
+            .sort((a, b) => a.sort - b.sort)
+            .map((o) => ({ id: o.id, name: o.name, group: o.group, priceCents: o.priceCents, mode: o.mode, vat: o.vat }));
+        })()
+      : [];
   const draft = inv.status === "draft";
   const credit = inv.kind === "credit";
   const buyer = inv.buyer as Buyer;
@@ -53,7 +77,7 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
         <div className="space-y-5">
           {draft ? (
             <Card title="Concept bewerken">
-              <InvoiceEditor id={id} kind={credit ? "credit" : "invoice"} lines={inv.lines as InvoiceLine[]} buyer={buyer} supplyDate={inv.supplyDate} note={inv.note} vatPerLine={settings.vatMode === "standard"} />
+              <InvoiceEditor id={id} kind={credit ? "credit" : "invoice"} lines={inv.lines as InvoiceLine[]} buyer={buyer} supplyDate={inv.supplyDate} note={inv.note} vatPerLine={settings.vatMode === "standard"} catalogue={catalogue} />
             </Card>
           ) : (
             <Card title="Factuur">
