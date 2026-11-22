@@ -28,7 +28,7 @@ export const nl = {
       prices: {
         title: "Tarieven",
         description:
-          "Alle behandelingen van Glow by Dilek op een rij, met tarief, duur of ‘op aanvraag’. Heb je een vraag over een tarief? Mail naar hello@glowbydilek.nl.",
+          "Alle behandelingen van Glow by Dilek op een rij, met tarief, duur of ‘op aanvraag’. Heb je een vraag over een tarief? Mail naar hello [at] glowbydilek.nl.",
       },
       about: {
         title: "Over Dilek",
@@ -38,7 +38,7 @@ export const nl = {
       contact: {
         title: "Contact",
         description:
-          "Een vraag over een behandeling of een afspraak? Stuur een bericht via het formulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
+          "Een vraag over een behandeling of een afspraak? Stuur een bericht via het formulier of mail naar hello [at] glowbydilek.nl. Dilek antwoordt persoonlijk.",
       },
       booking: {
         title: "Afspraak aanvragen in Amsterdam",
@@ -399,6 +399,7 @@ export const nl = {
         "Over een behandeling, je huid of het maken van een afspraak: Dilek leest elk bericht zelf en antwoordt persoonlijk.",
     },
     emailLabel: "E-mail",
+    phoneLabel: "Telefoon",
     emailNote: "Liever zelf mailen? Dat kan natuurlijk ook.",
     locationTitle: "Locatie",
     hoursTitle: "Afspraken",
@@ -606,7 +607,7 @@ export const nl = {
     sections: [
       {
         h: "Wie wij zijn",
-        p: "Glow by Dilek biedt persoonlijke schoonheidsbehandelingen en massages aan, uitsluitend op afspraak. Vragen over privacy kun je stellen via hello@glowbydilek.nl.",
+        p: "Glow by Dilek biedt persoonlijke schoonheidsbehandelingen en massages aan, uitsluitend op afspraak. Vragen over privacy kun je stellen via hello [at] glowbydilek.nl.",
       },
       {
         h: "Welke gegevens we ontvangen",
@@ -630,7 +631,7 @@ export const nl = {
       },
       {
         h: "Beoordelingen",
-        p: "Als je een beoordeling schrijft, worden je waardering, je tekst en de naam die je kiest (voornaam, initialen of anoniem) op de website geplaatst nadat Dilek hem heeft gelezen. Een e-mailadres is optioneel, wordt nooit getoond en dient alleen om misbruik te voorkomen. Wil je dat je beoordeling verdwijnt, mail dan naar hello@glowbydilek.nl.",
+        p: "Als je een beoordeling schrijft, worden je waardering, je tekst en de naam die je kiest (voornaam, initialen of anoniem) op de website geplaatst nadat Dilek hem heeft gelezen. Een e-mailadres is optioneel, wordt nooit getoond en dient alleen om misbruik te voorkomen. Wil je dat je beoordeling verdwijnt, mail dan naar hello [at] glowbydilek.nl.",
       },
       {
         h: "Cookies en Google Analytics",
@@ -646,7 +647,7 @@ export const nl = {
       },
       {
         h: "Jouw rechten",
-        p: "Je kunt vragen om inzage in je gegevens, om een kopie ervan, om correctie of om verwijdering. Stuur daarvoor een e-mail naar hello@glowbydilek.nl; we reageren binnen een maand. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.",
+        p: "Je kunt vragen om inzage in je gegevens, om een kopie ervan, om correctie of om verwijdering. Stuur daarvoor een e-mail naar hello [at] glowbydilek.nl; we reageren binnen een maand. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.",
       },
     ],
   },
