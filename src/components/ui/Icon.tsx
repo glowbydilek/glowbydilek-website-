@@ -15,6 +15,7 @@ export type IconName =
   | "info"
   | "leaf"
   | "whatsapp"
+  | "phone"
   | "chevron";
 
 const paths: Record<IconName, string> = {
@@ -34,6 +35,7 @@ const paths: Record<IconName, string> = {
   leaf: "M5 19c0-8 5-14 15-15-1 10-7 15-15 15Z M5 19 13 11",
   whatsapp: "M4.5 19.5l1.2-3.6A8 8 0 1 1 8.4 18.4L4.5 19.5Z M9.2 8.6c.3 2.6 2.4 4.9 5.2 5.6l1.2-1.2 1.8.8-.3 1.6c-3.8.3-8.5-3.5-8.6-7.6l1.5-.4.9 1.7-1.7-.5",
   chevron: "M9 6l6 6-6 6",
+  phone: "M7.2 4.5h2.6l1.4 3.7-1.8 1.2a9.5 9.5 0 0 0 5.2 5.2l1.2-1.8 3.7 1.4v2.6a1.7 1.7 0 0 1-1.8 1.7C11 18 6 13 5.5 6.3a1.7 1.7 0 0 1 1.7-1.8Z",
 };
 
 export function Icon({ name, className = "h-6 w-6" }: { name: IconName; className?: string }) {
