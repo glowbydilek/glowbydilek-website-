@@ -175,12 +175,6 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
             ))}
             <CookieSettingsLink label={dict.consent.settings} className="inline-flex min-h-10 items-center hover:text-glow sm:min-h-0" />
             <LanguageSwitcher locale={locale} label={dict.nav.languageFooter} tone="dark" placement="up" />
-            {/* Discreet owner entrance; the private areas are noindex and login-protected.
-                A plain <a>: /login lives in a different root layout, so it is a full page load anyway. */}
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/login" rel="nofollow" className="inline-flex min-h-10 items-center text-paper/60 hover:text-glow sm:min-h-0">
-              {dict.footer.login}
-            </a>
           </div>
         </div>
       </div>
