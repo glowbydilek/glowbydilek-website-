@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, test } from "node:test";
 import { tx } from "../src/lib/private/panelT.ts";
 import { TR, TR_PATTERNS } from "../src/lib/private/panelTr.ts";
-import { toPanelLang } from "../src/lib/private/panelLang.ts";
+import { pt, toPanelLang } from "../src/lib/private/panelLang.ts";
 
 function files(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
@@ -27,7 +27,9 @@ describe("panel Turkish", () => {
       const s = readFileSync(f, "utf8");
       for (const m of s.matchAll(/\bt\(\s*"((?:[^"\\]|\\.)+)"\s*\)/g)) {
         const key = JSON.parse(`"${m[1]}"`) as string;
-        if (!TR[key] && !TR_PATTERNS.some(([re]) => re.test(key))) missing.push(`${f}: ${key}`);
+        // Shell/menu keys (e.g. "logout") live in the older route dictionary of panelLang.ts.
+        const shellKey = pt("tr", key, "\u0000") !== "\u0000";
+        if (!shellKey && !TR[key] && !TR_PATTERNS.some(([re]) => re.test(key))) missing.push(`${f}: ${key}`);
       }
     }
     assert.deepEqual(missing, [], `missing Turkish:\n${missing.join("\n")}`);
