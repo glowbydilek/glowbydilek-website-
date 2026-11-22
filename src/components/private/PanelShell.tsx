@@ -9,7 +9,7 @@ import { PanelIcon } from "./PanelIcon";
 import { pt, type PanelLang } from "@/lib/private/panelLang";
 import { setPanelLangAction } from "@/lib/private/panelLangActions";
 
-export type NavItem = { href: string; label: string; icon?: string; badge?: number };
+export type NavItem = { href: string; label: string; icon?: string; badge?: number; technical?: boolean };
 
 /**
  * Shared shell for /admin and /agenda. Desktop: sidebar. Mobile: compact top
@@ -58,27 +58,41 @@ export function PanelShell({
     </div>
   );
 
+  const item = (n: NavItem) => (
+    <li key={n.href}>
+      <Link
+        href={n.href}
+        onClick={() => setOpen(false)}
+        aria-current={active(n.href) ? "page" : undefined}
+        className={`flex min-h-11 items-center justify-between rounded-xl px-3 text-[0.95rem] transition-colors ${
+          active(n.href) ? "bg-ink text-paper" : "text-ink hover:bg-ink/6"
+        }`}
+      >
+        <span className="flex items-center gap-3">
+          {n.icon && <PanelIcon name={n.icon} className={`h-5 w-5 ${active(n.href) ? "text-paper" : "text-muted"}`} />}
+          {n.label}
+        </span>
+        {n.badge ? <span className="rounded-full bg-accent px-2 text-xs font-semibold text-ink">{n.badge}</span> : null}
+      </Link>
+    </li>
+  );
+  const business = nav.filter((n) => !n.technical);
+  const technical = nav.filter((n) => n.technical);
+  const technicalOpen = technical.some((n) => active(n.href));
+  // Daily business items first; technical configuration (analytics, SEO, theme, system) folded away underneath.
   const links = (
-    <ul className="space-y-0.5">
-      {nav.map((n) => (
-        <li key={n.href}>
-          <Link
-            href={n.href}
-            onClick={() => setOpen(false)}
-            aria-current={active(n.href) ? "page" : undefined}
-            className={`flex min-h-11 items-center justify-between rounded-xl px-3 text-[0.95rem] transition-colors ${
-              active(n.href) ? "bg-ink text-paper" : "text-ink hover:bg-ink/6"
-            }`}
-          >
-            <span className="flex items-center gap-3">
-              {n.icon && <PanelIcon name={n.icon} className={`h-5 w-5 ${active(n.href) ? "text-paper" : "text-muted"}`} />}
-              {n.label}
-            </span>
-            {n.badge ? <span className="rounded-full bg-accent px-2 text-xs font-semibold text-ink">{n.badge}</span> : null}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="space-y-0.5">{business.map(item)}</ul>
+      {technical.length > 0 && (
+        <details className="mt-3 border-t border-line pt-2" open={technicalOpen}>
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl px-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted hover:bg-ink/6 [&::-webkit-details-marker]:hidden">
+            {lang === "tr" ? "Teknik yönetim" : "Technisch beheer"}
+            <span aria-hidden="true">›</span>
+          </summary>
+          <ul className="mt-1 space-y-0.5">{technical.map(item)}</ul>
+        </details>
+      )}
+    </>
   );
 
   const footer = (
