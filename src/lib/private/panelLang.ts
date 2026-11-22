@@ -1,6 +1,6 @@
 /**
- * Language of the private panel (/agenda and /admin): Dutch (default) or
- * Turkish. The public website keeps its own languages; this only affects the
+ * Language of the private panel (/agenda and /admin): Turkish (default,
+ * Dilek's working language) or Dutch. The public website keeps its own languages; this only affects the
  * interface Dilek works in. Stored customer data is never translated.
  *
  * The choice lives in a long-lived cookie on the device, so it survives
@@ -11,7 +11,7 @@ export const PANEL_LANG_COOKIE = "glow-panel-lang";
 export const PANEL_LANGS: PanelLang[] = ["nl", "tr"];
 
 export function toPanelLang(v: string | undefined | null): PanelLang {
-  return v === "tr" ? "tr" : "nl";
+  return v === "nl" ? "nl" : "tr";
 }
 
 /** BCP-47 locale for dates and numbers (times stay in Europe/Amsterdam). */
