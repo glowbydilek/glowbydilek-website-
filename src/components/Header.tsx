@@ -102,7 +102,7 @@ export function Header({
       ? catalogueRoots.some((r) => pathname === r || pathname.startsWith(`${r}/`))
       : pathname === target;
   const navLinkCls = (active: boolean) =>
-    `relative inline-flex min-h-11 items-center gap-1.5 px-3 text-[0.95rem] transition-colors duration-300 ${
+    `relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-2.5 text-[0.875rem] xl:px-3 xl:text-[0.95rem] transition-colors duration-300 ${
       active ? "text-ink" : "text-ink-soft hover:text-ink"
     }`;
   const activeMark = (active: boolean) =>
@@ -127,7 +127,7 @@ export function Header({
         {dict.nav.skipToContent}
       </a>
 
-      <div className="mx-auto flex h-[64px] max-w-[88rem] items-center justify-between gap-4 px-4 sm:px-8 lg:h-[76px] lg:px-12">
+      <div className="mx-auto flex h-[64px] max-w-[88rem] items-center justify-between gap-3 px-4 sm:px-8 lg:h-[76px] lg:px-8 xl:gap-4 xl:px-12">
         <Link
           href={href(locale, "home")}
           onClick={close}
@@ -135,13 +135,13 @@ export function Header({
           className="shrink-0"
           data-logo
         >
-          <LogoInline className="h-[32px] w-auto sm:h-[36px] lg:h-[40px]" />
+          <LogoInline className="h-[32px] w-auto sm:h-[36px] xl:h-[40px]" />
         </Link>
 
         {/* Desktop navigation */}
         <nav
           aria-label={dict.nav.main}
-          className="hidden items-center gap-1 lg:flex"
+          className="hidden items-center gap-0.5 lg:flex xl:gap-1"
         >
           <Link
             href={href(locale, "home")}
@@ -184,7 +184,7 @@ export function Header({
             ))}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex xl:gap-4">
           <LanguageSwitcher
             locale={locale}
             label={dict.nav.language}
@@ -193,7 +193,7 @@ export function Header({
           <Link
             href={href(locale, "booking")}
             onClick={close}
-            className="btn btn-primary min-h-11 px-5 py-2.5 text-[0.875rem]"
+            className="btn btn-primary min-h-11 whitespace-nowrap px-4 py-2.5 text-[0.8125rem] xl:px-5 xl:text-[0.875rem]"
           >
             {dict.nav.booking}
           </Link>
@@ -204,7 +204,7 @@ export function Header({
           <Link
             href={href(locale, "booking")}
             onClick={close}
-            className="btn btn-primary hidden min-h-10 px-4 py-2 text-[0.8125rem] min-[400px]:inline-flex"
+            className="btn btn-primary hidden min-h-10 whitespace-nowrap px-4 py-2 text-[0.8125rem] min-[400px]:inline-flex"
           >
             {dict.cta.request}
           </Link>
