@@ -6,10 +6,12 @@ import { searchCustomers } from "@/lib/booking/service";
 import { customerMetrics, findDuplicates } from "@/lib/crm/service";
 import { getDb } from "@/lib/db/client";
 import { dayBoundsUtc, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Klanten" };
 
 export default async function Customers({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "customers.view");
   const q = ((await searchParams).q ?? "").slice(0, 80);
   const db = getDb();
@@ -18,7 +20,7 @@ export default async function Customers({ searchParams }: { searchParams: Promis
   const [rows, m, dups] = await Promise.all([searchCustomers(db, q, 50), customerMetrics(db, monthStart, dayBoundsUtc(today).end), findDuplicates(db, 20)]);
   return (
     <>
-      <PageHeader title="Klanten" subtitle="Zoek op voornaam, achternaam, telefoonnummer of e-mailadres." />
+      <PageHeader title={t("Klanten")} subtitle="Zoek op voornaam, achternaam, telefoonnummer of e-mailadres." />
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
         <Stat label="Klanten" value={m.total} />
         <Stat label="Nieuw deze maand" value={m.newCustomers} hint="Eerste afgeronde behandeling" />
@@ -27,13 +29,13 @@ export default async function Customers({ searchParams }: { searchParams: Promis
       {dups.length > 0 && (
         <div className="mb-4">
           <Notice tone="warning">
-            {dups.length} mogelijk dubbel{dups.length === 1 ? " profiel" : "e profielen"} gevonden. <Link href="/agenda/klanten/dubbel" className="underline">Bekijken</Link>
+            {dups.length} mogelijk dubbel{dups.length === 1 ? " profiel" : "e profielen"} gevonden. <Link href="/agenda/klanten/dubbel" className="underline">{t("Bekijken")}</Link>
           </Notice>
         </div>
       )}
       <form action="/agenda/klanten" role="search" className="mb-4 flex gap-2">
-        <Input name="q" type="search" defaultValue={q} placeholder="Naam, telefoon of e-mail" aria-label="Zoek klant" autoComplete="off" />
-        <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">Zoeken</button>
+        <Input name="q" type="search" defaultValue={q} placeholder={t("Naam, telefoon of e-mail")} aria-label={t("Zoek klant")} autoComplete="off" />
+        <button className="min-h-11 rounded-full bg-ink px-5 text-sm text-paper">{t("Zoeken")}</button>
       </form>
       <Card>
         {rows.length ? (
@@ -54,7 +56,7 @@ export default async function Customers({ searchParams }: { searchParams: Promis
             ))}
           </ul>
         ) : (
-          <p className="text-muted">{q ? "Geen klant gevonden." : "Nog geen klanten."}</p>
+          <p className="text-muted">{t(q ? "Geen klant gevonden." : "Nog geen klanten.")}</p>
         )}
       </Card>
       <div className="mt-4"><LinkButton href="/agenda/afspraak/nieuw">＋ Nieuwe afspraak met nieuwe klant</LinkButton></div>
