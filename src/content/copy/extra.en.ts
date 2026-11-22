@@ -103,7 +103,7 @@ export const extraTreatmentsEn: Record<string, TreatmentCopy> = {
 
 export const extraSectionsEn: Record<string, SectionCopy> = {
   bodycare: {
-    seoTitle: "Body treatments",
+    seoTitle: "Body treatments in Amsterdam",
     seoDescription: "Body treatments at Glow by Dilek: care for the skin of your body, with a moment of rest. By appointment only.",
     hero: { eyebrow: "Body treatments", title: "Care", titleEm: "from head to toe.", subtitle: "Caring treatments for the skin of your body, with a moment of rest." },
     intro: { title: "Caring, without big promises", paragraphs: ["Body treatments are meant to care for your skin and take a moment of rest. No promises are made about weight loss, detox or other effects."] },

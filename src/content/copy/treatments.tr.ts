@@ -34,7 +34,7 @@ export const treatmentsTr: TreatmentCopySet = {
     faqs: [
       {
         q: "Kaşlarımı boyatabilir miyim?",
-        a: "Kaş boyama şu anda sunulmuyor. Bakımlar web sitesinde ancak gerçekten sunulmaya başladığında yer alır.",
+        a: "Evet. Kaş ve kirpik boyama yüz bakımları arasında yer alıyor. Kaş ağdasıyla birlikte yaptırmak istersen talebinde belirt.",
       },
       {
         q: "Şekli beğenmezsem ne olur?",

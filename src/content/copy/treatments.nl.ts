@@ -45,7 +45,7 @@ export const treatmentsNl: TreatmentCopySet = {
       },
       {
         q: "Kan ik mijn wenkbrauwen ook laten verven?",
-        a: "Wenkbrauwen verven wordt op dit moment niet aangeboden. Behandelingen verschijnen pas op de website als ze echt beschikbaar zijn.",
+        a: "Ja. Wenkbrauwen & wimpers verven staat bij de gezichtsbehandelingen. Vermeld in je aanvraag als je het wilt combineren met wenkbrauwen waxen.",
       },
       {
         q: "Wat als ik niet tevreden ben over de vorm?",
