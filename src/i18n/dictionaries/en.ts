@@ -482,7 +482,10 @@ export const en: Dictionary = {
     message: "Your message",
     messagePlaceholder: "How can Dilek help?",
     treatments: "Which treatment(s)?",
-    treatmentsHint: "You can choose more than one area.",
+    treatmentsHint: "You can choose more than one treatment.",
+    chooseCategory: "Choose a category:",
+    selected: "Your selection",
+    remove: "remove",
     preferredDate: "Preferred date",
     datePicker: {
       choose: "Choose a date",

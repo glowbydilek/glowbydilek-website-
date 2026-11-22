@@ -479,7 +479,10 @@ export const tr: Dictionary = {
     message: "Mesajın",
     messagePlaceholder: "Dilek sana nasıl yardımcı olabilir?",
     treatments: "Hangi bakım(lar)?",
-    treatmentsHint: "Birden fazla seçebilirsin.",
+    treatmentsHint: "Birden fazla bakım seçebilirsin.",
+    chooseCategory: "Bir kategori seç:",
+    selected: "Seçimin",
+    remove: "kaldır",
     preferredDate: "Tercih ettiğin tarih",
     datePicker: {
       choose: "Tarih seç",

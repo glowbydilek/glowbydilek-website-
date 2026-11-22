@@ -485,7 +485,10 @@ export const nl = {
     message: "Je bericht",
     messagePlaceholder: "Waar kan Dilek je mee helpen?",
     treatments: "Welke behandeling(en)?",
-    treatmentsHint: "Je kunt meerdere zones kiezen.",
+    treatmentsHint: "Je kunt meer dan één behandeling kiezen.",
+    chooseCategory: "Kies een categorie:",
+    selected: "Jouw keuze",
+    remove: "verwijderen",
     preferredDate: "Voorkeursdatum",
     datePicker: {
       choose: "Kies een datum",
