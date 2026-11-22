@@ -148,7 +148,7 @@ export default async function MeldingenPage({ searchParams }: { searchParams: Pr
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Nog geen apparaten. Zet bij "Meldingen op je telefoon" de meldingen aan op je iPhone, iPad of computer.</p>
+            <p className="text-sm text-muted">Nog geen apparaten. Zet bij „Meldingen op je telefoon” de meldingen aan op je iPhone, iPad of computer.</p>
           )}
         </Card>
       </div>
