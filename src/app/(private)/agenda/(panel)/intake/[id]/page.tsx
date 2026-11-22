@@ -7,6 +7,7 @@ import { requireOwner } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { getTemplate } from "@/lib/intake/service";
 import { deleteDraftAction, saveDraftAction } from "@/lib/private/intakeActions";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Intakeformulier" };
 
@@ -27,45 +28,46 @@ const HELP = [
 ];
 
 export default async function IntakeTemplatePage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await panelT();
   const id = Number((await params).id);
   await requireOwner("agenda", `/agenda/intake/${id}`);
-  const t = await getTemplate(getDb(), id);
-  if (!t) notFound();
-  const locale = asLocale(t.locale);
-  const draft = t.status === "draft";
+  const tpl = await getTemplate(getDb(), id);
+  if (!tpl) notFound();
+  const locale = asLocale(tpl.locale);
+  const draft = tpl.status === "draft";
   return (
     <>
       <PageHeader
-        title={`${t.version} · ${locale === "nl" ? "Nederlands" : "English"}`}
-        subtitle={draft ? "Concept: pas de tekst aan en activeer de versie als hij klaar is." : "Vastgelegde versie: alleen-lezen, zodat elk ondertekend formulier herleidbaar blijft."}
+        title={`${tpl.version} · ${locale === "nl" ? "Nederlands" : "English"}`}
+        subtitle={t(draft ? "Concept: pas de tekst aan en activeer de versie als hij klaar is." : "Vastgelegde versie: alleen-lezen, zodat elk ondertekend formulier herleidbaar blijft.")}
         actions={
           <>
-            <Badge tone={draft ? "pending" : t.status === "active" ? "confirmed" : "neutral"}>{draft ? "Concept" : t.status === "active" ? "Actief" : "Vorige versie"}</Badge>
-            <LinkButton href={`/agenda/intake-afdruk/${t.id}`}>Afdrukken (A4)</LinkButton>
-            <LinkButton href={`/agenda/intake/${t.id}/pdf`} prefetch={false}>PDF</LinkButton>
+            <Badge tone={draft ? "pending" : tpl.status === "active" ? "confirmed" : "neutral"}>{draft ? "Concept" : tpl.status === "active" ? "Actief" : "Vorige versie"}</Badge>
+            <LinkButton href={`/agenda/intake-afdruk/${tpl.id}`}>{t("Afdrukken (A4)")}</LinkButton>
+            <LinkButton href={`/agenda/intake/${tpl.id}/pdf`} prefetch={false}>PDF</LinkButton>
           </>
         }
       />
       <div className="grid [&>*]:min-w-0 gap-5 xl:grid-cols-[1fr_1fr]">
         {draft ? (
-          <Card title="Tekst bewerken">
+          <Card title={t("Tekst bewerken")}>
             <ActionForm action={saveDraftAction}>
-              <input type="hidden" name="id" value={t.id} />
+              <input type="hidden" name="id" value={tpl.id} />
               <Field label="Formulier" htmlFor="source" hint="Elke regel begint met een teken dat bepaalt hoe hij wordt afgedrukt (zie hieronder).">
-                <Textarea id="source" name="source" defaultValue={t.source} rows={28} className="font-mono text-[0.8rem]" spellCheck={false} />
+                <Textarea id="source" name="source" defaultValue={tpl.source} rows={28} className="font-mono text-[0.8rem]" spellCheck={false} />
               </Field>
               <Field label="Wat is er veranderd?" htmlFor="changeNote" hint="Verplicht voor activeren; komt in de versiegeschiedenis.">
-                <Input id="changeNote" name="changeNote" defaultValue={t.changeNote ?? ""} maxLength={300} />
+                <Input id="changeNote" name="changeNote" defaultValue={tpl.changeNote ?? ""} maxLength={300} />
               </Field>
               <div className="flex flex-wrap gap-2">
-                <SubmitButton name="intent" value="save" pending="Opslaan…">Concept opslaan</SubmitButton>
+                <SubmitButton name="intent" value="save" pending="Opslaan…">{t("Concept opslaan")}</SubmitButton>
                 <SubmitButton name="intent" value="activate" variant="outline" pending="Activeren…" confirm="Deze versie wordt het actieve formulier. De huidige versie blijft bewaard als vorige versie. Doorgaan?">
-                  Opslaan en activeren
+                  {t("Opslaan en activeren")}
                 </SubmitButton>
               </div>
             </ActionForm>
             <details className="mt-5 text-sm">
-              <summary className="cursor-pointer font-medium">Opmaaktekens</summary>
+              <summary className="cursor-pointer font-medium">{t("Opmaaktekens")}</summary>
               <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
                 {HELP.map(([k, v]) => (
                   <div key={k} className="contents">
@@ -76,20 +78,20 @@ export default async function IntakeTemplatePage({ params }: { params: Promise<{
               </dl>
             </details>
             <ActionForm action={deleteDraftAction} className="mt-5 border-t border-line pt-4">
-              <input type="hidden" name="id" value={t.id} />
-              <SubmitButton variant="outline" pending="Verwijderen…" confirm="Dit concept verwijderen?">Concept verwijderen</SubmitButton>
+              <input type="hidden" name="id" value={tpl.id} />
+              <SubmitButton variant="outline" pending="Verwijderen…" confirm="Dit concept verwijderen?">{t("Concept verwijderen")}</SubmitButton>
             </ActionForm>
           </Card>
         ) : (
-          <Card title="Over deze versie">
-            <p className="text-sm text-muted">{t.changeNote ?? "—"}</p>
+          <Card title={t("Over deze versie")}>
+            <p className="text-sm text-muted">{tpl.changeNote ?? "—"}</p>
             <div className="mt-4">
-              <Notice>Wil je iets aanpassen? Maak via Intakeformulier een nieuwe revisie. Ondertekende formulieren houden altijd hun eigen versie.</Notice>
+              <Notice>{t("Wil je iets aanpassen? Maak via Intakeformulier een nieuwe revisie. Ondertekende formulieren houden altijd hun eigen versie.")}</Notice>
             </div>
           </Card>
         )}
         <div className="overflow-x-auto rounded-2xl bg-surface p-3 sm:p-5">
-          <IntakeSheet source={t.source} version={t.version} locale={locale} />
+          <IntakeSheet source={tpl.source} version={tpl.version} locale={locale} />
         </div>
       </div>
     </>
