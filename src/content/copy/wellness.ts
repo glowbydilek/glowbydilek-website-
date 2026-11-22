@@ -78,8 +78,8 @@ function massage(
 export const wellnessTreatments: Record<string, T> = {
   "massage-relaxation": {
     nl: massage("nl", {
-      seoTitle: "Ontspanningsmassage voor het hele lichaam",
-      seoDescription: "Een ontspanningsmassage voor het hele lichaam, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt en vraag je afspraak aan.",
+      seoTitle: "Ontspanningsmassage hele lichaam in Amsterdam",
+      seoDescription: "Een ontspanningsmassage voor het hele lichaam in Amsterdam, uitsluitend voor vrouwen en op afspraak. Lees hoe het gaat en vraag online je afspraak aan.",
       title: "Ontspanningsmassage (hele lichaam)",
       lead: "Een ontspannen moment met aandacht voor het hele lichaam, zodat je de drukte van de dag even achter je kunt laten.",
       teaser: "Aandacht voor het hele lichaam, op jouw tempo.",
@@ -95,8 +95,8 @@ export const wellnessTreatments: Record<string, T> = {
       faq: { q: "Welke massagetechniek wordt gebruikt?", a: "Dat stemt Dilek vooraf met je af: rustige, ontspannende bewegingen, in een tempo en met een druk die voor jou prettig voelen. Heb je een voorkeur, vertel het gerust bij je aanvraag." },
     }),
     en: massage("en", {
-      seoTitle: "Full-body relaxation massage",
-      seoDescription: "A full-body relaxation massage, for women only and by appointment. Read how the appointment goes and request your appointment.",
+      seoTitle: "Full-body relaxation massage in Amsterdam",
+      seoDescription: "A full-body relaxation massage in Amsterdam, for women only and by appointment. Read how it goes and request your appointment online.",
       title: "Full-body relaxation massage",
       lead: "A relaxed moment with attention for the whole body, so you can leave the rush of the day behind for a while.",
       teaser: "Attention for the whole body, at your pace.",
@@ -125,8 +125,8 @@ export const wellnessTreatments: Record<string, T> = {
   },
   "massage-face": {
     nl: massage("nl", {
-      seoTitle: "Gezichtsmassage",
-      seoDescription: "Een zachte gezichtsmassage als rustig verzorgingsmoment, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
+      seoTitle: "Gezichtsmassage in Amsterdam",
+      seoDescription: "Een zachte gezichtsmassage in Amsterdam als rustig verzorgingsmoment, uitsluitend voor vrouwen en op afspraak. Vraag online je afspraak aan.",
       title: "Gezichtsmassage",
       lead: "Een zachte verzorging met de aandacht op je gezicht: een rustig, persoonlijk moment.",
       teaser: "Een zachte verzorging met de aandacht op je gezicht.",
@@ -139,8 +139,8 @@ export const wellnessTreatments: Record<string, T> = {
       faq: { q: "Is een gezichtsmassage hetzelfde als een gezichtsbehandeling?", a: "Nee. De massage is een ontspannend verzorgingsmoment. Wil je ook stoom of verzorging voor je huid, kijk dan bij de gezichtsbehandeling met stoom of vraag het in je aanvraag." },
     }),
     en: massage("en", {
-      seoTitle: "Facial massage",
-      seoDescription: "A gentle facial massage as a calm moment of care, for women only and by appointment. Read how the appointment goes.",
+      seoTitle: "Facial massage in Amsterdam",
+      seoDescription: "A gentle facial massage in Amsterdam as a calm moment of care, for women only and by appointment. Request your appointment online.",
       title: "Facial massage",
       lead: "Gentle care focused on your face: a calm, personal moment.",
       teaser: "Gentle care focused on your face.",
@@ -163,8 +163,8 @@ export const wellnessTreatments: Record<string, T> = {
   },
   "massage-head": {
     nl: massage("nl", {
-      seoTitle: "Hoofdmassage",
-      seoDescription: "Een ontspannende hoofdmassage, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt en wat je vooraf bespreekt.",
+      seoTitle: "Hoofdmassage in Amsterdam",
+      seoDescription: "Een ontspannende hoofdmassage in Amsterdam, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt en wat je vooraf bespreekt.",
       title: "Hoofdmassage",
       lead: "Even een moment voor je hoofd en jezelf, met een aanraking die voor jou prettig voelt.",
       teaser: "Even een moment voor je hoofd en jezelf.",
@@ -174,8 +174,8 @@ export const wellnessTreatments: Record<string, T> = {
       faq: { q: "Wordt mijn haar ook behandeld?", a: "Nee, het is een ontspannende massage en geen haarbehandeling. Of de hoofdhuid wordt meegenomen, bespreek je vooraf." },
     }),
     en: massage("en", {
-      seoTitle: "Head massage",
-      seoDescription: "A relaxing head massage, for women only and by appointment. Read how the appointment goes and what you discuss beforehand.",
+      seoTitle: "Head massage in Amsterdam",
+      seoDescription: "A relaxing head massage in Amsterdam, for women only and by appointment. Read how the appointment goes and what you discuss beforehand.",
       title: "Head massage",
       lead: "A moment for your head and yourself, with a touch that feels comfortable to you.",
       teaser: "A moment for your head and yourself.",
@@ -198,8 +198,8 @@ export const wellnessTreatments: Record<string, T> = {
   },
   "massage-hand": {
     nl: massage("nl", {
-      seoTitle: "Handmassage",
-      seoDescription: "Een rustige handmassage als verzorgend moment, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
+      seoTitle: "Handmassage in Amsterdam",
+      seoDescription: "Een rustige handmassage in Amsterdam als verzorgend moment, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
       title: "Handmassage",
       lead: "Je handen zijn de hele dag bezig. Gun ze een rustige massage, afgestemd op wat voor jou prettig voelt.",
       teaser: "Een rustig moment voor je handen.",
@@ -209,8 +209,8 @@ export const wellnessTreatments: Record<string, T> = {
       faq: { q: "Is dit een manicure?", a: "Nee. Het is een ontspannende massage; er wordt niets aan je nagels gedaan." },
     }),
     en: massage("en", {
-      seoTitle: "Hand massage",
-      seoDescription: "A calm hand massage as a moment of care, for women only and by appointment. Read how the appointment goes.",
+      seoTitle: "Hand massage in Amsterdam",
+      seoDescription: "A calm hand massage in Amsterdam as a moment of care, for women only and by appointment. Read how the appointment goes.",
       title: "Hand massage",
       lead: "Your hands are busy all day. Give them a calm massage, tuned to what feels comfortable for you.",
       teaser: "A calm moment for your hands.",
@@ -233,8 +233,8 @@ export const wellnessTreatments: Record<string, T> = {
   },
   "massage-foot": {
     nl: massage("nl", {
-      seoTitle: "Voetmassage",
-      seoDescription: "Een rustige voetmassage als verzorgend moment, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
+      seoTitle: "Voetmassage in Amsterdam",
+      seoDescription: "Een rustige voetmassage in Amsterdam als verzorgend moment, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
       title: "Voetmassage",
       lead: "Een rustig verzorgingsmoment voor je voeten, met jouw comfort voorop.",
       teaser: "Een rustig verzorgingsmoment voor je voeten.",
@@ -244,8 +244,8 @@ export const wellnessTreatments: Record<string, T> = {
       faq: { q: "Is dit voetreflexologie?", a: "Nee. Het is een ontspannende massage voor je voeten, zonder reflexzones en zonder beloftes over je gezondheid: gewoon een moment om tot rust te komen." },
     }),
     en: massage("en", {
-      seoTitle: "Foot massage",
-      seoDescription: "A calm foot massage as a moment of care, for women only and by appointment. Read how the appointment goes.",
+      seoTitle: "Foot massage in Amsterdam",
+      seoDescription: "A calm foot massage in Amsterdam as a moment of care, for women only and by appointment. Read how the appointment goes.",
       title: "Foot massage",
       lead: "A calm moment of care for your feet, with your comfort first.",
       teaser: "A calm moment of care for your feet.",
@@ -268,7 +268,7 @@ export const wellnessTreatments: Record<string, T> = {
   },
   "facial-steam": {
     nl: {
-      seoTitle: "Gezichtsbehandeling met stoom",
+      seoTitle: "Gezichtsbehandeling met stoom in Amsterdam",
       seoDescription: "Een verzorgende gezichtsbehandeling waarin stoom een van de stappen kan zijn, uitsluitend voor vrouwen en op afspraak. Lees hoe de afspraak verloopt.",
       title: "Gezichtsbehandeling met stoom",
       lead: "Een verzorgend moment voor je gezicht, waarbij stoom een van de stappen kan zijn. Wat er precies gebeurt, stem je vooraf samen af.",
@@ -297,7 +297,7 @@ export const wellnessTreatments: Record<string, T> = {
       ],
     },
     en: {
-      seoTitle: "Facial care with steam",
+      seoTitle: "Facial with steam in Amsterdam",
       seoDescription: "A caring facial in which steam can be one of the steps, for women only and by appointment. Read how the appointment goes.",
       title: "Facial care with steam",
       lead: "A caring moment for your face, in which steam can be one of the steps. What exactly happens, you agree together beforehand.",
@@ -354,8 +354,8 @@ export const wellnessTreatments: Record<string, T> = {
 export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
   massage: {
     nl: {
-      seoTitle: "Massages voor vrouwen — hele lichaam, gezicht, hoofd, handen en voeten",
-      seoDescription: "Ontspanningsmassage voor het hele lichaam, gezichtsmassage, hoofdmassage, handmassage en voetmassage bij Glow by Dilek. Uitsluitend voor vrouwen, op afspraak.",
+      seoTitle: "Massage voor vrouwen in Amsterdam",
+      seoDescription: "Ontspanningsmassage voor het hele lichaam, gezichtsmassage, hoofd-, hand- en voetmassage in Amsterdam. Uitsluitend voor vrouwen, op afspraak.",
       hero: { eyebrow: "Massages", title: "Even stilstaan,", titleEm: "helemaal voor jezelf.", subtitle: "Een massage is een uitnodiging om even stil te staan. Kies het hele lichaam, of geef je gezicht, hoofd, handen of voeten de aandacht." },
       intro: { title: "Ontspanning, op jouw voorwaarden", paragraphs: ["Je bespreekt vooraf je voorkeuren en welke delen van het lichaam aandacht mogen krijgen. Tijdens de massage kun je altijd aangeven wat je prettig vindt.", "Een massage bij Glow by Dilek is bedoeld om te ontspannen. Het is geen medische of therapeutische behandeling."] },
       listTitle: "Kies je massage",
@@ -364,8 +364,8 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       faqs: [{ q: "Welke massage past bij mij?", a: "Dat hangt af van waar je behoefte aan hebt. Twijfel je? Vermeld het in je aanvraag; Dilek denkt graag met je mee." }],
     },
     en: {
-      seoTitle: "Massages for women — full body, face, head, hands and feet",
-      seoDescription: "Full-body relaxation massage, facial massage, head massage, hand massage and foot massage at Glow by Dilek. For women only, by appointment.",
+      seoTitle: "Massage for women in Amsterdam",
+      seoDescription: "Full-body relaxation massage, facial massage, head, hand and foot massage in Amsterdam. For women only, by appointment.",
       hero: { eyebrow: "Massages", title: "Slow down,", titleEm: "entirely for yourself.", subtitle: "A massage is an invitation to slow down. Choose the whole body, or give your face, head, hands or feet some attention." },
       intro: { title: "Relaxation, on your terms", paragraphs: ["Beforehand you discuss your preferences and which areas of the body may receive attention. During the massage you can always say what feels good.", "A massage at Glow by Dilek is meant to help you relax. It is not a medical or therapeutic treatment."] },
       listTitle: "Choose your massage",
@@ -386,7 +386,7 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
   },
   facial: {
     nl: {
-      seoTitle: "Gezichtsbehandelingen voor vrouwen",
+      seoTitle: "Gezichtsbehandeling voor vrouwen in Amsterdam",
       seoDescription: "Gezichtsbehandelingen bij Glow by Dilek, waaronder een gezichtsbehandeling met stoom. Rustig en persoonlijk afgestemd, uitsluitend voor vrouwen en op afspraak.",
       hero: { eyebrow: "Gezichtsbehandelingen", title: "Tijd voor", titleEm: "je huid.", subtitle: "Verzorging voor je gezicht in een rustig tempo, afgestemd op hoe je huid zich voelt." },
       intro: { title: "Rustig en persoonlijk", paragraphs: ["Elke gezichtsbehandeling begint met een kort gesprek over je huid en de producten die je dagelijks gebruikt. Daarop wordt de behandeling afgestemd.", "Een gezichtsbehandeling is een verzorgende behandeling, geen medische. Bij huidaandoeningen of twijfel overleg je eerst met je huisarts of dermatoloog."] },
@@ -397,7 +397,7 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       note: "Er worden geen diagnoses gesteld en geen medische resultaten beloofd.",
     },
     en: {
-      seoTitle: "Facial treatments for women",
+      seoTitle: "Facials for women in Amsterdam",
       seoDescription: "Facial treatments at Glow by Dilek, including facial care with steam. Calm and personally adjusted, for women only and by appointment.",
       hero: { eyebrow: "Facial treatments", title: "Time for", titleEm: "your skin.", subtitle: "Care for your face at a calm pace, adjusted to how your skin feels." },
       intro: { title: "Calm and personal", paragraphs: ["Every facial starts with a short conversation about your skin and the products you use day to day. The treatment is adjusted to that.", "A facial is a caring treatment, not a medical one. With skin conditions or doubts, check with your GP or dermatologist first."] },

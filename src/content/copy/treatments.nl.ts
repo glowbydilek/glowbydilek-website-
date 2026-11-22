@@ -4,7 +4,7 @@ export const treatmentsNl: TreatmentCopySet = {
   eyebrows: {
     seoTitle: "Wenkbrauwen waxen in Amsterdam",
     seoDescription:
-      "Wenkbrauwen laten waxen in een natuurlijke vorm die bij je gezicht past. Lees hoe de behandeling verloopt, hoe je je voorbereidt en wat je erna doet.",
+      "Wenkbrauwen waxen in Amsterdam, in een natuurlijke vorm die bij je gezicht past. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Wenkbrauwen waxen",
     lead: "Een verzorgde wenkbrauwlijn die past bij jouw gezicht — rustig opgebouwd vanuit je natuurlijke vorm, zonder te veel weg te halen.",
     teaser: "Een natuurlijke, verzorgde vorm die bij je gelaatstrekken past.",
@@ -32,6 +32,18 @@ export const treatmentsNl: TreatmentCopySet = {
       "Je kunt direct na de afspraak weer je dag in; eventuele roodheid is meestal snel verdwenen. Wil je de vorm behouden, dan is elke drie tot vijf weken een prettig ritme. Epileer tussendoor bij voorkeur niet zelf, zodat de lijn rustig kan teruggroeien.",
     faqs: [
       {
+        q: "Hoe vaak moet je je wenkbrauwen laten waxen?",
+        a: "Meestal elke drie tot vijf weken. Dan is er genoeg teruggegroeid om de vorm netjes bij te werken, zonder dat de lijn verloren gaat.",
+      },
+      {
+        q: "Wat is beter: wenkbrauwen epileren of waxen?",
+        a: "Met wax gaan meerdere haartjes in één keer weg, waardoor de lijn snel en gelijkmatig wordt. Met een pincet werk je juist losse haartjes bij. Daarom worden ze gecombineerd: eerst wax, daarna waar nodig de pincet.",
+      },
+      {
+        q: "Wat kost wenkbrauwen waxen?",
+        a: "Het tarief hoor je persoonlijk bij je aanvraag. Zodra het vastligt, staat het ook op de pagina Tarieven.",
+      },
+      {
         q: "Kan ik mijn wenkbrauwen ook laten verven?",
         a: "Wenkbrauwen verven wordt op dit moment niet aangeboden. Behandelingen verschijnen pas op de website als ze echt beschikbaar zijn.",
       },
@@ -45,7 +57,7 @@ export const treatmentsNl: TreatmentCopySet = {
   "upper-lip": {
     seoTitle: "Bovenlip waxen in Amsterdam",
     seoDescription:
-      "Bovenlip waxen voor een gladde huid zonder scheren of epileren. Lees hoe het gaat, wat je moet weten bij een koortslip en hoe je je huid verzorgt.",
+      "Bovenlip waxen in Amsterdam voor een gladde huid zonder scheren of epileren. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Bovenlip waxen",
     lead: "Snel en nauwkeurig de haartjes op je bovenlip verwijderen, zodat je huid glad en verzorgd is — zonder stoppels of schaduw.",
     teaser: "Glad en verzorgd, zonder de schaduw die scheren achterlaat.",
@@ -250,7 +262,7 @@ export const treatmentsNl: TreatmentCopySet = {
   "full-arms": {
     seoTitle: "Hele armen waxen in Amsterdam",
     seoDescription:
-      "Hele armen laten waxen, van pols tot schouder. Lees hoe de behandeling verloopt, hoe je je huid voorbereidt en wat je de dagen erna beter kunt vermijden.",
+      "Hele armen waxen in Amsterdam, van pols tot schouder. Alleen voor vrouwen. Lees hoe de behandeling verloopt en vraag online je afspraak aan.",
     title: "Hele armen waxen",
     lead: "Gladde armen van pols tot schouder, met één zorgvuldige behandeling — ideaal voor wie mouwloze kleding draagt of gewoon langer glad wil zijn.",
     teaser: "De volledige armen, van pols tot schouder.",
@@ -291,7 +303,7 @@ export const treatmentsNl: TreatmentCopySet = {
   "half-legs": {
     seoTitle: "Onderbenen waxen in Amsterdam",
     seoDescription:
-      "Onderbenen laten waxen, van enkel tot knie, voor zijdezachte benen zonder stoppels. Lees hoe het gaat en hoe je ingegroeide haartjes voorkomt.",
+      "Onderbenen waxen in Amsterdam, van enkel tot knie, voor zijdezachte benen. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Onderbenen waxen",
     lead: "Zijdezachte benen van enkel tot knie, weken lang — zonder dagelijks scheren en zonder stoppels die alweer terug zijn voor het weekend.",
     teaser: "Van enkel tot knie, voor zijdezachte benen.",
@@ -373,7 +385,7 @@ export const treatmentsNl: TreatmentCopySet = {
   back: {
     seoTitle: "Rug waxen in Amsterdam",
     seoDescription:
-      "Rug laten waxen voor een gladde huid op een plek die je zelf moeilijk bereikt. Lees hoe het gaat, wat je vooraf moet weten en hoe je de huid erna verzorgt.",
+      "Rug waxen (harsen) in Amsterdam voor een gladde huid op een plek die je zelf moeilijk bereikt. Alleen voor vrouwen. Vraag online je afspraak aan.",
     title: "Rug waxen",
     lead: "Een gladde rug op de plek die je zelf nauwelijks kunt bereiken — grondig, comfortabel en zonder haast.",
     teaser: "Een gladde rug, grondig en comfortabel.",
@@ -483,6 +495,18 @@ export const treatmentsNl: TreatmentCopySet = {
     recovery:
       "Plan een Brazilian bij voorkeur niet op de dag van een strandbezoek of bijzondere avond, maar een paar dagen eerder. Elke vier tot vijf weken houdt het resultaat het mooist en wordt de haargroei vaak gelijkmatiger.",
     faqs: [
+      {
+        q: "Hoe lang moet het haar zijn voor een Brazilian wax?",
+        a: "Minimaal 0,5 cm, ongeveer de lengte van een rijstkorrel. Dat is meestal twee tot vier weken na het scheren. Is het veel langer, dan wordt het vooraf iets ingekort.",
+      },
+      {
+        q: "Wanneer mag ik weer sporten, zwemmen of intiem zijn?",
+        a: "Na 24 uur. Vermijd de eerste 24 uur zwembad, sauna, zon, intensief sporten en intiem contact, zodat de huid rustig kan herstellen.",
+      },
+      {
+        q: "Wat kost een Brazilian wax?",
+        a: "Het tarief hoor je persoonlijk bij je aanvraag. Zodra het vastligt, staat het ook op de pagina Tarieven.",
+      },
       {
         q: "Wat als ik me tijdens de behandeling ongemakkelijk voel?",
         a: "Zeg het gewoon. Er kan altijd een pauze worden genomen, en je kunt de behandeling op elk moment stoppen.",
