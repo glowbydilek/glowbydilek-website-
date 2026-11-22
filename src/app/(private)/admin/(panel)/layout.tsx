@@ -5,6 +5,8 @@ import { PanelShell } from "@/components/private/PanelShell";
 import { currentPermissions, requireSignedIn } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { ensureSeeded } from "@/lib/db/seed";
+import { pt } from "@/lib/private/panelLang";
+import { getPanelLang } from "@/lib/private/panelLangServer";
 
 export const metadata: Metadata = { title: { default: "Admin", template: "%s · Admin Glow by Dilek" } };
 
@@ -14,6 +16,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const perms = await currentPermissions();
   const owner = s.user.role === "owner";
   await ensureSeeded(getDb());
+  const lang = await getPanelLang();
   const allNav = [
     { href: "/admin", label: "Overzicht", icon: "overview" },
     { href: "/admin/paginas", label: "Pagina's", icon: "pages" },
@@ -42,19 +45,19 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     "/admin/beveiliging": true,
   };
   const nav = [
-    ...allNav.filter((n) => owner || NON_OWNER[n.href]),
-    ...(!owner && perms.has("agenda.view") ? [{ href: "/agenda", label: "Naar de agenda", icon: "calendar" }] : []),
+    ...allNav.filter((n) => owner || NON_OWNER[n.href]).map((n) => ({ ...n, label: pt(lang, n.href, n.label) })),
+    ...(!owner && perms.has("agenda.view") ? [{ href: "/agenda", label: pt(lang, "toAgendaLong"), icon: "calendar" }] : []),
   ];
   const banner = !s.user.mfaEnabled ? (
     <div className="mb-5 rounded-xl border border-accent/60 bg-[#fbf3e4] px-4 py-3 text-sm text-[#5a4320]">
-      Beveilig je account met tweestapsverificatie.{" "}
+      {lang === "tr" ? "Hesabını iki adımlı doğrulamayla koru." : "Beveilig je account met tweestapsverificatie."}{" "}
       <Link href="/admin/beveiliging" className="font-medium underline">
-        Nu instellen
+        {lang === "tr" ? "Şimdi ayarla" : "Nu instellen"}
       </Link>
     </div>
   ) : null;
   return (
-    <PanelShell area="admin" nav={nav} banner={banner}>
+    <PanelShell area="admin" nav={nav} banner={banner} lang={lang}>
       {children}
     </PanelShell>
   );
