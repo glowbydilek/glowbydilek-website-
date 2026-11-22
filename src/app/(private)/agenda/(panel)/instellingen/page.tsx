@@ -12,10 +12,12 @@ import { mailConfigured } from "@/lib/mail/send";
 import { lastCronRun } from "@/lib/notifications/deliver";
 import { resendEmailAction } from "@/lib/private/agendaActions";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Instellingen" };
 
 export default async function Settings() {
+  const t = await panelT();
   await requireOwner("agenda");
   const db = getDb();
   const [b, p, bookable, problems, cron] = await Promise.all([
@@ -29,15 +31,15 @@ export default async function Settings() {
   const failed = problems.filter((m) => m.status === "failed" || (m.status === "pending" && m.attempts > 0));
   return (
     <>
-      <PageHeader title="Instellingen" subtitle="Boekingsregels, herinneringen en e-mailstatus." />
+      <PageHeader title={t("Instellingen")} subtitle="Boekingsregels, herinneringen en e-mailstatus." />
       <div className="space-y-5">
-        <Card title="Boekingsregels">
+        <Card title={t("Boekingsregels")}>
           <SettingsForm b={b} p={p} bookableCount={bookable.length} />
         </Card>
         <Card title="Facturen & nazorg (automatisch)">
           <AutomationForm a={auto} c={care} ready={invoiceReadiness(inv).length === 0} />
         </Card>
-        <Card title="E-mails" >
+        <Card title={t("E-mails")} >
           <div id="emails" className="space-y-2 text-sm">
             <p>SMTP: {mailConfigured() ? "ingesteld" : <strong className="text-[#8e2f24]">niet ingesteld — e-mails blijven in de wachtrij</strong>}</p>
             <p>Laatste automatische verwerking: {cron ? `${formatLocal(cron.startedAt, "nl", { dateStyle: "medium", timeStyle: "short" })}${cron.error ? ` (${cron.error})` : ` · ${cron.sent} verstuurd`}` : <strong>nog nooit — stel de cron-taak in (zie handleiding)</strong>}</p>
@@ -53,7 +55,7 @@ export default async function Settings() {
                   </span>
                   <form action={resendEmailAction}>
                     <input type="hidden" name="id" value={m.id} />
-                    <SubmitButton variant="outline">Opnieuw versturen</SubmitButton>
+                    <SubmitButton variant="outline">{t("Opnieuw versturen")}</SubmitButton>
                   </form>
                 </li>
               ))}
