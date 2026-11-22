@@ -47,9 +47,9 @@ export function SubmitButton({ children, pending, variant = "primary", className
   );
 }
 
-export function LinkButton({ href, variant = "outline", children, className = "" }: { href: string; variant?: BtnVariant; children: ReactNode; className?: string }) {
+export function LinkButton({ href, variant = "outline", children, className = "", prefetch }: { href: string; variant?: BtnVariant; children: ReactNode; className?: string; prefetch?: boolean }) {
   return (
-    <Link href={href} className={btnClass(variant, className)}>
+    <Link href={href} prefetch={prefetch} className={btnClass(variant, className)}>
       {children}
     </Link>
   );
