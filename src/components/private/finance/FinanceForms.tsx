@@ -5,6 +5,7 @@ import { createInvoiceAction, invoiceOpAction, recordPaymentAction, saveInvoiceA
 import { centsToInput, formatCents, parseEuroToCents } from "@/lib/finance/money";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export const METHOD_OPTIONS = [
   ["pin", "Pin"],
@@ -44,6 +45,7 @@ export function PaymentForm({
   defaultAppointmentId?: number;
   defaultAmount?: number | null;
 }) {
+  const t = useT();
   return (
     <ActionForm action={recordPaymentAction} resetOnSuccess className="space-y-3">
       <input type="hidden" name="customerId" value={customerId} />
@@ -51,8 +53,8 @@ export function PaymentForm({
       <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
         <Field label="Soort">
           <Select name="kind" defaultValue="payment">
-            <option value="payment">Ontvangen betaling</option>
-            <option value="refund">Terugbetaling aan klant</option>
+            <option value="payment">{t("Ontvangen betaling")}</option>
+            <option value="refund">{t("Terugbetaling aan klant")}</option>
           </Select>
         </Field>
         <Field label="Bedrag" hint="Bijvoorbeeld 45 of 45,50">
@@ -92,20 +94,21 @@ export function PaymentForm({
       <Field label="Notitie (optioneel)">
         <Input name="note" maxLength={300} />
       </Field>
-      <SubmitButton pending="Bezig…">Vastleggen</SubmitButton>
+      <SubmitButton pending="Bezig…">{t("Vastleggen")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function VoidPaymentForm({ id }: { id: number }) {
+  const t = useT();
   return (
     <details className="text-xs">
       <summary className="cursor-pointer text-muted underline">ongedaan maken</summary>
       <ActionForm action={voidPaymentAction} className="mt-2 flex flex-wrap items-end gap-2">
         <input type="hidden" name="id" value={id} />
-        <Input name="reason" placeholder="Reden, bijv. dubbel ingevoerd" required minLength={3} className="max-w-xs" aria-label="Reden" />
+        <Input name="reason" placeholder="Reden, bijv. dubbel ingevoerd" required minLength={3} className="max-w-xs" aria-label={t("Reden")} />
         <SubmitButton variant="outline" confirm="Deze betaling ongedaan maken? Hij blijft zichtbaar in de geschiedenis.">
-          Ongedaan maken
+          {t("Ongedaan maken")}
         </SubmitButton>
       </ActionForm>
     </details>
@@ -150,6 +153,7 @@ function DescriptionPicker({
   onText: (v: string) => void;
   onPick: (o: CatalogueOption) => void;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const listId = useId();
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -188,7 +192,7 @@ function DescriptionPicker({
           className="absolute inset-x-0 top-full z-40 mt-1 max-h-[min(22rem,50dvh)] overflow-y-auto overscroll-contain rounded-2xl border border-line bg-white p-1 shadow-lg"
           onMouseDown={(e) => e.preventDefault()}
         >
-          {matches.length === 0 && <li className="px-3 py-3 text-sm text-muted">Geen behandeling gevonden — je eigen tekst blijft staan als vrije regel.</li>}
+          {matches.length === 0 && <li className="px-3 py-3 text-sm text-muted">{t("Geen behandeling gevonden — je eigen tekst blijft staan als vrije regel.")}</li>}
           {matches.map((o, k) => (
             <li key={o.id} role="option" aria-selected={false}>
               {(k === 0 || matches[k - 1].group !== o.group) && <p className="px-3 pb-1 pt-2 text-[0.7rem] uppercase tracking-[0.14em] text-muted">{o.group}</p>}
@@ -240,6 +244,7 @@ export function InvoiceEditor({
   supplyDate: string | null;
   note: string | null;
 }) {
+  const t = useT();
   const keySeq = useRef(initial.length + 1);
   const [lines, setLines] = useState<Line[]>(
     initial.length ? initial.map((l, n) => ({ description: l.description, quantity: l.quantity, amount: l.unitCents ? (kind === "invoice" && l.unitCents < 0 ? "-" : "") + centsToInput(Math.abs(l.unitCents)) : "", vat: l.vat ?? "standard", key: n })) : [{ description: "", quantity: 1, amount: "", vat: "standard", key: 0 }],
@@ -280,7 +285,7 @@ export function InvoiceEditor({
       </div>
       <fieldset className="space-y-3">
         <legend className="text-sm font-medium">Regels {kind === "credit" ? "(worden als negatief bedrag gecrediteerd)" : "(bedragen inclusief eventuele btw; een kortingsregel mag negatief zijn, bijv. −5)"}</legend>
-        {vatPerLine && <p className="text-xs text-muted">Kies per regel de btw-categorie. Een ander tarief dan standaard alleen na akkoord van je boekhouder.</p>}
+        {vatPerLine && <p className="text-xs text-muted">{t("Kies per regel de btw-categorie. Een ander tarief dan standaard alleen na akkoord van je boekhouder.")}</p>}
         {lines.map((l, i) => (
           <div key={l.key} className={`grid [&>*]:min-w-0 items-end gap-2 ${vatPerLine ? "grid-cols-[4rem_1fr_1fr_2.75rem] sm:grid-cols-[1fr_4.5rem_7rem_8rem_2.75rem]" : "grid-cols-[4.5rem_1fr_2.75rem] sm:grid-cols-[1fr_4.5rem_7rem_2.75rem]"} rounded-2xl border border-line p-3 sm:border-0 sm:p-0`}>
             <div className={vatPerLine ? "col-span-4 sm:col-span-1" : "col-span-3 sm:col-span-1"}>
@@ -310,7 +315,7 @@ export function InvoiceEditor({
         ))}
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={addLine} className="min-h-11 rounded-full border border-dashed border-ink/30 px-4 text-sm">
-            ＋ {catalogue.length ? "Nog een behandeling of regel" : "Regel toevoegen"}
+            ＋ {t(catalogue.length ? "Nog een behandeling of regel" : "Regel toevoegen")}
           </button>
         </div>
         {lines.some((l) => l.quantity > 1 && l.amount) && (
@@ -321,18 +326,19 @@ export function InvoiceEditor({
           </ul>
         )}
         <p className="rounded-xl bg-surface px-4 py-3 text-base">
-          Totaal: <strong className="tabular-nums">{formatCents(kind === "credit" ? -total : total)}</strong>
+          {t("Totaal:")} <strong className="tabular-nums">{formatCents(kind === "credit" ? -total : total)}</strong>
         </p>
       </fieldset>
       <Field label="Opmerking op de factuur (optioneel)">
         <Textarea name="note" rows={2} maxLength={500} defaultValue={note ?? ""} />
       </Field>
-      <SubmitButton pending="Bezig met opslaan…">Concept opslaan</SubmitButton>
+      <SubmitButton pending="Bezig met opslaan…">{t("Concept opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function IssueForm({ id, kind, ready, today }: { id: number; kind: "invoice" | "credit"; ready: boolean; today: string }) {
+  const t = useT();
   const [paid, setPaid] = useState(false);
   return (
     <ActionForm action={invoiceOpAction} className="space-y-3">
@@ -341,7 +347,7 @@ export function IssueForm({ id, kind, ready, today }: { id: number; kind: "invoi
       {kind === "invoice" && (
         <label className="flex min-h-11 items-center gap-3 text-sm">
           <input type="checkbox" name="paidNow" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="h-5 w-5 accent-[var(--color-ink)]" />
-          De klant heeft al betaald (de factuur vermeldt dan &quot;Voldaan&quot;)
+          {t("De klant heeft al betaald (de factuur vermeldt dan \"Voldaan\")")}
         </label>
       )}
       {paid && (

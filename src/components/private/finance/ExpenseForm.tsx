@@ -4,10 +4,12 @@ import { EXPENSE_CATEGORIES } from "@/lib/expenses/core";
 import { expenseAction } from "@/lib/private/financeActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export type ExpenseView = { id: number | null; spentOn: string; category: string; vendor: string; description: string; amount: string; vatRate: string; vatAmount: string; status: string; notes: string };
 
 export function ExpenseForm({ e }: { e: ExpenseView }) {
+  const t = useT();
   return (
     <ActionForm action={expenseAction} resetOnSuccess={!e.id}>
       {e.id && <input type="hidden" name="id" value={e.id} />}
@@ -23,9 +25,9 @@ export function ExpenseForm({ e }: { e: ExpenseView }) {
         <Field label="Bedrag incl. btw (€)"><Input name="amount" inputMode="decimal" defaultValue={e.amount} required /></Field>
         <Field label="Status">
           <Select name="status" defaultValue={e.status || "paid"}>
-            <option value="paid">Betaald</option>
-            <option value="open">Nog te betalen</option>
-            <option value="void">Vervallen (telt niet mee)</option>
+            <option value="paid">{t("Betaald")}</option>
+            <option value="open">{t("Nog te betalen")}</option>
+            <option value="void">{t("Vervallen (telt niet mee)")}</option>
           </Select>
         </Field>
         <Field label="Btw-bedrag op de bon (€)" hint="Het meest exact; laat leeg om uit het tarief te berekenen"><Input name="vatAmount" inputMode="decimal" defaultValue={e.vatAmount} /></Field>
@@ -33,7 +35,7 @@ export function ExpenseForm({ e }: { e: ExpenseView }) {
         <Field label="Bon (PDF of foto, max 10 MB)"><Input name="receipt" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" /></Field>
       </div>
       <Field label="Notities"><Textarea name="notes" rows={2} defaultValue={e.notes} /></Field>
-      <SubmitButton>{e.id ? "Uitgave opslaan" : "Uitgave toevoegen"}</SubmitButton>
+      <SubmitButton>{t(e.id ? "Uitgave opslaan" : "Uitgave toevoegen")}</SubmitButton>
     </ActionForm>
   );
 }
