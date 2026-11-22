@@ -5,6 +5,7 @@ import { Badge, Card, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
 import { inquiries } from "@/lib/db/schema";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Berichten" };
 const ST: Record<string, { label: string; tone: "pending" | "neutral" | "confirmed" | "done" }> = {
@@ -15,12 +16,13 @@ const ST: Record<string, { label: string; tone: "pending" | "neutral" | "confirm
 };
 
 export default async function Inbox({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("agenda", "agenda.manage");
   const all = (await searchParams).alle === "1";
   const rows = await getDb().select().from(inquiries).where(all ? undefined : ne(inquiries.status, "closed")).orderBy(desc(inquiries.createdAt)).limit(200);
   return (
     <>
-      <PageHeader title="Berichten" subtitle="Vragen via het contactformulier. Je ontvangt ze ook per e-mail." actions={<Link href={all ? "/agenda/berichten" : "/agenda/berichten?alle=1"} className="text-sm text-accent-deep underline">{all ? "Alleen open berichten" : "Toon ook afgehandeld"}</Link>} />
+      <PageHeader title={t("Berichten")} subtitle="Vragen via het contactformulier. Je ontvangt ze ook per e-mail." actions={<Link href={all ? "/agenda/berichten" : "/agenda/berichten?alle=1"} className="text-sm text-accent-deep underline">{t(all ? "Alleen open berichten" : "Toon ook afgehandeld")}</Link>} />
       <Card>
         {rows.length ? (
           <ul className="divide-y divide-line">
@@ -40,7 +42,7 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<Re
             ))}
           </ul>
         ) : (
-          <p className="text-muted">Geen berichten.</p>
+          <p className="text-muted">{t("Geen berichten.")}</p>
         )}
       </Card>
     </>
