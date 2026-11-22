@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useT } from "./PanelLangProvider";
 
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> };
 
@@ -13,6 +14,7 @@ type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{
  * - Hidden when the agenda already runs as an installed app.
  */
 export function InstallApp() {
+  const t = useT();
   const [evt, setEvt] = useState<InstallEvent | null>(null);
   const [device, setDevice] = useState({ ios: false, installed: true });
   const { ios, installed } = device;
@@ -49,10 +51,10 @@ export function InstallApp() {
 
   return (
     <div className="mt-5 rounded-xl border border-line bg-paper p-4 text-sm">
-      <p className="font-medium text-ink">Agenda als app op je telefoon, tablet of laptop</p>
+      <p className="font-medium text-ink">{t("Agenda als app op je telefoon, tablet of laptop")}</p>
       {evt ? (
         <>
-          <p className="mt-1 text-muted">Installeer de agenda en open hem voortaan met één tik, zonder browser.</p>
+          <p className="mt-1 text-muted">{t("Installeer de agenda en open hem voortaan met één tik, zonder browser.")}</p>
           <button
             type="button"
             onClick={async () => {
@@ -62,13 +64,12 @@ export function InstallApp() {
             }}
             className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-ink px-5 font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent"
           >
-            App installeren
+            {t("App installeren")}
           </button>
         </>
       ) : (
         <p className="mt-1 text-muted">
-          Tik in Safari op <strong className="font-medium text-ink">Deel</strong> (vierkantje met pijl omhoog) en kies{" "}
-          <strong className="font-medium text-ink">Zet op beginscherm</strong>. Daarna staat de Agenda als app tussen je apps.
+          {t("Tik in Safari op Deel (vierkantje met pijl omhoog) en kies „Zet op beginscherm”. Daarna staat de Agenda als app tussen je apps.")}
         </p>
       )}
     </div>

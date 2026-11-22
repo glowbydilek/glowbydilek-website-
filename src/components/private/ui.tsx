@@ -5,6 +5,13 @@ import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAt
 import { cloneElement, isValidElement, useContext, useId } from "react";
 import { ActionPending } from "./pending";
 import { useFormStatus } from "react-dom";
+import { useT } from "./PanelLangProvider";
+
+/** Translates plain-string children/props (Turkish dictionary keyed by Dutch); other nodes pass through. */
+function useTn() {
+  const t = useT();
+  return <N,>(v: N): N => (typeof v === "string" ? (t(v) as N) : v);
+}
 
 /** Small UI kit for the private areas (admin and agenda): clear, calm, large touch targets. */
 
@@ -31,26 +38,28 @@ export function SubmitButton({ children, pending, variant = "primary", className
   const { pending: formBusy } = useFormStatus();
   const actionBusy = useContext(ActionPending);
   const busy = formBusy || actionBusy;
+  const tn = useTn();
   return (
     <button
       type="submit"
       {...rest}
       disabled={busy || rest.disabled}
       onClick={(e) => {
-        if (confirm && !window.confirm(confirm)) e.preventDefault();
+        if (confirm && !window.confirm(tn(confirm))) e.preventDefault();
         rest.onClick?.(e);
       }}
       className={btnClass(variant, className)}
     >
-      {busy ? (pending ?? "Bezig…") : children}
+      {busy ? tn(pending ?? "Bezig…") : tn(children)}
     </button>
   );
 }
 
 export function LinkButton({ href, variant = "outline", children, className = "", prefetch }: { href: string; variant?: BtnVariant; children: ReactNode; className?: string; prefetch?: boolean }) {
+  const tn = useTn();
   return (
     <Link href={href} prefetch={prefetch} className={btnClass(variant, className)}>
-      {children}
+      {tn(children)}
     </Link>
   );
 }
@@ -58,6 +67,7 @@ export function LinkButton({ href, variant = "outline", children, className = ""
 export function Field({ label, hint, error, children, htmlFor }: { label: string; hint?: string; error?: string; children: ReactNode; htmlFor?: string }) {
   // Links the label to its control automatically (accessible name), unless the caller passes htmlFor.
   const auto = useId();
+  const tn = useTn();
   let id = htmlFor;
   let control = children;
   if (!id && isValidElement<{ id?: string }>(children)) {
@@ -67,11 +77,11 @@ export function Field({ label, hint, error, children, htmlFor }: { label: string
   return (
     <div className="min-w-0 space-y-1.5">
       <label htmlFor={id} className="block text-sm font-medium text-ink">
-        {label}
+        {tn(label)}
       </label>
       {control}
-      {hint && !error && <p className="text-xs text-muted">{hint}</p>}
-      {error && <p className="text-sm text-[#8e2f24]">{error}</p>}
+      {hint && !error && <p className="text-xs text-muted">{tn(hint)}</p>}
+      {error && <p className="text-sm text-[#8e2f24]">{tn(error)}</p>}
     </div>
   );
 }
@@ -80,21 +90,24 @@ const inputCls =
   "block w-full rounded-xl border border-ink/20 bg-white px-3.5 py-2.5 text-base text-ink shadow-sm outline-none transition focus:border-accent-deep focus:ring-2 focus:ring-accent/40 disabled:bg-sand";
 
 export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
-  return <input {...props} className={`${inputCls} ${props.className ?? ""}`} />;
+  const tn = useTn();
+  return <input {...props} placeholder={tn(props.placeholder)} className={`${inputCls} ${props.className ?? ""}`} />;
 }
 export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea {...props} className={`${inputCls} ${props.className ?? ""}`} />;
+  const tn = useTn();
+  return <textarea {...props} placeholder={tn(props.placeholder)} className={`${inputCls} ${props.className ?? ""}`} />;
 }
 export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
   return <select {...props} className={`${inputCls} ${props.className ?? ""}`} />;
 }
 
 export function Card({ children, className = "", title, actions }: { children: ReactNode; className?: string; title?: string; actions?: ReactNode }) {
+  const tn = useTn();
   return (
     <section className={`min-w-0 rounded-2xl border border-line bg-white p-4 shadow-sm sm:p-6 ${className}`}>
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          {title && <h2 className="font-serif text-2xl text-ink">{title}</h2>}
+          {title && <h2 className="font-serif text-2xl text-ink">{tn(title)}</h2>}
           {actions}
         </div>
       )}
@@ -104,6 +117,7 @@ export function Card({ children, className = "", title, actions }: { children: R
 }
 
 export function Notice({ tone = "info", children }: { tone?: "info" | "success" | "error" | "warning"; children: ReactNode }) {
+  const tn = useTn();
   const tones = {
     info: "border-line bg-surface text-ink",
     success: "border-[#5c7f5a]/40 bg-[#eef4ec] text-[#2f4b2d]",
@@ -112,12 +126,13 @@ export function Notice({ tone = "info", children }: { tone?: "info" | "success" 
   };
   return (
     <div role={tone === "error" ? "alert" : "status"} className={`rounded-xl border px-4 py-3 text-sm leading-relaxed ${tones[tone]}`}>
-      {children}
+      {tn(children)}
     </div>
   );
 }
 
 export function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "pending" | "confirmed" | "cancelled" | "done" | "warning" }) {
+  const tn = useTn();
   const tones = {
     neutral: "bg-sand text-ink",
     pending: "bg-[#fbf0d9] text-[#6b4b12]",
@@ -126,15 +141,16 @@ export function Badge({ children, tone = "neutral" }: { children: ReactNode; ton
     done: "bg-[#e6e9f2] text-[#2f3a5a]",
     warning: "bg-[#fbe8d3] text-[#6b3a12]",
   };
-  return <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>;
+  return <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tones[tone]}`}>{tn(children)}</span>;
 }
 
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
+  const tn = useTn();
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="font-serif text-3xl leading-tight text-ink sm:text-4xl">{title}</h1>
-        {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted">{subtitle}</p>}
+        <h1 className="font-serif text-3xl leading-tight text-ink sm:text-4xl">{tn(title)}</h1>
+        {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted">{tn(subtitle)}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
@@ -143,11 +159,12 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 
 /** Key figure (finance, CRM metrics). */
 export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
+  const tn = useTn();
   return (
     <div className="min-w-0 rounded-2xl border border-line bg-white p-4">
-      <p className="text-xs uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="text-xs uppercase tracking-[0.12em] text-muted">{tn(label)}</p>
       <p className="mt-1 break-words font-serif text-[1.7rem] leading-tight text-ink">{value}</p>
-      {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-muted">{tn(hint)}</p>}
     </div>
   );
 }
