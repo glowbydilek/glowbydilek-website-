@@ -145,6 +145,16 @@ export function TreatmentDetailPage({
                 {item.kind === "package" && !itemHasOwnCopy ? s.packageArea : t.areaTitle || s.area}
               </h2>
               <p className="lead mt-5">{t.area}</p>
+              {t.results && t.appointment.length > 0 && (
+                <ul className="mt-6 space-y-3 text-ink-soft">
+                  {t.appointment.map((p) => (
+                    <li key={p} className="flex gap-3 leading-relaxed">
+                      <span aria-hidden="true" className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-deep" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {parts.length > 0 && (
                 <div className="mt-8">
                   <h3 className="eyebrow">{s.included}</h3>
@@ -171,7 +181,20 @@ export function TreatmentDetailPage({
                 </div>
               )}
             </div>
-            {t.appointment.length > 0 && (
+            {t.results ? (
+              <div data-reveal style={{ ["--reveal-delay" as string]: "100ms" }}>
+                <h2 className="display text-[2rem] sm:text-[2.6rem]">{t.results.title}</h2>
+                <ul className="mt-5 space-y-3">
+                  {t.results.items.map((r) => (
+                    <li key={r} className="flex gap-3 leading-relaxed text-ink-soft">
+                      <span aria-hidden="true">✨</span>
+                      {r}
+                    </li>
+                  ))}
+                </ul>
+                {t.results.closing && <p className="lead mt-6">{t.results.closing}</p>}
+              </div>
+            ) : t.appointment.length > 0 && (
               <div
                 data-reveal
                 style={{ ["--reveal-delay" as string]: "100ms" }}
