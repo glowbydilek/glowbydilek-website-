@@ -63,9 +63,11 @@ const name = (u) => (u === "/" ? "home" : u.replace(/^\//, "").replace(/\//g, "_
     const since = Date.now() - 1000;
     await p.goto(`${BASE}/agenda/login`);
     await p.getByRole("link", { name: "Wachtwoord vergeten?" }).click();
+    await p.waitForURL(/wachtwoord-vergeten/);
     await p.fill("#email", EMAIL);
-    await p.waitForTimeout(500);
+    await p.waitForTimeout(500); // security check token
     await p.getByRole("button", { name: "Stuur mij een link" }).click();
+    await p.getByText("Als dit e-mailadres bij een account hoort").waitFor();
     let link = null;
     for (let i = 0; i < 40 && !link; i++) {
       await new Promise((r) => setTimeout(r, 300));
