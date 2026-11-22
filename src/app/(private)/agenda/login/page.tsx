@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Inloggen",
   manifest: "/agenda/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Agenda", statusBarStyle: "default" },
-  icons: { apple: "/apple-icon.png" },
+  icons: { icon: "/brand/agenda-icon.svg", apple: "/brand/agenda-apple-icon.png" },
 };
 
 export default function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {

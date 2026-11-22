@@ -606,14 +606,17 @@ html.glow-nav main {
     overflow: hidden;
     border-radius: 999px 999px var(--radius-media) var(--radius-media);
   }
+  /* The hairline sits evenly around the photo (same gap on every side), and
+     its corners follow the photo's corners plus that gap. */
   .arch::before {
     content: "";
     position: absolute;
-    inset: -0.9rem 0.9rem 0.9rem -0.9rem;
+    inset: -0.6rem;
     z-index: -1;
     border: 1px solid var(--color-champagne);
-    border-radius: 999px 999px var(--radius-media) var(--radius-media);
+    border-radius: 999px 999px calc(var(--radius-media) + 0.6rem) calc(var(--radius-media) + 0.6rem);
     opacity: 0.75;
+    pointer-events: none;
   }
   /* Home hero image. Phones: a calm landscape frame (3:2) under the text and
      buttons, so the first screen shows the promise and both actions, and
@@ -633,11 +636,12 @@ html.glow-nav main {
   .hero-media::before {
     content: "";
     position: absolute;
-    inset: -0.55rem 0.55rem 0.55rem -0.55rem;
+    inset: -0.45rem;
     z-index: -1;
     border: 1px solid var(--color-champagne);
-    border-radius: 1.75rem 1.75rem var(--radius-media) var(--radius-media);
+    border-radius: 2.2rem 2.2rem calc(var(--radius-media) + 0.45rem) calc(var(--radius-media) + 0.45rem);
     opacity: 0.7;
+    pointer-events: none;
   }
   @media (min-width: 768px) {
     .hero-frame {
@@ -645,8 +649,8 @@ html.glow-nav main {
       border-radius: 999px 999px var(--radius-media) var(--radius-media);
     }
     .hero-media::before {
-      inset: -0.9rem 0.9rem 0.9rem -0.9rem;
-      border-radius: 999px 999px var(--radius-media) var(--radius-media);
+      inset: -0.7rem;
+      border-radius: 999px 999px calc(var(--radius-media) + 0.7rem) calc(var(--radius-media) + 0.7rem);
     }
   }
   /* Hero headline and lead: art-directed per width instead of one scaled size. */

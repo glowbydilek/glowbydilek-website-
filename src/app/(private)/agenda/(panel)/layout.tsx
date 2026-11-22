@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: { default: "Agenda", template: "%s · Agenda" },
   manifest: "/agenda/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Agenda", statusBarStyle: "default" },
-  icons: { apple: "/apple-icon.png" },
+  icons: { icon: "/brand/agenda-icon.svg", apple: "/brand/agenda-apple-icon.png" },
 };
 
 export default async function AgendaLayout({ children }: { children: ReactNode }) {
