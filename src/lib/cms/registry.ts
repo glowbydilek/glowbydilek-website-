@@ -73,7 +73,8 @@ export const DOCS: DocDef[] = [
   ...Object.keys(wellnessTreatments).map((id) => ({ key: `treatment:${id}`, label: wellnessTreatments[id].nl.title, defaults: wellnessTreatments[id] })),
   ...Object.keys(wellnessSections).map((id) => ({ key: `section:${id}`, label: wellnessSections[id].nl.seoTitle, defaults: wellnessSections[id] })),
   // Drafts (not public until the owner publishes them).
-  ...Object.keys(extraTreatmentsTr).map((id) => ({ key: `treatment:${id}`, label: extraTreatmentsNl[id].title, defaults: { nl: extraTreatmentsNl[id], en: extraTreatmentsEn[id], tr: extraTreatmentsTr[id] } })),
+  // Items already published with confirmed copy above (e.g. body-wrap) keep one document only.
+  ...Object.keys(extraTreatmentsTr).filter((id) => !(id in wellnessTreatments)).map((id) => ({ key: `treatment:${id}`, label: extraTreatmentsNl[id].title, defaults: { nl: extraTreatmentsNl[id], en: extraTreatmentsEn[id], tr: extraTreatmentsTr[id] } })),
   ...Object.keys(extraSectionsTr).map((id) => ({ key: `section:${id}`, label: extraSectionsNl[id].seoTitle, defaults: { nl: extraSectionsNl[id], en: extraSectionsEn[id], tr: extraSectionsTr[id] } })),
   ...(["process", "preparation", "aftercare"] as const).map((k) => ({ key: `guide:${k}`, label: guidesNl[k].hero.eyebrow, defaults: { nl: guidesNl[k], en: guidesEn[k], tr: guidesTr[k] } })),
   { key: "faqpage", label: "Veelgestelde vragen (pagina)", defaults: { nl: faqPageNl, en: faqPageEn, tr: faqPageTr } },
