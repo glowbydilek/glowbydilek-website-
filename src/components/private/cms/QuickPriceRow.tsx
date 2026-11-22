@@ -13,6 +13,8 @@ export type QuickPriceLabels = {
   saving: string;
   draft: string;
   hidden: string;
+  earlier: string;
+  restore: string;
 };
 
 type Mode = "on_request" | "fixed" | "from";
@@ -32,6 +34,7 @@ export function QuickPriceRow({
   priceCents,
   status,
   visible,
+  previous,
   labels,
 }: {
   id: string;
@@ -40,6 +43,8 @@ export function QuickPriceRow({
   priceCents: number | null;
   status: string;
   visible: boolean;
+  /** The last earlier price (from the price history), to restore with one tap. */
+  previous?: { mode: Mode; priceCents: number | null; date: string } | null;
   labels: QuickPriceLabels;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
@@ -58,6 +63,22 @@ export function QuickPriceRow({
     ...(initialMode === "from" ? [{ v: "from" as Mode, label: labels.from }] : []),
   ];
   const showMsg = !dirty && !pending && (state.ok || state.error);
+  const restore = () => {
+    if (!previous) return;
+    const fd = new FormData();
+    fd.set("id", id);
+    fd.set("pricingMode", previous.mode);
+    fd.set("price", previous.mode === "on_request" ? "" : toInput(previous.priceCents));
+    setMode(previous.mode === "from" && initialMode !== "from" ? "fixed" : previous.mode);
+    setPrice(previous.mode === "on_request" ? price : toInput(previous.priceCents));
+    setDirty(false);
+    startTransition(() => run(fd));
+  };
+  const prevLabel = previous
+    ? previous.mode === "on_request" || previous.priceCents == null
+      ? labels.onRequest
+      : `${previous.mode === "from" ? `${labels.from} ` : ""}€ ${toInput(previous.priceCents)}`
+    : "";
 
   return (
     <li className="border-b border-line py-3 last:border-0">
@@ -116,6 +137,14 @@ export function QuickPriceRow({
         >
           {pending ? labels.saving : labels.ok}
         </button>
+        {previous && (
+          <p className="col-span-2 text-xs text-muted sm:col-span-4">
+            {labels.earlier}: {prevLabel} ({previous.date}){" "}
+            <button type="button" onClick={restore} disabled={pending} className="ml-1 min-h-8 rounded-full px-2 font-medium text-accent-deep underline disabled:opacity-60">
+              {labels.restore}
+            </button>
+          </p>
+        )}
         <div aria-live="polite" className="col-span-2 sm:col-span-4">
           {showMsg && state.ok && <p className="text-sm text-[#2f4b2d]">✓ {state.message}</p>}
           {showMsg && state.error && <p className="text-sm text-[#74261d]">{state.error}</p>}

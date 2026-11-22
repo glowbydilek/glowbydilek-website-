@@ -279,6 +279,9 @@ export async function quickPriceAction(_: FormState, f: FormData): Promise<FormS
     .update(treatments)
     .set({ pricingMode, priceCents, priceFrom, ...(stopOnline ? { bookableOnline: false } : {}) })
     .where(eq(treatments.id, id));
+  // First change of this treatment: keep the old price in the history too, so it can be put back.
+  const [hasHistory] = await db.select({ id: priceHistory.id }).from(priceHistory).where(eq(priceHistory.itemId, id)).limit(1);
+  if (!hasHistory) await db.insert(priceHistory).values({ itemId: id, pricingMode: currentMode, priceCents: t.priceCents, userId: null });
   await db.insert(priceHistory).values({ itemId: id, pricingMode, priceCents, userId: s.user.id });
   await audit(db, { userId: s.user.id, action: "catalogue.price.updated", entity: "treatment", entityId: id, details: { from: { pricingMode: currentMode, priceCents: t.priceCents }, to: { pricingMode, priceCents }, stopOnline } });
   refresh();
