@@ -1,0 +1,48 @@
+# Glow by Dilek
+
+> Glow by Dilek is a beauty salon for women in Amsterdam, run by Dilek, a qualified beauty specialist (level 3). Treatments are by appointment only: facial care with steam, relaxing massages and waxing (face, body, bikini and intimate). Clients from Amstelveen, Diemen and Haarlem are also welcome. The website is in Dutch, with an English version.
+
+Appointments are requested online. The visitor chooses one or more treatments and a preferred moment, receives an automatic receipt, and Dilek confirms the appointment personally by email. A request is not yet a confirmed appointment. Practical location details are shared personally after confirmation. Prices and durations are given personally with the request until the price list is published. Contact: hello@glowbydilek.nl.
+
+## Main pages (Dutch)
+
+- [Home](https://glowbydilek.nl/): overview of the salon and its treatments
+- [Treatments](https://glowbydilek.nl/behandelingen): all treatments
+- [Prices](https://glowbydilek.nl/prijzen): price list
+- [Request an appointment](https://glowbydilek.nl/afspraak-maken): online appointment request form
+- [How an appointment works](https://glowbydilek.nl/hoe-werkt-een-afspraak)
+- [Preparation](https://glowbydilek.nl/voorbereiding): how to prepare for waxing
+- [Aftercare](https://glowbydilek.nl/nazorg): aftercare after waxing
+- [FAQ](https://glowbydilek.nl/veelgestelde-vragen)
+- [About Dilek](https://glowbydilek.nl/over-dilek)
+- [Reviews](https://glowbydilek.nl/beoordelingen)
+- [Contact](https://glowbydilek.nl/contact)
+
+## Treatments (Dutch)
+
+- [Facial treatments](https://glowbydilek.nl/gezichtsbehandelingen)
+- [Facial with steam](https://glowbydilek.nl/gezichtsbehandelingen/gezichtsbehandeling-met-stoom)
+- [Massages](https://glowbydilek.nl/massages): [full-body relaxation massage](https://glowbydilek.nl/massages/ontspanningsmassage), [facial massage](https://glowbydilek.nl/massages/gezichtsmassage), [head massage](https://glowbydilek.nl/massages/hoofdmassage), [hand massage](https://glowbydilek.nl/massages/handmassage), [foot massage](https://glowbydilek.nl/massages/voetmassage)
+- [Waxing](https://glowbydilek.nl/waxbehandelingen)
+- [Face waxing](https://glowbydilek.nl/waxbehandelingen/gezicht): [eyebrows](https://glowbydilek.nl/waxbehandelingen/gezicht/wenkbrauwen-waxen), [upper lip](https://glowbydilek.nl/waxbehandelingen/gezicht/bovenlip-waxen), [chin](https://glowbydilek.nl/waxbehandelingen/gezicht/kin-waxen), [full face](https://glowbydilek.nl/waxbehandelingen/gezicht/volledig-gezicht-waxen)
+- [Body waxing](https://glowbydilek.nl/waxbehandelingen/lichaam): [underarms](https://glowbydilek.nl/waxbehandelingen/lichaam/oksels-waxen), [forearms](https://glowbydilek.nl/waxbehandelingen/lichaam/onderarmen-waxen), [full arms](https://glowbydilek.nl/waxbehandelingen/lichaam/hele-armen-waxen), [lower legs](https://glowbydilek.nl/waxbehandelingen/lichaam/onderbenen-waxen), [full legs](https://glowbydilek.nl/waxbehandelingen/lichaam/hele-benen-waxen), [back](https://glowbydilek.nl/waxbehandelingen/lichaam/rug-waxen)
+- [Bikini and intimate waxing](https://glowbydilek.nl/waxbehandelingen/bikini-intiem): [bikini line](https://glowbydilek.nl/waxbehandelingen/bikini-intiem/bikinilijn-waxen), [Brazilian](https://glowbydilek.nl/waxbehandelingen/bikini-intiem/brazilian-wax), [Hollywood](https://glowbydilek.nl/waxbehandelingen/bikini-intiem/hollywood-wax)
+
+## English
+
+- [Home](https://glowbydilek.nl/en)
+- [Treatments](https://glowbydilek.nl/en/treatments)
+- [Prices](https://glowbydilek.nl/en/prices)
+- [Book an appointment](https://glowbydilek.nl/en/book-appointment)
+- [Appointment process](https://glowbydilek.nl/en/appointment-process)
+- [Facial treatments](https://glowbydilek.nl/en/facial-treatments)
+- [Massages](https://glowbydilek.nl/en/massages)
+- [Waxing treatments](https://glowbydilek.nl/en/waxing-treatments)
+- [FAQ](https://glowbydilek.nl/en/faq)
+- [About Dilek](https://glowbydilek.nl/en/about-dilek)
+- [Contact](https://glowbydilek.nl/en/contact)
+
+## Optional
+
+- [Privacy](https://glowbydilek.nl/privacy)
+- [Cookie policy](https://glowbydilek.nl/cookiebeleid)
