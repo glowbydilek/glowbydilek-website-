@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createAppointmentAction } from "@/lib/private/agendaActions";
 import { centsToInput, formatCents } from "@/lib/finance/money";
@@ -160,26 +161,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
         )}
       </fieldset>
 
-      <fieldset className="space-y-3">
-        <legend className="mb-1 text-sm font-medium">Behandeling(en)</legend>
-        {groups.map((g) => (
-          <div key={g.id}>
-            <p className="mb-1.5 text-xs uppercase tracking-[0.14em] text-muted">{g.label}</p>
-            <div className="flex flex-wrap gap-2">
-              {g.items.map((t) => {
-                const on = picked.includes(t.id);
-                return (
-                  <label key={t.id} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm ${on ? "border-ink bg-ink text-paper" : "border-line bg-white"}`}>
-                    <input type="checkbox" name="treatments" value={t.id} checked={on} onChange={() => setPicked((p) => (on ? p.filter((x) => x !== t.id) : [...p, t.id]))} className="sr-only" />
-                    {t.name}
-                    <span className={`text-xs ${on ? "text-paper/70" : "text-muted"}`}>{t.duration ? `${t.duration} min` : "duur?"}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </fieldset>
+      <TreatmentPicker treatments={treatments} groups={groups} picked={picked} setPicked={setPicked} auto={auto} listPrice={listPrice} />
 
       <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-3">
         <Field label="Datum" htmlFor="day">
@@ -220,5 +202,134 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
       </SubmitButton>
       {!selected && strongMatch && !forceNew && <p className="text-sm text-muted">Kies het bestaande klantprofiel, of geef aan dat het een andere persoon is.</p>}
     </ActionForm>
+  );
+}
+
+/**
+ * Treatment picker: search, collapsible categories and equal-size cards.
+ * Every checkbox stays in the DOM (hidden when filtered out), so a search
+ * never drops an already selected treatment from the submitted form.
+ * Missing durations/prices are shown as "not set yet", never as a value.
+ */
+function TreatmentPicker({
+  treatments,
+  groups,
+  picked,
+  setPicked,
+  auto,
+  listPrice,
+}: {
+  treatments: PickTreatment[];
+  groups: { id: string; label: string; items: PickTreatment[] }[];
+  picked: string[];
+  setPicked: (fn: (p: string[]) => string[]) => void;
+  auto: number | null;
+  listPrice: number | null;
+}) {
+  const [q, setQ] = useState("");
+  const needle = q.trim().toLocaleLowerCase("nl");
+  const match = (t: PickTreatment) => !needle || t.name.toLocaleLowerCase("nl").includes(needle) || t.category.toLocaleLowerCase("nl").includes(needle);
+  const rows = picked.map((id) => treatments.find((t) => t.id === id)).filter((t): t is PickTreatment => Boolean(t));
+  const toggle = (id: string) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+  const missing = rows.some((r) => !r.duration || r.priceCents == null);
+
+  return (
+    <fieldset className="space-y-3">
+      <legend className="mb-1 text-sm font-medium">Behandeling(en)</legend>
+      <div className="relative">
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Zoek een behandeling…"
+          aria-label="Zoek een behandeling"
+          enterKeyHint="search"
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          className="min-h-12 w-full rounded-xl border border-line bg-white px-4 text-base outline-none focus-visible:border-ink"
+        />
+      </div>
+
+      <div className="space-y-2">
+        {groups.map((g) => {
+          const visible = g.items.filter(match);
+          const count = g.items.filter((t) => picked.includes(t.id)).length;
+          return (
+            <details
+              key={g.id}
+              open={Boolean(needle) || count > 0 || groups.length <= 2}
+              className={`group rounded-2xl border border-line bg-white ${needle && !visible.length ? "hidden" : ""}`}
+            >
+              <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 text-sm font-medium text-ink [&::-webkit-details-marker]:hidden">
+                <span className="min-w-0 truncate">{g.label}</span>
+                <span className="flex shrink-0 items-center gap-2 text-xs text-muted">
+                  {count > 0 && <span className="rounded-full bg-ink px-2 py-0.5 font-semibold text-paper">{count}</span>}
+                  <span>{g.items.length}</span>
+                  <span aria-hidden="true" className="transition-transform group-open:rotate-90">›</span>
+                </span>
+              </summary>
+              <div className="grid grid-cols-1 gap-2 px-3 pb-3 min-[420px]:grid-cols-2">
+                {g.items.map((t) => {
+                  const on = picked.includes(t.id);
+                  return (
+                    <label
+                      key={t.id}
+                      className={`flex min-h-14 cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors ${
+                        on ? "border-ink bg-ink text-paper" : "border-line bg-white hover:border-ink/40"
+                      } ${match(t) ? "" : "hidden"}`}
+                    >
+                      <input type="checkbox" name="treatments" value={t.id} checked={on} onChange={() => toggle(t.id)} className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-accent)]" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block break-words font-medium leading-snug">{t.name}</span>
+                        <span className={`mt-0.5 block text-xs ${on ? "text-paper/75" : "text-muted"}`}>
+                          {t.duration ? `${t.duration} min` : "duur nog niet ingesteld"}
+                          {" · "}
+                          {t.priceCents != null ? formatCents(t.priceCents) : "prijs op aanvraag"}
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </details>
+          );
+        })}
+        {needle && !treatments.some(match) && <p className="rounded-xl bg-surface px-4 py-3 text-sm text-muted">Geen behandeling gevonden voor “{q}”.</p>}
+      </div>
+
+      {rows.length > 0 && (
+        <div className="rounded-2xl border border-line bg-surface p-4 text-sm">
+          <p className="mb-2 font-medium text-ink">Gekozen ({rows.length})</p>
+          <ul className="divide-y divide-line">
+            {rows.map((r) => (
+              <li key={r.id} className="flex items-center justify-between gap-3 py-2">
+                <span className="min-w-0 break-words">{r.name}</span>
+                <span className="flex shrink-0 items-center gap-3 text-xs text-muted">
+                  <span>{r.duration ? `${r.duration} min` : "—"}</span>
+                  <span>{r.priceCents != null ? formatCents(r.priceCents) : "—"}</span>
+                  <button type="button" onClick={() => toggle(r.id)} aria-label={`${r.name} verwijderen`} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-ink/6">
+                    ✕
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 flex justify-between border-t border-line pt-2 font-medium">
+            <span>Totaal</span>
+            <span>
+              {auto ? `${auto} min` : "duur zelf invullen"} · {listPrice != null ? formatCents(listPrice) : "prijs zelf afspreken"}
+            </span>
+          </p>
+          {missing && (
+            <p className="mt-2 text-xs text-muted">
+              Niet alle duur/prijzen zijn ingesteld.{" "}
+              <Link href="/admin/behandelingen" className="underline">
+                Stel ze in bij Behandelingen &amp; prijzen
+              </Link>
+              .
+            </p>
+          )}
+        </div>
+      )}
+    </fieldset>
   );
 }

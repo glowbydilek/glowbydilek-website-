@@ -103,6 +103,7 @@ export const AGENDA_PAGE_PERM: Record<string, Perm | "owner"> = {
   "/agenda/uitgaven": "finance",
   "/agenda/berichten": "agenda.manage",
   "/agenda/historie": "finance",
+  "/agenda/openstaand": "finance",
   "/agenda/werktijden": "hours.manage",
   "/agenda/instellingen": "owner",
   "/admin/beveiliging": "agenda.view",
