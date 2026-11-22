@@ -12,9 +12,11 @@ export function GET() {
       background_color: "#f4f1ea",
       theme_color: "#292724",
       lang: "nl",
+      // Agenda-only icon (D monogram). The public website keeps its own G icon.
       icons: [
-        { src: "/brand/icon-192.png", sizes: "192x192", type: "image/png" },
-        { src: "/brand/icon-512.png", sizes: "512x512", type: "image/png" },
+        { src: "/brand/agenda-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+        { src: "/brand/agenda-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+        { src: "/brand/agenda-icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
       ],
     }),
     { headers: { "Content-Type": "application/manifest+json", "Cache-Control": "public, max-age=3600" } },
