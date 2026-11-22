@@ -42,7 +42,7 @@ export default async function IntakeTemplatePage({ params }: { params: Promise<{
           <>
             <Badge tone={draft ? "pending" : t.status === "active" ? "confirmed" : "neutral"}>{draft ? "Concept" : t.status === "active" ? "Actief" : "Vorige versie"}</Badge>
             <LinkButton href={`/agenda/intake-afdruk/${t.id}`}>Afdrukken (A4)</LinkButton>
-            <LinkButton href={`/agenda/intake/${t.id}/pdf`}>PDF</LinkButton>
+            <LinkButton href={`/agenda/intake/${t.id}/pdf`} prefetch={false}>PDF</LinkButton>
           </>
         }
       />

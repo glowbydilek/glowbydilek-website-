@@ -1,0 +1,99 @@
+name: E2E preview
+
+# Safe test environment: a production build of the branch with a throwaway
+# MariaDB and a local SMTP sink (no real email, no real data, no secrets).
+# Produces iPhone/desktop screenshots of Agenda, Admin and key public pages
+# as a downloadable artifact. Run it from the Actions tab (any branch) or
+# automatically on pull requests.
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  # write is only used to push screenshots to the separate e2e-previews
+  # branch (never main, never deployed by Hostinger).
+  contents: write
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_DATABASE: glow_e2e
+          MARIADB_USER: glow
+          MARIADB_PASSWORD: ci-only-password
+          MARIADB_ROOT_PASSWORD: ci-only-root-password
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DATABASE_URL: mysql://glow:ci-only-password@127.0.0.1:3306/glow_e2e
+      DB_MIGRATE_ON_BUILD: "true"
+      NEXT_PUBLIC_SITE_URL: http://localhost:3123
+      AUTH_SECRET: ci-only-auth-secret-0123456789abcdefghijklmnop
+      CRON_SECRET: ci-only-cron-secret-0123456789
+      OWNER_EMAIL: hello@glowbydilek.nl
+      TURNSTILE_ALLOW_TEST_KEYS: "true"
+      SMTP_HOST: 127.0.0.1
+      SMTP_PORT: "2525"
+      SMTP_SECURE: "false"
+      SMTP_USER: sink@example.test
+      SMTP_PASS: sink
+      MAIL_TO: sink@example.test
+      MAIL_DIR: /tmp/mail
+      SHOTS: /tmp/shots
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Start SMTP sink and app
+        run: |
+          SMTP_SINK_PORT=2525 node scripts/smtp-sink.mjs > sink.log 2>&1 &
+          PORT=3123 npm start > server.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf http://localhost:3123/ > /dev/null && break; sleep 1; done
+      - name: Install Playwright (test only, not a project dependency)
+        run: |
+          npm i --no-save playwright@1
+          npx playwright install --with-deps chromium
+      - name: Screenshots and checks
+        run: node scripts/e2e-screens.cjs http://localhost:3123
+      - name: Logs (no secrets)
+        if: always()
+        run: |
+          tail -n 80 server.log || true
+          tail -n 20 sink.log || true
+      - name: Report in job summary
+        if: always()
+        run: |
+          { echo '```'; cat /tmp/shots/report.txt 2>/dev/null || echo "no report"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish screenshots to e2e-previews branch (preview only, not deployed)
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd /tmp/shots
+          git init -q -b e2e-previews
+          git config user.name "e2e-preview"
+          git config user.email "e2e-preview@users.noreply.github.com"
+          git add -A
+          git commit -qm "Preview screenshots for ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" e2e-previews
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-screenshots
+          path: /tmp/shots
+          retention-days: 14

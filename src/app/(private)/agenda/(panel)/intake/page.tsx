@@ -37,7 +37,8 @@ export default async function IntakeTemplatesPage({ searchParams }: { searchPara
               {active && (
                 <div className="flex flex-wrap gap-2">
                   <LinkButton href={`/agenda/intake-afdruk/${active.id}`} variant="primary">Afdrukken (A4)</LinkButton>
-                  <LinkButton href={`/agenda/intake/${active.id}/pdf`}>PDF downloaden</LinkButton>
+                  {/* No prefetch: it would generate the PDF on every visit. */}
+                  <LinkButton href={`/agenda/intake/${active.id}/pdf`} prefetch={false}>PDF downloaden</LinkButton>
                 </div>
               )}
               <ul className="mt-4 divide-y divide-line text-sm">

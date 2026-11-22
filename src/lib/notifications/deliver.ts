@@ -7,6 +7,7 @@ import { purgeExpiredLimits } from "../db/limits";
 import { cronRuns } from "../db/schema";
 import { mailConfigured, sendMail } from "../mail/send";
 import { processOutbox, type Sender } from "./outbox";
+import { deliverPushes, releaseStuck, syncNotifications } from "../notify/service";
 
 export const smtpSender: Sender = (m) => sendMail({ to: m.to, replyTo: m.replyTo, subject: m.subject, text: m.text, html: m.html, attachments: m.attachments });
 
@@ -28,6 +29,14 @@ export async function cronTick(db: DB) {
     await purgeExpiredLimits(db);
     await purgeAuthData(db);
     await purgeExpiredConsultations(db);
+    // Agenda notifications: catch up with the source tables, then push (never blocks email delivery).
+    try {
+      await releaseStuck(db);
+      await syncNotifications(db);
+      await deliverPushes(db);
+    } catch (err) {
+      console.error("[notify] cron step failed:", err instanceof Error ? err.message.slice(0, 120) : "error");
+    }
     await db.update(cronRuns).set({ finishedAt: new Date(), sent: r.sent, failed: r.failed, error: mailConfigured() ? null : "SMTP not configured" }).where(eq(cronRuns.id, res.insertId));
     return r;
   } catch (err) {

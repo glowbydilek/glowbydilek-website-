@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { and, eq, inArray, sql } from "drizzle-orm";
+import { BadgeSync } from "@/components/private/BadgeSync";
 import { PanelShell } from "@/components/private/PanelShell";
+import { badgeCount, syncNotifications } from "@/lib/notify/service";
 import { currentPermissions, requireCan } from "@/lib/auth/session";
 import { AGENDA_PAGE_PERM } from "@/lib/auth/permissions";
 import { getDb } from "@/lib/db/client";
@@ -32,9 +34,17 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
   ]);
   const pending = Number(p.n);
   const unread = Number(m.n);
+  const owner = session.user.role === "owner";
+  // Open actions for the bell, the menu and the app-icon badge (owner only; one rule everywhere).
+  let actions = 0;
+  if (owner) {
+    await syncNotifications(db).catch(() => null);
+    actions = await badgeCount(db).catch(() => 0);
+  }
   const lang = await getPanelLang();
   const allNav = [
     { href: "/agenda", label: "Vandaag", icon: "today" },
+    { href: "/agenda/meldingen", label: "Meldingen", icon: "bell", badge: actions },
     { href: "/agenda/kalender", label: "Kalender", icon: "calendar" },
     { href: "/agenda/aanvragen", label: "Aanvragen", icon: "requests", badge: pending },
     { href: "/agenda/afspraak/nieuw", label: "Nieuwe afspraak", icon: "plus" },
@@ -64,7 +74,8 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
   ];
   const tabs = allTabs.filter((t) => allowed(t.href)).map((t) => ({ ...t, label: pt(lang, `tab:${t.href}`, pt(lang, t.href, t.label)) }));
   return (
-    <PanelShell area="agenda" nav={nav} tabs={tabs} lang={lang}>
+    <PanelShell area="agenda" nav={nav} tabs={tabs} lang={lang} alerts={owner ? { href: "/agenda/meldingen", count: actions, label: pt(lang, "/agenda/meldingen", "Meldingen") } : undefined}>
+      {owner && <BadgeSync initial={actions} />}
       {children}
     </PanelShell>
   );

@@ -4,6 +4,7 @@ import { validateContact } from "@/lib/forms/validation";
 import { contactCustomerMail, contactOwnerMail } from "@/lib/mail/templates";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { inquiries } from "@/lib/db/schema";
+import { notifySoon } from "@/lib/notify/service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export function POST(req: NextRequest) {
     store: async (d) => {
       if (!databaseConfigured()) return;
       await getDb().insert(inquiries).values({ name: d.name, email: d.email, phone: d.phone ?? null, topic: d.topic, message: d.message, locale: d.locale, consentAt: new Date() });
+      await notifySoon(getDb());
     },
     signature: (d) => `${d.topic}|${d.message.toLowerCase().replace(/\s+/g, " ")}`,
     ownerMail: contactOwnerMail,

@@ -10,6 +10,7 @@ import { fingerprint, LIMITS } from "@/lib/forms/rateLimit";
 import { verifyTurnstile } from "@/lib/forms/turnstile";
 import { isLikelySpam, validateBookingRequest } from "@/lib/forms/validation";
 import { deliverSoon } from "@/lib/notifications/deliver";
+import { notifySoon } from "@/lib/notify/service";
 import { hhmmToMinutes } from "@/lib/time";
 
 export const runtime = "nodejs";
@@ -73,5 +74,6 @@ export async function POST(req: NextRequest) {
     return json(500, { ok: false, error: "generic" });
   }
   await deliverSoon(db);
+  await notifySoon(db);
   return json(200, { ok: true });
 }

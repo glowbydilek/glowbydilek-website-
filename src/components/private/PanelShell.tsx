@@ -22,7 +22,10 @@ export function PanelShell({
   children,
   banner,
   lang = "nl",
+  alerts,
 }: {
+  /** Bell in the mobile top bar: link to Meldingen with the number of open actions. */
+  alerts?: { href: string; count: number; label: string };
   lang?: PanelLang;
   area: "admin" | "agenda";
   nav: NavItem[];
@@ -146,6 +149,12 @@ export function PanelShell({
             <span className="font-serif text-lg text-ink">{area === "admin" ? "Admin" : lang === "tr" ? "Ajanda" : "Agenda"}</span>
           </Link>
           <div className="ml-auto mr-1">{langSwitch(true)}</div>
+          {alerts && (
+            <Link href={alerts.href} aria-label={alerts.count ? `${alerts.label}: ${alerts.count}` : alerts.label} className="relative flex h-11 w-11 items-center justify-center rounded-full text-ink">
+              <PanelIcon name="bell" className="h-6 w-6" />
+              {alerts.count ? <span className="absolute right-0.5 top-1 min-w-5 rounded-full bg-accent px-1 text-center text-[0.65rem] font-semibold text-ink">{alerts.count}</span> : null}
+            </Link>
+          )}
           <button
             type="button"
             className="flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-medium text-ink"

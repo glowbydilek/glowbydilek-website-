@@ -986,3 +986,58 @@ export const intakeDocuments = mysqlTable(
   },
   (t) => [index("intake_doc_customer_idx").on(t.customerId, t.status)],
 );
+
+// ─────────────────────────────────────────────────────── Notifications (0005)
+
+/**
+ * Agenda notifications ("Meldingen"). One row per underlying event, made
+ * idempotent by dedupeKey. Actionable rows stay "open" until the item behind
+ * them is handled (e.g. the request is confirmed or declined) — opening the
+ * app or reading the row never clears them. The app-icon badge counts open
+ * actionable rows; the source tables stay the truth (see lib/notify).
+ * Title/body are written for a lock screen: never health, intake or invoice
+ * contents, never tokens.
+ */
+export const notifications = mysqlTable(
+  "notifications",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    dedupeKey: varchar("dedupe_key", { length: 190 }).notNull().unique(),
+    kind: varchar("kind", { length: 40 }).notNull(),
+    category: varchar("category", { length: 16 }).notNull(), // afspraak | bericht | intake | factuur | systeem
+    title: varchar("title", { length: 120 }).notNull(),
+    body: varchar("body", { length: 200 }).notNull().default(""),
+    url: varchar("url", { length: 250 }).notNull(),
+    entityType: varchar("entity_type", { length: 24 }),
+    entityId: int("entity_id"),
+    actionable: boolean("actionable").notNull().default(false),
+    state: varchar("state", { length: 12 }).notNull().default("open"), // open | resolved | dismissed
+    readAt: ts("read_at"),
+    resolvedAt: ts("resolved_at"),
+    pushStatus: varchar("push_status", { length: 12 }).notNull().default("pending"), // pending | sent | skipped | failed
+    pushAttempts: int("push_attempts").notNull().default(0),
+    createdAt: created(),
+  },
+  (t) => [index("notif_state_idx").on(t.state, t.actionable), index("notif_push_idx").on(t.pushStatus), index("notif_created_idx").on(t.createdAt)],
+);
+
+/** Web Push subscriptions: one per device/browser, always tied to a signed-in user. */
+export const pushSubscriptions = mysqlTable(
+  "push_subscriptions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    endpointHash: varchar("endpoint_hash", { length: 64 }).notNull().unique(),
+    endpoint: varchar("endpoint", { length: 1000 }).notNull(),
+    p256dh: varchar("p256dh", { length: 120 }).notNull(),
+    auth: varchar("auth", { length: 40 }).notNull(),
+    device: varchar("device", { length: 80 }).notNull().default(""),
+    failures: int("failures").notNull().default(0),
+    lastSuccessAt: ts("last_success_at"),
+    disabledAt: ts("disabled_at"),
+    createdAt: created(),
+  },
+  (t) => [index("push_sub_user_idx").on(t.userId)],
+);
