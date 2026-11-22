@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { appointmentAction } from "@/lib/private/agendaActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 type Props = {
   id: number;
@@ -58,10 +59,11 @@ function Message({ label = "Persoonlijke toelichting in de e-mail (optioneel)" }
 
 /** Material changes always notify the customer; without an email address that is shown clearly. */
 function Notify({ hasEmail, label }: { hasEmail: boolean; label: string }) {
+  const t = useT();
   if (!hasEmail)
     return (
       <p role="note" className="rounded-xl border border-[#8e2f24]/30 bg-[#fbeeec] px-3 py-2 text-sm text-[#74261d]">
-        Geen e-mailadres bekend: de klant krijgt hier <strong>geen</strong> bericht van. Laat het de klant zelf weten.
+        {t("Geen e-mailadres bekend: de klant krijgt hier")} <strong>geen</strong> bericht van. Laat het de klant zelf weten.
       </p>
     );
   return <p className="rounded-xl bg-surface px-3 py-2 text-sm text-ink-soft">✉ {label}</p>;
@@ -77,6 +79,7 @@ function Hidden({ id, op }: { id: number; op: string }) {
 }
 
 export function AppointmentActions(p: Props) {
+  const t = useT();
   const pending = p.status === "requested" || p.status === "proposed";
   return (
     <div className="space-y-3">
@@ -88,11 +91,11 @@ export function AppointmentActions(p: Props) {
               {!p.hasExactTime ? (
                 <WhenFields day={p.day} time={p.time} duration={p.duration} />
               ) : (
-                <p className="text-sm text-muted">De afspraak wordt bevestigd op het aangevraagde tijdstip. Het systeem controleert eerst of het nog vrij is.</p>
+                <p className="text-sm text-muted">{t("De afspraak wordt bevestigd op het aangevraagde tijdstip. Het systeem controleert eerst of het nog vrij is.")}</p>
               )}
               <Message />
               <label className="flex min-h-11 items-center gap-3 text-sm">
-                <input type="checkbox" name="allowOutsideHours" className="h-5 w-5" /> Toestaan buiten mijn werktijden
+                <input type="checkbox" name="allowOutsideHours" className="h-5 w-5" /> {t("Toestaan buiten mijn werktijden")}
               </label>
               <SubmitButton pending="Bezig met bevestigen…">Afspraak bevestigen{p.hasEmail ? " en klant mailen" : ""}</SubmitButton>
             </ActionForm>
@@ -102,16 +105,16 @@ export function AppointmentActions(p: Props) {
               <Hidden id={p.id} op="propose" />
               <WhenFields day={p.day} time={p.time} duration={p.duration} />
               <Message label="Toelichting voor de klant (optioneel)" />
-              <p className="text-xs text-muted">Het tijdstip wordt voorlopig voor deze klant vastgehouden. De klant antwoordt per e-mail; daarna bevestig je hier.</p>
-              <SubmitButton variant="outline">Voorstel versturen</SubmitButton>
+              <p className="text-xs text-muted">{t("Het tijdstip wordt voorlopig voor deze klant vastgehouden. De klant antwoordt per e-mail; daarna bevestig je hier.")}</p>
+              <SubmitButton variant="outline">{t("Voorstel versturen")}</SubmitButton>
             </ActionForm>
           </Panel>
-          <Panel title="✕ Afwijzen" tone="danger">
+          <Panel title={t("✕ Afwijzen")} tone="danger">
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="decline" />
               <Message label="Toelichting voor de klant (optioneel)" />
               <Notify hasEmail={p.hasEmail} label="De klant krijgt automatisch een vriendelijk bericht." />
-              <SubmitButton variant="danger" confirm="Weet je zeker dat je deze aanvraag wilt afwijzen?">Aanvraag afwijzen</SubmitButton>
+              <SubmitButton variant="danger" confirm="Weet je zeker dat je deze aanvraag wilt afwijzen?">{t("Aanvraag afwijzen")}</SubmitButton>
             </ActionForm>
           </Panel>
         </>
@@ -119,12 +122,12 @@ export function AppointmentActions(p: Props) {
 
       {p.status === "confirmed" && (
         <>
-          <Panel title="↻ Verplaatsen of wijzigen" open>
+          <Panel title={t("↻ Verplaatsen of wijzigen")} open>
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="reschedule" />
               <WhenFields day={p.day} time={p.time} duration={p.duration} />
               <fieldset>
-                <legend className="mb-1.5 text-sm font-medium">Behandeling(en)</legend>
+                <legend className="mb-1.5 text-sm font-medium">{t("Behandeling(en)")}</legend>
                 <div className="flex flex-wrap gap-2">
                   {p.treatments.map((t) => (
                     <label key={t.id} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-white px-3 text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-paper">
@@ -135,53 +138,53 @@ export function AppointmentActions(p: Props) {
                 </div>
               </fieldset>
               <Field label="Afgesproken prijs" hint="Leeg = geen prijs vastgelegd. Een gewijzigde prijs stuurt geen e-mail.">
-                <Input name="price" inputMode="decimal" defaultValue={p.priceInput} placeholder="bijv. 45,00" />
+                <Input name="price" inputMode="decimal" defaultValue={p.priceInput} placeholder={t("bijv. 45,00")} />
               </Field>
               <Message />
               <Notify hasEmail={p.hasEmail} label="Verandert het tijdstip, de duur of de behandeling, dan krijgt de klant automatisch een e-mail met de nieuwe gegevens." />
               <label className="flex min-h-11 items-center gap-3 text-sm">
-                <input type="checkbox" name="allowOutsideHours" className="h-5 w-5" /> Toestaan buiten mijn werktijden
+                <input type="checkbox" name="allowOutsideHours" className="h-5 w-5" /> {t("Toestaan buiten mijn werktijden")}
               </label>
-              <SubmitButton>Wijziging opslaan</SubmitButton>
+              <SubmitButton>{t("Wijziging opslaan")}</SubmitButton>
             </ActionForm>
           </Panel>
-          <Panel title="Status">
+          <Panel title={t("Status")}>
             <div className="flex flex-wrap gap-2">
               <ActionForm action={appointmentAction} className="">
                 <Hidden id={p.id} op="complete" />
-                <SubmitButton variant="outline">✓ Afgerond</SubmitButton>
+                <SubmitButton variant="outline">{t("✓ Afgerond")}</SubmitButton>
               </ActionForm>
               <ActionForm action={appointmentAction} className="">
                 <Hidden id={p.id} op="noshow" />
-                <SubmitButton variant="outline" confirm="Markeren als niet verschenen?">Niet verschenen</SubmitButton>
+                <SubmitButton variant="outline" confirm="Markeren als niet verschenen?">{t("Niet verschenen")}</SubmitButton>
               </ActionForm>
             </div>
           </Panel>
-          <Panel title="✕ Annuleren" tone="danger">
+          <Panel title={t("✕ Annuleren")} tone="danger">
             <ActionForm action={appointmentAction}>
               <Hidden id={p.id} op="cancel" />
               <Message />
               <Notify hasEmail={p.hasEmail} label="De klant krijgt automatisch een annuleringsbericht." />
-              <p className="text-xs text-muted">De afspraak blijft in de geschiedenis staan; het tijdstip komt weer vrij.</p>
-              <SubmitButton variant="danger" confirm="Weet je zeker dat je deze afspraak wilt annuleren?">Afspraak annuleren</SubmitButton>
+              <p className="text-xs text-muted">{t("De afspraak blijft in de geschiedenis staan; het tijdstip komt weer vrij.")}</p>
+              <SubmitButton variant="danger" confirm="Weet je zeker dat je deze afspraak wilt annuleren?">{t("Afspraak annuleren")}</SubmitButton>
             </ActionForm>
           </Panel>
         </>
       )}
 
-      <Panel title="Interne notitie">
+      <Panel title={t("Interne notitie")}>
         <ActionForm action={appointmentAction}>
           <Hidden id={p.id} op="notes" />
-          <Textarea name="internalNote" rows={3} maxLength={2000} defaultValue={p.internalNote} aria-label="Interne notitie" />
-          <p className="text-xs text-muted">Alleen zichtbaar voor jou. Geen medische details opslaan.</p>
-          <SubmitButton variant="outline">Notitie opslaan</SubmitButton>
+          <Textarea name="internalNote" rows={3} maxLength={2000} defaultValue={p.internalNote} aria-label={t("Interne notitie")} />
+          <p className="text-xs text-muted">{t("Alleen zichtbaar voor jou. Geen medische details opslaan.")}</p>
+          <SubmitButton variant="outline">{t("Notitie opslaan")}</SubmitButton>
         </ActionForm>
       </Panel>
 
       {!["requested", "proposed", "confirmed"].includes(p.status) && (
         <ActionForm action={appointmentAction} className="">
           <Hidden id={p.id} op={p.archived ? "unarchive" : "archive"} />
-          <SubmitButton variant="ghost">{p.archived ? "Uit archief halen" : "Archiveren"}</SubmitButton>
+          <SubmitButton variant="ghost">{t(p.archived ? "Uit archief halen" : "Archiveren")}</SubmitButton>
         </ActionForm>
       )}
     </div>

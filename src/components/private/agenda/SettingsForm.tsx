@@ -4,8 +4,10 @@ import { saveBookingSettingsAction } from "@/lib/private/agendaActions";
 import type { BookingSettings, PrivateBusinessSettings } from "@/lib/db/settings";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function SettingsForm({ b, p, bookableCount }: { b: BookingSettings; p: PrivateBusinessSettings; bookableCount: number }) {
+  const t = useT();
   return (
     <ActionForm action={saveBookingSettingsAction}>
       <label className="flex min-h-11 items-start gap-3">
@@ -26,14 +28,14 @@ export function SettingsForm({ b, p, bookableCount }: { b: BookingSettings; p: P
       </div>
       <label className="flex min-h-11 items-center gap-3">
         <input type="checkbox" name="remindersEnabled" defaultChecked={b.remindersEnabled} className="h-5 w-5" />
-        Herinneringsmail sturen
+        {t("Herinneringsmail sturen")}
       </label>
       <Field label="Herinnering hoeveel uur vooraf"><Input type="number" name="reminderHoursBefore" min={2} max={72} defaultValue={b.reminderHoursBefore} className="max-w-[8rem]" /></Field>
       <Field label="Praktische locatiegegevens (privé)" hint="Alleen opgenomen in bevestigings- en herinneringsmails. Nooit zichtbaar op de website.">
         <Textarea name="locationDetails" rows={3} maxLength={1000} defaultValue={p.locationDetails} />
       </Field>
       <Field label="E-mailadres voor nieuwe aanvragen" hint="Leeg = hello@glowbydilek.nl (MAIL_TO)"><Input type="email" name="ownerNotifyEmail" defaultValue={p.ownerNotifyEmail} /></Field>
-      <SubmitButton>Instellingen opslaan</SubmitButton>
+      <SubmitButton>{t("Instellingen opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
