@@ -7,12 +7,14 @@ import { AGENDA_PAGE_PERM } from "@/lib/auth/permissions";
 import { getDb } from "@/lib/db/client";
 import { appointments, inquiries } from "@/lib/db/schema";
 import { ensureSeeded } from "@/lib/db/seed";
+import { pt } from "@/lib/private/panelLang";
+import { getPanelLang } from "@/lib/private/panelLangServer";
 
 export const metadata: Metadata = {
   title: { default: "Agenda", template: "%s · Agenda" },
   manifest: "/agenda/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Agenda", statusBarStyle: "default" },
-  icons: { apple: "/apple-icon.png" },
+  icons: { icon: "/brand/agenda-icon.svg", apple: "/brand/agenda-apple-icon.png" },
 };
 
 export default async function AgendaLayout({ children }: { children: ReactNode }) {
@@ -30,6 +32,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
   ]);
   const pending = Number(p.n);
   const unread = Number(m.n);
+  const lang = await getPanelLang();
   const allNav = [
     { href: "/agenda", label: "Vandaag", icon: "today" },
     { href: "/agenda/kalender", label: "Kalender", icon: "calendar" },
@@ -43,10 +46,11 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/berichten", label: "Berichten", icon: "messages", badge: unread },
     { href: "/agenda/historie", label: "Overzichten", icon: "history" },
     { href: "/agenda/werktijden", label: "Werktijden", icon: "clock" },
+    { href: "/admin/behandelingen", label: "Behandelingen & prijzen", icon: "tag" },
     { href: "/agenda/instellingen", label: "Instellingen", icon: "settings" },
     ...(session.user.role !== "owner" ? [{ href: "/admin/beveiliging", label: "Mijn account", icon: "settings" }] : []),
   ];
-  const nav = allNav.filter((n) => allowed(n.href));
+  const nav = allNav.filter((n) => allowed(n.href)).map((n) => ({ ...n, label: pt(lang, n.href, n.label) }));
   const allTabs = [
     { href: "/agenda", label: "Vandaag", icon: "today" },
     { href: "/agenda/kalender", label: "Kalender", icon: "calendar" },
@@ -55,9 +59,9 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/klanten", label: "Klanten", icon: "users" },
     { href: "/agenda/intake", label: "Intake", icon: "invoice" },
   ];
-  const tabs = allTabs.filter((t) => allowed(t.href));
+  const tabs = allTabs.filter((t) => allowed(t.href)).map((t) => ({ ...t, label: pt(lang, `tab:${t.href}`, pt(lang, t.href, t.label)) }));
   return (
-    <PanelShell area="agenda" nav={nav} tabs={tabs}>
+    <PanelShell area="agenda" nav={nav} tabs={tabs} lang={lang}>
       {children}
     </PanelShell>
   );
