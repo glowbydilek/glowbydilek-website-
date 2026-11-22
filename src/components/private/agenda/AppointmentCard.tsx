@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ListItem } from "@/lib/booking/service";
 import { Badge } from "../ui";
-import { STATUS, TIME_RANGE_NL, dayShort, time } from "./format";
+import type { PanelLang } from "@/lib/private/panelLang";
+import { dayShort, statusOf, time, timeRange } from "./format";
 
 const bar: Record<string, string> = {
   requested: "bg-[#d9a441]",
@@ -24,9 +25,9 @@ const edge: Record<string, string> = {
 };
 
 /** Large, tappable appointment card (agenda lists). */
-export function AppointmentCard({ item, showDate = false, compact = false }: { item: ListItem; showDate?: boolean; compact?: boolean }) {
+export function AppointmentCard({ item, showDate = false, compact = false, lang = "nl" }: { item: ListItem; showDate?: boolean; compact?: boolean; lang?: PanelLang }) {
   const { appt, customer, treatments } = item;
-  const st = STATUS[appt.status] ?? { label: appt.status, tone: "neutral" as const };
+  const st = statusOf(appt.status, lang);
   if (compact) {
     // Narrow week columns: everything stacked, nothing wider than the column.
     return (
@@ -63,7 +64,7 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
           <p className="text-xs leading-tight text-muted">
             {appt.requestedDate ?? "—"}
             <br />
-            {TIME_RANGE_NL[appt.requestedTimeRange ?? ""] ?? ""}
+            {timeRange(appt.requestedTimeRange, lang)}
           </p>
         )}
       </div>
@@ -75,7 +76,7 @@ export function AppointmentCard({ item, showDate = false, compact = false }: { i
           <Badge tone={st.tone}>{st.label}</Badge>
         </div>
         <p className="mt-0.5 truncate text-sm text-ink-soft">{treatments.join(", ") || "—"}</p>
-        {showDate && appt.startAt && <p className="mt-0.5 text-xs text-muted">{dayShort(appt.startAt)}</p>}
+        {showDate && appt.startAt && <p className="mt-0.5 text-xs text-muted">{dayShort(appt.startAt, lang)}</p>}
       </div>
       <span aria-hidden="true" className="self-center text-muted transition group-hover:translate-x-0.5">
         ›
