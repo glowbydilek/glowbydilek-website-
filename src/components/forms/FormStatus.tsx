@@ -3,6 +3,7 @@
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Glint } from "../brand/Logo";
 import { Icon } from "../ui/Icon";
+import { ProtectedEmail } from "../ProtectedEmail";
 import type { SubmitState } from "./useFormSubmit";
 
 /**
@@ -51,7 +52,7 @@ export function FormSuccess({
   );
 }
 
-export function FormError({ state, t, email }: { state: SubmitState; t: Dictionary["forms"]; email: string }) {
+export function FormError({ state, t }: { state: SubmitState; t: Dictionary["forms"]; email?: string }) {
   if (state.status !== "error") return null;
   const map: Record<string, string> = {
     validation: t.errors.summary,
@@ -71,9 +72,7 @@ export function FormError({ state, t, email }: { state: SubmitState; t: Dictiona
         {showEmail && (
           <>
             {" "}
-            <a href={`mailto:${email}`} className="font-medium underline underline-offset-4">
-              {email}
-            </a>
+            <ProtectedEmail className="font-medium underline underline-offset-4" />
             .
           </>
         )}
