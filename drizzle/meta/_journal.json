@@ -36,6 +36,13 @@
       "when": 1793730482277,
       "tag": "0004_turkish_locale",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1795384900000,
+      "tag": "0005_notifications",
+      "breakpoints": true
     }
   ]
 }
