@@ -2,7 +2,7 @@ import type { CategoryCopySet } from "./types";
 
 export const categoriesEn: CategoryCopySet = {
   face: {
-    seoTitle: "Face waxing — eyebrows, upper lip and chin",
+    seoTitle: "Face waxing in Amsterdam",
     seoDescription:
       "Eyebrow, upper lip, chin or full face waxing. Read how a facial waxing appointment works, who it suits and how to prepare your skin.",
     label: "Face",
@@ -80,7 +80,7 @@ export const categoriesEn: CategoryCopySet = {
   },
 
   body: {
-    seoTitle: "Body waxing — underarms, arms, legs and back",
+    seoTitle: "Body waxing in Amsterdam",
     seoDescription:
       "Underarm, arm, leg or back waxing. Read what a body waxing appointment involves, what to expect and how to prevent ingrown hairs.",
     label: "Body",
@@ -158,7 +158,7 @@ export const categoriesEn: CategoryCopySet = {
   },
 
   intimate: {
-    seoTitle: "Bikini line, Brazilian and Hollywood waxing — discreet",
+    seoTitle: "Bikini line and Brazilian wax in Amsterdam",
     seoDescription:
       "Bikini line, Brazilian or Hollywood waxing in a calm, discreet setting. Read the difference, how the appointment works and how to prepare.",
     label: "Bikini & intimate",

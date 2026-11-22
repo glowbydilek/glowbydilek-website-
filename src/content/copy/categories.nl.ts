@@ -2,7 +2,7 @@ import type { CategoryCopySet } from "./types";
 
 export const categoriesNl: CategoryCopySet = {
   face: {
-    seoTitle: "Gezicht waxen — wenkbrauwen, bovenlip en kin",
+    seoTitle: "Gezicht waxen in Amsterdam",
     seoDescription:
       "Wenkbrauwen, bovenlip, kin of het volledige gezicht laten waxen. Lees hoe een gezichtsbehandeling verloopt, voor wie hij geschikt is en hoe je je huid voorbereidt.",
     label: "Gezicht",
@@ -80,7 +80,7 @@ export const categoriesNl: CategoryCopySet = {
   },
 
   body: {
-    seoTitle: "Lichaam waxen — oksels, armen, benen en rug",
+    seoTitle: "Lichaam waxen in Amsterdam",
     seoDescription:
       "Oksels, armen, benen of rug laten waxen. Lees wat een lichaamsbehandeling inhoudt, wat je kunt verwachten en hoe je ingegroeide haartjes voorkomt.",
     label: "Lichaam",
@@ -158,7 +158,7 @@ export const categoriesNl: CategoryCopySet = {
   },
 
   intimate: {
-    seoTitle: "Bikinilijn, Brazilian en Hollywood waxen — discreet",
+    seoTitle: "Bikinilijn en Brazilian wax in Amsterdam",
     seoDescription:
       "Bikinilijn, Brazilian of Hollywood waxen in een rustige, discrete setting. Lees wat het verschil is, hoe de afspraak verloopt en hoe je je voorbereidt.",
     label: "Bikini & intiem",

@@ -162,3 +162,37 @@ test("without live keys in production the public widget is not rendered with a t
   assert.equal(turnstileSiteKey({ NODE_ENV: "production" }), "");
   assert.equal(turnstileSiteKey({ NODE_ENV: "production", TURNSTILE_SECRET_KEY: "s", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAlive" }), "0x4AAAAlive");
 });
+
+test("cleanKey removes copy-paste artefacts that trim() misses", async () => {
+  const { cleanKey } = await import("../src/lib/forms/turnstile.ts");
+  const key = "0x4AAAAAAAabcdefghijklmn";
+  assert.equal(cleanKey(`"${key}"`), key);
+  assert.equal(cleanKey(`  '${key}'\n`), key);
+  assert.equal(cleanKey(`${key}​`), key);
+  assert.equal(cleanKey(`﻿${key} `), key);
+  assert.equal(cleanKey(undefined), "");
+});
+
+test("siteKeyShape recognises site keys, secrets pasted as site keys and odd lengths", async () => {
+  const { siteKeyShape } = await import("../src/lib/forms/turnstile.ts");
+  assert.equal(siteKeyShape("0x4AAAAAAAabcdefghijklmn"), "ok");
+  assert.equal(siteKeyShape("0x4AAAAAAAabcdefghijklmnX"), "unexpected");
+  assert.equal(siteKeyShape("0x4AAAAAAAabcdefghijklmnopqrstuvwxyz"), "looks-like-secret");
+  assert.equal(siteKeyShape(TURNSTILE_TEST_SITE_KEY), "test");
+  assert.equal(siteKeyShape(""), "empty");
+});
+
+test("a quoted or zero-width-padded live site key is served clean to the widget", () => {
+  const key = "0x4AAAAAAAabcdefghijklmn";
+  const env = { NODE_ENV: "production", TURNSTILE_SECRET_KEY: "live-secret", NEXT_PUBLIC_TURNSTILE_SITE_KEY: `"${key}​"` };
+  assert.equal(turnstileSiteKey(env), key);
+  assert.equal(turnstileConfig(env).mode, "live");
+  assert.equal(turnstileStatus(env).problem, undefined);
+});
+
+test("status explains a malformed live site key without revealing it", () => {
+  const env = { NODE_ENV: "production", TURNSTILE_SECRET_KEY: "live-secret", NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAAAAabcdefghijklmnX" };
+  const p = turnstileStatus(env).problem ?? "";
+  assert.match(p, /25/);
+  assert.ok(!p.includes("0x4AAAAAAAabcdefghijklmnX"));
+});
