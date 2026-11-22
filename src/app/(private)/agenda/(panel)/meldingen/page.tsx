@@ -8,6 +8,8 @@ import { appointments, customers, inquiries } from "@/lib/db/schema";
 import { badgeCount, listDevices, listNotifications, syncNotifications, unreadCount, type Category, type Filter } from "@/lib/notify/service";
 import { dismissAction, markAllReadAction, removeDeviceAction } from "@/lib/private/notifyActions";
 import { formatLocal } from "@/lib/time";
+import { getPanelLang } from "@/lib/private/panelLangServer";
+import { makeT } from "@/lib/private/panelT";
 
 export const metadata = { title: "Meldingen" };
 
@@ -28,6 +30,9 @@ const CAT_LABEL: Record<string, string> = { afspraak: "Afspraak", bericht: "Beri
 
 export default async function MeldingenPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const session = await requireOwner("agenda", "/agenda/meldingen");
+  const lang = await getPanelLang();
+  const t = makeT(lang);
+  const loc = lang === "tr" ? "tr" : "nl";
   const sp = await searchParams;
   const filter = (FILTERS.find((f) => f.key === sp.f)?.key ?? "actie") as Filter;
   const cat = CATS.find((c) => c.key === sp.c)?.key;
@@ -45,7 +50,7 @@ export default async function MeldingenPage({ searchParams }: { searchParams: Pr
   const detail = (r: (typeof rows)[number]): string | null => {
     if (r.entityType === "appointment") {
       const a = appts.find((x) => x.id === r.entityId);
-      return a ? [`${a.first} ${a.last}`.trim(), a.startAt ? formatLocal(a.startAt, "nl", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : null].filter(Boolean).join(" · ") : null;
+      return a ? [`${a.first} ${a.last}`.trim(), a.startAt ? formatLocal(a.startAt, loc, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : null].filter(Boolean).join(" · ") : null;
     }
     if (r.entityType === "inquiry") return inqs.find((x) => x.id === r.entityId)?.name ?? null;
     return null;
@@ -56,29 +61,29 @@ export default async function MeldingenPage({ searchParams }: { searchParams: Pr
   return (
     <>
       <PageHeader
-        title="Meldingen"
+        title={t("Meldingen")}
         subtitle={pending ? `${pending} ${pending === 1 ? "actie wacht" : "acties wachten"} op jou. Een actie verdwijnt pas als je hem hebt afgehandeld.` : "Er wacht niets op je. Nieuwe aanvragen, berichten en problemen verschijnen hier."}
         actions={
           unread > 0 ? (
             <form action={markAllReadAction}>
-              <button className="text-sm text-accent-deep underline">Alles als gelezen markeren</button>
+              <button className="text-sm text-accent-deep underline">{t("Alles als gelezen markeren")}</button>
             </form>
           ) : undefined
         }
       />
 
-      <nav aria-label="Filter" className="mb-3 flex flex-wrap gap-2">
+      <nav aria-label={t("Filter")} className="mb-3 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <Link key={f.key} href={href(f.key, cat)} aria-current={filter === f.key ? "page" : undefined} className={chip(filter === f.key)}>
-            {f.label}
+            {t(f.label)}
             {f.key === "actie" && pending ? ` (${pending})` : f.key === "ongelezen" && unread ? ` (${unread})` : ""}
           </Link>
         ))}
       </nav>
-      <nav aria-label="Soort" className="mb-5 flex flex-wrap gap-2 text-sm">
-        <Link href={href(filter)} className={chip(!cat)}>Alle soorten</Link>
+      <nav aria-label={t("Soort")} className="mb-5 flex flex-wrap gap-2 text-sm">
+        <Link href={href(filter)} className={chip(!cat)}>{t("Alle soorten")}</Link>
         {CATS.map((c) => (
-          <Link key={c.key} href={href(filter, c.key)} className={chip(cat === c.key)}>{c.label}</Link>
+          <Link key={c.key} href={href(filter, c.key)} className={chip(cat === c.key)}>{t(c.label)}</Link>
         ))}
       </nav>
 
@@ -92,24 +97,24 @@ export default async function MeldingenPage({ searchParams }: { searchParams: Pr
                 <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                   <a href={`/agenda/meldingen-open/${r.id}`} className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2">
-                      {!r.readAt && <span aria-label="Ongelezen" className="h-2 w-2 rounded-full bg-accent-deep" />}
-                      <span className={r.readAt ? "" : "font-semibold"}>{r.title}</span>
+                      {!r.readAt && <span aria-label={t("Ongelezen")} className="h-2 w-2 rounded-full bg-accent-deep" />}
+                      <span className={r.readAt ? "" : "font-semibold"}>{t(r.title)}</span>
                       <Badge tone="neutral">{CAT_LABEL[r.category] ?? r.category}</Badge>
-                      {r.actionable && open && <Badge tone="pending">Actie nodig</Badge>}
-                      {r.state === "resolved" && <Badge tone="confirmed">Afgehandeld</Badge>}
-                      {r.state === "dismissed" && <Badge tone="done">Weggezet</Badge>}
+                      {r.actionable && open && <Badge tone="pending">{t("Actie nodig")}</Badge>}
+                      {r.state === "resolved" && <Badge tone="confirmed">{t("Afgehandeld")}</Badge>}
+                      {r.state === "dismissed" && <Badge tone="done">{t("Weggezet")}</Badge>}
                     </span>
                     {d && <span className="mt-0.5 block text-sm text-ink">{d}</span>}
-                    <span className="mt-0.5 block text-xs text-muted">{formatLocal(r.createdAt, "nl", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                    <span className="mt-0.5 block text-xs text-muted">{formatLocal(r.createdAt, loc, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
                   </a>
                   <span className="flex items-center gap-2">
                     <a href={`/agenda/meldingen-open/${r.id}`} className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm font-medium text-paper">
-                      {r.actionable && open ? "Openen en afhandelen" : "Openen"}
+                      {t(r.actionable && open ? "Openen en afhandelen" : "Openen")}
                     </a>
                     {!r.actionable && open && (
                       <form action={dismissAction}>
                         <input type="hidden" name="id" value={r.id} />
-                        <button className="inline-flex min-h-11 items-center rounded-full px-3 text-sm text-muted underline">Wegzetten</button>
+                        <button className="inline-flex min-h-11 items-center rounded-full px-3 text-sm text-muted underline">{t("Wegzetten")}</button>
                       </form>
                     )}
                   </span>
@@ -123,32 +128,32 @@ export default async function MeldingenPage({ searchParams }: { searchParams: Pr
       </Card>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
-        <Card title="Meldingen op je telefoon">
+        <Card title={t("Meldingen op je telefoon")}>
           <p className="mb-3 text-sm text-muted">
-            Krijg direct een melding bij een nieuwe afspraakaanvraag, een bericht van een klant of een probleem met een factuur — ook als de Agenda dicht is. Het getal op het app-icoon is het aantal acties dat nog op je wacht. Op het vergrendelscherm staan nooit namen, gezondheidsgegevens of bedragen.
+            {t("Krijg direct een melding bij een nieuwe afspraakaanvraag, een bericht van een klant of een probleem met een factuur — ook als de Agenda dicht is. Het getal op het app-icoon is het aantal acties dat nog op je wacht. Op het vergrendelscherm staan nooit namen, gezondheidsgegevens of bedragen.")}
           </p>
           <NotificationSetup />
         </Card>
-        <Card title="Aangemelde apparaten">
+        <Card title={t("Aangemelde apparaten")}>
           {devices.length ? (
             <ul className="divide-y divide-line text-sm">
               {devices.map((d) => (
                 <li key={d.id} className="flex items-center justify-between gap-2 py-2">
                   <span>
-                    {d.device || "Apparaat"}
+                    {d.device || t("Apparaat")}
                     <span className="block text-xs text-muted">
-                      {d.disabledAt ? "Werkt niet meer — zet de meldingen op dit apparaat opnieuw aan" : d.lastSuccessAt ? `Laatste melding: ${formatLocal(d.lastSuccessAt, "nl", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}` : "Nog geen melding ontvangen"}
+                      {t(d.disabledAt ? "Werkt niet meer — zet de meldingen op dit apparaat opnieuw aan" : d.lastSuccessAt ? `Laatste melding: ${formatLocal(d.lastSuccessAt, loc, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}` : "Nog geen melding ontvangen")}
                     </span>
                   </span>
                   <form action={removeDeviceAction}>
                     <input type="hidden" name="id" value={d.id} />
-                    <button className="min-h-11 px-2 text-muted underline">Verwijderen</button>
+                    <button className="min-h-11 px-2 text-muted underline">{t("Verwijderen")}</button>
                   </form>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted">Nog geen apparaten. Zet bij „Meldingen op je telefoon” de meldingen aan op je iPhone, iPad of computer.</p>
+            <p className="text-sm text-muted">{t("Nog geen apparaten. Zet bij „Meldingen op je telefoon” de meldingen aan op je iPhone, iPad of computer.")}</p>
           )}
         </Card>
       </div>
