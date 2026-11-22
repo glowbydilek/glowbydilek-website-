@@ -6,6 +6,7 @@ import { createAppointmentAction } from "@/lib/private/agendaActions";
 import { centsToInput, formatCents } from "@/lib/finance/money";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "../PanelLangProvider";
 
 export type PickTreatment = { id: string; name: string; category: string; duration: number | null; buffer: number; priceCents: number | null };
 type Known = { id: number; firstName: string; lastName: string; email: string | null; phone: string | null; locale: string };
@@ -25,6 +26,7 @@ function addMinutes(t: string, m: number) {
  * are never merged automatically.
  */
 export function NewAppointmentForm({ treatments, day, timeValue, customer }: { treatments: PickTreatment[]; day: string; timeValue?: string; customer?: Known }) {
+  const t = useT();
   const [picked, setPicked] = useState<string[]>([]);
   const [start, setStart] = useState(timeValue ?? "09:00");
   const [manualDuration, setManualDuration] = useState("");
@@ -85,7 +87,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
       {forceNew && <input type="hidden" name="forceNew" value="on" />}
 
       <fieldset className="space-y-3">
-        <legend className="mb-1 text-sm font-medium">Klant</legend>
+        <legend className="mb-1 text-sm font-medium">{t("Klant")}</legend>
         {selected ? (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ink/20 bg-surface p-4">
             <div className="min-w-0">
@@ -93,11 +95,11 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                 {selected.firstName} {selected.lastName}
               </p>
               <p className="break-words text-sm text-muted">{[selected.phone, selected.email].filter(Boolean).join(" · ") || "Geen contactgegevens"}</p>
-              <p className="mt-1 text-xs text-muted">Bestaande klant: de afspraak komt in dit klantprofiel.</p>
+              <p className="mt-1 text-xs text-muted">{t("Bestaande klant: de afspraak komt in dit klantprofiel.")}</p>
             </div>
             {!customer && (
               <button type="button" onClick={() => setSelected(null)} className="min-h-11 rounded-full border border-ink/20 px-4 text-sm">
-                Andere klant
+                {t("Andere klant")}
               </button>
             )}
           </div>
@@ -118,14 +120,14 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
               </Field>
               <Field label="Taal van de e-mails" htmlFor="locale">
                 <Select id="locale" name="locale" defaultValue="nl">
-                  <option value="nl">Nederlands</option>
-                  <option value="en">Engels</option>
+                  <option value="nl">{t("Nederlands")}</option>
+                  <option value="en">{t("Engels")}</option>
                 </Select>
               </Field>
             </div>
             {visibleSuggestions.length > 0 && (
               <div role="status" className="space-y-2 rounded-2xl border border-accent/60 bg-[#fbf3e4] p-4">
-                <p className="text-sm font-medium">Bestaande klant{visibleSuggestions.length > 1 ? "en" : ""} gevonden</p>
+                <p className="text-sm font-medium">{t(visibleSuggestions.length > 1 ? "Bestaande klanten gevonden" : "Bestaande klant gevonden")}</p>
                 <ul className="space-y-2">
                   {visibleSuggestions.map((sg) => (
                     <li key={sg.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white p-3">
@@ -134,7 +136,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                           {sg.firstName} {sg.lastName}
                         </strong>
                         <span className="block break-words text-muted">{[sg.phone, sg.email].filter(Boolean).join(" · ")}</span>
-                        <span className="block text-xs text-muted">{sg.reason}</span>
+                        <span className="block text-xs text-muted">{sg.reason.split(" + ").map(t).join(" + ")}</span>
                       </span>
                       <button
                         type="button"
@@ -144,7 +146,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                         }}
                         className="min-h-11 rounded-full bg-ink px-4 text-sm text-paper"
                       >
-                        Deze klant gebruiken
+                        {t("Deze klant gebruiken")}
                       </button>
                     </li>
                   ))}
@@ -152,7 +154,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
                 {strongMatch && (
                   <label className="flex min-h-11 items-center gap-3 text-sm">
                     <input type="checkbox" checked={forceNew} onChange={(e) => setForceNew(e.target.checked)} className="h-5 w-5 accent-[var(--color-ink)]" />
-                    Nee, dit is een andere persoon: maak een nieuw klantprofiel
+                    {t("Nee, dit is een andere persoon: maak een nieuw klantprofiel")}
                   </label>
                 )}
               </div>
@@ -175,7 +177,7 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
         </Field>
       </div>
       <p className="rounded-xl bg-surface px-4 py-3 text-sm">
-        Eindtijd: <strong>{duration ? addMinutes(start, duration) : "—"}</strong>
+        {t("Eindtijd:")} <strong>{duration ? addMinutes(start, duration) : "—"}</strong>
       </p>
 
       <Field
@@ -189,18 +191,20 @@ export function NewAppointmentForm({ treatments, day, timeValue, customer }: { t
         <Textarea id="internalNote" name="internalNote" rows={3} maxLength={2000} />
       </Field>
       <p className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink-soft">
-        {selected?.email || person.email
-          ? "De klant krijgt automatisch een bevestiging per e-mail, en een herinnering vóór de afspraak."
-          : "Zonder e-mailadres kan er geen bevestiging of herinnering worden verstuurd. Laat het de klant dan zelf weten."}
+        {t(
+          selected?.email || person.email
+            ? "De klant krijgt automatisch een bevestiging per e-mail, en een herinnering vóór de afspraak."
+            : "Zonder e-mailadres kan er geen bevestiging of herinnering worden verstuurd. Laat het de klant dan zelf weten.",
+        )}
       </p>
       <label className="flex min-h-11 items-center gap-3">
         <input type="checkbox" name="allowOutsideHours" className="h-5 w-5 accent-[var(--color-ink)]" />
-        <span>Toestaan buiten mijn werktijden</span>
+        <span>{t("Toestaan buiten mijn werktijden")}</span>
       </label>
       <SubmitButton className="w-full sm:w-auto" pending="Bezig met opslaan…" disabled={!selected && strongMatch && !forceNew}>
-        Afspraak opslaan
+        {t("Afspraak opslaan")}
       </SubmitButton>
-      {!selected && strongMatch && !forceNew && <p className="text-sm text-muted">Kies het bestaande klantprofiel, of geef aan dat het een andere persoon is.</p>}
+      {!selected && strongMatch && !forceNew && <p className="text-sm text-muted">{t("Kies het bestaande klantprofiel, of geef aan dat het een andere persoon is.")}</p>}
     </ActionForm>
   );
 }
@@ -226,6 +230,7 @@ function TreatmentPicker({
   auto: number | null;
   listPrice: number | null;
 }) {
+  const t = useT();
   const [q, setQ] = useState("");
   const needle = q.trim().toLocaleLowerCase("nl");
   const match = (t: PickTreatment) => !needle || t.name.toLocaleLowerCase("nl").includes(needle) || t.category.toLocaleLowerCase("nl").includes(needle);
@@ -235,14 +240,14 @@ function TreatmentPicker({
 
   return (
     <fieldset className="space-y-3">
-      <legend className="mb-1 text-sm font-medium">Behandeling(en)</legend>
+      <legend className="mb-1 text-sm font-medium">{t("Behandeling(en)")}</legend>
       <div className="relative">
         <input
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Zoek een behandeling…"
-          aria-label="Zoek een behandeling"
+          placeholder={t("Zoek een behandeling…")}
+          aria-label={t("Zoek een behandeling")}
           enterKeyHint="search"
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           className="min-h-12 w-full rounded-xl border border-line bg-white px-4 text-base outline-none focus-visible:border-ink"
@@ -293,20 +298,20 @@ function TreatmentPicker({
             </details>
           );
         })}
-        {needle && !treatments.some(match) && <p className="rounded-xl bg-surface px-4 py-3 text-sm text-muted">Geen behandeling gevonden voor “{q}”.</p>}
+        {needle && !treatments.some(match) && <p className="rounded-xl bg-surface px-4 py-3 text-sm text-muted">{t("Geen behandeling gevonden voor")} “{q}”.</p>}
       </div>
 
       {rows.length > 0 && (
         <div className="rounded-2xl border border-line bg-surface p-4 text-sm">
-          <p className="mb-2 font-medium text-ink">Gekozen ({rows.length})</p>
+          <p className="mb-2 font-medium text-ink">{t("Gekozen")} ({rows.length})</p>
           <ul className="divide-y divide-line">
             {rows.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-3 py-2">
                 <span className="min-w-0 break-words">{r.name}</span>
                 <span className="flex shrink-0 items-center gap-3 text-xs text-muted">
-                  <span>{r.duration ? `${r.duration} min` : "—"}</span>
+                  <span>{r.duration ? `${r.duration} ${t("min")}` : "—"}</span>
                   <span>{r.priceCents != null ? formatCents(r.priceCents) : "—"}</span>
-                  <button type="button" onClick={() => toggle(r.id)} aria-label={`${r.name} verwijderen`} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-ink/6">
+                  <button type="button" onClick={() => toggle(r.id)} aria-label={`${t("Verwijderen")}: ${r.name}`} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-ink/6">
                     ✕
                   </button>
                 </span>
@@ -314,16 +319,16 @@ function TreatmentPicker({
             ))}
           </ul>
           <p className="mt-2 flex justify-between border-t border-line pt-2 font-medium">
-            <span>Totaal</span>
+            <span>{t("Totaal")}</span>
             <span>
-              {auto ? `${auto} min` : "duur zelf invullen"} · {listPrice != null ? formatCents(listPrice) : "prijs zelf afspreken"}
+              {auto ? `${auto} ${t("min")}` : t("duur zelf invullen")} · {listPrice != null ? formatCents(listPrice) : t("prijs zelf afspreken")}
             </span>
           </p>
           {missing && (
             <p className="mt-2 text-xs text-muted">
-              Niet alle duur/prijzen zijn ingesteld.{" "}
+              {t("Niet alle duur/prijzen zijn ingesteld.")}{" "}
               <Link href="/admin/behandelingen" className="underline">
-                Stel ze in bij Behandelingen &amp; prijzen
+                {t("Stel ze in bij Behandelingen & prijzen")}
               </Link>
               .
             </p>

@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { PanelMonogram } from "./PanelMonogram";
 import { logoutAction } from "@/lib/private/authActions";
 import { PanelIcon } from "./PanelIcon";
+import { PanelLangProvider } from "./PanelLangProvider";
 import { pt, type PanelLang } from "@/lib/private/panelLang";
 import { setPanelLangAction } from "@/lib/private/panelLangActions";
 
@@ -130,6 +131,7 @@ export function PanelShell({
   );
 
   return (
+    <PanelLangProvider lang={lang}>
     <div className="min-h-dvh lg:grid lg:grid-cols-[17rem_1fr]">
       <aside className="hidden border-r border-line bg-white p-4 lg:flex lg:min-h-dvh lg:flex-col lg:justify-between">
         <div>
@@ -202,5 +204,6 @@ export function PanelShell({
         )}
       </div>
     </div>
+    </PanelLangProvider>
   );
 }

@@ -4,6 +4,7 @@ import { startTransition, useActionState, useEffect, useRef, type FormEvent, typ
 import type { FormState } from "@/lib/private/authActions";
 import { ActionPending } from "./pending";
 import { Notice } from "./ui";
+import { useT } from "./PanelLangProvider";
 
 /**
  * Form bound to a server action, with a visible saved/error message.
@@ -30,6 +31,7 @@ export function ActionForm({
     const fd = new FormData(e.currentTarget, submitter && submitter.getAttribute("name") ? submitter : undefined);
     startTransition(() => run(fd));
   };
+  const t = useT();
   const ref = useRef<HTMLFormElement>(null);
   const msgRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -40,7 +42,7 @@ export function ActionForm({
     <form ref={ref} onSubmit={submit} className={className}>
       <div ref={msgRef} aria-live="polite">
         {state.error && <Notice tone="error">{state.error}</Notice>}
-        {state.ok && state.message && <Notice tone="success">✓ {state.message}</Notice>}
+        {state.ok && state.message && <Notice tone="success">✓ {t(state.message)}</Notice>}
       </div>
       <ActionPending.Provider value={pending}>{children}</ActionPending.Provider>
     </form>

@@ -86,6 +86,9 @@ const name = (u) => (u === "/" ? "home" : u.replace(/^\//, "").replace(/\//g, "_
     await p.getByRole("button", { name: "Inloggen" }).click();
     await p.waitForURL(`${BASE}/agenda`);
     log.push("✓ owner login");
+    // Turkish is the default panel language; take the first set in Dutch.
+    await p.getByRole("button", { name: "NL" }).first().click();
+    await p.waitForTimeout(800);
   } catch (e) {
     log.push(`✗ login: ${String(e.message).split("\n")[0]}`);
     await p.screenshot({ path: path.join(SHOTS, "login-failed.png"), fullPage: true });
@@ -112,7 +115,7 @@ const name = (u) => (u === "/" ? "home" : u.replace(/^\//, "").replace(/\//g, "_
     await p.goto(`${BASE}/agenda`);
     await p.getByRole("button", { name: "TR" }).first().click();
     await p.waitForTimeout(800);
-    for (const u of ["/agenda", "/admin/prijzen", "/agenda/klanten"]) {
+    for (const u of ["/agenda", "/agenda/afspraak/nieuw", "/agenda/meldingen", "/admin/prijzen", "/agenda/klanten"]) {
       await p.goto(BASE + u, { waitUntil: "networkidle" });
       await p.screenshot({ path: path.join(SHOTS, `iphone-tr-${name(u)}.png`), fullPage: true });
     }
