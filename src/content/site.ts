@@ -36,7 +36,8 @@ export const siteConfig: SiteConfig = {
   country: "NL",
   contact: {
     email: "hello@glowbydilek.nl",
-    phone: undefined,
+    // Owner-provided business number (22 Nov 2026).
+    phone: "+31 20 550 0400",
     instagram: undefined,
     address: undefined,
     region: "Amsterdam",
@@ -70,3 +71,19 @@ export function mailto(subject: string, body?: string): string {
   if (body) params.set("body", body);
   return `mailto:${siteConfig.contact.email}?${params.toString().replace(/\+/g, "%20")}`;
 }
+
+/** The business phone in Dutch notation for display (020 550 0400) and as a tel: link. */
+export function phoneDisplay(international?: string): string | null {
+  const p = (international ?? siteConfig.contact.phone ?? "").trim();
+  if (!p) return null;
+  const digits = p.replace(/[^\d]/g, "");
+  if (digits.startsWith("3120") && digits.length === 11) return `020 ${digits.slice(4, 7)} ${digits.slice(7)}`;
+  return p;
+}
+export function telHref(international?: string): string | null {
+  const p = (international ?? siteConfig.contact.phone ?? "").trim();
+  return p ? `tel:${p.replace(/[^+\d]/g, "")}` : null;
+}
+
+/** Human-readable, scraper-resistant form of the public address (see ProtectedEmail). */
+export const emailDisplay = "hello [at] glowbydilek.nl";

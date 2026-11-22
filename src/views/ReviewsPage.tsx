@@ -3,7 +3,7 @@ import { Glint } from "@/components/brand/Logo";
 import { Container } from "@/components/Container";
 import { ReviewForm } from "@/components/forms/ReviewForm";
 import { ReportReview } from "@/components/ReportReview";
-import { siteConfig } from "@/content/site";
+import { emailDisplay } from "@/content/site";
 import { allTreatments } from "@/content/treatments";
 import { href, type Locale, pick, intlTag } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -101,7 +101,7 @@ export async function ReviewsPage({ locale }: { locale: Locale }) {
             </p>
           </div>
           <div className="rounded-[var(--radius-card)] bg-surface p-6 sm:p-9">
-            <ReviewForm locale={locale} t={t.form} forms={dict.forms} privacyHref={href(locale, "privacy")} email={siteConfig.contact.email} turnstileSiteKey={turnstileSiteKey()} />
+            <ReviewForm locale={locale} t={t.form} forms={dict.forms} privacyHref={href(locale, "privacy")} email={emailDisplay} turnstileSiteKey={turnstileSiteKey()} />
           </div>
         </Container>
       </section>

@@ -9,6 +9,7 @@ import { Glint, LogoInline } from "./brand/Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { NavModel } from "./navModel";
 import { Icon } from "./ui/Icon";
+import { ProtectedEmail } from "./ProtectedEmail";
 
 /**
  * Sticky header that is part of the document flow (it never overlaps page
@@ -429,12 +430,7 @@ export function Header({
                   onNavigate={close}
                   placement="up"
                 />
-                <a
-                  href="mailto:hello@glowbydilek.nl"
-                  className="text-sm text-muted"
-                >
-                  hello@glowbydilek.nl
-                </a>
+                <ProtectedEmail className="text-sm text-muted" />
               </div>
             </div>
           </nav>

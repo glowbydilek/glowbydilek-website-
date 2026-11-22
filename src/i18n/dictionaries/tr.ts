@@ -27,7 +27,7 @@ export const tr: Dictionary = {
       prices: {
         title: "Fiyatlar",
         description:
-          "Glow by Dilek'in tüm bakımları tek listede; fiyat, süre ya da 'talep üzerine'. Fiyatla ilgili bir sorun mu var? hello@glowbydilek.nl adresine yaz.",
+          "Glow by Dilek'in tüm bakımları tek listede; fiyat, süre ya da 'talep üzerine'. Fiyatla ilgili bir sorun mu var? hello [at] glowbydilek.nl adresine yaz.",
       },
       about: {
         title: "Dilek hakkında",
@@ -37,7 +37,7 @@ export const tr: Dictionary = {
       contact: {
         title: "İletişim",
         description:
-          "Bir bakım ya da randevu hakkında sorun mu var? Formdan mesaj gönder ya da hello@glowbydilek.nl adresine yaz. Dilek kişisel olarak yanıtlar.",
+          "Bir bakım ya da randevu hakkında sorun mu var? Formdan mesaj gönder ya da hello [at] glowbydilek.nl adresine yaz. Dilek kişisel olarak yanıtlar.",
       },
       booking: {
         title: "Randevu talep et",
@@ -393,6 +393,7 @@ export const tr: Dictionary = {
       subtitle: "Bir bakım, cildin ya da randevu almak hakkında; Dilek her mesajı kendisi okur ve kişisel olarak yanıtlar.",
     },
     emailLabel: "E-posta",
+    phoneLabel: "Telefon",
     emailNote: "Kendin e-posta göndermeyi mi tercih edersin? Elbette.",
     locationTitle: "Konum",
     hoursTitle: "Randevular",
@@ -600,7 +601,7 @@ export const tr: Dictionary = {
     sections: [
       {
         h: "Biz kimiz",
-        p: "Glow by Dilek, kadınlara özel, yalnızca randevuyla kişisel güzellik bakımları ve masajlar sunar. Gizlilikle ilgili sorularını hello@glowbydilek.nl adresine gönderebilirsin.",
+        p: "Glow by Dilek, kadınlara özel, yalnızca randevuyla kişisel güzellik bakımları ve masajlar sunar. Gizlilikle ilgili sorularını hello [at] glowbydilek.nl adresine gönderebilirsin.",
       },
       {
         h: "Hangi bilgileri alıyoruz",
@@ -624,7 +625,7 @@ export const tr: Dictionary = {
       },
       {
         h: "Yorumlar",
-        p: "Bir yorum yazarsan puanın, metnin ve seçtiğin ad (adın, baş harflerin veya anonim) Dilek okuduktan sonra web sitesinde yayımlanır. E-posta adresi isteğe bağlıdır, asla gösterilmez ve yalnızca kötüye kullanımı önlemeye yardımcı olur. Yorumunun kaldırılmasını istersen hello@glowbydilek.nl adresine yaz.",
+        p: "Bir yorum yazarsan puanın, metnin ve seçtiğin ad (adın, baş harflerin veya anonim) Dilek okuduktan sonra web sitesinde yayımlanır. E-posta adresi isteğe bağlıdır, asla gösterilmez ve yalnızca kötüye kullanımı önlemeye yardımcı olur. Yorumunun kaldırılmasını istersen hello [at] glowbydilek.nl adresine yaz.",
       },
       {
         h: "Çerezler ve Google Analytics",
@@ -640,7 +641,7 @@ export const tr: Dictionary = {
       },
       {
         h: "Hakların",
-        p: "Bilgilerini görmeyi, bir kopyasını almayı, düzeltilmesini ya da silinmesini isteyebilirsin. hello@glowbydilek.nl adresine yaz; bir ay içinde yanıt veririz. Bilgilerinin işlenme şekline katılmıyorsan Hollanda Veri Koruma Kurumu'na (Autoriteit Persoonsgegevens) şikâyette bulunabilirsin.",
+        p: "Bilgilerini görmeyi, bir kopyasını almayı, düzeltilmesini ya da silinmesini isteyebilirsin. hello [at] glowbydilek.nl adresine yaz; bir ay içinde yanıt veririz. Bilgilerinin işlenme şekline katılmıyorsan Hollanda Veri Koruma Kurumu'na (Autoriteit Persoonsgegevens) şikâyette bulunabilirsin.",
       },
     ],
   },

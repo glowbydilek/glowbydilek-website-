@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ProtectedEmail } from "../ProtectedEmail";
 
 type TurnstileApi = {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
@@ -112,7 +113,7 @@ export function Turnstile({
     return (
       <p role="alert" className="text-sm text-[#9b3b2f]">
         {labels.unavailable ?? labels.blocked}{" "}
-        <a className="underline" href={`mailto:${labels.email}`}>{labels.email}</a>.
+        <ProtectedEmail className="underline" />.
       </p>
     );
   }
@@ -123,9 +124,7 @@ export function Turnstile({
       {status === "blocked" && (
         <p className="text-sm text-[#9b3b2f]">
           {labels.blocked}{" "}
-          <a className="underline" href={`mailto:${labels.email}`}>
-            {labels.email}
-          </a>
+          <ProtectedEmail className="underline" />
           .
         </p>
       )}

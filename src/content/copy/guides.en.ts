@@ -54,7 +54,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
       {
         title: "Can’t make it after all?",
         paragraphs: [
-          "Please let us know as soon as possible by replying to your confirmation email or writing to hello@glowbydilek.nl, so the time can be offered to someone else.",
+          "Please let us know as soon as possible by replying to your confirmation email or writing to hello [at] glowbydilek.nl, so the time can be offered to someone else.",
         ],
       },
     ],
@@ -69,7 +69,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Can I ask a question first?",
-        a: "Of course. Use the contact form or email hello@glowbydilek.nl. Dilek replies personally.",
+        a: "Of course. Use the contact form or email hello [at] glowbydilek.nl. Dilek replies personally.",
       },
     ],
   },
