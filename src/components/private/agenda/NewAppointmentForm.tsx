@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createAppointmentAction } from "@/lib/private/agendaActions";
 import { centsToInput, formatCents } from "@/lib/finance/money";
@@ -321,9 +322,9 @@ function TreatmentPicker({
           {missing && (
             <p className="mt-2 text-xs text-muted">
               Niet alle duur/prijzen zijn ingesteld.{" "}
-              <a href="/admin/behandelingen" className="underline">
+              <Link href="/admin/behandelingen" className="underline">
                 Stel ze in bij Behandelingen &amp; prijzen
-              </a>
+              </Link>
               .
             </p>
           )}
