@@ -8,6 +8,7 @@ import { appointmentCustomerMail, appointmentOwnerMail } from "@/lib/mail/templa
 import { createLegacyRequest } from "@/lib/booking/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { applyPromotion, checkCode } from "@/lib/promotions/service";
+import { notifySoon } from "@/lib/notify/service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
       );
       // Automatic promotions, or the one matching the code (only for treatments with a fixed price).
       await applyPromotion(getDb(), id, d.promoCode ?? null).catch((err) => console.error("[appointment] promotion not applied:", err instanceof Error ? err.message.slice(0, 120) : err));
+      await notifySoon(getDb());
     },
     signature: (d) => [[...d.treatments].sort().join(","), d.preferredDate, d.timeRange, d.notes ?? ""].join("|"),
     ownerMail: (d) => appointmentOwnerMail(d, names(d, "nl")),
