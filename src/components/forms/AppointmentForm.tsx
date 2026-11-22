@@ -14,7 +14,9 @@ import { FormError, FormSuccess } from "./FormStatus";
 import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
 
-type Group = { id: string; name: string; treatments: { id: string; name: string }[] };
+type Group = { id: string; name: string | null; treatments: { id: string; name: string }[] };
+/** One website category (same order and names as the menu) with its sub-groups. */
+export type FormSection = { id: string; name: string; groups: Group[] };
 
 /**
  * Appointment REQUEST form. Sends the request to the studio mailbox and an
@@ -24,7 +26,7 @@ type Group = { id: string; name: string; treatments: { id: string; name: string 
 export function AppointmentForm({
   locale,
   t,
-  groups,
+  sections,
   calendar,
   privacyHref,
   email,
@@ -34,7 +36,7 @@ export function AppointmentForm({
 }: {
   locale: "nl" | "en" | "tr";
   t: Dictionary["forms"];
-  groups: Group[];
+  sections: FormSection[];
   /** Closed weekdays and dates (disabled in the calendar, refused by the API). */
   calendar: RequestCalendar;
   privacyHref: string;
@@ -47,7 +49,11 @@ export function AppointmentForm({
   const challenge = useTurnstileToken();
   const { state, submit, reset } = useFormSubmit("/api/appointment");
   const formRef = useRef<HTMLFormElement>(null);
-  const ids = useMemo(() => groups.flatMap((g) => g.treatments.map((x) => x.id)), [groups]);
+  const ids = useMemo(() => sections.flatMap((s) => s.groups.flatMap((g) => g.treatments.map((x) => x.id))), [sections]);
+  const sectionOf = useMemo(() => new Map(sections.flatMap((s) => s.groups.flatMap((g) => g.treatments.map((x) => [x.id, s.id] as const)))), [sections]);
+  const nameOf = useMemo(() => new Map(sections.flatMap((s) => s.groups.flatMap((g) => g.treatments.map((x) => [x.id, x.name] as const)))), [sections]);
+  // One category open at a time: the list stays short on a phone.
+  const [active, setActive] = useState(sections[0]?.id ?? "");
   // Earliest selectable date = today in Amsterdam (not UTC, not the device zone).
   const [today] = useState(() => amsterdamToday());
   const empty = { preferredDate: "", alternative: "", name: "", email: "", phone: "", notes: "", promoCode: "" };
@@ -82,9 +88,12 @@ export function AppointmentForm({
   // page itself can stay static.
   useEffect(() => {
     const wanted = preselectedTreatment(window.location.search);
+    if (!wanted || !ids.includes(wanted)) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL after hydration
-    if (wanted && ids.includes(wanted)) setTreatments((s) => (s.includes(wanted) ? s : [...s, wanted]));
-  }, [ids]);
+    setTreatments((s) => (s.includes(wanted) ? s : [...s, wanted]));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- open the category of the preselected treatment
+    setActive(sectionOf.get(wanted) ?? sections[0]?.id ?? "");
+  }, [ids, sectionOf, sections]);
 
   const toggle = (id: string) => {
     setTreatments((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
@@ -110,6 +119,7 @@ export function AppointmentForm({
       track("booking_submitted", { form: "request" });
       setValues(empty);
       setTreatments([]);
+      setActive(sections[0]?.id ?? "");
       setTimeRange("");
       setPrivacy(false);
     }
@@ -158,31 +168,81 @@ export function AppointmentForm({
         <p id="appt-treatments-hint" className="mt-1 text-sm text-muted">
           {t.treatmentsHint}
         </p>
-        <div className="mt-4 space-y-5">
-          {groups.map((g) => (
-            <div key={g.id}>
-              <p className="font-serif text-xl text-ink">{g.name}</p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                {g.treatments.map((tr) => {
-                  const on = treatments.includes(tr.id);
-                  return (
-                    <label key={tr.id} data-selected={on ? "true" : undefined} className={chip(on)}>
-                      <input
-                        type="checkbox"
-                        className="sr-only"
-                        checked={on}
-                        onChange={() => toggle(tr.id)}
-                        aria-invalid={fe("treatments") ? true : undefined}
-                      />
-                      {on && <Icon name="check" className="h-3.5 w-3.5" />}
-                      {tr.name}
-                    </label>
-                  );
-                })}
-              </div>
+        {sections.length > 1 && (
+          <div className="mt-4">
+            <p className="text-sm text-ink-soft">{t.chooseCategory}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {sections.map((sec) => {
+                const on = sec.id === active;
+                const n = treatments.filter((id) => sectionOf.get(id) === sec.id).length;
+                return (
+                  <button
+                    key={sec.id}
+                    type="button"
+                    aria-pressed={on}
+                    aria-controls={`appt-sec-${sec.id}`}
+                    onClick={() => setActive(sec.id)}
+                    className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-deep ${
+                      on ? "border-accent-deep bg-glow-soft text-ink" : "border-ink/15 bg-paper text-ink-soft hover:border-ink/40"
+                    }`}
+                  >
+                    {sec.name}
+                    {n > 0 && <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1.5 text-[0.7rem] text-paper">{n}</span>}
+                  </button>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+        {sections.map((sec) => (
+          <div key={sec.id} id={`appt-sec-${sec.id}`} hidden={sec.id !== active} className="mt-5 space-y-4 border-t border-line pt-4">
+            {sec.groups.map((g) => (
+              <div key={g.id}>
+                {g.name && <p className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-accent-deep">{g.name}</p>}
+                <div className={`${g.name ? "mt-2" : ""} flex flex-wrap gap-2`}>
+                  {g.treatments.map((tr) => {
+                    const on = treatments.includes(tr.id);
+                    return (
+                      <label key={tr.id} data-selected={on ? "true" : undefined} className={chip(on)}>
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={on}
+                          onChange={() => toggle(tr.id)}
+                          aria-invalid={fe("treatments") ? true : undefined}
+                        />
+                        {on && <Icon name="check" className="h-3.5 w-3.5" />}
+                        {tr.name}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+        {treatments.length > 0 && (
+          <div className="mt-5 rounded-2xl bg-surface p-4" aria-live="polite">
+            <p className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">
+              {t.selected} ({treatments.length})
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {treatments.map((id) => (
+                <li key={id}>
+                  <button
+                    type="button"
+                    onClick={() => toggle(id)}
+                    aria-label={`${nameOf.get(id) ?? id}: ${t.remove}`}
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-paper px-3 text-sm text-ink shadow-card"
+                  >
+                    {nameOf.get(id) ?? id}
+                    <span aria-hidden="true" className="text-muted">×</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {fe("treatments") && (
           <p id="appt-treatments-error" className="mt-3 text-sm text-[#9b3b2f]">
             {fe("treatments")}
