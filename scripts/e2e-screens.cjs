@@ -31,6 +31,7 @@ function latestResetLink(since) {
 
 const PRIVATE = [
   "/agenda",
+  "/agenda/meldingen",
   "/agenda/kalender",
   "/agenda/aanvragen",
   "/agenda/afspraak/nieuw",
