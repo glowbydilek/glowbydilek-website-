@@ -142,7 +142,7 @@ export default async function TreatmentsAdmin() {
                             <Badge tone={STATUS[t.status]?.tone ?? "neutral"}>{STATUS[t.status]?.label ?? t.status}</Badge>
                             {t.pricingMode === "on_request" ? "op aanvraag" : `${t.pricingMode === "from" ? "vanaf " : ""}${euro(t.priceCents)}`}
                             {" · "}
-                            {t.durationMinutes ? `${t.durationMinutes} min` : "duur?"}
+                            {t.durationMinutes ? `${t.durationMinutes} min` : "duur niet ingesteld"}
                             {!t.visible ? " · verborgen" : ""}
                             {t.bookableOnline ? " · online" : ""}
                             {!t.nameTr && <Badge tone="pending">Vertaling nodig (TR)</Badge>}

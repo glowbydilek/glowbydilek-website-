@@ -6,13 +6,16 @@ import { systemStatus } from "@/lib/private/status";
 
 export const metadata = { title: "Overzicht" };
 
+// Everyday business first: one tap to each daily task.
 const tiles = [
-  { href: "/admin/paginas", title: "Pagina's", body: "Teksten, koppen, knoppen en afbeeldingen per pagina (NL/EN)." },
-  { href: "/admin/thema", title: "Thema & Design", body: "Kleuren, knoppen, lettertypes, header en footer." },
-  { href: "/admin/navigatie", title: "Menu & footer", body: "Menu-items, volgorde, footertekst en contactgegevens." },
-  { href: "/admin/media", title: "Media", body: "Foto's uploaden, vervangen, alt-teksten en uitsnede." },
-  { href: "/admin/behandelingen", title: "Behandelingen & prijzen", body: "Prijzen, duur, opruimtijd en online boekbaar." },
-  { href: "/admin/seo", title: "SEO", body: "Titels, omschrijvingen, indexering en doorverwijzingen." },
+  { href: "/agenda", title: "Agenda", body: "Afspraken van vandaag en de kalender." },
+  { href: "/agenda/afspraak/nieuw", title: "Nieuwe afspraak", body: "Snel een afspraak inplannen." },
+  { href: "/agenda/klanten", title: "Klanten", body: "Gegevens, afspraken en documenten per klant." },
+  { href: "/admin/prijzen", title: "Prijzen beheren", body: "Prijs of ‘Op aanvraag’ — tik op OK, klaar." },
+  { href: "/agenda/facturen", title: "Facturen", body: "Factuur maken met je behandelingen en prijzen." },
+  { href: "/agenda/intake", title: "Intakeformulieren & PDF", body: "Formulieren vinden, bekijken en printen." },
+  { href: "/admin/behandelingen", title: "Behandelingen", body: "Teksten, duur en publicatie van behandelingen." },
+  { href: "/admin/bedrijf", title: "Bedrijfsgegevens", body: "Bedrijfs- en factuurgegevens." },
 ];
 
 export default async function AdminHome() {
@@ -20,22 +23,22 @@ export default async function AdminHome() {
   const { checks, counts } = await systemStatus(getDb());
   return (
     <>
-      <PageHeader title={`Welkom, ${s.user.name || "Dilek"}`} subtitle="Beheer hier de website. Afspraken en klanten vind je in Agenda." />
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
-        <Link href="/agenda/aanvragen" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.pending}</span><span className="text-sm text-muted">open aanvragen</span></Link>
-        <Link href="/agenda/berichten" className="rounded-2xl border border-line bg-white p-4"><span className="block text-3xl font-semibold">{counts.unread}</span><span className="text-sm text-muted">nieuwe berichten</span></Link>
-        <Link href="/agenda/instellingen#emails" className="rounded-2xl border border-line bg-white p-4"><span className={`block text-3xl font-semibold ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-sm text-muted">mislukte e-mails</span></Link>
+      <PageHeader title={`Welkom, ${s.user.name || "Dilek"}`} subtitle="Alles voor je dagelijkse werk op één plek. Website- en technische instellingen staan onderaan het menu." />
+      <div className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
+        <Link href="/agenda/aanvragen" className="rounded-2xl border border-line bg-white p-3 sm:p-4"><span className="block text-2xl font-semibold sm:text-3xl">{counts.pending}</span><span className="text-xs text-muted sm:text-sm">open aanvragen</span></Link>
+        <Link href="/agenda/berichten" className="rounded-2xl border border-line bg-white p-3 sm:p-4"><span className="block text-2xl font-semibold sm:text-3xl">{counts.unread}</span><span className="text-xs text-muted sm:text-sm">nieuwe berichten</span></Link>
+        <Link href="/agenda/instellingen#emails" className="rounded-2xl border border-line bg-white p-3 sm:p-4"><span className={`block text-2xl font-semibold sm:text-3xl ${counts.failedMail ? "text-[#8e2f24]" : ""}`}>{counts.failedMail}</span><span className="text-xs text-muted sm:text-sm">mislukte e-mails</span></Link>
       </div>
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1.4fr_1fr]">
-        <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
+        <div className="grid [&>*]:min-w-0 grid-cols-2 gap-3">
           {tiles.map((t) => (
-            <Link key={t.href} href={t.href} className="rounded-2xl border border-line bg-white p-4 transition hover:border-ink/30">
-              <span className="block font-serif text-2xl">{t.title}</span>
-              <span className="mt-1 block text-sm text-muted">{t.body}</span>
+            <Link key={t.href} href={t.href} className="rounded-2xl border border-line bg-white p-3.5 transition hover:border-ink/30 sm:p-4">
+              <span className="block font-serif text-xl">{t.title}</span>
+              <span className="mt-1 block text-xs text-muted sm:text-sm">{t.body}</span>
             </Link>
           ))}
         </div>
-        <Card title="Systeemstatus">
+        <Card title="Systeemstatus" className="hidden lg:block">
           <ul className="space-y-2.5 text-sm">
             {checks.map((c) => (
               <li key={c.label} className="flex gap-3">

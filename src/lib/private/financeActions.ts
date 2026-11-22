@@ -103,7 +103,7 @@ export async function saveInvoiceAction(_: FormState, f: FormData): Promise<Form
   const lines: InvoiceLine[] = [];
   for (let i = 0; i < desc.length; i++) {
     if (!desc[i].trim() && amt[i] == null) continue;
-    if (amt[i] == null) return { error: `Regel ${i + 1}: controleer het bedrag.` };
+    if (amt[i] == null) return { error: `Regel ${i + 1}${desc[i].trim() ? ` (${desc[i].trim().slice(0, 60)})` : ""}: vul het (afgesproken) bedrag in, bijvoorbeeld 45 of 42,50.` };
     const vat = (["standard", "reduced", "zero", "exempt"] as const).find((v) => v === vats[i]) ?? "standard";
     lines.push({ description: desc[i].trim().slice(0, 200), quantity: qty[i] || 1, unitCents: credit ? -Math.abs(amt[i]!) : amt[i]!, vat });
   }

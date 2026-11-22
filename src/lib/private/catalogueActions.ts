@@ -250,3 +250,42 @@ export async function groupAction(_: FormState, f: FormData): Promise<FormState>
   refresh();
   return { ok: true, message: "Opgeslagen." };
 }
+
+// ──────────────────────────────────────────────────── Quick price (Prijzen beheren)
+
+/**
+ * One-row price update from Admin → Prijzen beheren. Changes only how the
+ * price is shown and the amount; status, texts, duration and categories stay
+ * as they are. Writes the same treatments row the website and the booking
+ * flow read (no second price list), logs the change in price_history and the
+ * audit log, and refreshes the website.
+ */
+export async function quickPriceAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertCan("cms.publish");
+  const db = getDb();
+  const id = str(f, "id");
+  const [t] = await db.select().from(treatments).where(eq(treatments.id, id));
+  if (!t) return { error: "Behandeling niet gevonden." };
+  const mode = str(f, "pricingMode");
+  if (mode !== "on_request" && mode !== "fixed" && mode !== "from") return { error: "Kies ‘Op aanvraag’ of ‘Vaste prijs’." };
+  const p = validatePricing({ mode, price: str(f, "price"), duration: t.durationMinutes ? String(t.durationMinutes) : "", buffer: String(t.bufferMinutes ?? 0), vat: t.vatCategory });
+  if (!p.ok) return { error: mode === "on_request" ? p.error : "Vul een geldig bedrag in, bijvoorbeeld 35 of 42,50." };
+  const { pricingMode, priceCents, priceFrom } = p.value;
+  const currentMode = t.pricingMode ?? (t.priceCents == null ? "on_request" : t.priceFrom ? "from" : "fixed");
+  if (currentMode === pricingMode && t.priceCents === priceCents) return { ok: true, message: "Geen wijziging — de prijs was al zo." };
+  // ‘Op aanvraag’ goes through a request and price proposal; online time-slot booking needs a price.
+  const stopOnline = pricingMode === "on_request" && t.bookableOnline;
+  await db
+    .update(treatments)
+    .set({ pricingMode, priceCents, priceFrom, ...(stopOnline ? { bookableOnline: false } : {}) })
+    .where(eq(treatments.id, id));
+  await db.insert(priceHistory).values({ itemId: id, pricingMode, priceCents, userId: s.user.id });
+  await audit(db, { userId: s.user.id, action: "catalogue.price.updated", entity: "treatment", entityId: id, details: { from: { pricingMode: currentMode, priceCents: t.priceCents }, to: { pricingMode, priceCents }, stopOnline } });
+  refresh();
+  revalidatePath("/admin/prijzen");
+  const shown = pricingMode === "on_request" ? "Op aanvraag" : `${pricingMode === "from" ? "vanaf " : ""}€ ${(priceCents! / 100).toFixed(2).replace(".", ",")}`;
+  return {
+    ok: true,
+    message: `Opgeslagen: ${shown}.${stopOnline ? " Online tijdstip kiezen staat nu uit; klanten sturen een aanvraag." : ""}`,
+  };
+}
