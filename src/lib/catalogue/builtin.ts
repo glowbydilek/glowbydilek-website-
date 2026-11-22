@@ -21,7 +21,7 @@ export const BUILTIN_SECTIONS: Section[] = [
   { id: "waxing", kind: "treatments", slug: { nl: "waxbehandelingen", en: "waxing-treatments", tr: "agda" }, name: { nl: "Waxbehandelingen", en: "Waxing", tr: "Ağda" }, status: "published", sort: 0, photo: "treatments-hero", mediaId: null, builtin: true },
   // Published for the confirmed facial care with steam; the other facial entries remain drafts.
   { id: "facial", kind: "treatments", slug: { nl: "gezichtsbehandelingen", en: "facial-treatments", tr: "yuz-bakimlari" }, name: { nl: "Gezichtsbehandelingen", en: "Facial treatments", tr: "Yüz bakımları" }, status: "published", sort: -2, photo: "facial-steam", mediaId: null, builtin: true },
-  { id: "bodycare", kind: "treatments", slug: { nl: "lichaamsbehandelingen", en: "body-treatments", tr: "vucut-bakimlari" }, name: { nl: "Lichaamsbehandelingen", en: "Body treatments", tr: "Vücut bakımları" }, status: "draft", sort: 2, photo: "bodycare", mediaId: null, builtin: true },
+  { id: "bodycare", kind: "treatments", slug: { nl: "lichaamsbehandelingen", en: "body-treatments", tr: "vucut-bakimlari" }, name: { nl: "Lichaamsbehandelingen", en: "Body treatments", tr: "Vücut bakımları" }, status: "published", sort: 2, photo: "bodycare", mediaId: null, builtin: true },
   { id: "massage", kind: "treatments", slug: { nl: "massages", en: "massages", tr: "masajlar" }, name: { nl: "Massages", en: "Massages", tr: "Masajlar" }, status: "published", sort: -1, photo: "massage-body", mediaId: null, builtin: true },
   { id: "packages", kind: "packages", slug: { nl: "pakketten", en: "packages", tr: "paketler" }, name: { nl: "Pakketten", en: "Packages", tr: "Paketler" }, status: "draft", sort: 4, photo: "aftercare", mediaId: null, builtin: true },
 ];
@@ -143,6 +143,44 @@ const facial: Item[] = [
     sort: 3,
     related: ["facial-exfoliation", "facial-manual-cleansing", "facial-complete"],
   }),
+  {
+    // Owner's official treatment description (22 Nov 2026). Price and duration
+    // not confirmed yet: "op aanvraag", duration empty until Dilek enters them.
+    ...draft({
+      id: "facial-deep-cleansing",
+      sectionId: "facial",
+      slug: { nl: "dieptereinigende-gezichtsbehandeling", en: "deep-cleansing-facial", tr: "derin-temizleyici-yuz-bakimi" },
+      name: { nl: "Dieptereinigende gezichtsbehandeling", en: "Deep cleansing facial", tr: "Derin temizleyici yüz bakımı" },
+      description: {
+        nl: "Een professionele dieptereiniging in tien stappen, van huidanalyse en stoom tot masker, gezichtsmassage en zonbescherming, afgestemd op jouw huid.",
+        en: "A professional deep cleanse in ten steps, from skin analysis and steam to a mask, facial massage and sun protection, tailored to your skin.",
+        tr: "Cilt analizinden ve buhardan maskeye, yüz masajına ve güneş korumasına uzanan on adımlı, cildine göre ayarlanan profesyonel derin temizlik.",
+      },
+      photo: "facial",
+      sort: 0,
+      related: ["facial-steam", "brow-lash-tint", "massage-face"],
+    }),
+    status: "published" as const,
+  },
+  {
+    // Owner's official description (22 Nov 2026). No eyebrow/eyelash category
+    // exists, so it sits with the facial treatments. Price/duration on request.
+    ...draft({
+      id: "brow-lash-tint",
+      sectionId: "facial",
+      slug: { nl: "wenkbrauwen-en-wimpers-verven", en: "eyebrow-and-eyelash-tinting", tr: "kas-ve-kirpik-boyama" },
+      name: { nl: "Wenkbrauwen & wimpers verven", en: "Eyebrow & eyelash tinting", tr: "Kaş ve kirpik boyama" },
+      description: {
+        nl: "Geef je ogen een mooie, verzorgde en sprekende uitstraling: met het verven van wenkbrauwen en wimpers accentueren we de natuurlijke schoonheid van je ogen.",
+        en: "Give your eyes a lovely, groomed and expressive look: tinting your brows and lashes brings out the natural beauty of your eyes.",
+        tr: "Gözlerine güzel, bakımlı ve etkileyici bir ifade kazandır: kaş ve kirpik boyamayla gözlerinin doğal güzelliğini ön plana çıkarıyoruz.",
+      },
+      photo: "botanical",
+      sort: 0,
+      related: ["eyebrows", "facial-deep-cleansing", "facial-steam"],
+    }),
+    status: "published" as const,
+  },
   draft({
     id: "facial-complete",
     sectionId: "facial",
@@ -156,15 +194,24 @@ const facial: Item[] = [
 ];
 
 const body: Item[] = [
-  draft({
-    id: "body-wrap",
-    sectionId: "bodycare",
-    slug: { nl: "lichaamspakking", en: "body-wrap", tr: "vucut-sargisi" },
-    name: { nl: "Lichaamspakking", en: "Body wrap", tr: "Vücut sargısı" },
-    description: { nl: "Een verzorgende pakking voor de huid van het lichaam, met een moment van rust terwijl de pakking inwerkt.", en: "A caring wrap for the skin of the body, with a moment of rest while the wrap does its work.", tr: "Vücut cildine bakım yapan bir sargı; sargı etki ederken dinlenme anı." },
-    photo: "bodycare",
-    sort: 0,
-  }),
+  {
+    // Owner's official description (22 Nov 2026). Keeps its id and URLs; price
+    // and duration on request until Dilek enters them.
+    ...draft({
+      id: "body-wrap",
+      sectionId: "bodycare",
+      slug: { nl: "lichaamspakking", en: "body-wrap", tr: "vucut-sargisi" },
+      name: { nl: "Lichaamspakking & huidverzorging", en: "Body wrap & skin care", tr: "Vücut sargısı ve cilt bakımı" },
+      description: {
+        nl: "Een complete verzorgende behandeling voor een zachte, gladde en stralende huid op onder andere rug, armen en benen — ideaal voor een huid met onzuiverheden, puistjes of een ruwe huidstructuur.",
+        en: "A complete caring treatment for soft, smooth and radiant-looking skin on areas such as the back, arms and legs — ideal for skin with impurities, blemishes or a rough texture.",
+        tr: "Sırt, kollar ve bacaklar gibi bölgelerde yumuşak, pürüzsüz ve ışıltılı bir cilt için eksiksiz bir bakım; sivilceli, lekeli veya pürüzlü ciltler için ideal.",
+      },
+      photo: "bodycare",
+      sort: 0,
+    }),
+    status: "published" as const,
+  },
 ];
 
 /**
@@ -312,3 +359,20 @@ const packages: Item[] = [
 ];
 
 export const BUILTIN_ITEMS: Item[] = [...waxing, ...facial, ...body, ...massage, ...packages];
+
+/**
+ * Items added after the first deployment. The seed only runs on an empty
+ * catalogue, so these are inserted on their own when missing (INSERT IGNORE,
+ * never touching rows the owner already has).
+ */
+export const LATE_ITEM_IDS = ["facial-deep-cleansing", "brow-lash-tint"];
+
+/**
+ * Built-in rows the owner confirmed later (22 Nov 2026). Applied once, and
+ * only while the row still holds the original seeded text (`whenNameNl`), so
+ * anything the owner already changed is never overwritten.
+ */
+export const LATE_UPDATES = {
+  sections: [{ id: "bodycare", whenNameNl: "Lichaamsbehandelingen", whenStatus: "draft", set: { status: "published" as const } }],
+  items: [{ id: "body-wrap", whenNameNl: "Lichaamspakking", whenStatus: "draft" }],
+};

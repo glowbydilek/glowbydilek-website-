@@ -65,18 +65,18 @@ after(() => setSnapshotResolver(() => null));
 
 // ───────────────────────────────────────────────────────── pure
 
-test("without a database: the five massages, facial care with steam and the 13 waxing treatments are public; the rest are drafts", () => {
+test("without a database: the five massages, the three confirmed facial treatments, the body wrap and the 13 waxing treatments are public; the rest are drafts", () => {
   withSnapshot({});
-  assert.deepEqual(publicSections().map((s) => s.id), ["facial", "massage", "waxing"]);
-  assert.equal(publicItems().length, 19);
-  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-steam"]) {
+  assert.deepEqual(publicSections().map((s) => s.id), ["facial", "massage", "waxing", "bodycare"]);
+  assert.equal(publicItems().length, 22);
+  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-steam", "facial-deep-cleansing", "brow-lash-tint", "body-wrap"]) {
     const m = itemById(id)!;
     assert.equal(isPublicItem(m), true, id);
     assert.equal(m.pricing.mode, "on_request", `${id} has no invented price`);
     assert.equal(m.durationMinutes, null, `${id} has no invented duration`);
     assert.ok(m.name.nl && m.name.en && m.name.tr, `${id} is named in NL, EN and TR`);
   }
-  for (const id of ["facial-manual-cleansing", "facial-brush-cleansing", "facial-exfoliation", "facial-mask", "facial-complete", "body-wrap", "pkg-glow-face-trio", "pkg-smooth-essentials", "pkg-glow-complete", "pkg-bikini-smooth"]) {
+  for (const id of ["facial-manual-cleansing", "facial-brush-cleansing", "facial-exfoliation", "facial-mask", "facial-complete", "pkg-glow-face-trio", "pkg-smooth-essentials", "pkg-glow-complete", "pkg-bikini-smooth"]) {
     const i = itemById(id)!;
     assert.equal(i.status, "draft", id);
     assert.equal(isPublicItem(i), false, id);
@@ -91,6 +91,8 @@ test("without a database: the five massages, facial care with steam and the 13 w
   assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "gezichtspeeling"]), null, "draft facial treatment stays hidden");
   assert.equal(resolveCatalogue("nl", ["pakketten", "glow-face-trio"]), null);
   assert.equal(resolveCatalogue("nl", ["waxbehandelingen", "gezicht", "wenkbrauwen-waxen"])?.type, "item");
+  assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "dieptereinigende-gezichtsbehandeling"])?.type, "item");
+  assert.equal(resolveCatalogue("en", ["facial-treatments", "eyebrow-and-eyelash-tinting"])?.type, "item");
 });
 
 test("an item is public only when it, its section and (for packages) every part are published", () => {
@@ -117,7 +119,7 @@ test("an item is public only when it, its section and (for packages) every part 
   assert.equal(itemHref("en", itemById("facial-exfoliation")!), "/en/facial-treatments/facial-exfoliation");
   assert.equal(resolveCatalogue("nl", ["gezichtsbehandelingen", "gezichtspeeling"])?.type, "item");
   assert.equal(alternateCataloguePath("/gezichtsbehandelingen/gezichtspeeling", "en"), "/en/facial-treatments/facial-exfoliation");
-  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing", "facial", "packages"], "owner sort order from the database");
+  assert.deepEqual(publicSections().map((s) => s.id), ["massage", "waxing", "facial", "packages", "bodycare"], "owner sort order from the database");
 });
 
 test("archived or hidden items disappear, owner-created items resolve by their own slugs", () => {
@@ -194,7 +196,8 @@ describe("catalogue seed and price proposals (database)", { skip: skipDb }, () =
     const mask = rows.find((r) => r.id === "facial-mask")!;
     assert.equal(mask.priceCents, 5500);
     assert.equal(mask.status, "published");
-    assert.equal(rows.find((r) => r.id === "body-wrap")!.status, "draft");
+    assert.equal(rows.find((r) => r.id === "body-wrap")!.status, "published", "owner confirmed the body wrap");
+    assert.equal(rows.find((r) => r.id === "facial-complete")!.status, "draft");
     assert.equal((await db.select().from(serviceSections)).length, 5);
     assert.equal((await db.select().from(packageItems).where(eq(packageItems.packageId, "pkg-glow-face-trio"))).length, 3);
   });

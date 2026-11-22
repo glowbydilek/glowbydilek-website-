@@ -27,6 +27,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/prijzen", label: "Prijzen beheren", icon: "euro" },
     { href: "/agenda/intake", label: "Intakeformulieren & PDF", icon: "consult" },
     { href: "/agenda/facturen", label: "Facturen", icon: "invoice" },
+    { href: "/agenda/werktijden", label: "Openingstijden & beschikbaarheid", icon: "clock" },
     { href: "/admin/bedrijf", label: "Bedrijfsgegevens", icon: "building" },
     { href: "/admin/beveiliging", label: "Mijn account & beveiliging", icon: "shield" },
     { href: "/admin/paginas", label: "Pagina's", icon: "pages", technical: true },
@@ -55,6 +56,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     "/agenda/klanten": perms.has("customers.view"),
     "/agenda/intake": perms.has("health.view"),
     "/agenda/facturen": perms.has("finance"),
+    "/agenda/werktijden": perms.has("hours.manage"),
   };
   const nav = [
     ...allNav.filter((n) => owner || NON_OWNER[n.href]).map((n) => ({ ...n, label: lang === "nl" ? n.label : pt(lang, `admin:${n.href}`, pt(lang, n.href, n.label)) })),

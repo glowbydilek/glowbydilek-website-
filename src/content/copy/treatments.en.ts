@@ -45,7 +45,7 @@ export const treatmentsEn: TreatmentCopySet = {
       },
       {
         q: "Can I have my brows tinted too?",
-        a: "Brow tinting is not offered at the moment. Treatments only appear on the website once they are genuinely available.",
+        a: "Yes. Eyebrow & eyelash tinting is listed under facial treatments. Mention it in your request if you would like to combine it with eyebrow waxing.",
       },
       {
         q: "What if I’m not happy with the shape?",

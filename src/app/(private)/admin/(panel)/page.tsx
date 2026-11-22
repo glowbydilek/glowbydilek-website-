@@ -14,6 +14,7 @@ const tiles = [
   { href: "/admin/prijzen", title: "Prijzen beheren", body: "Prijs of ‘Op aanvraag’ — tik op OK, klaar." },
   { href: "/agenda/facturen", title: "Facturen", body: "Factuur maken met je behandelingen en prijzen." },
   { href: "/agenda/intake", title: "Intakeformulieren & PDF", body: "Formulieren vinden, bekijken en printen." },
+  { href: "/agenda/werktijden", title: "Openingstijden", body: "Dagen, tijden, pauzes, vakantie en uitzonderingen." },
   { href: "/admin/behandelingen", title: "Behandelingen", body: "Teksten, duur en publicatie van behandelingen." },
   { href: "/admin/bedrijf", title: "Bedrijfsgegevens", body: "Bedrijfs- en factuurgegevens." },
 ];

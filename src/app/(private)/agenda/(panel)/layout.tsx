@@ -46,7 +46,7 @@ export default async function AgendaLayout({ children }: { children: ReactNode }
     { href: "/agenda/uitgaven", label: "Uitgaven", icon: "euro" },
     { href: "/agenda/berichten", label: "Berichten", icon: "messages", badge: unread },
     { href: "/agenda/historie", label: "Overzichten", icon: "history" },
-    { href: "/agenda/werktijden", label: "Werktijden", icon: "clock" },
+    { href: "/agenda/werktijden", label: "Openingstijden & beschikbaarheid", icon: "clock" },
     { href: "/admin/prijzen", label: "Prijzen beheren", icon: "tag" },
     { href: "/admin/behandelingen", label: "Behandelingen", icon: "tag" },
     { href: "/admin/bedrijf", label: "Bedrijfsgegevens & facturen", icon: "building" },

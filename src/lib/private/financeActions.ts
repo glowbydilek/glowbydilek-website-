@@ -8,6 +8,7 @@ import { audit } from "../db/audit";
 import { defaultInvoiceSettings, setSetting, type InvoiceSettings } from "../db/settings";
 import { createCredit, createDraft, deleteDraft, emailInvoice, InvoiceError, issueInvoice, updateDraft, type Buyer } from "../finance/invoices";
 import { invoiceReadiness, type InvoiceLine } from "../finance/invoice-core";
+import { lookupKvk, type KvkLookup } from "../finance/kvk";
 import { parseEuroToCents } from "../finance/money";
 import { FinanceError, recordPayment, voidPayment } from "../finance/service";
 import { deliverSoon } from "../notifications/deliver";
@@ -236,4 +237,18 @@ export async function deleteReceiptAction(f: FormData) {
   if (id) await deleteReceipt(getDb(), id);
   await audit(getDb(), { userId: s.user.id, action: "expense.receipt_deleted", entity: "receipt", entityId: id ?? undefined });
   revalidatePath("/agenda/uitgaven");
+}
+
+// ───────────────────────────────────────────────────────────── KVK lookup
+
+/**
+ * Bedrijfsgegevens → "Gegevens ophalen". Read-only: returns what the KVK
+ * register holds; nothing is saved until the owner reviews it and presses
+ * Opslaan.
+ */
+export async function kvkLookupAction(kvk: string): Promise<KvkLookup> {
+  const s = await assertOwner();
+  const r = await lookupKvk(kvk);
+  await audit(getDb(), { userId: s.user.id, action: "settings.kvk_lookup", details: { ok: r.ok, reason: r.ok ? undefined : r.reason } });
+  return r;
 }

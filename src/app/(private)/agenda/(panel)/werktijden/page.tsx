@@ -7,7 +7,7 @@ import { blocks, dateOverrides, overrideIntervals, weeklyHours } from "@/lib/db/
 import { deleteBlockAction, deleteOverrideAction } from "@/lib/private/agendaActions";
 import { dayBoundsUtc, formatLocal, localToUtc, minutesToHHMM, todayLocal } from "@/lib/time";
 
-export const metadata = { title: "Werktijden" };
+export const metadata = { title: "Openingstijden & beschikbaarheid" };
 
 export default async function Hours() {
   await requireCan("agenda", "hours.manage");
@@ -27,7 +27,7 @@ export default async function Hours() {
   const fmtDay = (d: string) => formatLocal(localToUtc(d, 720), "nl", { weekday: "long", day: "numeric", month: "long" });
   return (
     <>
-      <PageHeader title="Werktijden" subtitle="Je vaste weekrooster, uitzonderingen op specifieke dagen en geblokkeerde periodes. Alle tijden in Nederlandse tijd." />
+      <PageHeader title="Openingstijden & beschikbaarheid" subtitle="Je vaste weekrooster (de tijden waarop klanten op afspraak kunnen komen), uitzonderingen op een datum en vakantie of vrije periodes. Alle tijden in Nederlandse tijd. Bestaande afspraken veranderen nooit automatisch." />
       <div className="space-y-5">
         {!weekly.length && <Notice tone="warning">Er zijn nog geen werktijden ingesteld. Zolang dit leeg is, kunnen klanten online geen tijdstip kiezen.</Notice>}
         <Card title="Vast weekrooster">

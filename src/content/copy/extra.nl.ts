@@ -110,7 +110,7 @@ export const extraTreatmentsNl: Record<string, TreatmentCopy> = {
 
 export const extraSectionsNl: Record<string, SectionCopy> = {
   bodycare: {
-    seoTitle: "Lichaamsbehandelingen",
+    seoTitle: "Lichaamsbehandelingen in Amsterdam",
     seoDescription: "Lichaamsbehandelingen bij Glow by Dilek: verzorging voor de huid van je lichaam, met een moment van rust. Uitsluitend op afspraak.",
     hero: { eyebrow: "Lichaamsbehandelingen", title: "Verzorging", titleEm: "van top tot teen.", subtitle: "Verzorgende behandelingen voor de huid van je lichaam, met een moment van rust." },
     intro: { title: "Verzorgend, zonder grote beloftes", paragraphs: ["Lichaamsbehandelingen zijn bedoeld om je huid te verzorgen en even tot rust te komen. Er worden geen beloftes gedaan over afvallen, ontgiften of andere effecten."] },
