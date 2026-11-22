@@ -52,6 +52,12 @@ export type TreatmentCopy = {
   faqs: QA[];
   /** One-line teaser for cards. */
   teaser: string;
+  /**
+   * Optional owner-supplied result list (e.g. "Het resultaat:"). When set, the
+   * steps in `appointment` are shown as a list under `area`, and this block
+   * takes the second column.
+   */
+  results?: { title: string; items: string[]; closing?: string };
 };
 
 export type CategoryCopySet = Record<CategoryId, CategoryCopy>;
