@@ -60,8 +60,15 @@ const nextConfig = {
    */
   async redirects() {
     return [
-      // One host for search engines: www serves the same site, so send it to the main domain.
-      { source: "/:path*", has: [{ type: "host", value: "www.glowbydilek.nl" }], destination: "https://glowbydilek.nl/:path*", permanent: true },
+      // One canonical host: www.glowbydilek.nl answered with a duplicate copy of
+      // every page (200) instead of redirecting. Permanent redirect to the bare
+      // domain, path and query preserved (canonical tags already use it).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.glowbydilek.nl" }],
+        destination: "https://glowbydilek.nl/:path*",
+        permanent: true,
+      },
       { source: "/faq", destination: "/veelgestelde-vragen", permanent: true },
       { source: "/afspraak", destination: "/afspraak-maken", permanent: true },
       { source: "/waxbehandelingen/intiem", destination: "/waxbehandelingen/bikini-intiem", permanent: true },
