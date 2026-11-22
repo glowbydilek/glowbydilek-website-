@@ -85,12 +85,15 @@ test("educational pages exist in both languages", () => {
 test("sitemap lists every page in Dutch and English (Turkish is noindex) with reciprocal hreflang and real dates", async () => {
   const entries = await sitemap();
   // Besides the fixed pages: the massage landing page and its five massages, the facial landing
-  // page with facial care with steam, and (of the legal pages) only the cookie policy.
-  assert.equal(entries.length, (allPages().length + 9) * 2);
+  // page with its three confirmed facial treatments, the body-care page with the body wrap,
+  // and (of the legal pages) only the cookie policy.
+  assert.equal(entries.length, (allPages().length + 13) * 2);
   assert.ok(!entries.some((e) => e.url.includes("/tr/") || e.url.endsWith("/tr")), "no Turkish URLs");
   assert.ok(!entries.some((e) => /\/(admin|agenda|login|api|offerte)(\/|$)|\/en\/quote\//.test(e.url)), "no private URLs");
   assert.equal(new Set(entries.map((e) => e.url)).size, entries.length, "no duplicate URLs");
   assert.ok(entries.some((e) => e.url.endsWith("/gezichtsbehandelingen/gezichtsbehandeling-met-stoom")));
+  assert.ok(entries.some((e) => e.url.endsWith("/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling")));
+  assert.ok(entries.some((e) => e.url.endsWith("/en/facial-treatments/eyebrow-and-eyelash-tinting")));
   assert.ok(entries.some((e) => e.url.endsWith("/cookiebeleid")));
   assert.ok(!entries.some((e) => e.url.endsWith("/algemene-voorwaarden")));
   assert.ok(entries.some((e) => e.url.endsWith("/behandelingen")));
