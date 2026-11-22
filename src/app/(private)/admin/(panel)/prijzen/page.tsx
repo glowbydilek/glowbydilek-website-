@@ -1,11 +1,11 @@
-import { asc } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 import Link from "next/link";
 import { requireCan } from "@/lib/auth/session";
 import { QuickPriceRow, type QuickPriceLabels } from "@/components/private/cms/QuickPriceRow";
 import { Card, PageHeader } from "@/components/private/ui";
 import { BUILTIN_ITEMS } from "@/lib/catalogue/builtin";
 import { getDb } from "@/lib/db/client";
-import { serviceSections, treatments } from "@/lib/db/schema";
+import { priceHistory, serviceSections, treatments } from "@/lib/db/schema";
 import { ensureSeeded } from "@/lib/db/seed";
 import { getPanelLang } from "@/lib/private/panelLangServer";
 
@@ -26,6 +26,8 @@ const L: Record<"nl" | "tr", QuickPriceLabels & { title: string; subtitle: strin
     saving: "…",
     draft: "Concept (niet op de website)",
     hidden: "Verborgen",
+    earlier: "Eerder",
+    restore: "Terugzetten",
   },
   tr: {
     title: "Fiyatları yönet",
@@ -41,6 +43,8 @@ const L: Record<"nl" | "tr", QuickPriceLabels & { title: string; subtitle: strin
     saving: "…",
     draft: "Taslak (sitede değil)",
     hidden: "Gizli",
+    earlier: "Önceki",
+    restore: "Geri al",
   },
 };
 
@@ -56,9 +60,10 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
   const db = getDb();
   await ensureSeeded(db);
   const q = ((await searchParams).q ?? "").trim().toLowerCase().slice(0, 60);
-  const [sections, rows] = await Promise.all([
+  const [sections, rows, history] = await Promise.all([
     db.select().from(serviceSections).orderBy(asc(serviceSections.sort)),
     db.select().from(treatments).orderBy(asc(treatments.sort)),
+    db.select().from(priceHistory).orderBy(desc(priceHistory.createdAt), desc(priceHistory.id)).limit(2000),
   ]);
   const items = rows
     .filter((r) => r.status !== "archived")
@@ -75,6 +80,11 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
         status: r.status,
         visible: r.visible,
       };
+    })
+    .map((i) => {
+      // The most recent earlier price that differs from today's, to put back with one tap.
+      const prev = history.find((h) => h.itemId === i.id && (h.pricingMode !== i.mode || h.priceCents !== i.priceCents));
+      return { ...i, previous: prev ? { mode: prev.pricingMode as "on_request" | "fixed" | "from", priceCents: prev.priceCents, at: prev.createdAt } : null };
     })
     .filter((i) => !q || i.search.includes(q));
   const secName = (s: (typeof sections)[number]) => (lang === "tr" ? s.nameTr || s.nameNl : s.nameNl);
@@ -102,7 +112,17 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
             <Card key={s.id} title={secName(s)} className="!p-4 sm:!p-5">
               <ul>
                 {list.map((i) => (
-                  <QuickPriceRow key={i.id} id={i.id} name={i.name} mode={i.mode} priceCents={i.priceCents} status={i.status} visible={i.visible} labels={t} />
+                  <QuickPriceRow
+                    key={i.id}
+                    id={i.id}
+                    name={i.name}
+                    mode={i.mode}
+                    priceCents={i.priceCents}
+                    status={i.status}
+                    visible={i.visible}
+                    previous={i.previous ? { mode: i.previous.mode, priceCents: i.previous.priceCents, date: i.previous.at.toLocaleDateString(lang === "tr" ? "tr-NL" : "nl-NL", { timeZone: "Europe/Amsterdam", day: "numeric", month: "short", year: "numeric" }) } : null}
+                    labels={t}
+                  />
                 ))}
               </ul>
             </Card>
