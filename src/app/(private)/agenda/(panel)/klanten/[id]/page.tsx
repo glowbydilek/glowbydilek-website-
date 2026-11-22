@@ -18,6 +18,7 @@ import { invoicesForCustomer } from "@/lib/finance/invoices";
 import { formatCents } from "@/lib/finance/money";
 import { customerPayments, METHODS } from "@/lib/finance/service";
 import { formatLocal, todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Klant" };
 
@@ -25,6 +26,7 @@ const dateNl = (d: string) => d.split("-").reverse().join("-");
 const day = (d: Date | null) => (d ? formatLocal(d, "nl", { day: "numeric", month: "long", year: "numeric" }) : "—");
 
 export default async function CustomerPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   const id = Number((await params).id);
   const session = await requireCan("agenda", "customers.view", `/agenda/klanten/${id}`);
   // Least privilege: finance, health and export parts are only loaded and shown with their own permission.
@@ -53,7 +55,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
     <>
       <PageHeader
         title={`${c.firstName} ${c.lastName}`.trim()}
-        subtitle={c.consentAt ? "Klant via de website (privacytoestemming gegeven)" : "Klantprofiel"}
+        subtitle={t(c.consentAt ? "Klant via de website (privacytoestemming gegeven)" : "Klantprofiel")}
         actions={
           c.anonymizedAt ? undefined : (
             <>
@@ -67,12 +69,12 @@ export default async function CustomerPage({ params, searchParams }: { params: P
           )
         }
       />
-      {sp.samengevoegd && <div className="mb-4"><Notice tone="success">✓ De profielen zijn samengevoegd. Alle afspraken, betalingen en facturen staan nu in dit profiel.</Notice></div>}
+      {sp.samengevoegd && <div className="mb-4"><Notice tone="success">{t("✓ De profielen zijn samengevoegd. Alle afspraken, betalingen en facturen staan nu in dit profiel.")}</Notice></div>}
       {dups.some((d) => d.strong) && (
         <div className="mb-4">
           <Notice tone="warning">
             Mogelijk dubbel profiel: {dups.filter((d) => d.strong).map((d) => `${d.customer.firstName} ${d.customer.lastName} (${matchLabel(d.reasons)})`).join(", ")}.{" "}
-            <Link href={`/agenda/klanten/dubbel?a=${c.id}`} className="underline">Bekijken en eventueel samenvoegen</Link>
+            <Link href={`/agenda/klanten/dubbel?a=${c.id}`} className="underline">{t("Bekijken en eventueel samenvoegen")}</Link>
           </Notice>
         </div>
       )}
@@ -86,7 +88,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
 
       <div className="mt-5 grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
         <div className="space-y-5">
-          <Card title="Gegevens">
+          <Card title={t("Gegevens")}>
             <div className="mb-4 flex items-center gap-3">
               <CustomerAvatar size={48} />
               <p className="text-sm text-muted">Klantnummer {c.id}</p>
@@ -97,26 +99,26 @@ export default async function CustomerPage({ params, searchParams }: { params: P
               <CustomerForm c={c} />
             ) : (
               <dl className="grid gap-1 text-sm">
-                <dt className="text-muted">E-mail</dt>
+                <dt className="text-muted">{t("E-mail")}</dt>
                 <dd>{c.email ?? "—"}</dd>
-                <dt className="mt-2 text-muted">Telefoon</dt>
+                <dt className="mt-2 text-muted">{t("Telefoon")}</dt>
                 <dd>{c.phone ?? "—"}</dd>
               </dl>
             )}
           </Card>
           {!c.anonymizedAt && health && <IntakeCard db={db} customerId={c.id} mfa={session.user.mfaEnabled && session.mfaPassed} />}
           {!c.anonymizedAt && session.user.role === "owner" && (
-            <Card title="Consultatie (vertrouwelijk)">
+            <Card title={t("Consultatie (vertrouwelijk)")}>
               {consult.enabled ? (
-                <LinkButton href={`/agenda/klanten/${c.id}/consultatie`}>Consultatieformulier openen</LinkButton>
+                <LinkButton href={`/agenda/klanten/${c.id}/consultatie`}>{t("Consultatieformulier openen")}</LinkButton>
               ) : (
                 <p className="text-sm text-muted">
-                  Het consultatieformulier staat uit. Gezondheidsinformatie wordt pas vastgelegd als de wettelijke voorwaarden zijn bevestigd en de versleutelingssleutel is ingesteld (Admin → Privacy & consultatie). Zet geen gezondheidsinformatie in gewone notities.
+                  {t("Het consultatieformulier staat uit. Gezondheidsinformatie wordt pas vastgelegd als de wettelijke voorwaarden zijn bevestigd en de versleutelingssleutel is ingesteld (Admin → Privacy & consultatie). Zet geen gezondheidsinformatie in gewone notities.")}
                 </p>
               )}
             </Card>
           )}
-          <Card title="Behandelingen">
+          <Card title={t("Behandelingen")}>
             {stats.treatments.length ? (
               <ul className="flex flex-wrap gap-2 text-sm">
                 {stats.treatments.map((t) => (
@@ -126,35 +128,35 @@ export default async function CustomerPage({ params, searchParams }: { params: P
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">Nog geen afgeronde behandelingen.</p>
+              <p className="text-sm text-muted">{t("Nog geen afgeronde behandelingen.")}</p>
             )}
             {session.user.role === "owner" && (
             <form action={`/agenda/klanten/${c.id}/rapport`} target="_blank" className="mt-4 flex flex-wrap items-end gap-2 border-t border-line pt-4 text-sm">
               <label>
-                Van <input type="date" name="van" className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
+                {t("Van")} <input type="date" name="van" className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
               </label>
               <label>
-                Tot en met <input type="date" name="tot" defaultValue={todayLocal()} className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
+                {t("Tot en met")} <input type="date" name="tot" defaultValue={todayLocal()} className="ml-1 min-h-11 rounded-xl border border-ink/20 bg-white px-2" />
               </label>
-              <button className="min-h-11 rounded-full border border-ink/25 px-4">Behandeloverzicht (PDF)</button>
+              <button className="min-h-11 rounded-full border border-ink/25 px-4">{t("Behandeloverzicht (PDF)")}</button>
             </form>
             )}
             {!c.anonymizedAt && perms.has("customers.export") && (
               <a href={`/agenda/klanten/${c.id}/export`} className="mt-3 inline-block text-xs text-muted underline">
-                Alle persoonsgegevens exporteren (AVG-inzageverzoek, JSON, zonder consultatie en intakeformulieren)
+                {t("Alle persoonsgegevens exporteren (AVG-inzageverzoek, JSON, zonder consultatie en intakeformulieren)")}
               </a>
             )}
           </Card>
         </div>
         <div className="space-y-5">
           <Card title={`Komende afspraken (${upcoming.length})`}>
-            {upcoming.length ? <ul className="space-y-2">{upcoming.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-sm text-muted">Geen komende afspraken.</p>}
+            {upcoming.length ? <ul className="space-y-2">{upcoming.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-sm text-muted">{t("Geen komende afspraken.")}</p>}
           </Card>
           <Card title={`Geschiedenis (${past.length})`}>
-            {past.length ? <ul className="space-y-2">{past.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-sm text-muted">Nog geen eerdere afspraken.</p>}
+            {past.length ? <ul className="space-y-2">{past.map((i) => <li key={i.appt.id}><AppointmentCard item={i} showDate /></li>)}</ul> : <p className="text-sm text-muted">{t("Nog geen eerdere afspraken.")}</p>}
           </Card>
           {fin && (
-          <Card title="Betalingen">
+          <Card title={t("Betalingen")}>
             {pays.length > 0 && (
               <ul className="mb-4 divide-y divide-line text-sm">
                 {pays.map((p) => (
@@ -189,7 +191,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">Nog geen facturen.</p>
+              <p className="text-sm text-muted">{t("Nog geen facturen.")}</p>
             )}
           </Card>
           )}
