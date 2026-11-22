@@ -7,6 +7,7 @@ import { turnstileConfig, turnstileSiteKey } from "@/lib/forms/turnstile";
 import { Notice } from "../ui";
 import { DB_HINT, dbErrorKind } from "@/lib/ops/errors";
 import { AuthShell } from "./AuthShell";
+import { InstallApp } from "../InstallApp";
 import { ForgotForm } from "./ForgotForm";
 import { LoginForm } from "./LoginForm";
 import { MfaForm } from "./MfaForm";
@@ -40,6 +41,7 @@ export async function LoginPage({ area, searchParams }: { area: Area; searchPara
   return (
     <AuthShell area={area} title="Inloggen">
       <LoginForm area={area} next={next} siteKey={turnstileSiteKey()} captcha={captcha()} notice={notice} />
+      {area === "agenda" && <InstallApp />}
     </AuthShell>
   );
 }

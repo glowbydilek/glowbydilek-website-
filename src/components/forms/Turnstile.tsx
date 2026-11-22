@@ -78,6 +78,9 @@ export function Turnstile({
           language: locale,
           theme: "light",
           size: "flexible",
+          // Invisible unless Cloudflare really needs the visitor to click: the
+          // check still runs on every form, only the box stays out of sight.
+          appearance: "interaction-only",
           "refresh-expired": "auto",
           callback: (token: string) => tokenCb.current(token),
           "expired-callback": () => tokenCb.current(null),
@@ -114,9 +117,9 @@ export function Turnstile({
     );
   }
   return (
-    <div role="group" aria-label={labels.title} className="min-h-[65px]">
+    <div role="group" aria-label={labels.title}>
       <div ref={box} />
-      {status === "loading" && <p className="text-sm text-muted">{labels.loading}</p>}
+      {status === "loading" && <p className="sr-only">{labels.loading}</p>}
       {status === "blocked" && (
         <p className="text-sm text-[#9b3b2f]">
           {labels.blocked}{" "}
