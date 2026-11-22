@@ -158,21 +158,17 @@ async function step(name, fn) {
     await p.close();
   });
 
-  await step("desktop mega menu opens, lists all categories and navigates", async () => {
+  await step("desktop mega menu opens, lists the categories (not the full catalogue) and navigates", async () => {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/`);
     await p.getByRole("button", { name: "Behandelingen" }).click();
     const menu = p.locator("#mega-menu");
     await menu.waitFor();
-    for (const name of [
-      "Gezichtsbehandelingen", "Gezichtsbehandeling met stoom",
-      "Massages", "Ontspanningsmassage (hele lichaam)", "Gezichtsmassage", "Hoofdmassage", "Handmassage", "Voetmassage",
-      "Waxbehandelingen", "Gezicht", "Lichaam", "Bikini & intiem",
-      "Wenkbrauwen", "Bovenlip", "Kin", "Volledig gezicht", "Oksels", "Onderarmen", "Hele armen", "Onderbenen", "Hele benen", "Rug", "Bikinilijn", "Brazilian", "Hollywood",
-      "Nazorg", "Alle behandelingen",
-    ]) {
-      assert.ok(await menu.getByRole("link", { name, exact: true }).count(), `missing ${name}`);
+    for (const name of [/^Gezichtsbehandelingen/, /^Massages/, /^Waxbehandelingen/, "Gezicht", "Lichaam", "Bikini & intiem", "Nazorg", "Alle behandelingen"]) {
+      assert.ok(await menu.getByRole("link", typeof name === "string" ? { name, exact: true } : { name }).count(), `missing ${name}`);
     }
+    // Individual treatments live on the category pages, not in the menu.
+    assert.equal(await menu.getByRole("link", { name: "Brazilian", exact: true }).count(), 0, "menu lists individual treatments");
     await p.keyboard.press("Escape");
     await menu.waitFor({ state: "detached" });
     await p.getByRole("button", { name: "Behandelingen" }).click();
@@ -182,21 +178,51 @@ async function step(name, fn) {
     await p.close();
   });
 
-  await step("mobile menu: opens, locks scroll, Escape closes, links navigate", async () => {
+  await step("mobile menu: short, Behandelingen opens the categories, Escape closes, links navigate", async () => {
     const p = await mobile.newPage();
     await p.goto(`${BASE}/en`);
     const toggle = p.locator('button[aria-controls="mobile-menu"]');
     await toggle.click();
-    await p.locator("#mobile-menu").waitFor();
+    const menu = p.locator("#mobile-menu");
+    await menu.waitFor();
     assert.equal(await toggle.getAttribute("aria-expanded"), "true");
     assert.equal(await p.evaluate(() => document.documentElement.style.overflow), "hidden");
+    // Closed state: no category or treatment list, everything fits without scrolling.
+    assert.equal(await menu.getByRole("link", { name: /^Massages/ }).filter({ visible: true }).count(), 0, "categories visible before opening Treatments");
+    const fits = await menu.evaluate((el) => el.scrollHeight <= el.clientHeight + 1);
+    assert.ok(fits, "closed mobile menu needs scrolling");
+    assert.equal(await menu.getByRole("link", { name: "Brazilian", exact: true }).count(), 0, "menu lists individual treatments");
     await p.keyboard.press("Escape");
-    await p.locator("#mobile-menu").waitFor({ state: "detached" });
+    await menu.waitFor({ state: "detached" });
     assert.equal(await p.evaluate(() => document.documentElement.style.overflow), "");
     await toggle.click();
-    await p.locator("#mobile-menu").getByRole("link", { name: /^Massages/ }).click();
+    await menu.getByRole("button", { name: /^Treatments/ }).click();
+    await menu.getByRole("link", { name: /^Massages/ }).click();
     await p.waitForURL(`${BASE}/en/massages`);
     assert.equal(await p.locator("#mobile-menu").count(), 0);
+    await p.close();
+  });
+
+  await step("booking form: one category at a time, no duplicate treatments, selection summary", async () => {
+    const p = await mobile.newPage();
+    await p.goto(`${BASE}/afspraak-maken`);
+    const tabs = p.getByRole("tab");
+    if (await tabs.count()) await tabs.nth(1).click(); // online booking on: use the request form
+    const form = p.locator("form").filter({ has: p.locator("#appt-date") });
+    await form.waitFor();
+    const names = await form.locator("input[type=checkbox]").evaluateAll((els) => els.map((e) => e.closest("label")?.textContent?.trim() ?? ""));
+    assert.equal(new Set(names).size, names.length, `duplicate treatments: ${names.join(", ")}`);
+    const brazilian = form.locator("label", { hasText: "Brazilian" });
+    assert.equal(await brazilian.isVisible(), false, "waxing list shown before choosing the category");
+    await form.getByRole("button", { name: /^Waxbehandelingen/ }).click();
+    assert.ok(await brazilian.isVisible(), "waxing list after choosing the category");
+    await brazilian.click();
+    await form.getByRole("button", { name: /^Massages/ }).click();
+    await form.locator("label", { hasText: "Handmassage" }).click();
+    assert.equal(await form.locator("input[type=checkbox]:checked").count(), 2, "selection kept across categories");
+    assert.ok(await form.getByText("Jouw keuze (2)").count(), "selection summary");
+    await form.getByRole("button", { name: /Brazilian: verwijderen/ }).click();
+    assert.equal(await form.locator("input[type=checkbox]:checked").count(), 1, "remove from summary");
     await p.close();
   });
 
