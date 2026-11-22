@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { mailto, siteConfig, whatsappLink } from "@/content/site";
+import { phoneDisplay, siteConfig, telHref, whatsappLink } from "@/content/site";
 import { href, type Locale, pick } from "@/i18n/config";
 import { currentSnapshot, override } from "@/lib/cms/current";
 import { publicSocial, validateBusiness } from "@/lib/cms/menu";
@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { NavModel } from "./navModel";
 import { SocialIcons } from "./SocialIcons";
 import { Icon } from "./ui/Icon";
+import { ProtectedEmail } from "./ProtectedEmail";
 import { publishedLegal } from "@/lib/legal";
 
 /** Espresso footer: logo, short promise, grouped navigation, contact, social and legal. */
@@ -72,14 +73,12 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
               <p className={heading}>{dict.footer.contact}</p>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <a href={mailto(dict.forms.topics.question)} className="inline-flex min-h-10 items-center gap-2 break-all text-paper hover:text-glow sm:min-h-0">
-                    {siteConfig.contact.email}
-                  </a>
+                  <ProtectedEmail subject={dict.forms.topics.question} className="inline-flex min-h-10 items-center gap-2 break-all text-left text-paper hover:text-glow sm:min-h-0" />
                 </li>
-                {biz.phone && (
+                {telHref(biz.phone || undefined) && (
                   <li>
-                    <a href={`tel:${biz.phone.replace(/[^+\d]/g, "")}`} className="inline-flex min-h-10 items-center text-paper hover:text-glow sm:min-h-0">
-                      {biz.phone}
+                    <a href={telHref(biz.phone || undefined)!} className="inline-flex min-h-10 items-center text-paper hover:text-glow sm:min-h-0">
+                      {phoneDisplay(biz.phone || undefined)}
                     </a>
                   </li>
                 )}

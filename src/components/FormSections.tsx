@@ -1,5 +1,5 @@
 import type { RequestCalendar } from "@/lib/booking/calendar";
-import { siteConfig } from "@/content/site";
+import { emailDisplay } from "@/content/site";
 import { groupCopy } from "@/content/copy";
 import { publicGroups, publicItems, publicSections } from "@/lib/catalogue";
 import { currentSnapshot } from "@/lib/cms/current";
@@ -11,7 +11,7 @@ import { ContactForm } from "./forms/ContactForm";
 
 /** Server wrappers that localise data for the client forms. */
 export function ContactFormBlock({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  return <ContactForm locale={locale} t={dict.forms} privacyHref={href(locale, "privacy")} email={siteConfig.contact.email} turnstileSiteKey={turnstileSiteKey()} />;
+  return <ContactForm locale={locale} t={dict.forms} privacyHref={href(locale, "privacy")} email={emailDisplay} turnstileSiteKey={turnstileSiteKey()} />;
 }
 
 export function AppointmentFormBlock({ locale, dict, calendar }: { locale: Locale; dict: Dictionary; calendar: RequestCalendar }) {
@@ -32,7 +32,7 @@ export function AppointmentFormBlock({ locale, dict, calendar }: { locale: Local
       groups={groups}
       calendar={calendar}
       privacyHref={href(locale, "privacy")}
-      email={siteConfig.contact.email}
+      email={emailDisplay}
       notConfirmed={dict.booking.notConfirmed}
       turnstileSiteKey={turnstileSiteKey()}
       promoField={Boolean(currentSnapshot().marketing?.hasCodes)}
