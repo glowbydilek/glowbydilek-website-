@@ -58,7 +58,7 @@ export const legalNl: Record<LegalKey, LegalDoc> = {
       { title: "Afspraken", paragraphs: ["Een afspraak is pas definitief na persoonlijke bevestiging per e-mail.", "[INVULLEN: hoe lang van tevoren een afspraak kan worden gemaakt, en of er een aanbetaling geldt — of verwijder deze regel.]"] },
       { title: "Prijzen en betaling", paragraphs: ["Prijzen zijn inclusief btw. Bij ‘prijs op aanvraag’ ontvang je eerst een prijsvoorstel dat je zelf accepteert.", "[INVULLEN: hoe er betaald kan worden (bijv. pin of contant).]"] },
       { title: "Gezondheid en veiligheid", paragraphs: ["Meld vooraf medicijngebruik, huidaandoeningen, allergieën of zwangerschap. Bij twijfel kan een behandeling niet doorgaan; dat is in jouw belang.", "Een schoonheidsbehandeling is geen medische behandeling."] },
-      { title: "Klachten", paragraphs: ["Ben je ergens niet tevreden over? Laat het zo snel mogelijk weten via hello [at] glowbydilek.nl, dan zoeken we samen naar een oplossing.", "[INVULLEN: termijn waarbinnen een klacht gemeld kan worden.]"] },
+      { title: "Klachten", paragraphs: ["Ben je ergens niet tevreden over? Laat het zo snel mogelijk weten via hello@glowbydilek.nl, dan zoeken we samen naar een oplossing.", "[INVULLEN: termijn waarbinnen een klacht gemeld kan worden.]"] },
       { title: "Aansprakelijkheid", paragraphs: ["[INVULLEN: laat de aansprakelijkheidsregeling opstellen of controleren door een jurist of je beroepsvereniging.]"] },
     ],
   },
@@ -67,7 +67,7 @@ export const legalNl: Record<LegalKey, LegalDoc> = {
     effectiveDate: "[INVULLEN: ingangsdatum]",
     intro: "Kun je onverhoopt niet? Laat het dan zo snel mogelijk weten, zodat iemand anders je plek kan krijgen.",
     sections: [
-      { title: "Annuleren of verzetten", paragraphs: ["Annuleren of verzetten kan door te antwoorden op je bevestigingsmail of te mailen naar hello [at] glowbydilek.nl.", "[INVULLEN: tot hoeveel uur van tevoren kosteloos annuleren of verzetten kan.]"] },
+      { title: "Annuleren of verzetten", paragraphs: ["Annuleren of verzetten kan door te antwoorden op je bevestigingsmail of te mailen naar hello@glowbydilek.nl.", "[INVULLEN: tot hoeveel uur van tevoren kosteloos annuleren of verzetten kan.]"] },
       { title: "Te laat of niet verschenen", paragraphs: ["[INVULLEN: wat er gebeurt bij te laat annuleren of niet verschijnen — bijvoorbeeld geen kosten, of een vast bedrag. Noem alleen kosten die je echt rekent.]"] },
       { title: "Als Glow by Dilek moet annuleren", paragraphs: ["Moet een afspraak door ziekte of overmacht vervallen, dan hoor je dat zo snel mogelijk en plannen we samen een nieuw moment. Er worden dan geen kosten gerekend."] },
     ],
