@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/content/site";
 
 /** Private areas (also login-protected and sent with X-Robots-Tag: noindex). */
-const PRIVATE = ["/admin", "/agenda", "/ajanda", "/login", "/api/"];
+const PRIVATE = ["/admin", "/agenda", "/ajanda", "/login", "/api/", "/intake"];
 
 /**
  * Crawlers that only collect data to TRAIN AI models. They do not power any
