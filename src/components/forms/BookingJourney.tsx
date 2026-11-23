@@ -133,7 +133,7 @@ export function BookingJourney({
         load();
       } else {
         if (data.fields?.promoCode) setFieldErrors({ promoCode: forms.errors.promoCode });
-        const map: Record<string, string> = { rateLimited: forms.status.rateLimited, challenge: forms.status.challenge, duplicate: forms.status.duplicate, validation: forms.errors.summary };
+        const map: Record<string, string> = { rateLimited: forms.status.rateLimited, challenge: forms.status.challenge, duplicate: forms.status.duplicate, validation: forms.errors.summary, refused: `${forms.status.refused} ${email}.` };
         setError(map[data.error ?? ""] ?? `${forms.status.generic} ${email}.`);
       }
     } catch {
