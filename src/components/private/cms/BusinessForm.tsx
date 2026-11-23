@@ -6,6 +6,7 @@ import type { KvkLookup } from "@/lib/finance/kvk";
 import { kvkLookupAction, saveInvoiceSettingsAction } from "@/lib/private/financeActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 const KVK_MSG: Record<string, string> = {
   invalid: "Een KVK-nummer heeft precies 8 cijfers.",
@@ -22,6 +23,7 @@ const KVK_MSG: Record<string, string> = {
  * IBAN are never filled in.
  */
 function KvkLookupBox({ formRef, kvk }: { formRef: RefObject<HTMLDivElement | null>; kvk: string }) {
+  const t = useT();
   const [res, setRes] = useState<KvkLookup | null>(null);
   const [applied, setApplied] = useState(false);
   const [current, setCurrent] = useState<Record<string, string>>({});
@@ -69,7 +71,7 @@ function KvkLookupBox({ formRef, kvk }: { formRef: RefObject<HTMLDivElement | nu
         {res && !res.ok && <p className="text-sm text-[#74261d]">{KVK_MSG[res.reason]}</p>}
         {d && (
           <div className="rounded-2xl border border-line bg-surface p-4 text-sm">
-            <p className="mb-2 font-medium">Gevonden in het Handelsregister — controleer en neem over:</p>
+            <p className="mb-2 font-medium">{t("Gevonden in het Handelsregister — controleer en neem over:")}</p>
             <dl className="grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)] gap-x-3 gap-y-1">
               {proposals.map(([name, label, val]) => {
                 const cur = current[name] ?? "";
@@ -84,10 +86,10 @@ function KvkLookupBox({ formRef, kvk }: { formRef: RefObject<HTMLDivElement | nu
                 );
               })}
             </dl>
-            {addr?.shielded && <p className="mt-2 text-xs text-muted">Het adres is afgeschermd in het Handelsregister en wordt niet ingevuld. Vul het factuuradres zelf in.</p>}
+            {addr?.shielded && <p className="mt-2 text-xs text-muted">{t("Het adres is afgeschermd in het Handelsregister en wordt niet ingevuld. Vul het factuuradres zelf in.")}</p>}
             {d.tradeNames.length > 1 && <p className="mt-2 text-xs text-muted">Andere handelsnamen: {d.tradeNames.slice(1).join(", ")}</p>}
             {d.establishments.length > 1 && <p className="mt-2 text-xs text-muted">Vestigingen: {d.establishments.map((e) => `${e.name || "—"} (${e.number})`).join(" · ")}. Het adres van de hoofdvestiging wordt voorgesteld.</p>}
-            <p className="mt-2 text-xs text-muted">Btw-identificatienummer en IBAN komen niet uit het Handelsregister en blijven zoals ze zijn.</p>
+            <p className="mt-2 text-xs text-muted">{t("Btw-identificatienummer en IBAN komen niet uit het Handelsregister en blijven zoals ze zijn.")}</p>
             <button type="button" onClick={apply} className="mt-3 min-h-11 rounded-full bg-ink px-4 text-sm font-semibold text-white">
               {applied ? "✓ Overgenomen — tik onderaan op Opslaan" : "Overnemen in het formulier"}
             </button>
@@ -99,13 +101,14 @@ function KvkLookupBox({ formRef, kvk }: { formRef: RefObject<HTMLDivElement | nu
 }
 
 export function BusinessForm({ v }: { v: InvoiceSettings }) {
+  const t = useT();
   const [mode, setMode] = useState(v.vatMode);
   const anchor = useRef<HTMLDivElement>(null);
   return (
     <ActionForm action={saveInvoiceSettingsAction} className="space-y-6">
       <div ref={anchor} hidden />
       <fieldset className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-serif text-xl">Onderneming</legend>
+        <legend className="mb-2 font-serif text-xl">{t("Onderneming")}</legend>
         <Field label="Naam zoals ingeschreven bij de KVK">
           <Input name="legalName" defaultValue={v.legalName} />
         </Field>
@@ -121,8 +124,8 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
         </Field>
       </fieldset>
       <fieldset className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-serif text-xl">Adres op de factuur</legend>
-        <p className="text-sm text-muted sm:col-span-2">Een factuur moet het adres van de onderneming vermelden. Dit adres staat alleen op facturen, nooit op de website.</p>
+        <legend className="mb-2 font-serif text-xl">{t("Adres op de factuur")}</legend>
+        <p className="text-sm text-muted sm:col-span-2">{t("Een factuur moet het adres van de onderneming vermelden. Dit adres staat alleen op facturen, nooit op de website.")}</p>
         <Field label="Straat en huisnummer">
           <Input name="street" defaultValue={v.street} autoComplete="off" />
         </Field>
@@ -137,14 +140,14 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
         </Field>
       </fieldset>
       <fieldset className="space-y-4">
-        <legend className="mb-2 font-serif text-xl">Btw</legend>
-        <p className="text-sm text-muted">Kies wat je boekhouder of de Belastingdienst voor jouw situatie heeft bevestigd. Het systeem kiest hier niets voor je en vult geen tarief in.</p>
+        <legend className="mb-2 font-serif text-xl">{t("Btw")}</legend>
+        <p className="text-sm text-muted">{t("Kies wat je boekhouder of de Belastingdienst voor jouw situatie heeft bevestigd. Het systeem kiest hier niets voor je en vult geen tarief in.")}</p>
         <Field label="Btw-situatie">
           <Select name="vatMode" value={mode} onChange={(e) => setMode(e.target.value as InvoiceSettings["vatMode"])}>
-            <option value="">— nog niet gekozen —</option>
-            <option value="standard">Ik reken btw</option>
-            <option value="kor">Kleineondernemersregeling (KOR) — geen btw</option>
-            <option value="exempt">Vrijgesteld van btw (andere vrijstelling)</option>
+            <option value="">{t("— nog niet gekozen —")}</option>
+            <option value="standard">{t("Ik reken btw")}</option>
+            <option value="kor">{t("Kleineondernemersregeling (KOR) — geen btw")}</option>
+            <option value="exempt">{t("Vrijgesteld van btw (andere vrijstelling)")}</option>
           </Select>
         </Field>
         {mode === "standard" && (
@@ -167,7 +170,7 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
         )}
       </fieldset>
       <fieldset className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2">
-        <legend className="mb-2 font-serif text-xl">Betalen en contact</legend>
+        <legend className="mb-2 font-serif text-xl">{t("Betalen en contact")}</legend>
         <Field label="IBAN (optioneel)">
           <Input name="iban" defaultValue={v.iban} autoComplete="off" />
         </Field>
@@ -187,7 +190,7 @@ export function BusinessForm({ v }: { v: InvoiceSettings }) {
           <Input name="footer" defaultValue={v.footer} maxLength={200} />
         </Field>
       </fieldset>
-      <SubmitButton pending="Bezig met opslaan…">Opslaan</SubmitButton>
+      <SubmitButton pending="Bezig met opslaan…">{t("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }

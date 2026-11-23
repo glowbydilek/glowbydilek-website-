@@ -6,8 +6,10 @@ import { SENSITIVE_CLAIMS } from "@/lib/profile";
 import { profileAction } from "@/lib/private/profileActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Notice, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function ProfileForm({ p, media }: { p: Profile; media: { id: number; name: string }[] }) {
+  const t = useT();
   const [text, setText] = useState([p.diplomaTitle, p.level, p.backgroundNl, p.backgroundEn, ...p.certificates.map((c) => c.name)].join(" "));
   const warn = SENSITIVE_CLAIMS.test(text);
   return (
@@ -21,7 +23,7 @@ export function ProfileForm({ p, media }: { p: Profile; media: { id: number; nam
         </div>
         <label className="flex min-h-11 items-start gap-3 rounded-xl border border-accent/50 bg-glow-soft p-3">
           <input type="checkbox" name="verified" defaultChecked={p.verified} className="mt-1 h-5 w-5" />
-          <span className="text-sm">Ik heb diplomatitel, niveau en instelling <strong>exact</strong> overgenomen van mijn diploma. (Zonder dit vinkje toont de website het diploma niet.)</span>
+          <span className="text-sm">{t("Ik heb diplomatitel, niveau en instelling")} <strong>{t("exact")}</strong> {t("overgenomen van mijn diploma. (Zonder dit vinkje toont de website het diploma niet.)")}</span>
         </label>
         <Field label="Certificaten en cursussen" hint="Eén per regel: naam — uitgever — jaar"><Textarea name="certificates" rows={4} defaultValue={p.certificates.map((c) => [c.name, c.issuer, c.year].filter(Boolean).join(" — ")).join("\n")} /></Field>
         <div className="grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
@@ -31,26 +33,26 @@ export function ProfileForm({ p, media }: { p: Profile; media: { id: number; nam
         <div className="grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
           <Field label="Portretfoto (uit Media)" hint="Alleen een echte foto van jezelf">
             <Select name="photoMediaId" defaultValue={p.photoMediaId ?? ""}>
-              <option value="">— geen foto —</option>
+              <option value="">{t("— geen foto —")}</option>
               {media.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
             </Select>
           </Field>
           <label className="flex min-h-11 items-start gap-3 self-end">
             <input type="checkbox" name="photoIsReal" defaultChecked={p.photoIsReal} className="mt-1 h-5 w-5" />
-            <span className="text-sm">Dit is een echte foto van mij (geen stockfoto of model).</span>
+            <span className="text-sm">{t("Dit is een echte foto van mij (geen stockfoto of model).")}</span>
           </label>
         </div>
         {warn && (
           <Notice tone="warning">
-            Je tekst noemt een registratie, bevoegdheid of btw-vrijstelling (bijv. BIG, fysiotherapie, medisch, btw-vrij). Noem dit alleen als je het officieel kunt aantonen, en overleg bij btw met je boekhouder.
+            {t("Je tekst noemt een registratie, bevoegdheid of btw-vrijstelling (bijv. BIG, fysiotherapie, medisch, btw-vrij). Noem dit alleen als je het officieel kunt aantonen, en overleg bij btw met je boekhouder.")}
           </Notice>
         )}
         <label className="flex min-h-11 items-start gap-3">
           <input type="checkbox" name="published" defaultChecked={p.published} className="mt-1 h-5 w-5" />
-          <span className="text-sm">Toon ‘Opleiding &amp; achtergrond’ op de pagina Over Dilek</span>
+          <span className="text-sm">{t("Toon ‘Opleiding & achtergrond’ op de pagina Over Dilek")}</span>
         </label>
       </div>
-      <SubmitButton>Opslaan</SubmitButton>
+      <SubmitButton>{t("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }

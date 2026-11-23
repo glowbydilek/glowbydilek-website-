@@ -15,6 +15,7 @@ import { BLANK_CUSTOM } from "@/lib/cms/custom";
 import { CustomPageSettings } from "@/components/private/cms/CustomPageForms";
 import { restoreVersionAction } from "@/lib/private/cmsActions";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 
 /** One label per language (Turkish is reachable but not shown in Google). */
@@ -24,6 +25,7 @@ export const metadata = { title: "Pagina bewerken" };
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 export default async function EditPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireCan("admin", "cms.edit");
   const { id } = await params;
   const sp = await searchParams;
@@ -73,15 +75,15 @@ export default async function EditPage({ params, searchParams }: { params: Promi
       <PageHeader
         title={page.label}
         subtitle={`Op de website: ${page.paths.nl} · ${page.paths.en}`}
-        actions={<a href={(locale !== "nl" && page.paths[locale]) || page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">Bekijk live ↗</a>}
+        actions={<a href={(locale !== "nl" && page.paths[locale]) || page.paths.nl} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-4 text-sm">{t("Bekijk live ↗")}</a>}
       />
-      {sp.hersteld && <div className="mb-4"><Notice tone="success">Eerdere versie teruggezet als concept. Controleer en klik op Publiceren.</Notice></div>}
+      {sp.hersteld && <div className="mb-4"><Notice tone="success">{t("Eerdere versie teruggezet als concept. Controleer en klik op Publiceren.")}</Notice></div>}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {page.docs.length > 1 && page.docs.map((d) => (
           <Link key={d.key} href={href(d.key, locale)} aria-current={d.key === docKey ? "page" : undefined} className={`min-h-10 rounded-full px-4 py-2 text-sm ${d.key === docKey ? "bg-ink text-paper" : "bg-white text-ink"}`}>{d.label}</Link>
         ))}
       </div>
-      <div className="mb-4 inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Taal">
+      <div className="mb-4 inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label={t("Taal")}>
         {(["nl", "en", "tr"] as const).map((l) => (
           <Link key={l} href={href(docKey, l)} role="tab" aria-selected={l === locale} className={`min-h-10 rounded-full px-4 py-2 text-sm ${l === locale ? "bg-ink text-paper" : ""}`}>
             {LANG_LABEL[l]}
@@ -102,17 +104,17 @@ export default async function EditPage({ params, searchParams }: { params: Promi
         </Card>
         <div className="space-y-5">
           {custom && (
-            <Card title="Pagina-instellingen">
+            <Card title={t("Pagina-instellingen")}>
               <CustomPageSettings id={custom.id} published={custom.published} noindex={custom.noindex} />
             </Card>
           )}
           {page.sectionsPage && (
-            <Card title="Onderdelen">
+            <Card title={t("Onderdelen")}>
               <p className="mb-3 text-sm text-muted">Volgorde en zichtbaarheid{page.sectionsPage !== "home" && page.sectionsPage !== "about" ? " (geldt voor alle pagina's van dit type)" : ""}.</p>
               <SectionsEditor page={page.sectionsPage} defs={PAGE_SECTIONS[page.sectionsPage]} order={sections.order ?? []} hidden={sections.hidden ?? []} />
             </Card>
           )}
-          <Card title="Geschiedenis">
+          <Card title={t("Geschiedenis")}>
             {hist.length ? (
               <ul className="space-y-2 text-sm">
                 {hist.map((h) => (
@@ -121,13 +123,13 @@ export default async function EditPage({ params, searchParams }: { params: Promi
                     <form action={restoreVersionAction}>
                       <input type="hidden" name="versionId" value={h.id} />
                       <input type="hidden" name="back" value={href(docKey, locale)} />
-                      <SubmitButton variant="ghost" className="min-h-9 px-3 text-xs">Terugzetten</SubmitButton>
+                      <SubmitButton variant="ghost" className="min-h-9 px-3 text-xs">{t("Terugzetten")}</SubmitButton>
                     </form>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">Nog geen gepubliceerde wijzigingen.</p>
+              <p className="text-sm text-muted">{t("Nog geen gepubliceerde wijzigingen.")}</p>
             )}
           </Card>
         </div>

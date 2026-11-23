@@ -7,6 +7,7 @@ import { BUILTIN_GROUPS, BUILTIN_ITEMS, BUILTIN_SECTIONS } from "@/lib/catalogue
 import { getDb } from "@/lib/db/client";
 import { packageItems, serviceGroups, serviceSections, treatments } from "@/lib/db/schema";
 import { ensureSeeded } from "@/lib/db/seed";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Behandelingen & prijzen" };
 
@@ -23,6 +24,7 @@ const euro = (c: number | null) => (c != null ? `€ ${(c / 100).toFixed(2).repl
  * Long-form page texts are edited under Pagina's.
  */
 export default async function TreatmentsAdmin() {
+  const t = await panelT();
   await requireCan("admin", "cms.publish");
   const db = getDb();
   await ensureSeeded(db);
@@ -80,16 +82,16 @@ export default async function TreatmentsAdmin() {
 
   return (
     <>
-      <PageHeader title="Behandelingen & prijzen" subtitle="Categorieën, subcategorieën, behandelingen en pakketten. Uitgebreide pagina-teksten bewerk je onder Pagina's." />
+      <PageHeader title={t("Behandelingen & prijzen")} subtitle="Categorieën, subcategorieën, behandelingen en pakketten. Uitgebreide pagina-teksten bewerk je onder Pagina's." />
       <div className="mb-5 space-y-3">
         <Notice tone="info">
-          Alleen <strong>gepubliceerde</strong> behandelingen in een <strong>gepubliceerde</strong> categorie staan op de website. Concepten zie je alleen hier en in de voorbeeldweergave. Zonder prijs toont de site ‘Op aanvraag’ — nooit € 0.
+          {t("Alleen")} <strong>{t("gepubliceerde")}</strong> {t("behandelingen in een")} <strong>{t("gepubliceerde")}</strong> {t("categorie staan op de website. Concepten zie je alleen hier en in de voorbeeldweergave. Zonder prijs toont de site ‘Op aanvraag’ — nooit € 0.")}
         </Notice>
         <Notice tone="info">
-          Turkse pagina&apos;s (/tr) tonen alleen behandelingen en categorieën met een Turkse naam. Ontbreekt die, dan staat er <strong>Vertaling nodig (TR)</strong> en blijft het onderdeel verborgen op /tr (geen Engelse of Nederlandse tekst als vervanging).
+          {t("Turkse pagina's (/tr) tonen alleen behandelingen en categorieën met een Turkse naam. Ontbreekt die, dan staat er")} <strong>{t("Vertaling nodig (TR)")}</strong> {t("en blijft het onderdeel verborgen op /tr (geen Engelse of Nederlandse tekst als vervanging).")}
         </Notice>
         <Notice tone="warning">
-          De nieuwe gezichts-, lichaams-, massage- en pakketbehandelingen staan klaar als <strong>concept</strong>. Controleer per behandeling of je hem echt aanbiedt, vul prijs en duur in en publiceer pas daarna. Btw-tarieven anders dan 21% alleen na akkoord van je boekhouder.
+          {t("De nieuwe gezichts-, lichaams-, massage- en pakketbehandelingen staan klaar als")} <strong>{t("concept")}</strong>{t(". Controleer per behandeling of je hem echt aanbiedt, vul prijs en duur in en publiceer pas daarna. Btw-tarieven anders dan 21% alleen na akkoord van je boekhouder.")}
         </Notice>
       </div>
 
@@ -108,11 +110,11 @@ export default async function TreatmentsAdmin() {
               actions={<Badge tone={STATUS[s.status]?.tone ?? "neutral"}>{STATUS[s.status]?.label ?? s.status}</Badge>}
             >
               <details className="mb-4 rounded-2xl border border-line p-3">
-                <summary className="cursor-pointer text-sm font-medium">Categorie-instellingen</summary>
+                <summary className="cursor-pointer text-sm font-medium">{t("Categorie-instellingen")}</summary>
                 <div className="mt-3 space-y-3">
                   <SectionForm s={sectionTr(s)} />
                   <Link href={s.id === "waxing" ? "/admin/paginas/treatments" : `/admin/paginas/section-${s.id}`} className="inline-block text-sm text-accent-deep underline">
-                    Teksten van de categoriepagina bewerken
+                    {t("Teksten van de categoriepagina bewerken")}
                   </Link>
                 </div>
               </details>
@@ -126,43 +128,43 @@ export default async function TreatmentsAdmin() {
                   )}
                   {b.group && !b.group.id.match(/^(face|body|intimate)$/) && (
                     <details className="mb-3 rounded-xl border border-line p-3">
-                      <summary className="cursor-pointer text-sm">Subcategorie bewerken</summary>
+                      <summary className="cursor-pointer text-sm">{t("Subcategorie bewerken")}</summary>
                       <div className="mt-3"><GroupForm g={groupTr(b.group)} /></div>
                     </details>
                   )}
                   <div className="space-y-3">
-                    {b.list.map((t) => (
-                      <details key={t.id} className="rounded-2xl border border-line p-3">
+                    {b.list.map((it) => (
+                      <details key={it.id} className="rounded-2xl border border-line p-3">
                         <summary className="flex cursor-pointer flex-wrap items-center justify-between gap-2">
                           <span className="font-medium">
-                            {t.nameNl}
-                            {t.kind === "package" && <span className="ml-2 text-xs uppercase tracking-[0.14em] text-muted">pakket</span>}
+                            {it.nameNl}
+                            {it.kind === "package" && <span className="ml-2 text-xs uppercase tracking-[0.14em] text-muted">{t("pakket")}</span>}
                           </span>
                           <span className="flex flex-wrap items-center gap-2 text-sm text-muted">
-                            <Badge tone={STATUS[t.status]?.tone ?? "neutral"}>{STATUS[t.status]?.label ?? t.status}</Badge>
-                            {t.pricingMode === "on_request" ? "op aanvraag" : `${t.pricingMode === "from" ? "vanaf " : ""}${euro(t.priceCents)}`}
+                            <Badge tone={STATUS[it.status]?.tone ?? "neutral"}>{STATUS[it.status]?.label ?? it.status}</Badge>
+                            {it.pricingMode === "on_request" ? "op aanvraag" : `${it.pricingMode === "from" ? "vanaf " : ""}${euro(it.priceCents)}`}
                             {" · "}
-                            {t.durationMinutes ? `${t.durationMinutes} min` : "duur niet ingesteld"}
-                            {!t.visible ? " · verborgen" : ""}
-                            {t.bookableOnline ? " · online" : ""}
-                            {!t.nameTr && <Badge tone="pending">Vertaling nodig (TR)</Badge>}
+                            {it.durationMinutes ? `${it.durationMinutes} min` : "duur niet ingesteld"}
+                            {!it.visible ? " · verborgen" : ""}
+                            {it.bookableOnline ? " · online" : ""}
+                            {!it.nameTr && <Badge tone="pending">{t("Vertaling nodig (TR)")}</Badge>}
                           </span>
                         </summary>
                         <div className="mt-3 space-y-4">
-                          <ItemForm t={t} sections={sectionOpts} groups={groupOpts} />
-                          {t.kind === "package" && (
-                            <PackagePartsForm id={t.id} parts={parts.filter((p) => p.packageId === t.id)} treatments={treatmentOpts} />
+                          <ItemForm t={it} sections={sectionOpts} groups={groupOpts} />
+                          {it.kind === "package" && (
+                            <PackagePartsForm id={it.id} parts={parts.filter((p) => p.packageId === it.id)} treatments={treatmentOpts} />
                           )}
                           <div className="flex flex-wrap gap-4 text-sm">
-                            <Link href={`/admin/paginas/treatment-${t.id}`} className="text-accent-deep underline">Pagina-teksten bewerken</Link>
-                            {t.status === "published" && s.status === "published" && (
-                              <Link href={path(t)} target="_blank" className="text-accent-deep underline">Bekijk pagina ↗</Link>
+                            <Link href={`/admin/paginas/treatment-${it.id}`} className="text-accent-deep underline">{t("Pagina-teksten bewerken")}</Link>
+                            {it.status === "published" && s.status === "published" && (
+                              <Link href={path(it)} target="_blank" className="text-accent-deep underline">{t("Bekijk pagina ↗")}</Link>
                             )}
                           </div>
                         </div>
                       </details>
                     ))}
-                    {!b.list.length && <p className="text-sm text-muted">Nog geen behandelingen.</p>}
+                    {!b.list.length && <p className="text-sm text-muted">{t("Nog geen behandelingen.")}</p>}
                   </div>
                 </div>
               ))}
@@ -170,10 +172,10 @@ export default async function TreatmentsAdmin() {
           );
         })}
 
-        <Card title="Nieuwe behandeling of pakket">
+        <Card title={t("Nieuwe behandeling of pakket")}>
           <CreateItemForm sections={sectionOpts} groups={groupOpts} />
         </Card>
-        <Card title="Nieuwe categorie of subcategorie">
+        <Card title={t("Nieuwe categorie of subcategorie")}>
           <div className="space-y-6">
             <CreateSectionForm />
             <CreateGroupForm sections={sectionOpts.filter((s) => s.kind !== "packages")} />

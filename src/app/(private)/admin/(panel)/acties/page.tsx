@@ -10,12 +10,14 @@ import { centsToInput } from "@/lib/finance/money";
 import { isRunning } from "@/lib/promotions/core";
 import { toPromotion } from "@/lib/promotions/service";
 import { toLocalParts } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Acties & kortingen" };
 
 const day = (d: Date | null) => (d ? toLocalParts(d).date : "");
 
 export default async function MarketingAdmin() {
+  const t = await panelT();
   await requireOwner("admin");
   const db = getDb();
   await ensureSeeded(db);
@@ -53,14 +55,14 @@ export default async function MarketingAdmin() {
   const now = new Date();
   return (
     <>
-      <PageHeader title="Acties & kortingen" subtitle="Kortingen, actiecodes en de actieslider op de homepage." />
+      <PageHeader title={t("Acties & kortingen")} subtitle="Kortingen, actiecodes en de actieslider op de homepage." />
       <div className="mb-5">
         <Notice tone="info">
-          Er wordt nooit iets automatisch gepubliceerd: een actie werkt pas als je de status op <strong>Actief</strong> zet, en alleen binnen de ingestelde periode. Per afspraak geldt maximaal één actie. Kortingen gelden alleen voor behandelingen met een vaste prijs.
+          {t("Er wordt nooit iets automatisch gepubliceerd: een actie werkt pas als je de status op")} <strong>{t("Actief")}</strong> {t("zet, en alleen binnen de ingestelde periode. Per afspraak geldt maximaal één actie. Kortingen gelden alleen voor behandelingen met een vaste prijs.")}
         </Notice>
       </div>
       <div className="space-y-6">
-        <Card title="Acties">
+        <Card title={t("Acties")}>
           <div className="space-y-3">
             {promoRows.map((r) => {
               const p = toPromotion(r);
@@ -78,16 +80,16 @@ export default async function MarketingAdmin() {
                 </details>
               );
             })}
-            {!promoRows.length && <p className="text-sm text-muted">Nog geen acties.</p>}
+            {!promoRows.length && <p className="text-sm text-muted">{t("Nog geen acties.")}</p>}
           </div>
           <details className="mt-5 rounded-2xl border border-dashed border-ink/25 p-3">
-            <summary className="cursor-pointer font-medium">＋ Nieuwe actie</summary>
+            <summary className="cursor-pointer font-medium">{t("＋ Nieuwe actie")}</summary>
             <div className="mt-3"><PromotionForm p={blankPromo} opts={opts} /></div>
           </details>
         </Card>
 
-        <Card title="Actieslider op de homepage">
-          <p className="mb-4 text-sm text-muted">Zonder actieve slides wordt de slider niet getoond. Bezoekers met ‘minder beweging’ ingesteld zien geen automatische wisseling.</p>
+        <Card title={t("Actieslider op de homepage")}>
+          <p className="mb-4 text-sm text-muted">{t("Zonder actieve slides wordt de slider niet getoond. Bezoekers met ‘minder beweging’ ingesteld zien geen automatische wisseling.")}</p>
           <div className="space-y-3">
             {campaignRows.map((c) => (
               <details key={c.id} className="rounded-2xl border border-line p-3">
@@ -100,7 +102,7 @@ export default async function MarketingAdmin() {
             ))}
           </div>
           <details className="mt-5 rounded-2xl border border-dashed border-ink/25 p-3">
-            <summary className="cursor-pointer font-medium">＋ Nieuwe slide</summary>
+            <summary className="cursor-pointer font-medium">{t("＋ Nieuwe slide")}</summary>
             <div className="mt-3">
               <CampaignForm c={{ id: null, titleNl: "", titleEn: "", textNl: "", textEn: "", ctaNl: "", ctaEn: "", href: "", mediaId: null, startsAt: "", endsAt: "", status: "draft", sort: campaignRows.length }} media={mediaRows} />
             </div>

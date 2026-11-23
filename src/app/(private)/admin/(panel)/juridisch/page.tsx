@@ -7,10 +7,12 @@ import { legalNl } from "@/content/copy/legal.nl";
 import { mergeContent } from "@/lib/cms/registry";
 import { getPublishedEntry } from "@/lib/cms/store";
 import { DEFAULT_LEGAL_STATUS, hasPlaceholder, LEGAL_KEYS, LEGAL_LABELS, LEGAL_PATHS } from "@/lib/legal";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Juridische pagina's" };
 
 export default async function LegalAdmin() {
+  const t = await panelT();
   await requireOwner("admin");
   const statusRow = await getPublishedEntry("legal-status", "all");
   const status = { ...DEFAULT_LEGAL_STATUS, ...((statusRow?.data as object) ?? {}) } as Record<string, boolean>;
@@ -24,12 +26,12 @@ export default async function LegalAdmin() {
   );
   return (
     <>
-      <PageHeader title="Juridische pagina's" subtitle="Cookiebeleid, voorwaarden, annuleringsbeleid en beoordelingsbeleid — met ingangsdatum en versiegeschiedenis." />
+      <PageHeader title={t("Juridische pagina's")} subtitle="Cookiebeleid, voorwaarden, annuleringsbeleid en beoordelingsbeleid — met ingangsdatum en versiegeschiedenis." />
       <div className="mb-5 space-y-3">
         <Notice tone="warning">
-          Deze teksten zijn een zorgvuldig startpunt, <strong>geen juridisch advies</strong>. Stukken met <code>[INVULLEN …]</code> vragen om jouw keuzes (bijv. annuleringstermijn en eventuele kosten). Zolang die markeringen er staan, kan de pagina niet online. Laat voorwaarden bij voorkeur controleren door een jurist of je beroepsvereniging.
+          {t("Deze teksten zijn een zorgvuldig startpunt,")} <strong>{t("geen juridisch advies")}</strong>{t(". Stukken met")} <code>[INVULLEN …]</code> {t("vragen om jouw keuzes (bijv. annuleringstermijn en eventuele kosten). Zolang die markeringen er staan, kan de pagina niet online. Laat voorwaarden bij voorkeur controleren door een jurist of je beroepsvereniging.")}
         </Notice>
-        <Notice tone="info">De privacyverklaring bewerk je onder Pagina&apos;s → Privacyverklaring; die staat altijd online.</Notice>
+        <Notice tone="info">{t("De privacyverklaring bewerk je onder Pagina's → Privacyverklaring; die staat altijd online.")}</Notice>
       </div>
       <div className="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
         {rows.map((r) => (
@@ -39,9 +41,9 @@ export default async function LegalAdmin() {
               <br />
               {r.date ? `Ingangsdatum: ${r.date}` : "Nog geen ingangsdatum"} · {r.version ? `versie ${r.version}` : "oorspronkelijke tekst"}
             </p>
-            {r.todo && <p className="mt-2 text-sm text-[#8e2f24]">Bevat nog [INVULLEN …]-markeringen.</p>}
+            {r.todo && <p className="mt-2 text-sm text-[#8e2f24]">{t("Bevat nog [INVULLEN …]-markeringen.")}</p>}
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <Link href={`/admin/paginas/legal-${r.k}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">Tekst bewerken</Link>
+              <Link href={`/admin/paginas/legal-${r.k}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">{t("Tekst bewerken")}</Link>
               <LegalToggle k={r.k} on={r.on} />
             </div>
           </Card>

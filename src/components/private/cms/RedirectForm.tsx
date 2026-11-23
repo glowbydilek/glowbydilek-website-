@@ -3,8 +3,10 @@
 import { redirectAction } from "@/lib/private/cmsActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, SubmitButton } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function RedirectForm({ targets }: { targets: string[] }) {
+  const t = useT();
   return (
     <ActionForm action={redirectAction} resetOnSuccess>
       <input type="hidden" name="op" value="save" />
@@ -16,17 +18,18 @@ export function RedirectForm({ targets }: { targets: string[] }) {
           </select>
         </Field>
       </div>
-      <SubmitButton>Doorverwijzing toevoegen</SubmitButton>
+      <SubmitButton>{t("Doorverwijzing toevoegen")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function DeleteRedirect({ id }: { id: number }) {
+  const t = useT();
   return (
     <ActionForm action={redirectAction} className="">
       <input type="hidden" name="op" value="delete" />
       <input type="hidden" name="id" value={id} />
-      <SubmitButton variant="ghost" className="min-h-9 px-3 text-xs" confirm="Verwijderen?">Verwijderen</SubmitButton>
+      <SubmitButton variant="ghost" className="min-h-9 px-3 text-xs" confirm="Verwijderen?">{t("Verwijderen")}</SubmitButton>
     </ActionForm>
   );
 }

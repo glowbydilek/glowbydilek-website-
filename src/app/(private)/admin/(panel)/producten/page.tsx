@@ -10,12 +10,14 @@ import { ensureSeeded } from "@/lib/db/seed";
 import { centsToInput } from "@/lib/finance/money";
 import { parseSteps, PRODUCT_CATEGORIES, stockFlags } from "@/lib/products/core";
 import { todayLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Producten & materialen" };
 
 const FLAG: Record<string, string> = { out: "Op", low: "Bijna op", expired: "Over datum", expiring: "Bijna over datum" };
 
 export default async function ProductsAdmin({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireOwner("admin");
   const sp = await searchParams;
   const db = getDb();
@@ -53,10 +55,10 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
   const warnings = rows.flatMap((r) => stockFlags(r, today).map((f) => ({ name: `${r.brand ? `${r.brand} ` : ""}${r.name}`, flag: f! })));
   return (
     <>
-      <PageHeader title="Producten & materialen" subtitle="Welke producten je gebruikt, voorraad, houdbaarheid en je eigen behandelprotocollen." />
+      <PageHeader title={t("Producten & materialen")} subtitle="Welke producten je gebruikt, voorraad, houdbaarheid en je eigen behandelprotocollen." />
       <div className="mb-5 space-y-3">
         <Notice tone="info">
-          Er zijn geen producten vooraf ingevuld: alleen jij weet welke producten (bijv. van Depilève of Extenso) je echt gebruikt en hoe. Sommige producten zijn uitsluitend voor professioneel gebruik — markeer die, zodat ze nooit als thuisadvies verschijnen. Dit is geen webshop.
+          {t("Er zijn geen producten vooraf ingevuld: alleen jij weet welke producten (bijv. van Depilève of Extenso) je echt gebruikt en hoe. Sommige producten zijn uitsluitend voor professioneel gebruik — markeer die, zodat ze nooit als thuisadvies verschijnen. Dit is geen webshop.")}
         </Notice>
         {warnings.length > 0 && (
           <Notice tone="warning">
@@ -65,7 +67,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
         )}
       </div>
       <div className="space-y-6">
-        <Card title="Producten">
+        <Card title={t("Producten")}>
           <div className="space-y-3">
             {rows.map((r) => (
               <details key={r.id} className="rounded-2xl border border-line p-3">
@@ -74,7 +76,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
                   <span className="flex flex-wrap items-center gap-2 text-sm text-muted">
                     {PRODUCT_CATEGORIES[r.category] ?? r.category} · voorraad {r.stockQty ?? "—"}
                     {stockFlags(r, today).map((f) => <Badge key={f!} tone="warning">{FLAG[f!]}</Badge>)}
-                    {r.status === "archived" && <Badge tone="cancelled">Gearchiveerd</Badge>}
+                    {r.status === "archived" && <Badge tone="cancelled">{t("Gearchiveerd")}</Badge>}
                   </span>
                 </summary>
                 <div className="mt-3 space-y-4">
@@ -83,25 +85,25 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
                 </div>
               </details>
             ))}
-            {!rows.length && <p className="text-sm text-muted">Nog geen producten.</p>}
+            {!rows.length && <p className="text-sm text-muted">{t("Nog geen producten.")}</p>}
           </div>
           <details className="mt-5 rounded-2xl border border-dashed border-ink/25 p-3">
-            <summary className="cursor-pointer font-medium">＋ Nieuw product</summary>
+            <summary className="cursor-pointer font-medium">{t("＋ Nieuw product")}</summary>
             <div className="mt-3"><ProductForm p={blank} media={mediaRows} /></div>
           </details>
         </Card>
 
-        <Card title="Behandelprotocollen (intern)">
-          <p className="mb-3 text-sm text-muted">Je eigen werkwijze per behandeling, stap voor stap, met de producten die je daarbij gebruikt. Alleen zichtbaar voor jou.</p>
+        <Card title={t("Behandelprotocollen (intern)")}>
+          <p className="mb-3 text-sm text-muted">{t("Je eigen werkwijze per behandeling, stap voor stap, met de producten die je daarbij gebruikt. Alleen zichtbaar voor jou.")}</p>
           <form className="mb-4 flex flex-wrap items-end gap-3">
             <label className="w-full min-w-0 text-sm sm:w-auto">
-              <span className="mb-1 block text-muted">Behandeling</span>
+              <span className="mb-1 block text-muted">{t("Behandeling")}</span>
               <select name="protocol" defaultValue={selected?.id ?? ""} className="min-h-11 w-full max-w-full rounded-xl border border-ink/20 bg-white px-3 sm:w-auto">
-                <option value="">— kies —</option>
+                <option value="">{t("— kies —")}</option>
                 {items.map((i) => <option key={i.id} value={i.id}>{i.category} · {i.name}</option>)}
               </select>
             </label>
-            <button className="min-h-11 rounded-full border border-ink/25 px-5 text-sm">Openen</button>
+            <button className="min-h-11 rounded-full border border-ink/25 px-5 text-sm">{t("Openen")}</button>
           </form>
           {selected && (
             <ProtocolForm
@@ -114,7 +116,7 @@ export default async function ProductsAdmin({ searchParams }: { searchParams: Pr
           )}
         </Card>
 
-        <Card title="Publieke pagina">
+        <Card title={t("Publieke pagina")}>
           <ProductsPublicForm enabled={pub.enabled} />
         </Card>
       </div>

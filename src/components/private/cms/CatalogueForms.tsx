@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createGroupAction, createItemAction, createSectionAction, groupAction, itemAction, packagePartsAction, sectionAction } from "@/lib/private/catalogueActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export type Opt = { id: string; label: string };
 
@@ -56,6 +57,7 @@ function Check({ name, label, on, hint }: { name: string; label: string; on?: bo
 const euro = (c: number | null) => (c != null ? (c / 100).toFixed(2).replace(".", ",").replace(",00", "") : "");
 
 export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]; groups: (Opt & { sectionId: string })[] }) {
+  const tr = useT();
   const [mode, setMode] = useState(t.pricingMode);
   const [status, setStatus] = useState(t.status);
   const [section, setSection] = useState(t.sectionId);
@@ -80,7 +82,7 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
         </Field>
         <Field label="Subcategorie" hint="Optioneel">
           <Select name="groupId" defaultValue={t.groupId ?? ""}>
-            <option value="">— geen —</option>
+            <option value="">{tr("— geen —")}</option>
             {groups.filter((g) => g.sectionId === section).map((g) => (
               <option key={g.id} value={g.id}>{g.label}</option>
             ))}
@@ -90,9 +92,9 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
       <div className="grid gap-3 sm:grid-cols-3 [&>*]:min-w-0">
         <Field label="Prijsweergave">
           <Select name="pricingMode" value={mode} onChange={(e) => setMode(e.target.value)}>
-            <option value="fixed">Vaste prijs</option>
-            <option value="from">Vanaf-prijs</option>
-            <option value="on_request">Prijs op aanvraag (prijsvoorstel)</option>
+            <option value="fixed">{tr("Vaste prijs")}</option>
+            <option value="from">{tr("Vanaf-prijs")}</option>
+            <option value="on_request">{tr("Prijs op aanvraag (prijsvoorstel)")}</option>
           </Select>
         </Field>
         <Field label="Prijs in euro (incl. btw)" hint={mode === "on_request" ? "Niet nodig bij ‘op aanvraag’" : "Bijv. 35 of 42,50"}>
@@ -117,7 +119,7 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
       <details className="rounded-xl border border-line p-3">
         <summary className="cursor-pointer text-sm">
           Naam, korte omschrijving en webadres (NL/EN/TR)
-          {!t.nameTr && <span className="ml-2 rounded-full bg-glow-soft px-2 py-0.5 text-xs font-medium text-accent-deep">Vertaling nodig (TR)</span>}
+          {!t.nameTr && <span className="ml-2 rounded-full bg-glow-soft px-2 py-0.5 text-xs font-medium text-accent-deep">{tr("Vertaling nodig (TR)")}</span>}
         </summary>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
           <Field label="Naam (NL)"><Input name="nameNl" defaultValue={t.nameNl} required /></Field>
@@ -136,18 +138,19 @@ export function ItemForm({ t, sections, groups }: { t: ItemView; sections: Opt[]
           <Check name="confirm" label="Ik bied deze behandeling echt aan en heb de tekst, prijs en duur gecontroleerd." hint="Er staan geen medische claims, certificaten of technieken in die niet kloppen." />
         </div>
       )}
-      <SubmitButton>Opslaan</SubmitButton>
+      <SubmitButton>{tr("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function PackagePartsForm({ id, parts, treatments }: { id: string; parts: { treatmentId: string; quantity: number }[]; treatments: (Opt & { group: string })[] }) {
+  const t = useT();
   const has = (tid: string) => parts.find((p) => p.treatmentId === tid);
   const groups = [...new Set(treatments.map((t) => t.group))];
   return (
     <ActionForm action={packagePartsAction}>
       <input type="hidden" name="id" value={id} />
-      <p className="text-sm text-muted">Kies welke behandelingen in dit pakket zitten (minimaal twee). De pakketpagina toont ze alleen als die behandelingen zelf ook gepubliceerd zijn.</p>
+      <p className="text-sm text-muted">{t("Kies welke behandelingen in dit pakket zitten (minimaal twee). De pakketpagina toont ze alleen als die behandelingen zelf ook gepubliceerd zijn.")}</p>
       <div className="grid gap-4 sm:grid-cols-2 [&>*]:min-w-0">
         {groups.map((g) => (
           <fieldset key={g} className="rounded-xl border border-line p-3">
@@ -164,12 +167,13 @@ export function PackagePartsForm({ id, parts, treatments }: { id: string; parts:
           </fieldset>
         ))}
       </div>
-      <SubmitButton variant="outline">Inhoud opslaan</SubmitButton>
+      <SubmitButton variant="outline">{t("Inhoud opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function SectionForm({ s }: { s: { id: string; nameNl: string; nameEn: string; nameTr: string; status: string; sort: number; slugNl: string; slugEn: string } }) {
+  const t = useT();
   const [status, setStatus] = useState(s.status);
   return (
     <ActionForm action={sectionAction}>
@@ -190,12 +194,13 @@ export function SectionForm({ s }: { s: { id: string; nameNl: string; nameEn: st
       </div>
       <p className="text-xs text-muted">Webadres: /{s.slugNl} · /en/{s.slugEn}</p>
       {status === "published" && s.status !== "published" && <Check name="confirm" label="Publiceer deze categorie (alleen gepubliceerde behandelingen worden getoond)." />}
-      <SubmitButton variant="outline">Categorie opslaan</SubmitButton>
+      <SubmitButton variant="outline">{t("Categorie opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function GroupForm({ g }: { g: { id: string; nameNl: string; nameEn: string; nameTr: string; status: string; sort: number } }) {
+  const t = useT();
   return (
     <ActionForm action={groupAction} className="flex flex-wrap items-end gap-3">
       <input type="hidden" name="id" value={g.id} />
@@ -210,12 +215,13 @@ export function GroupForm({ g }: { g: { id: string; nameNl: string; nameEn: stri
         </Select>
       </Field>
       <Field label="Volgorde"><Input name="sort" type="number" defaultValue={g.sort} className="w-24" /></Field>
-      <SubmitButton variant="outline">Opslaan</SubmitButton>
+      <SubmitButton variant="outline">{t("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function CreateItemForm({ sections, groups }: { sections: (Opt & { kind: string })[]; groups: (Opt & { sectionId: string })[] }) {
+  const t = useT();
   const [section, setSection] = useState(sections[0]?.id ?? "");
   const isPkg = sections.find((s) => s.id === section)?.kind === "packages";
   return (
@@ -231,7 +237,7 @@ export function CreateItemForm({ sections, groups }: { sections: (Opt & { kind: 
         </Field>
         <Field label="Subcategorie" hint="Optioneel">
           <Select name="groupId" defaultValue="">
-            <option value="">— geen —</option>
+            <option value="">{t("— geen —")}</option>
             {groups.filter((g) => g.sectionId === section).map((g) => (
               <option key={g.id} value={g.id}>{g.label}</option>
             ))}
@@ -249,17 +255,19 @@ export function CreateItemForm({ sections, groups }: { sections: (Opt & { kind: 
 }
 
 export function CreateSectionForm() {
+  const t = useT();
   return (
     <ActionForm action={createSectionAction} resetOnSuccess className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end [&>*]:min-w-0">
-      <Field label="Naam (NL)"><Input name="nameNl" required placeholder="bijv. Wimpers & wenkbrauwen" /></Field>
+      <Field label="Naam (NL)"><Input name="nameNl" required placeholder={t("bijv. Wimpers & wenkbrauwen")} /></Field>
       <Field label="Naam (EN)"><Input name="nameEn" required /></Field>
         <Field label="Naam (TR)" hint="Optioneel; leeg = niet op /tr"><Input name="nameTr" lang="tr" /></Field>
-      <SubmitButton variant="outline">Categorie toevoegen</SubmitButton>
+      <SubmitButton variant="outline">{t("Categorie toevoegen")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function CreateGroupForm({ sections }: { sections: Opt[] }) {
+  const t = useT();
   return (
     <ActionForm action={createGroupAction} resetOnSuccess className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end [&>*]:min-w-0">
       <Field label="Binnen categorie">
@@ -272,7 +280,7 @@ export function CreateGroupForm({ sections }: { sections: Opt[] }) {
       <Field label="Naam (NL)"><Input name="nameNl" required /></Field>
       <Field label="Naam (EN)"><Input name="nameEn" required /></Field>
         <Field label="Naam (TR)" hint="Optioneel; leeg = niet op /tr"><Input name="nameTr" lang="tr" /></Field>
-      <SubmitButton variant="outline">Subcategorie toevoegen</SubmitButton>
+      <SubmitButton variant="outline">{t("Subcategorie toevoegen")}</SubmitButton>
     </ActionForm>
   );
 }

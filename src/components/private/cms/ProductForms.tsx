@@ -5,6 +5,7 @@ import { MOVEMENT_REASONS, PRODUCT_CATEGORIES, type ProtocolStep } from "@/lib/p
 import { productAction, productsPublicAction, protocolAction, stockAction } from "@/lib/private/productActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export type ProductView = {
   id: number | null;
@@ -28,6 +29,7 @@ export type ProductView = {
 };
 
 export function ProductForm({ p, media }: { p: ProductView; media: { id: number; name: string }[] }) {
+  const t = useT();
   return (
     <ActionForm action={productAction} resetOnSuccess={!p.id}>
       {p.id && <input type="hidden" name="id" value={p.id} />}
@@ -48,14 +50,14 @@ export function ProductForm({ p, media }: { p: ProductView; media: { id: number;
         <Field label="Houdbaar tot"><Input name="expiresOn" type="date" defaultValue={p.expiresOn} /></Field>
         <Field label="Foto (uit Media)">
           <Select name="mediaId" defaultValue={p.mediaId ?? ""}>
-            <option value="">— geen —</option>
+            <option value="">{t("— geen —")}</option>
             {media.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
           </Select>
         </Field>
         <Field label="Status">
           <Select name="status" defaultValue={p.status || "active"}>
-            <option value="active">In gebruik</option>
-            <option value="archived">Gearchiveerd</option>
+            <option value="active">{t("In gebruik")}</option>
+            <option value="archived">{t("Gearchiveerd")}</option>
           </Select>
         </Field>
       </div>
@@ -69,8 +71,8 @@ export function ProductForm({ p, media }: { p: ProductView; media: { id: number;
         <Field label="Interne notities"><Textarea name="notes" rows={3} defaultValue={p.notes} /></Field>
       </div>
       <div className="grid gap-1 sm:grid-cols-2">
-        <label className="flex min-h-11 items-start gap-3 text-sm"><input type="checkbox" name="professionalOnly" defaultChecked={p.professionalOnly} className="mt-1 h-5 w-5" />Alleen voor professioneel gebruik (niet voor thuisgebruik aanraden)</label>
-        <label className="flex min-h-11 items-start gap-3 text-sm"><input type="checkbox" name="showPublic" defaultChecked={p.showPublic} className="mt-1 h-5 w-5" />Tonen op de pagina ‘Producten &amp; verzorging’ (als die aanstaat)</label>
+        <label className="flex min-h-11 items-start gap-3 text-sm"><input type="checkbox" name="professionalOnly" defaultChecked={p.professionalOnly} className="mt-1 h-5 w-5" />{t("Alleen voor professioneel gebruik (niet voor thuisgebruik aanraden)")}</label>
+        <label className="flex min-h-11 items-start gap-3 text-sm"><input type="checkbox" name="showPublic" defaultChecked={p.showPublic} className="mt-1 h-5 w-5" />{t("Tonen op de pagina ‘Producten & verzorging’ (als die aanstaat)")}</label>
       </div>
       <SubmitButton>{p.id ? "Product opslaan" : "Product toevoegen"}</SubmitButton>
     </ActionForm>
@@ -78,6 +80,7 @@ export function ProductForm({ p, media }: { p: ProductView; media: { id: number;
 }
 
 export function StockForm({ productId }: { productId: number }) {
+  const t = useT();
   return (
     <ActionForm action={stockAction} resetOnSuccess className="flex flex-wrap items-end gap-3">
       <input type="hidden" name="productId" value={productId} />
@@ -88,12 +91,13 @@ export function StockForm({ productId }: { productId: number }) {
       </Field>
       <Field label="Aantal"><Input name="quantity" type="number" required className="w-24" /></Field>
       <Field label="Notitie"><Input name="note" maxLength={300} /></Field>
-      <SubmitButton variant="outline">Voorraad aanpassen</SubmitButton>
+      <SubmitButton variant="outline">{t("Voorraad aanpassen")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function ProtocolForm({ treatmentId, steps, notes, products }: { treatmentId: string; steps: ProtocolStep[]; notes: string; products: { id: number; label: string }[] }) {
+  const t = useT();
   const [list, setList] = useState<ProtocolStep[]>(steps.length ? steps : [{ title: "", body: "", productIds: [] }]);
   return (
     <ActionForm action={protocolAction}>
@@ -110,7 +114,7 @@ export function ProtocolForm({ treatmentId, steps, notes, products }: { treatmen
             <Field label="Toelichting"><Textarea name={`step${i}.body`} rows={2} defaultValue={st.body} maxLength={1000} /></Field>
             {products.length > 0 && (
               <fieldset className="mt-2 flex flex-wrap gap-x-4">
-                <legend className="text-xs text-muted">Producten bij deze stap</legend>
+                <legend className="text-xs text-muted">{t("Producten bij deze stap")}</legend>
                 {products.map((p) => (
                   <label key={p.id} className="flex min-h-10 items-center gap-2 text-sm">
                     <input type="checkbox" name={`step${i}.products`} value={p.id} defaultChecked={st.productIds.includes(p.id)} className="h-4 w-4" />
@@ -122,21 +126,22 @@ export function ProtocolForm({ treatmentId, steps, notes, products }: { treatmen
           </li>
         ))}
       </ol>
-      <button type="button" onClick={() => setList((l) => [...l, { title: "", body: "", productIds: [] }])} className="min-h-10 rounded-full border border-dashed border-ink/30 px-4 text-sm">＋ Stap toevoegen</button>
+      <button type="button" onClick={() => setList((l) => [...l, { title: "", body: "", productIds: [] }])} className="min-h-10 rounded-full border border-dashed border-ink/30 px-4 text-sm">{t("＋ Stap toevoegen")}</button>
       <Field label="Notities bij dit protocol"><Textarea name="notes" rows={2} defaultValue={notes} /></Field>
-      <SubmitButton>Protocol opslaan</SubmitButton>
+      <SubmitButton>{t("Protocol opslaan")}</SubmitButton>
     </ActionForm>
   );
 }
 
 export function ProductsPublicForm({ enabled }: { enabled: boolean }) {
+  const t = useT();
   return (
     <ActionForm action={productsPublicAction} className="flex flex-wrap items-center gap-4">
       <label className="flex min-h-11 items-center gap-3 text-sm">
         <input type="checkbox" name="enabled" defaultChecked={enabled} className="h-5 w-5" />
-        Pagina ‘Producten &amp; verzorging’ tonen (/producten). Geen webshop; alleen informatie over gemarkeerde producten.
+        {t("Pagina ‘Producten & verzorging’ tonen (/producten). Geen webshop; alleen informatie over gemarkeerde producten.")}
       </label>
-      <SubmitButton variant="outline">Opslaan</SubmitButton>
+      <SubmitButton variant="outline">{t("Opslaan")}</SubmitButton>
     </ActionForm>
   );
 }

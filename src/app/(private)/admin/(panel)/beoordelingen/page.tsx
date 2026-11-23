@@ -7,6 +7,7 @@ import { getDb } from "@/lib/db/client";
 import { reviews } from "@/lib/db/schema";
 import { displayName, getReviewSettings } from "@/lib/reviews/service";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Beoordelingen" };
 
@@ -18,6 +19,7 @@ const TABS = [
 ] as const;
 
 export default async function Reviews({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireOwner("admin");
   const sp = await searchParams;
   const requested = sp.s;
@@ -27,13 +29,13 @@ export default async function Reviews({ searchParams }: { searchParams: Promise<
   const [rows, settings] = await Promise.all([db.select().from(reviews).where(eq(reviews.status, tab)).orderBy(desc(reviews.createdAt)).limit(200), getReviewSettings(db)]);
   return (
     <>
-      <PageHeader title="Beoordelingen" subtitle="Elke beoordeling verschijnt pas na jouw controle. Plaats positieve én kritische beoordelingen over echte behandelingen; wijs alleen spam, beledigingen of persoonsgegevens af." />
+      <PageHeader title={t("Beoordelingen")} subtitle="Elke beoordeling verschijnt pas na jouw controle. Plaats positieve én kritische beoordelingen over echte behandelingen; wijs alleen spam, beledigingen of persoonsgegevens af." />
       {sp.melding && done[sp.melding] && (
         <div className="mb-4">
           <Notice tone="success">✓ {done[sp.melding]}</Notice>
         </div>
       )}
-      <nav aria-label="Status" className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
+      <nav aria-label={t("Status")} className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/admin/beoordelingen?s=${k}`} aria-current={k === tab ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === tab ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>
             {l}
@@ -51,7 +53,7 @@ export default async function Reviews({ searchParams }: { searchParams: Promise<
                     <span className="text-line">{"★".repeat(5 - r.rating)}</span>
                   </p>
                   <span className="flex gap-2">
-                    {r.verified && <Badge tone="confirmed">Na een behandeling</Badge>}
+                    {r.verified && <Badge tone="confirmed">{t("Na een behandeling")}</Badge>}
                     {r.reportCount > 0 && <Badge tone="warning">{r.reportCount}× gemeld</Badge>}
                   </span>
                 </div>
@@ -68,20 +70,20 @@ export default async function Reviews({ searchParams }: { searchParams: Promise<
             ))
           ) : (
             <Card>
-              <p className="text-sm text-muted">Niets in deze lijst.</p>
+              <p className="text-sm text-muted">{t("Niets in deze lijst.")}</p>
             </Card>
           )}
         </div>
         <div className="space-y-5">
-          <Card title="Instellingen">
+          <Card title={t("Instellingen")}>
             <ReviewSettingsForm googleReviewUrl={settings.googleReviewUrl} invitesEnabled={settings.invitesEnabled} />
           </Card>
-          <Card title="Regels (Google en eerlijkheid)">
+          <Card title={t("Regels (Google en eerlijkheid)")}>
             <ul className="list-disc space-y-2 pl-5 text-sm text-ink-soft">
-              <li>Geen nep-, gekochte of beloonde beoordelingen, en geen korting in ruil voor een beoordeling.</li>
-              <li>Kritische beoordelingen over een echte behandeling blijven staan; reageer liever vriendelijk.</li>
-              <li>Op de website worden geen sterren-‘rich results’ aangevraagd: Google toont die niet voor beoordelingen die een bedrijf over zichzelf plaatst.</li>
-              <li>Uitnodigingen gaan alleen na een afgeronde afspraak, één keer, via de knop bij de afspraak.</li>
+              <li>{t("Geen nep-, gekochte of beloonde beoordelingen, en geen korting in ruil voor een beoordeling.")}</li>
+              <li>{t("Kritische beoordelingen over een echte behandeling blijven staan; reageer liever vriendelijk.")}</li>
+              <li>{t("Op de website worden geen sterren-‘rich results’ aangevraagd: Google toont die niet voor beoordelingen die een bedrijf over zichzelf plaatst.")}</li>
+              <li>{t("Uitnodigingen gaan alleen na een afgeronde afspraak, één keer, via de knop bij de afspraak.")}</li>
             </ul>
           </Card>
         </div>
