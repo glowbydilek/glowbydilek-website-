@@ -7,10 +7,12 @@ import { editorValue } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
 import { media } from "@/lib/db/schema";
 import { mediaUsage } from "@/lib/private/mediaActions";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Media" };
 
 export default async function MediaPage() {
+  const t = await panelT();
   await requireOwner("admin");
   const db = getDb();
   const [items, slotsEv] = await Promise.all([db.select().from(media).orderBy(desc(media.createdAt)), editorValue(db, "photos", "all", {})]);
@@ -19,19 +21,19 @@ export default async function MediaPage() {
   const options = items.map((m) => ({ id: m.id, name: `${m.filename}${m.altNl ? ` — ${m.altNl.slice(0, 40)}` : ""}` }));
   return (
     <>
-      <PageHeader title="Media" subtitle="Upload foto's, vul omschrijvingen in, kies de uitsnede en bepaal welke foto waar op de website staat. Foto's worden veilig in de database bewaard en blijven staan bij updates van de website." />
+      <PageHeader title={t("Media")} subtitle="Upload foto's, vul omschrijvingen in, kies de uitsnede en bepaal welke foto waar op de website staat. Foto's worden veilig in de database bewaard en blijven staan bij updates van de website." />
       <div className="space-y-5">
-        <Card title="Foto uploaden"><UploadForm /></Card>
+        <Card title={t("Foto uploaden")}><UploadForm /></Card>
         <Card title={`Bibliotheek (${items.length})`}>
           {items.length ? (
             <div className="grid [&>*]:min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((m, i) => <MediaItem key={m.id} m={{ ...m, version: m.updatedAt.getTime() }} usage={usage[i]} />)}
             </div>
           ) : (
-            <p className="text-sm text-muted">Nog geen eigen foto&apos;s. De website gebruikt de bestaande gelicenseerde foto&apos;s.</p>
+            <p className="text-sm text-muted">{t("Nog geen eigen foto's. De website gebruikt de bestaande gelicenseerde foto's.")}</p>
           )}
         </Card>
-        <Card title="Foto's op de website">
+        <Card title={t("Foto's op de website")}>
           <p className="mb-3 text-sm text-muted">Elke plek gebruikt standaard de bestaande gelicenseerde foto. Kies een eigen foto om die te vervangen; &lsquo;Oorspronkelijke foto&rsquo; zet de originele terug.</p>
           <div className="space-y-2">
             {(Object.keys(photos) as PhotoId[]).map((id) => {
