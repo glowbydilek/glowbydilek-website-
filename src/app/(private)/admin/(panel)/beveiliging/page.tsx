@@ -7,6 +7,7 @@ import { requireSignedIn } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { auditLogs, sessions } from "@/lib/db/schema";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Beveiliging" };
 
@@ -25,6 +26,7 @@ const ACTION_NL: Record<string, string> = {
 };
 
 export default async function Security() {
+  const t = await panelT();
   const s = await requireSignedIn("admin");
   const db = getDb();
   const [remaining, active, log] = await Promise.all([
@@ -34,9 +36,9 @@ export default async function Security() {
   ]);
   return (
     <>
-      <PageHeader title="Beveiliging" subtitle={`Account: ${s.user.email}.`} />
+      <PageHeader title={t("Beveiliging")} subtitle={`Account: ${s.user.email}.`} />
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-2">
-        <Card title="Tweestapsverificatie"><MfaSetup enabled={s.user.mfaEnabled} remaining={remaining} /></Card>
+        <Card title={t("Tweestapsverificatie")}><MfaSetup enabled={s.user.mfaEnabled} remaining={remaining} /></Card>
         <Card title="Wachtwoord wijzigen"><ChangePasswordForm /></Card>
         <Card title={`Actieve sessies (${active.length})`}>
           <ul className="space-y-2 text-sm">
@@ -48,11 +50,11 @@ export default async function Security() {
             ))}
           </ul>
           <form action={logoutEverywhereAction} className="mt-4">
-            <SubmitButton variant="outline" confirm="Op alle apparaten uitloggen, ook op dit apparaat?">Overal uitloggen</SubmitButton>
+            <SubmitButton variant="outline" confirm="Op alle apparaten uitloggen, ook op dit apparaat?">{t("Overal uitloggen")}</SubmitButton>
           </form>
-          <p className="mt-2 text-xs text-muted">Gebruik dit als een telefoon of computer kwijt is. Vermoed je dat iemand je wachtwoord kent? Wijzig dan ook je wachtwoord.</p>
+          <p className="mt-2 text-xs text-muted">{t("Gebruik dit als een telefoon of computer kwijt is. Vermoed je dat iemand je wachtwoord kent? Wijzig dan ook je wachtwoord.")}</p>
         </Card>
-        <Card title="Recente beveiligingsgebeurtenissen">
+        <Card title={t("Recente beveiligingsgebeurtenissen")}>
           <ul className="space-y-1.5 text-sm">
             {log.map((l) => (
               <li key={l.id} className="flex justify-between gap-3">
