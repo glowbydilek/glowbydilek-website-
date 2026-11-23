@@ -12,6 +12,7 @@ import { editorValue } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
 import { media, redirects } from "@/lib/db/schema";
 import { staticPageMeta } from "@/lib/seo";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "SEO" };
 
@@ -33,6 +34,7 @@ function defaultsFor(item: Item, locale: "nl" | "en" | "tr") {
 }
 
 export default async function SeoPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireOwner("admin");
   const sp = await searchParams;
   const item = items.find((i) => i.key === sp.pagina) ?? items[0];
@@ -46,7 +48,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
   const targets = allPages().flatMap((p) => [pagePath("nl", p), pagePath("en", p)]);
   return (
     <>
-      <PageHeader title="SEO & doorverwijzingen" subtitle="Titels en omschrijvingen voor Google, per pagina en per taal. Adressen van pagina's veranderen niet; oude adressen kun je doorverwijzen." />
+      <PageHeader title={t("SEO & doorverwijzingen")} subtitle="Titels en omschrijvingen voor Google, per pagina en per taal. Adressen van pagina's veranderen niet; oude adressen kun je doorverwijzen." />
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[18rem_1fr]">
         <Card>
           <ul className="max-h-[36rem] space-y-0.5 overflow-y-auto text-sm">
@@ -61,7 +63,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
           <Card title={item.label} actions={<span className="inline-flex rounded-full bg-surface p-1 text-sm">{(["nl", "en", "tr"] as const).map((l) => <Link key={l} href={`/admin/seo?pagina=${item.key}&taal=${l}`} className={`rounded-full px-3 py-1.5 ${l === locale ? "bg-ink text-paper" : ""}`}>{l.toUpperCase()}</Link>)}</span>}>
             <SeoForm key={`${item.key}-${locale}`} seoKey={item.key} locale={locale} initial={(ev.value ?? {}) as Seo} defaults={defaultsFor(item, locale)} path={pagePath(locale, item.ref)} media={imgs} />
           </Card>
-          <Card title="Doorverwijzingen">
+          <Card title={t("Doorverwijzingen")}>
             <RedirectForm targets={targets} />
             {reds.length > 0 && (
               <ul className="mt-4 divide-y divide-line text-sm">
