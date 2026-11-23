@@ -46,7 +46,7 @@ export default async function Customers({ searchParams }: { searchParams: Promis
                   <span className="flex min-w-0 items-center gap-3">
                     <CustomerAvatar size={36} />
                     <span className="min-w-0">
-                    <span className="block font-medium">{c.firstName} {c.lastName}</span>
+                    <span className="block font-medium">{c.firstName} {c.lastName}{c.blockedAt && <span className="ml-2 rounded-full bg-[#8e2f24]/10 px-2 py-0.5 text-xs text-[#8e2f24]">{t("Geblokkeerd")}</span>}</span>
                     <span className="block truncate text-sm text-muted">{[c.phone, c.email].filter(Boolean).join(" · ") || "—"}</span>
                     </span>
                   </span>
