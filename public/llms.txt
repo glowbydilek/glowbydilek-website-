@@ -1,6 +1,6 @@
 # Glow by Dilek
 
-> Glow by Dilek is a beauty salon for women in Amsterdam, run by Dilek, a qualified beauty specialist (level 3). Treatments are by appointment only: facial care with steam, relaxing massages and waxing (face, body, bikini and intimate). Clients from Amstelveen, Diemen and Haarlem are also welcome. The website is in Dutch, with an English version.
+> Glow by Dilek is a ladies-only beauty salon in Amsterdam (Dutch: "uitsluitend voor vrouwen, op afspraak"), run by Dilek, a qualified beauty specialist (level 3). Treatments are for women only and by appointment only: facials (deep cleansing facial, facial with steam, eyebrow and eyelash tinting), relaxing massages, body wrap and waxing (face, body, bikini and intimate, including Brazilian and Hollywood wax). Clients from Amstelveen, Diemen and Haarlem are also welcome. The website is in Dutch, with English and Turkish versions.
 
 Appointments are requested online. The visitor chooses one or more treatments and a preferred moment, receives an automatic receipt, and Dilek confirms the appointment personally by email. A request is not yet a confirmed appointment. Practical location details are shared personally after confirmation. Prices and durations are given personally with the request until the price list is published. Contact: hello@glowbydilek.nl.
 
@@ -20,8 +20,8 @@ Appointments are requested online. The visitor chooses one or more treatments an
 
 ## Treatments (Dutch)
 
-- [Facial treatments](https://glowbydilek.nl/gezichtsbehandelingen)
-- [Facial with steam](https://glowbydilek.nl/gezichtsbehandelingen/gezichtsbehandeling-met-stoom)
+- [Facial treatments](https://glowbydilek.nl/gezichtsbehandelingen): [deep cleansing facial](https://glowbydilek.nl/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling), [facial with steam](https://glowbydilek.nl/gezichtsbehandelingen/gezichtsbehandeling-met-stoom), [eyebrow and eyelash tinting](https://glowbydilek.nl/gezichtsbehandelingen/wenkbrauwen-en-wimpers-verven)
+- [Body treatments](https://glowbydilek.nl/lichaamsbehandelingen): [body wrap](https://glowbydilek.nl/lichaamsbehandelingen/lichaamspakking)
 - [Massages](https://glowbydilek.nl/massages): [full-body relaxation massage](https://glowbydilek.nl/massages/ontspanningsmassage), [facial massage](https://glowbydilek.nl/massages/gezichtsmassage), [head massage](https://glowbydilek.nl/massages/hoofdmassage), [hand massage](https://glowbydilek.nl/massages/handmassage), [foot massage](https://glowbydilek.nl/massages/voetmassage)
 - [Waxing](https://glowbydilek.nl/waxbehandelingen)
 - [Face waxing](https://glowbydilek.nl/waxbehandelingen/gezicht): [eyebrows](https://glowbydilek.nl/waxbehandelingen/gezicht/wenkbrauwen-waxen), [upper lip](https://glowbydilek.nl/waxbehandelingen/gezicht/bovenlip-waxen), [chin](https://glowbydilek.nl/waxbehandelingen/gezicht/kin-waxen), [full face](https://glowbydilek.nl/waxbehandelingen/gezicht/volledig-gezicht-waxen)
@@ -35,9 +35,10 @@ Appointments are requested online. The visitor chooses one or more treatments an
 - [Prices](https://glowbydilek.nl/en/prices)
 - [Book an appointment](https://glowbydilek.nl/en/book-appointment)
 - [Appointment process](https://glowbydilek.nl/en/appointment-process)
-- [Facial treatments](https://glowbydilek.nl/en/facial-treatments)
-- [Massages](https://glowbydilek.nl/en/massages)
-- [Waxing treatments](https://glowbydilek.nl/en/waxing-treatments)
+- [Facial treatments](https://glowbydilek.nl/en/facial-treatments): [deep cleansing facial](https://glowbydilek.nl/en/facial-treatments/deep-cleansing-facial), [facial with steam](https://glowbydilek.nl/en/facial-treatments/facial-care-with-steam), [eyebrow and eyelash tinting](https://glowbydilek.nl/en/facial-treatments/eyebrow-and-eyelash-tinting)
+- [Massages](https://glowbydilek.nl/en/massages): [relaxation massage](https://glowbydilek.nl/en/massages/relaxation-massage), [facial massage](https://glowbydilek.nl/en/massages/facial-massage)
+- [Body treatments](https://glowbydilek.nl/en/body-treatments)
+- [Women-only waxing](https://glowbydilek.nl/en/waxing-treatments): [eyebrow waxing](https://glowbydilek.nl/en/waxing-treatments/face/eyebrow-waxing), [bikini and intimate waxing](https://glowbydilek.nl/en/waxing-treatments/bikini-intimate)
 - [FAQ](https://glowbydilek.nl/en/faq)
 - [About Dilek](https://glowbydilek.nl/en/about-dilek)
 - [Contact](https://glowbydilek.nl/en/contact)
