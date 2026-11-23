@@ -6,10 +6,12 @@ import { EDITOR_PAGES } from "@/lib/cms/registry";
 import { getDb } from "@/lib/db/client";
 import { contentEntries, customPages } from "@/lib/db/schema";
 import { CreateCustomPage } from "@/components/private/cms/CustomPageForms";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Pagina's" };
 
 export default async function Pages() {
+  const t = await panelT();
   await requireCan("admin", "cms.edit");
   const keys = EDITOR_PAGES.flatMap((p) => p.docs.map((d) => d.key));
   const rows = await getDb().select({ docKey: contentEntries.docKey, locale: contentEntries.locale, status: contentEntries.status }).from(contentEntries).where(inArray(contentEntries.docKey, keys));
@@ -21,7 +23,7 @@ export default async function Pages() {
   };
   return (
     <>
-      <PageHeader title="Pagina's" subtitle="Kies een pagina om teksten, koppen, knoppen en de volgorde van onderdelen te bewerken. Nederlands en Engels worden apart bewerkt en gepubliceerd." />
+      <PageHeader title={t("Pagina's")} subtitle="Kies een pagina om teksten, koppen, knoppen en de volgorde van onderdelen te bewerken. Nederlands en Engels worden apart bewerkt en gepubliceerd." />
       <div className="space-y-5">
         {groups.map((g) => (
           <Card key={g} title={g}>
@@ -36,8 +38,8 @@ export default async function Pages() {
                         <span className="text-xs text-muted">{p.paths.nl}</span>
                       </span>
                       <span className="flex shrink-0 items-center gap-2 text-xs">
-                        {st.drafts > 0 && <span className="rounded-full bg-[#fbf0d9] px-2 py-0.5 text-[#6b4b12]">concept</span>}
-                        {st.edited > 0 && <span className="rounded-full bg-[#e3efe1] px-2 py-0.5 text-[#2f4b2d]">aangepast</span>}
+                        {st.drafts > 0 && <span className="rounded-full bg-[#fbf0d9] px-2 py-0.5 text-[#6b4b12]">{t("concept")}</span>}
+                        {st.edited > 0 && <span className="rounded-full bg-[#e3efe1] px-2 py-0.5 text-[#2f4b2d]">{t("aangepast")}</span>}
                         <span aria-hidden="true" className="text-muted">›</span>
                       </span>
                     </Link>
@@ -47,7 +49,7 @@ export default async function Pages() {
             </ul>
           </Card>
         ))}
-        <Card title="Eigen informatiepagina's">
+        <Card title={t("Eigen informatiepagina's")}>
           {custom.length > 0 && (
             <ul className="mb-5 divide-y divide-line">
               {custom.map((c) => (
@@ -63,7 +65,7 @@ export default async function Pages() {
               ))}
             </ul>
           )}
-          <p className="mb-3 text-sm text-muted">Bijvoorbeeld een pagina over cadeaubonnen of een tijdelijke mededeling. Vul eerst de tekst in beide talen in en publiceer; zet de pagina daarna online.</p>
+          <p className="mb-3 text-sm text-muted">{t("Bijvoorbeeld een pagina over cadeaubonnen of een tijdelijke mededeling. Vul eerst de tekst in beide talen in en publiceer; zet de pagina daarna online.")}</p>
           <CreateCustomPage />
         </Card>
       </div>
