@@ -6,7 +6,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Wenkbrauwen waxen in Amsterdam, in een natuurlijke vorm die bij je gezicht past. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Wenkbrauwen waxen",
-    lead: "Een verzorgde wenkbrauwlijn die past bij jouw gezicht — rustig opgebouwd vanuit je natuurlijke vorm, zonder te veel weg te halen.",
+    lead: "Een verzorgde wenkbrauwlijn die past bij jouw gezicht — rustig opgebouwd vanuit je natuurlijke vorm, zonder te veel weg te halen. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "Een natuurlijke, verzorgde vorm die bij je gelaatstrekken past.",
     area: "De haartjes onder en tussen de wenkbrauwen, en waar nodig losse haartjes boven de boog. Het ooglid zelf wordt nooit gewaxt.",
     appointment: [
@@ -59,7 +59,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Bovenlip waxen in Amsterdam voor een gladde huid zonder scheren of epileren. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Bovenlip waxen",
-    lead: "Snel en nauwkeurig de haartjes op je bovenlip verwijderen, zodat je huid glad en verzorgd is — zonder stoppels of schaduw.",
+    lead: "Snel en nauwkeurig de haartjes op je bovenlip verwijderen, zodat je huid glad en verzorgd is — zonder stoppels of schaduw. Uitsluitend voor vrouwen, op afspraak in Amsterdam.",
     teaser: "Glad en verzorgd, zonder de schaduw die scheren achterlaat.",
     area: "De huid tussen je neus en bovenlip, inclusief de hoekjes van de mond. De lippen zelf en de binnenkant van de neus worden niet gewaxt.",
     appointment: [
@@ -100,7 +100,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Kin en kaaklijn laten waxen voor een gladde huid. Lees hoe het gaat, hoe je ingegroeide haartjes voorkomt en wanneer je beter eerst je huisarts raadpleegt.",
     title: "Kin waxen",
-    lead: "Een gladde kin en kaaklijn, met aandacht voor de gevoelige huid langs je kaak en de richting waarin het haar daar groeit.",
+    lead: "Een gladde kin en kaaklijn, met aandacht voor de gevoelige huid langs je kaak en de richting waarin het haar daar groeit. Bij Glow by Dilek in Amsterdam — uitsluitend voor vrouwen en op afspraak.",
     teaser: "Een gladde kinpartij, met zorg voor de huid langs je kaaklijn.",
     area: "De kin en, als je dat wilt, de huid net onder de kin en langs de kaaklijn. Welke zone precies wordt meegenomen, bespreken jullie vooraf.",
     appointment: [
@@ -141,7 +141,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Wenkbrauwen, bovenlip, kin en wangen in één afspraak laten waxen. Lees hoe een volledige gezichtsbehandeling verloopt en hoe je je huid erna verzorgt.",
     title: "Volledig gezicht waxen",
-    lead: "Wenkbrauwen, bovenlip, kin en wangen in één rustige afspraak — voor een egaal, verzorgd gezicht waarop make-up mooi zit.",
+    lead: "Wenkbrauwen, bovenlip, kin en wangen in één rustige afspraak — voor een egaal, verzorgd gezicht waarop make-up mooi zit. Rustig en uitsluitend voor vrouwen, hier in Amsterdam.",
     teaser: "Wenkbrauwen, bovenlip, kin en wangen in één afspraak.",
     area: "Wenkbrauwen, bovenlip, kin en wangen, en als je dat wilt de zijkanten van het gezicht langs de oren. Neus en oren zelf worden niet gewaxt.",
     appointment: [
@@ -182,7 +182,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Oksels laten waxen voor een gladde huid zonder stoppels en scheerirritatie. Lees hoe het gaat, wat je vooraf moet weten en wat je doet met deodorant.",
     title: "Oksels waxen",
-    lead: "Een frisse, gladde huid onder je armen, zonder de stoppels, jeuk en rode bultjes die scheren vaak achterlaat.",
+    lead: "Een frisse, gladde huid onder je armen, zonder de stoppels, jeuk en rode bultjes die scheren vaak achterlaat. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "Fris en glad, zonder stoppels of scheerirritatie.",
     area: "De volledige okselholte aan beide kanten.",
     appointment: [
@@ -223,7 +223,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Onderarmen laten waxen, van pols tot elleboog, voor zachte armen zonder stoppels. Lees wat je kunt verwachten, hoe je je voorbereidt en hoe je je huid verzorgt.",
     title: "Onderarmen waxen",
-    lead: "Zachte, verzorgde onderarmen van pols tot elleboog — zonder de stugge stoppels die na scheren al binnen een paar dagen terugkomen.",
+    lead: "Zachte, verzorgde onderarmen van pols tot elleboog — zonder de stugge stoppels die na scheren al binnen een paar dagen terugkomen. Uitsluitend voor vrouwen, op afspraak in Amsterdam.",
     teaser: "Van pols tot elleboog, voor zachte en verzorgde armen.",
     area: "Van je pols tot net boven de elleboog, aan de voor- en achterkant van de arm. Wil je ook de handrug en vingers laten meenemen? Bespreek het vooraf.",
     appointment: [
@@ -264,7 +264,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Hele armen waxen in Amsterdam, van pols tot schouder. Alleen voor vrouwen. Lees hoe de behandeling verloopt en vraag online je afspraak aan.",
     title: "Hele armen waxen",
-    lead: "Gladde armen van pols tot schouder, met één zorgvuldige behandeling — ideaal voor wie mouwloze kleding draagt of gewoon langer glad wil zijn.",
+    lead: "Gladde armen van pols tot schouder, met één zorgvuldige behandeling — ideaal voor wie mouwloze kleding draagt of gewoon langer glad wil zijn. Bij Glow by Dilek in Amsterdam — uitsluitend voor vrouwen en op afspraak.",
     teaser: "De volledige armen, van pols tot schouder.",
     area: "De volledige arm, van pols tot schouder, aan alle kanten. Oksels horen er niet standaard bij; die kun je er apart bij vragen.",
     appointment: [
@@ -305,7 +305,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Onderbenen waxen in Amsterdam, van enkel tot knie, voor zijdezachte benen. Alleen voor vrouwen. Lees hoe het gaat en vraag online je afspraak aan.",
     title: "Onderbenen waxen",
-    lead: "Zijdezachte benen van enkel tot knie, weken lang — zonder dagelijks scheren en zonder stoppels die alweer terug zijn voor het weekend.",
+    lead: "Zijdezachte benen van enkel tot knie, weken lang — zonder dagelijks scheren en zonder stoppels die alweer terug zijn voor het weekend. Rustig en uitsluitend voor vrouwen, hier in Amsterdam.",
     teaser: "Van enkel tot knie, voor zijdezachte benen.",
     area: "Van je enkel tot en met de knie, rondom. De voeten en tenen kunnen op verzoek worden meegenomen.",
     appointment: [
@@ -346,7 +346,7 @@ export const treatmentsNl: TreatmentCopySet = {
     seoDescription:
       "Hele benen laten waxen, van enkel tot bovenbeen. Lees hoe de behandeling verloopt, hoe je je voorbereidt en hoe je je huid de dagen erna verzorgt.",
     title: "Hele benen waxen",
-    lead: "Gladde benen van enkel tot bovenbeen in één behandeling — voor de zomer, een vakantie of gewoon omdat het fijn voelt.",
+    lead: "Gladde benen van enkel tot bovenbeen in één behandeling — voor de zomer, een vakantie of gewoon omdat het fijn voelt. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "De volledige benen, van enkel tot bovenbeen.",
     area: "De volledige benen van enkel tot bovenbeen, rondom. De bikinilijn hoort er niet standaard bij; die kun je apart toevoegen.",
     appointment: [
@@ -383,11 +383,11 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   back: {
-    seoTitle: "Rug waxen in Amsterdam",
+    seoTitle: "Rug waxen of harsen in Amsterdam",
     seoDescription:
       "Rug waxen (harsen) in Amsterdam voor een gladde huid op een plek die je zelf moeilijk bereikt. Alleen voor vrouwen. Vraag online je afspraak aan.",
     title: "Rug waxen",
-    lead: "Een gladde rug op de plek die je zelf nauwelijks kunt bereiken — grondig, comfortabel en zonder haast.",
+    lead: "Een gladde rug op de plek die je zelf nauwelijks kunt bereiken — grondig, comfortabel en zonder haast. Uitsluitend voor vrouwen, op afspraak in Amsterdam.",
     teaser: "Een gladde rug, grondig en comfortabel.",
     area: "De rug van de onderrug tot en met de schouders. Wil je ook de nek of schouderbladen extra laten meenemen, dan bespreek je dat vooraf.",
     appointment: [
@@ -426,9 +426,9 @@ export const treatmentsNl: TreatmentCopySet = {
   "bikini-line": {
     seoTitle: "Bikinilijn waxen in Amsterdam",
     seoDescription:
-      "Bikinilijn laten waxen: een nette lijn langs je bikini of ondergoed. Lees discreet hoe de behandeling verloopt en hoe je irritatie voorkomt.",
+      "Bikinilijn waxen in Amsterdam, uitsluitend voor vrouwen: een nette lijn langs je bikini of ondergoed. Lees discreet hoe het gaat en hoe je irritatie voorkomt.",
     title: "Bikinilijn waxen",
-    lead: "Een nette lijn langs de randen van je bikini of ondergoed — de meest ingetogen intieme behandeling, en een rustige eerste stap als je nog nooit intiem hebt gewaxt.",
+    lead: "Een nette lijn langs de randen van je bikini of ondergoed — de meest ingetogen intieme behandeling, en een rustige eerste stap als je nog nooit intiem hebt gewaxt. Bij Glow by Dilek in Amsterdam — uitsluitend voor vrouwen en op afspraak.",
     teaser: "Een nette lijn langs je bikini of ondergoed.",
     area: "Alleen het haar dat buiten je bikinibroekje of ondergoed zichtbaar is: langs de liezen en de bovenkant. Hoe hoog of breed de lijn loopt, bepaal je zelf.",
     appointment: [
@@ -465,11 +465,11 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   brazilian: {
-    seoTitle: "Brazilian wax in Amsterdam",
+    seoTitle: "Brazilian wax in Amsterdam, alleen vrouwen",
     seoDescription:
-      "Brazilian wax: bijna alles verwijderd, met naar wens een smal strookje of driehoekje. Lees discreet hoe de behandeling verloopt en hoe je je voorbereidt.",
-    title: "Brazilian wax",
-    lead: "Bijna alles verwijderd, met naar wens een smal strookje of klein driehoekje — discreet, in kleine stappen en in het tempo dat voor jou goed voelt.",
+      "Brazilian wax in Amsterdam, uitsluitend voor vrouwen: bijna alles weg, naar wens met een strookje. Lees discreet hoe het verloopt en hoe je je voorbereidt.",
+    title: "Brazilian wax in Amsterdam",
+    lead: "Bijna alles verwijderd, met naar wens een smal strookje of klein driehoekje — discreet, in kleine stappen en in het tempo dat voor jou goed voelt. Rustig en uitsluitend voor vrouwen, hier in Amsterdam.",
     teaser: "Bijna alles weg, met een strookje of driehoekje naar wens.",
     area: "De bikinizone aan de voorkant, de liezen en het intieme gebied, waarbij je zelf kiest of er een smal strookje of klein driehoekje blijft staan. Of de zone tussen de billen wordt meegenomen, bespreek je vooraf.",
     appointment: [
@@ -521,9 +521,9 @@ export const treatmentsNl: TreatmentCopySet = {
   hollywood: {
     seoTitle: "Hollywood wax in Amsterdam",
     seoDescription:
-      "Hollywood wax: volledig glad in de intieme zone. Lees discreet wat de behandeling inhoudt, hoe je je voorbereidt en hoe je je huid erna verzorgt.",
-    title: "Hollywood wax",
-    lead: "Volledig glad, voor een frisse en verzorgde huid — met dezelfde discretie, uitleg en rust als bij elke intieme behandeling.",
+      "Hollywood wax in Amsterdam, uitsluitend voor vrouwen: volledig glad in de intieme zone. Lees discreet wat het inhoudt en hoe je je huid erna verzorgt.",
+    title: "Hollywood wax in Amsterdam",
+    lead: "Volledig glad, voor een frisse en verzorgde huid — met dezelfde discretie, uitleg en rust als bij elke intieme behandeling. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "Volledig glad, discreet en zorgvuldig.",
     area: "De volledige intieme zone: de voorkant, de liezen, het intieme gebied en de zone tussen de billen. Er blijft geen haar staan.",
     appointment: [

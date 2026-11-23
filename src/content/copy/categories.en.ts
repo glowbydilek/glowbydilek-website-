@@ -17,7 +17,7 @@ export const categoriesEn: CategoryCopySet = {
     intro: {
       title: "Detailed work for delicate skin",
       paragraphs: [
-        "The skin on your face is thinner than the skin on your body, reacts faster to warmth and is visible every day. So the work is done in small, manageable sections, checking after each step how your skin is responding.",
+        "The skin on your face is thinner than the skin on your body, reacts faster to warmth and is visible every day. So the work is done in small, manageable sections, checking after each step how your skin is responding. At Glow by Dilek in Amsterdam, women only.",
         "A facial treatment always starts with looking: at the shape of your brows, the direction your hair grows and what you like. The aim is a groomed result, not a dramatic change.",
       ],
     },
@@ -95,7 +95,7 @@ export const categoriesEn: CategoryCopySet = {
     intro: {
       title: "Larger areas, the same eye for detail",
       paragraphs: [
-        "Shaving only removes hair at the surface; waxing removes it from the root. That keeps your skin smooth for weeks rather than days, without the stubble and itching that often follow shaving.",
+        "Shaving only removes hair at the surface; waxing removes it from the root. That keeps your skin smooth for weeks rather than days, without the stubble and itching that often follow shaving. Women only, by appointment in Amsterdam.",
         "On the body, hair grows in different directions — especially in the underarms and around the knees. So the wax is worked in strips that follow the hair growth, to break as few hairs as possible and keep your skin calm.",
       ],
     },
@@ -173,7 +173,7 @@ export const categoriesEn: CategoryCopySet = {
     intro: {
       title: "Personal, without the awkwardness",
       paragraphs: [
-        "An intimate wax feels nerve-racking for many people the first time. That is understandable, and it is taken into account: with a calm conversation beforehand, clear explanations and a way of working that helps you feel as comfortable as possible.",
+        "An intimate wax feels nerve-racking for many people the first time. That is understandable, and it is taken into account: with a calm conversation beforehand, clear explanations and a way of working that helps you feel as comfortable as possible. At Glow by Dilek in Amsterdam — women only and by appointment.",
         "There is one client at a time and no rush. Whatever you share or ask stays between you and Dilek.",
       ],
     },
