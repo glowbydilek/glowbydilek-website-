@@ -9,7 +9,7 @@ import { enqueue } from "../notifications/outbox";
 import { paragraphsToHtml } from "../notifications/templates";
 import { PDF_FONT, registerPdfFonts } from "../pdf/fonts";
 import { logoData } from "../../components/brand/logoData";
-import { activeTemplate, encryptFile, ensureIntakeTemplates, IntakeError, intakeStorageStatus } from "./service";
+import { activeTemplate, decryptFile, encryptFile, ensureIntakeTemplates, IntakeError, intakeStorageStatus } from "./service";
 import { ANSWERS, parseIntake, type IntakeBlock, type ParsedIntake } from "./template";
 
 /**
@@ -153,12 +153,61 @@ export async function submitIntake(db: DB, token: string, s: IntakeSubmission): 
   return { ok: true, pdf };
 }
 
-/** Owner: mark a stored form as checked. */
-export async function reviewIntakeDocument(db: DB, customerId: number, id: number, who: { userId: number }) {
-  const [d] = await db.select({ id: intakeDocuments.id }).from(intakeDocuments).where(and(eq(intakeDocuments.id, id), eq(intakeDocuments.customerId, customerId)));
-  if (!d) throw new IntakeError("Document niet gevonden.");
-  await db.update(intakeDocuments).set({ reviewedAt: new Date(), reviewedBy: who.userId }).where(eq(intakeDocuments.id, id));
-  await audit(db, { userId: who.userId, action: "intake.document.reviewed", entity: "customer", entityId: customerId, details: { documentId: id } });
+const COPY_DAYS = 14;
+
+/**
+ * Owner: "Goedkeuren en verzenden". Marks the form as approved and emails the
+ * customer a personal download link to her own signed copy (no health data in
+ * the e-mail itself). Returns false when the customer has no e-mail address.
+ */
+export async function approveAndSendIntake(db: DB, customerId: number, id: number, who: { userId: number }): Promise<{ sent: boolean }> {
+  const [d] = await db.select({ id: intakeDocuments.id, status: intakeDocuments.status, locale: intakeDocuments.locale }).from(intakeDocuments).where(and(eq(intakeDocuments.id, id), eq(intakeDocuments.customerId, customerId)));
+  if (!d || d.status === "deleted") throw new IntakeError("Document niet gevonden.");
+  const [c] = await db.select({ email: customers.email, firstName: customers.firstName, locale: customers.locale, anonymizedAt: customers.anonymizedAt }).from(customers).where(eq(customers.id, customerId));
+  if (!c || c.anonymizedAt) throw new IntakeError("Klant niet gevonden.");
+  const now = new Date();
+  if (!c.email) {
+    await db.update(intakeDocuments).set({ reviewedAt: now, reviewedBy: who.userId }).where(eq(intakeDocuments.id, id));
+    await audit(db, { userId: who.userId, action: "intake.document.reviewed", entity: "customer", entityId: customerId, details: { documentId: id, sent: false } });
+    return { sent: false };
+  }
+  const token = randomBytes(24).toString("base64url");
+  const expires = new Date(now.getTime() + COPY_DAYS * 86_400_000);
+  await db.update(intakeDocuments).set({ reviewedAt: now, reviewedBy: who.userId, copyTokenHash: sha(token), copyExpiresAt: expires }).where(eq(intakeDocuments.id, id));
+  const locale = asLoc(d.locale || c.locale);
+  const link = `${siteUrl()}/intake/kopie/${token}`;
+  const first = c.firstName;
+  const t = {
+    nl: { s: "Je ondertekende intakeformulier — Glow by Dilek", p: [`Beste ${first},`, "Dank je wel voor het invullen van je intakeformulier. Ik heb het bekeken en goedgekeurd.", `Je kunt je eigen ondertekende kopie hier downloaden (de link werkt ${COPY_DAYS} dagen):\n${link}`, "Bewaar de kopie op een veilige plek. Het formulier zelf staat niet in deze e-mail, om je privacy te beschermen.", "Hartelijke groet,\nDilek — Glow by Dilek"] },
+    en: { s: "Your signed intake form — Glow by Dilek", p: [`Dear ${first},`, "Thank you for filling in your intake form. I have reviewed and approved it.", `You can download your own signed copy here (the link works for ${COPY_DAYS} days):\n${link}`, "Please keep the copy somewhere safe. The form itself is not attached to this e-mail, to protect your privacy.", "Kind regards,\nDilek — Glow by Dilek"] },
+    tr: { s: "İmzalı ön bilgi formun — Glow by Dilek", p: [`Merhaba ${first},`, "Ön bilgi formunu doldurduğun için teşekkürler. Formu inceledim ve onayladım.", `İmzalı kopyanı buradan indirebilirsin (bağlantı ${COPY_DAYS} gün geçerlidir):\n${link}`, "Kopyayı güvenli bir yerde sakla. Gizliliğini korumak için formun kendisi bu e-postada yer almıyor.", "Sevgiler,\nDilek — Glow by Dilek"] },
+  }[locale];
+  await enqueue(db, {
+    dedupeKey: `intake-copy:${id}:${now.getTime()}`,
+    kind: "intake_copy",
+    customerId,
+    to: c.email,
+    replyTo: process.env.MAIL_TO || process.env.SMTP_USER || null,
+    subject: t.s,
+    text: t.p.join("\n\n"),
+    html: paragraphsToHtml(t.p),
+  });
+  await audit(db, { userId: who.userId, action: "intake.document.approved_sent", entity: "customer", entityId: customerId, details: { documentId: id } });
+  return { sent: true };
+}
+
+/** Public: the customer's own approved copy behind a download link, or null. */
+export async function openCopy(db: DB, token: string): Promise<{ data: Buffer; mime: string; filename: string } | null> {
+  if (!/^[A-Za-z0-9_-]{20,64}$/.test(token)) return null;
+  const [d] = await db.select().from(intakeDocuments).where(and(eq(intakeDocuments.copyTokenHash, sha(token)), gt(intakeDocuments.copyExpiresAt, new Date())));
+  if (!d || d.status === "deleted" || !d.dataEnc) return null;
+  const raw = Buffer.from(process.env.INTAKE_DOCUMENT_KEY ?? "", "base64");
+  if (raw.length !== 32) return null;
+  const data = decryptFile(Buffer.from(d.dataEnc), raw);
+  if (sha(data) !== d.sha256) return null;
+  await audit(db, { userId: null, action: "intake.document.copy_downloaded", entity: "customer", entityId: d.customerId, details: { documentId: d.id } });
+  const ext = d.mime === "application/pdf" ? "pdf" : d.mime === "image/png" ? "png" : "jpg";
+  return { data, mime: d.mime, filename: `intake-glow-by-dilek-${d.signedOn}.${ext}` };
 }
 
 export async function openRequestsFor(db: DB, customerId: number) {
