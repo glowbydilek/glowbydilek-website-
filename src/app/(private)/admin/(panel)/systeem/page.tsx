@@ -4,23 +4,25 @@ import { Card, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
 import { auditLogs } from "@/lib/db/schema";
 import { formatLocal } from "@/lib/time";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Systeem & logboek" };
 
 export default async function SystemPage() {
+  const t = await panelT();
   await requireOwner("admin");
   const log = await getDb().select().from(auditLogs).orderBy(desc(auditLogs.createdAt)).limit(150);
   return (
     <>
-      <PageHeader title="Systeem & logboek" subtitle="Wie heeft wat gewijzigd, en een back-up van je gegevens." />
+      <PageHeader title={t("Systeem & logboek")} subtitle="Wie heeft wat gewijzigd, en een back-up van je gegevens." />
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[1fr_1.4fr]">
-        <Card title="Back-up">
-          <p className="text-sm text-muted">Download een kopie van je inhoud, instellingen, behandelingen, klanten en afspraken (JSON, zonder wachtwoorden of sleutels). Bewaar dit bestand veilig: het bevat persoonsgegevens.</p>
-          <a href="/admin/systeem/backup" download className="mt-4 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm text-paper">Back-up downloaden</a>
-          <p className="mt-4 text-xs text-muted">De volledige database-back-up (inclusief afbeeldingen) maak je in Hostinger → Databases → phpMyAdmin → Exporteren, of via de automatische back-ups van Hostinger. Zie docs/DEPLOYMENT.md.</p>
+        <Card title={t("Back-up")}>
+          <p className="text-sm text-muted">{t("Download een kopie van je inhoud, instellingen, behandelingen, klanten en afspraken (JSON, zonder wachtwoorden of sleutels). Bewaar dit bestand veilig: het bevat persoonsgegevens.")}</p>
+          <a href="/admin/systeem/backup" download className="mt-4 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm text-paper">{t("Back-up downloaden")}</a>
+          <p className="mt-4 text-xs text-muted">{t("De volledige database-back-up (inclusief afbeeldingen) maak je in Hostinger → Databases → phpMyAdmin → Exporteren, of via de automatische back-ups van Hostinger. Zie docs/DEPLOYMENT.md.")}</p>
         </Card>
-        <Card title="Logboek (laatste 150)">
-          <ul tabIndex={0} aria-label="Logboek" className="max-h-[32rem] space-y-1 overflow-y-auto rounded-lg text-sm outline-none focus-visible:ring-2 focus-visible:ring-accent/60">
+        <Card title={t("Logboek (laatste 150)")}>
+          <ul tabIndex={0} aria-label={t("Logboek")} className="max-h-[32rem] space-y-1 overflow-y-auto rounded-lg text-sm outline-none focus-visible:ring-2 focus-visible:ring-accent/60">
             {log.map((l) => (
               <li key={l.id} className="flex justify-between gap-3 border-b border-line/60 py-1">
                 <span className="min-w-0 truncate">{l.action}{l.entityId ? ` #${l.entityId}` : ""}</span>
