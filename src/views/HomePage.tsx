@@ -18,6 +18,7 @@ import { phoneDisplay, telHref } from "@/content/site";
 import { treatmentGroups } from "@/content/treatments";
 import { groupHref, isPublicItem, itemById, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 import { TreatmentCard } from "@/components/TreatmentCard";
+import { PopularLinks } from "@/components/PopularLinks";
 import { groupCopy, sectionCopy } from "@/content/copy";
 import { alternatePath, href, intlTag, routes, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -242,6 +243,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
+            <PopularLinks locale={locale} className="mt-10" />
           </Container>
         </section>
       </>
