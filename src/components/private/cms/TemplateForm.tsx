@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { templateAction } from "@/lib/private/cmsActions";
+import { templateAction, testTemplateAction } from "@/lib/private/cmsActions";
 import { ALLOWED, PLACEHOLDERS, REQUIRED, renderTemplate, validateTemplate, type TemplateKey } from "@/lib/notifications/templates";
 import { ActionForm } from "../ActionForm";
-import { Field, Input, Notice, SubmitButton, Textarea } from "../ui";
+import { Field, Input, Notice, Select, SubmitButton, Textarea } from "../ui";
 import { useT } from "@/components/private/PanelLangProvider";
 
 const SAMPLE = { firstName: "Sara", treatments: "Brazilian", date: "maandag 9 november 2026", time: "10:00", endTime: "10:45", request: "Aangevraagd: Brazilian — maandag 9 november 2026 10:00", location: "[praktische locatiegegevens uit Instellingen]", message: "" };
@@ -41,6 +41,29 @@ export function TemplateForm({ k, locale, subject, body, custom }: { k: Template
       <div className="flex flex-wrap gap-2">
         <SubmitButton name="op" value="save" disabled={errors.length > 0}>{t("Opslaan")}</SubmitButton>
         {custom && <SubmitButton name="op" value="reset" variant="ghost" confirm="Standaardtekst terugzetten (NL en EN)?">{t("Standaardtekst")}</SubmitButton>}
+      </div>
+    </ActionForm>
+  );
+}
+
+/** Sends the saved text with example data to a test inbox (owner only). */
+export function TestMailForm({ k, locale, recipients }: { k: TemplateKey; locale: "nl" | "en" | "tr"; recipients: string[] }) {
+  const t = useT();
+  return (
+    <ActionForm action={testTemplateAction} className="mt-6 rounded-2xl border border-line p-4">
+      <p className="font-medium">{t("Testmail versturen")}</p>
+      <p className="mt-1 text-sm text-muted">{t("Verstuurt de opgeslagen tekst met voorbeeldgegevens (geen echte klant). Sla wijzigingen eerst op.")}</p>
+      <input type="hidden" name="key" value={k} />
+      <input type="hidden" name="locale" value={locale} />
+      <div className="mt-3 flex flex-wrap items-end gap-3">
+        <Field label="Naar">
+          <Select name="to" defaultValue={recipients[0]}>
+            {recipients.map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </Select>
+        </Field>
+        <SubmitButton variant="outline">{t("Testmail versturen")}</SubmitButton>
       </div>
     </ActionForm>
   );

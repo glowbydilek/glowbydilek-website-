@@ -43,13 +43,13 @@ export function layout(title: string, rows: [string, string][], intro?: string, 
   return `<!doctype html><html><body style="margin:0;background:#f8f5ef;font-family:Helvetica,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;padding:32px 20px">
 <div style="background:#292724;color:#f8f5ef;padding:22px 28px;border-radius:14px 14px 0 0;font-family:Georgia,serif;font-size:22px"><span style="color:#d6b98a">Glow</span> <i>by Dilek</i></div>
-<div style="background:#ffffff;padding:28px;border-radius:0 0 14px 14px">
+<div style="height:3px;background:#d6b98a"></div><div style="background:#ffffff;padding:28px;border-radius:0 0 14px 14px">
 <h1 style="margin:0 0 16px;font-family:Georgia,serif;font-weight:normal;font-size:24px;color:#292724">${escapeHtml(title)}</h1>
 ${intro ? `<p style="margin:0 0 20px;color:#292724;font-size:15px;line-height:1.6">${escapeHtml(intro)}</p>` : ""}
 ${rows.length ? `<table style="border-collapse:collapse;width:100%">${body}</table>` : ""}
 ${outro ? `<p style="margin:24px 0 0;color:#292724;font-size:15px;line-height:1.6;white-space:pre-wrap">${escapeHtml(outro)}</p>` : ""}
 </div>
-<p style="color:#6b635c;font-size:12px;text-align:center;margin:20px 0 0">Glow by Dilek · hello@glowbydilek.nl · glowbydilek.nl</p>
+<p style="color:#6b635c;font-size:12px;text-align:center;margin:20px 0 0">Glow by Dilek · 020 550 0400 · hello@glowbydilek.nl · glowbydilek.nl<br><span style="font-size:11px">Schoonheidssalon voor vrouwen · Amsterdam · uitsluitend op afspraak</span></p>
 </div></body></html>`;
 }
 

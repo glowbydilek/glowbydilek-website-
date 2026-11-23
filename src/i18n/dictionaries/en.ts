@@ -26,7 +26,7 @@ export const en: Dictionary = {
       prices: {
         title: "Prices",
         description:
-          "Every Glow by Dilek treatment in one overview, with price, duration or ‘upon request’. A question about a price? Email hello [at] glowbydilek.nl.",
+          "Every Glow by Dilek treatment in one overview, with price, duration or ‘upon request’. A question about a price? Email hello@glowbydilek.nl.",
       },
       about: {
         title: "About Dilek",
@@ -36,7 +36,7 @@ export const en: Dictionary = {
       contact: {
         title: "Contact",
         description:
-          "A question about a treatment or an appointment? Send a message through the form or email hello [at] glowbydilek.nl. Dilek replies personally.",
+          "A question about a treatment or an appointment? Send a message through the form or email hello@glowbydilek.nl. Dilek replies personally.",
       },
       booking: {
         title: "Book an appointment in Amsterdam",
@@ -535,6 +535,7 @@ export const en: Dictionary = {
       unavailable: "The form is temporarily unavailable. Please email your message directly to",
       sendFailed: "Something went wrong while sending. Please try again later or email directly to",
       rateLimited: "You've sent several messages in a short time. Please try again in a few minutes.",
+      refused: "We can't process this request online. Please contact us on 020 550 0400 or email",
       generic: "Something went wrong. Please try again or email directly to",
       challenge: "The security check expired or failed. Your details have been kept — please complete the check again and resend.",
       duplicate: "This request has already been received. There is no need to send it again.",
@@ -607,7 +608,7 @@ export const en: Dictionary = {
     sections: [
       {
         h: "Who we are",
-        p: "Glow by Dilek offers personal beauty treatments and massages, by appointment only. Privacy questions can be sent to hello [at] glowbydilek.nl.",
+        p: "Glow by Dilek offers personal beauty treatments and massages, by appointment only. Privacy questions can be sent to hello@glowbydilek.nl.",
       },
       {
         h: "What information we receive",
@@ -631,7 +632,7 @@ export const en: Dictionary = {
       },
       {
         h: "Reviews",
-        p: "If you write a review, your rating, your text and the name you choose (first name, initials or anonymous) are published on the website after Dilek has read it. An email address is optional, never shown, and only helps prevent abuse. If you want your review removed, email hello [at] glowbydilek.nl.",
+        p: "If you write a review, your rating, your text and the name you choose (first name, initials or anonymous) are published on the website after Dilek has read it. An email address is optional, never shown, and only helps prevent abuse. If you want your review removed, email hello@glowbydilek.nl.",
       },
       {
         h: "Cookies and Google Analytics",
@@ -647,7 +648,7 @@ export const en: Dictionary = {
       },
       {
         h: "Your rights",
-        p: "You can ask to see your information, to receive a copy of it, to correct it or to have it deleted. Email hello [at] glowbydilek.nl; we respond within one month. If you disagree with how we handle your information, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).",
+        p: "You can ask to see your information, to receive a copy of it, to correct it or to have it deleted. Email hello@glowbydilek.nl; we respond within one month. If you disagree with how we handle your information, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).",
       },
     ],
   },

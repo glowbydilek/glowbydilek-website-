@@ -61,6 +61,7 @@ export function FormError({ state, t }: { state: SubmitState; t: Dictionary["for
     rateLimited: t.status.rateLimited,
     challenge: t.status.challenge,
     duplicate: t.status.duplicate,
+    refused: t.status.refused,
   };
   const message = map[state.error] ?? t.status.generic;
   const showEmail = !["validation", "rateLimited", "challenge", "duplicate"].includes(state.error);

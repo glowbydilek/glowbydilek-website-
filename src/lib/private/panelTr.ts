@@ -1155,6 +1155,41 @@ export const TR: Record<string, string> = {
   "＋ Nieuwe slide": "＋ Yeni slayt",
   "＋ Stap toevoegen": "＋ Adım ekle",
   "＋ Toevoegen": "＋ Ekle",
+
+  // ── Customer blocking
+  "Geblokkeerd": "Engellendi",
+  "Klant blokkeren": "Müşteriyi engelle",
+  "Blokkade opheffen": "Engeli kaldır",
+  "Deze klant blokkeren?": "Bu müşteri engellensin mi?",
+  "Online aanvragen met dit e-mailadres of telefoonnummer worden geweigerd. De geschiedenis blijft bewaard.": "Bu e-posta adresi veya telefon numarasıyla gelen online talepler reddedilir. Geçmiş saklanır.",
+  "Na blokkeren worden online aanvragen met dit e-mailadres of telefoonnummer vriendelijk geweigerd. Bestaande afspraken en facturen blijven staan.": "Engellendikten sonra bu e-posta adresi veya telefon numarasıyla gelen online talepler nazikçe reddedilir. Mevcut randevular ve faturalar kalır.",
+  "Deze klant is geblokkeerd: online aanvragen worden geweigerd.": "Bu müşteri engellendi: online talepler reddedilir.",
+  "Klant geblokkeerd. Online aanvragen met dit e-mailadres of telefoonnummer worden geweigerd.": "Müşteri engellendi. Bu e-posta adresi veya telefon numarasıyla gelen online talepler reddedilir.",
+  "Blokkade opgeheven.": "Engel kaldırıldı.",
+
+  // ── Invoice mail history, test mail
+  "PDF mailen naar": "PDF'yi şu adrese gönder:",
+  "PDF opnieuw mailen naar": "PDF'yi tekrar şu adrese gönder:",
+  "Verzendgeschiedenis": "Gönderim geçmişi",
+  "„Verstuurd” betekent: de mailserver heeft het bericht geaccepteerd.": "„Gönderildi” şu anlama gelir: e-posta sunucusu mesajı kabul etti.",
+  "Testmail versturen": "Test e-postası gönder",
+  "Verstuurt de opgeslagen tekst met voorbeeldgegevens (geen echte klant). Sla wijzigingen eerst op.": "Kaydedilmiş metni örnek bilgilerle gönderir (gerçek müşteri değil). Değişiklikleri önce kaydet.",
+  "Naar": "Alıcı",
+  "Kies een van de testadressen.": "Test adreslerinden birini seç.",
+  "Er is net een testmail verstuurd. Probeer het over een minuut opnieuw.": "Az önce bir test e-postası gönderildi. Bir dakika sonra tekrar dene.",
+  "De testmail kon niet worden verstuurd. Controleer de e-mailinstellingen.": "Test e-postası gönderilemedi. E-posta ayarlarını kontrol et.",
+  "In de wachtrij": "Sırada",
+  "Verstuurd": "Gönderildi",
+  "Bezig": "Gönderiliyor",
+  "verstuurd": "gönderildi",
+  "mislukt": "başarısız",
+  "vervallen": "geçersiz",
+
+  // ── Accountant ZIP
+  "Voor de boekhouder": "Muhasebeci için",
+  "Eén ZIP met het overzicht (CSV), het financiële rapport (PDF), alle facturen en alle bonnen.": "Özet (CSV), finans raporu (PDF), tüm faturalar ve tüm fişler tek bir ZIP dosyasında.",
+  "Vorige maand downloaden": "Geçen ayı indir",
+  "Gekozen periode": "Seçilen dönem",
 };
 
 /** Texts with a variable part (numbers, amounts, names). */
@@ -1166,4 +1201,5 @@ export const TR_PATTERNS: [RegExp, string][] = [
   [/^Actie nodig \((\d+)\)$/, "İşlem bekliyor ($1)"],
   [/^Ongelezen \((\d+)\)$/, "Okunmamış ($1)"],
   [/^Laatste melding: (.+)$/, "Son bildirim: $1"],
+  [/^Testmail verstuurd naar (.+)\.$/, "Test e-postası gönderildi: $1."],
 ];

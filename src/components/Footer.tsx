@@ -117,7 +117,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
           </ul>
         </nav>
 
-        <div className="flex flex-col gap-3 py-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 pb-24 pt-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between sm:pb-6 sm:pr-24">
           <p className="flex items-center gap-2">
             <Glint className="h-3 w-auto text-glow" />© {year} {siteConfig.name}. {dict.footer.rights}
           </p>

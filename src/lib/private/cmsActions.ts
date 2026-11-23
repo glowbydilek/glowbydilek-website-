@@ -14,7 +14,11 @@ import { ContentError, discardDraft, editorValue, publish, resetToDefault, resto
 import { PAGE_SECTIONS } from "../cms/registry";
 import { validateTheme } from "../cms/theme";
 import { validateAnalytics, validateBusiness, validateSocial, validateMenu } from "../cms/menu";
-import { TEMPLATE_KEYS, validateTemplate, type TemplateKey } from "../notifications/templates";
+import { paragraphsToHtml, renderTemplate, TEMPLATE_KEYS, validateTemplate, type TemplateKey } from "../notifications/templates";
+import { loadTemplate } from "../booking/service";
+import { claimOnce } from "../db/limits";
+import { sendMail } from "../mail/send";
+import { TEST_MAIL_RECIPIENTS } from "../mail/test";
 import { allPages, matchPage, pagePath } from "@/i18n/config";
 import type { FormState } from "./authActions";
 
@@ -215,6 +219,29 @@ export async function templateAction(_: FormState, f: FormData): Promise<FormSta
   await db.insert(notificationTemplates).values({ key, locale, ...t }).onDuplicateKeyUpdate({ set: t });
   await audit(db, { userId: s.user.id, action: "template.saved", entityId: `${key}|${locale}` });
   return { ok: true, message: "E-mailtekst opgeslagen. Nieuwe e-mails gebruiken deze tekst." };
+}
+
+const TEST_SAMPLE = { firstName: "Sara", treatments: "Brazilian", date: "maandag 9 november 2026", time: "10:00", endTime: "10:45", request: "Aangevraagd: Brazilian — maandag 9 november 2026 10:00", location: "[voorbeeld: praktische locatiegegevens]", message: "" };
+
+/** Sends the saved text of one email with made-up example data to the owner or the fixed test inbox. */
+export async function testTemplateAction(_: FormState, f: FormData): Promise<FormState> {
+  const s = await assertOwner();
+  const key = str(f, "key") as TemplateKey;
+  const locale = asLocale(str(f, "locale"));
+  const to = str(f, "to").toLowerCase();
+  if (!TEMPLATE_KEYS.includes(key)) return { error: "Onbekende e-mail." };
+  if (![s.user.email.toLowerCase(), ...TEST_MAIL_RECIPIENTS].includes(to)) return { error: "Kies een van de testadressen." };
+  const db = getDb();
+  if (!(await claimOnce(db, `testmail:${s.user.id}`, 60_000))) return { error: "Er is net een testmail verstuurd. Probeer het over een minuut opnieuw." };
+  try {
+    const r = renderTemplate(await loadTemplate(db, key, locale), TEST_SAMPLE);
+    await sendMail({ to, subject: `[TEST] ${r.subject}`, text: `TESTMAIL — voorbeeldgegevens, geen echte klant.\n\n${r.text}`, html: paragraphsToHtml(["TESTMAIL — voorbeeldgegevens, geen echte klant.", ...r.paragraphs]) });
+  } catch (err) {
+    console.error("[testmail] failed:", err instanceof Error ? err.message.slice(0, 120) : err);
+    return { error: "De testmail kon niet worden verstuurd. Controleer de e-mailinstellingen." };
+  }
+  await audit(db, { userId: s.user.id, action: "template.test_sent", entityId: `${key}|${locale}` });
+  return { ok: true, message: `Testmail verstuurd naar ${to}.` };
 }
 
 export async function goToPreview(f: FormData) {

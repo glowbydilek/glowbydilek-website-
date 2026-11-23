@@ -17,6 +17,8 @@ type Handler<T extends { email: string; name: string }> = {
   validate: (raw: Record<string, unknown>) => Outcome<T> | Promise<Outcome<T>>;
   /** Optional: persist the submission (e.g. contact inbox, agenda request). Runs after the owner email was sent. */
   store?: (data: T) => Promise<void>;
+  /** Optional: refuse the submission (e.g. a contact the owner has blocked). Nothing is sent or stored. */
+  refuse?: (data: T) => Promise<boolean>;
   /** Stable content used to detect duplicate submissions. */
   signature: (data: T) => string;
   ownerMail: (data: T) => { subject: string; text: string; html: string };
@@ -126,6 +128,9 @@ export async function handleForm<T extends { email: string; name: string }>(req:
     console.warn(`[${h.kind}] Turnstile rejected: ${check.reason}`);
     return json(403, { ok: false, error: "challenge", reason: check.reason });
   }
+
+  // Blocked contacts: a neutral refusal, no email to the owner and nothing stored.
+  if (h.refuse && (await h.refuse(data).catch(() => false))) return json(403, { ok: false, error: "refused" });
 
   // Duplicate content (double submits, retries, copy-paste floods).
   const dupKey = `dup:${h.kind}:${fingerprint(data.email, h.signature(data))}`;

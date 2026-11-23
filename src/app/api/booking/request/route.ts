@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { BookingError, createTimedRequest } from "@/lib/booking/service";
+import { isBlockedContact } from "@/lib/crm/service";
 import { onlineBookingStatus } from "@/lib/booking/public";
 import { applyPromotion, checkCode } from "@/lib/promotions/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
@@ -59,6 +60,10 @@ export async function POST(req: NextRequest) {
   const dupKey = `dup:booking:${fingerprint(d.email, d.date, d.time, d.treatments.sort().join(","))}`;
   if (!(await claimOnce(db, dupKey, LIMITS.duplicateMs))) return json(409, { ok: false, error: "duplicate" });
 
+  if (await isBlockedContact(db, { email: d.email, phone: d.phone })) {
+    await releaseOnce(db, dupKey);
+    return json(403, { ok: false, error: "refused" });
+  }
   const priv = await getSetting(db, "private", defaultPrivateSettings);
   try {
     const id = await createTimedRequest(

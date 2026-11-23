@@ -30,6 +30,10 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
   const db = getDb();
   const [r, m] = await Promise.all([financeReport(db, period), customerMetrics(db, dayBoundsUtc(period.from).start, dayBoundsUtc(period.to).end)]);
   const q = new URLSearchParams({ p: kind, ...(kind === "custom" ? { van: period.from, tot: period.to } : {}) });
+  // Previous calendar month (the usual package for the accountant).
+  const firstOfMonth = new Date(`${today.slice(0, 7)}-01T12:00:00Z`);
+  const prevEnd = new Date(firstOfMonth.getTime() - 86_400_000).toISOString().slice(0, 10);
+  const prevMonth = { from: `${prevEnd.slice(0, 7)}-01`, to: prevEnd };
   return (
     <>
       <PageHeader
@@ -46,6 +50,20 @@ export default async function Finance({ searchParams }: { searchParams: Promise<
           </div>
         }
       />
+      <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-line bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-medium">{t("Voor de boekhouder")}</p>
+          <p className="text-sm text-muted">{t("Eén ZIP met het overzicht (CSV), het financiële rapport (PDF), alle facturen en alle bonnen.")}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <a href={`/agenda/financien/boekhouder?p=custom&van=${prevMonth.from}&tot=${prevMonth.to}`} className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper">
+            {t("Vorige maand downloaden")}
+          </a>
+          <a href={`/agenda/financien/boekhouder?${q}`} className="inline-flex min-h-11 items-center rounded-full border border-ink/25 px-5 text-sm">
+            {t("Gekozen periode")}
+          </a>
+        </div>
+      </div>
       <nav aria-label={t("Periode")} className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm shadow-sm">
         {TABS.map(([k, l]) => (
           <Link key={k} href={`/agenda/financien?p=${k}`} aria-current={k === kind ? "page" : undefined} className={`rounded-full px-4 py-2 ${k === kind ? "bg-ink text-paper" : "hover:bg-ink/6"}`}>

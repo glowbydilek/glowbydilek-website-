@@ -39,7 +39,7 @@ export const legalTr: Record<LegalKey, LegalDoc> = {
       { title: "Randevular", paragraphs: ["Bir randevu ancak e-postayla kişisel onaydan sonra kesinleşir.", "[INVULLEN: randevuların ne kadar önceden alınabileceği ve kapora olup olmadığı — ya da bu satırı kaldır.]"] },
       { title: "Fiyatlar ve ödeme", paragraphs: ["Fiyatlara KDV dahildir. 'Talep üzerine' fiyatlarda önce kendin kabul ettiğin bir fiyat teklifi alırsın.", "[INVULLEN: kabul edilen ödeme yöntemleri.]"] },
       { title: "Sağlık ve güvenlik", paragraphs: ["Lütfen ilaçları, cilt rahatsızlıklarını, alerjileri veya hamileliği önceden belirt. Emin olunamadığında bir bakım yapılmayabilir; bu senin yararınadır.", "Güzellik bakımı tıbbi bir uygulama değildir."] },
-      { title: "Şikâyetler", paragraphs: ["Bir şeyden memnun kalmadın mı? Lütfen mümkün olan en kısa sürede hello [at] glowbydilek.nl adresinden bildir; birlikte bir çözüm ararız.", "[INVULLEN: şikâyetin bildirilebileceği süre.]"] },
+      { title: "Şikâyetler", paragraphs: ["Bir şeyden memnun kalmadın mı? Lütfen mümkün olan en kısa sürede hello@glowbydilek.nl adresinden bildir; birlikte bir çözüm ararız.", "[INVULLEN: şikâyetin bildirilebileceği süre.]"] },
       { title: "Sorumluluk", paragraphs: ["[INVULLEN: sorumluluk maddesini bir avukata veya meslek kuruluşuna hazırlat ya da kontrol ettir.]"] },
     ],
   },
@@ -48,7 +48,7 @@ export const legalTr: Record<LegalKey, LegalDoc> = {
     effectiveDate: "[INVULLEN: yürürlük tarihi]",
     intro: "Gelemeyecek misin? Yerin başka birine verilebilmesi için lütfen mümkün olan en kısa sürede haber ver.",
     sections: [
-      { title: "İptal veya erteleme", paragraphs: ["Onay e-postanı yanıtlayarak ya da hello [at] glowbydilek.nl adresine yazarak iptal et veya ertele.", "[INVULLEN: kaç saat öncesine kadar iptal veya ertelemenin ücretsiz olduğu.]"] },
+      { title: "İptal veya erteleme", paragraphs: ["Onay e-postanı yanıtlayarak ya da hello@glowbydilek.nl adresine yazarak iptal et veya ertele.", "[INVULLEN: kaç saat öncesine kadar iptal veya ertelemenin ücretsiz olduğu.]"] },
       { title: "Geç iptal veya gelmeme", paragraphs: ["[INVULLEN: geç iptal veya randevuya gelinmemesi durumunda ne olacağı — örneğin ücret alınmaz ya da sabit bir tutar. Yalnızca gerçekten uyguladığın ücretleri belirt.]"] },
       { title: "Glow by Dilek iptal etmek zorunda kalırsa", paragraphs: ["Bir randevu hastalık veya elde olmayan nedenlerle iptal edilmek zorunda kalırsa en kısa sürede haber alırsın ve birlikte yeni bir zaman planlarız. Herhangi bir ücret alınmaz."] },
     ],

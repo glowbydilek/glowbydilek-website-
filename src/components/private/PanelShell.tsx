@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { PanelMonogram } from "./PanelMonogram";
 import { logoutAction } from "@/lib/private/authActions";
@@ -10,7 +10,24 @@ import { PanelLangProvider } from "./PanelLangProvider";
 import { pt, type PanelLang } from "@/lib/private/panelLang";
 import { setPanelLangAction } from "@/lib/private/panelLangActions";
 
-export type NavItem = { href: string; label: string; icon?: string; badge?: number; technical?: boolean };
+export type NavItem = { href: string; label: string; icon?: string; badge?: number; technical?: boolean; /** Other paths that highlight this item (e.g. Finance covers invoices and expenses). */ match?: string[] };
+
+/** Where "Back" goes when there is no in-app history: the parent list of a detail page. */
+const BACK_PARENT: [RegExp, string][] = [
+  [/^\/agenda\/klanten\/(\d+)\/consultatie$/, "/agenda/klanten/$1"],
+  [/^\/agenda\/klanten\/(dubbel|\d+)$/, "/agenda/klanten"],
+  [/^\/agenda\/facturen\/.+$/, "/agenda/facturen"],
+  [/^\/agenda\/berichten\/.+$/, "/agenda/berichten"],
+  [/^\/agenda\/intake\/.+$/, "/agenda/intake"],
+  [/^\/agenda\/afspraak\/.+$/, "/agenda/kalender"],
+  [/^\/agenda\/meldingen$/, "/agenda"],
+  [/^\/admin\/paginas\/.+$/, "/admin/paginas"],
+  [/^\/admin\/(.+)\/.+$/, "/admin/$1"],
+];
+function backTarget(path: string): string | null {
+  for (const [re, to] of BACK_PARENT) if (re.test(path)) return path.replace(re, to);
+  return null;
+}
 
 /**
  * Shared shell for /admin and /agenda. Desktop: sidebar. Mobile: compact top
@@ -24,7 +41,13 @@ export function PanelShell({
   banner,
   lang = "nl",
   alerts,
+  subnav,
+  moreLabel,
 }: {
+  /** Groups of related pages shown as tabs above the page (e.g. Finance: overview, invoices, expenses). */
+  subnav?: NavItem[][];
+  /** Heading of the folded part of the menu (settings and management). */
+  moreLabel?: string;
   /** Bell in the mobile top bar: link to Meldingen with the number of open actions. */
   alerts?: { href: string; count: number; label: string };
   lang?: PanelLang;
@@ -35,6 +58,7 @@ export function PanelShell({
   banner?: ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   // While typing (on-screen keyboard open) the bottom tab bar steps aside, so it
   // never covers a field or a Save button on iPhone.
@@ -51,7 +75,15 @@ export function PanelShell({
       document.removeEventListener("focusout", onOut);
     };
   }, []);
-  const active = (href: string) => (href === `/${area}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
+  const hit = (href: string) => (href === `/${area}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
+  const active = (href: string) => hit(href) || Boolean(nav.find((n) => n.href === href)?.match?.some(hit));
+  const group = subnav?.find((g) => g.length > 1 && g.some((n) => pathname === n.href));
+  const back = backTarget(pathname);
+  const goBack = () => {
+    // In-app history first (returns to Today, Calendar or wherever the user came from); otherwise the parent list.
+    if (typeof window !== "undefined" && window.history.length > 1 && document.referrer.startsWith(window.location.origin)) router.back();
+    else if (back) router.push(back);
+  };
   const t = (k: string) => pt(lang, k);
   const title = area === "admin" ? t("titleAdmin") : t("titleAgenda");
   const other = area === "admin" ? { href: "/agenda", label: t("toAgenda") } : { href: "/admin", label: t("toAdmin") };
@@ -105,7 +137,7 @@ export function PanelShell({
       {technical.length > 0 && (
         <details className="mt-3 border-t border-line pt-2" open={technicalOpen}>
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl px-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted hover:bg-ink/6 [&::-webkit-details-marker]:hidden">
-            {lang === "tr" ? "Web sitesi ve teknik yönetim" : "Websitebeheer & technisch"}
+            {moreLabel ?? (lang === "tr" ? "Web sitesi ve teknik yönetim" : "Websitebeheer & technisch")}
             <span aria-hidden="true">›</span>
           </summary>
           <ul className="mt-1 space-y-0.5">{technical.map(item)}</ul>
@@ -176,6 +208,33 @@ export function PanelShell({
 
         <main className={`mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:py-8 ${tabs ? "panel-has-tabs pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8" : ""}`}>
           {banner}
+          {back && (
+            <button
+              type="button"
+              onClick={goBack}
+              className="-ml-2 mb-3 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-[0.95rem] font-medium text-accent-deep hover:bg-ink/6"
+            >
+              <span aria-hidden="true">←</span>
+              {lang === "tr" ? "Geri" : "Terug"}
+            </button>
+          )}
+          {group && (
+            <nav aria-label={group[0].label} className="-mx-4 mb-5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              <ul className="flex w-max gap-1 rounded-full bg-surface p-1">
+                {group.map((n) => (
+                  <li key={n.href}>
+                    <Link
+                      href={n.href}
+                      aria-current={pathname === n.href ? "page" : undefined}
+                      className={`flex min-h-10 items-center whitespace-nowrap rounded-full px-4 text-sm font-medium transition-colors ${pathname === n.href ? "bg-ink text-paper" : "text-ink-soft hover:bg-white"}`}
+                    >
+                      {n.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
           {children}
         </main>
 
@@ -193,7 +252,13 @@ export function PanelShell({
                     aria-current={active(t.href) ? "page" : undefined}
                     className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.72rem] font-medium ${active(t.href) ? "text-ink" : "text-muted"}`}
                   >
-                    {t.icon && <PanelIcon name={t.icon} className="h-6 w-6" />}
+                    {t.icon === "plus" ? (
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-paper shadow-sm">
+                        <PanelIcon name="plus" className="h-5 w-5" />
+                      </span>
+                    ) : (
+                      t.icon && <PanelIcon name={t.icon} className="h-6 w-6" />
+                    )}
                     {t.label}
                     {t.badge ? <span className="absolute right-[22%] top-1.5 min-w-5 rounded-full bg-accent px-1 text-center text-[0.65rem] font-semibold text-ink">{t.badge}</span> : null}
                   </Link>

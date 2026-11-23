@@ -55,7 +55,7 @@ export const guidesTr: Record<GuideKey, GuideCopy> = {
       {
         title: "Gelemeyecek misin?",
         paragraphs: [
-          "Zamanın başka birine verilebilmesi için lütfen mümkün olan en kısa sürede onay e-postanı yanıtlayarak ya da hello [at] glowbydilek.nl adresine yazarak haber ver.",
+          "Zamanın başka birine verilebilmesi için lütfen mümkün olan en kısa sürede onay e-postanı yanıtlayarak ya da hello@glowbydilek.nl adresine yazarak haber ver.",
         ],
       },
     ],
@@ -70,7 +70,7 @@ export const guidesTr: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Önce bir soru sorabilir miyim?",
-        a: "Elbette. İletişim formunu kullan ya da hello [at] glowbydilek.nl adresine yaz. Dilek kişisel olarak yanıtlar.",
+        a: "Elbette. İletişim formunu kullan ya da hello@glowbydilek.nl adresine yaz. Dilek kişisel olarak yanıtlar.",
       },
     ],
   },

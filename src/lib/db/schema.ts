@@ -363,6 +363,9 @@ export const customers = mysqlTable(
     phoneNorm: varchar("phone_norm", { length: 20 }),
     /** Set when this profile was merged into another one (history moved, row kept for the audit trail). */
     mergedIntoId: int("merged_into_id"),
+    /** Blocked by the owner (migration 0006): no online requests are accepted for this email/phone. */
+    blockedAt: ts("blocked_at"),
+    blockReason: varchar("block_reason", { length: 300 }),
     createdAt: created(),
     updatedAt: updated(),
   },
