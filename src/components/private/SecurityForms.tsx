@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { changePasswordAction, confirmMfaAction, disableMfaAction, startMfaAction, type FormState } from "@/lib/private/authActions";
 import { ActionForm } from "./ActionForm";
 import { Button, Field, Input, Notice, SubmitButton } from "./ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function ChangePasswordForm() {
   return (
@@ -17,6 +18,7 @@ export function ChangePasswordForm() {
 }
 
 export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: number }) {
+  const t = useT();
   const [setup, setSetup] = useState<{ uri: string; secret: string; qr: string } | null>(null);
   const [state, confirm] = useActionState<FormState, FormData>(confirmMfaAction, {});
   const [busy, setBusy] = useState(false);
@@ -25,12 +27,12 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
   if (codes) {
     return (
       <div className="space-y-3">
-        <Notice tone="success">Tweestapsverificatie staat aan.</Notice>
+        <Notice tone="success">{t("Tweestapsverificatie staat aan.")}</Notice>
         <p className="text-sm">
-          <strong>Bewaar deze herstelcodes nu</strong> op een veilige plek (bijvoorbeeld uitgeprint of in een wachtwoordmanager). Elke code werkt één keer als je je telefoon niet bij de hand hebt. Ze worden maar één keer getoond.
+          <strong>{t("Bewaar deze herstelcodes nu")}</strong> {t("op een veilige plek (bijvoorbeeld uitgeprint of in een wachtwoordmanager). Elke code werkt één keer als je je telefoon niet bij de hand hebt. Ze worden maar één keer getoond.")}
         </p>
         <ul className="grid grid-cols-2 gap-2 rounded-xl bg-surface p-4 font-mono text-sm">{codes.map((c) => <li key={c}>{c}</li>)}</ul>
-        <Button type="button" variant="outline" onClick={() => navigator.clipboard?.writeText(codes.join("\n"))}>Kopiëren</Button>
+        <Button type="button" variant="outline" onClick={() => navigator.clipboard?.writeText(codes.join("\n"))}>{t("Kopiëren")}</Button>
       </div>
     );
   }
@@ -39,10 +41,10 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
       <div className="space-y-3">
         <Notice tone="success">Tweestapsverificatie staat aan. Nog {remaining} ongebruikte herstelcodes.</Notice>
         <details className="rounded-xl border border-line p-3">
-          <summary className="cursor-pointer text-sm">Uitschakelen</summary>
+          <summary className="cursor-pointer text-sm">{t("Uitschakelen")}</summary>
           <ActionForm action={disableMfaAction} className="mt-3 space-y-3">
             <Field label="Bevestig met je wachtwoord"><Input type="password" name="password" required autoComplete="current-password" /></Field>
-            <SubmitButton variant="danger" confirm="Tweestapsverificatie uitschakelen?">Uitschakelen</SubmitButton>
+            <SubmitButton variant="danger" confirm="Tweestapsverificatie uitschakelen?">{t("Uitschakelen")}</SubmitButton>
           </ActionForm>
         </details>
       </div>
@@ -51,7 +53,7 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
   if (!setup) {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-muted">Gebruik een authenticator-app (bijv. de ingebouwde codes in iPhone-wachtwoorden, Google Authenticator of Microsoft Authenticator). Na het inloggen vraagt de site dan om een code van zes cijfers.</p>
+        <p className="text-sm text-muted">{t("Gebruik een authenticator-app (bijv. de ingebouwde codes in iPhone-wachtwoorden, Google Authenticator of Microsoft Authenticator). Na het inloggen vraagt de site dan om een code van zes cijfers.")}</p>
         <Button
           type="button"
           disabled={busy}
@@ -64,20 +66,20 @@ export function MfaSetup({ enabled, remaining }: { enabled: boolean; remaining: 
             setBusy(false);
           }}
         >
-          Tweestapsverificatie instellen
+          {t("Tweestapsverificatie instellen")}
         </Button>
       </div>
     );
   }
   return (
     <form action={confirm} className="space-y-4">
-      <p className="text-sm">1. Scan deze QR-code met je authenticator-app (of tik op de link op je iPhone).</p>
+      <p className="text-sm">{t("1. Scan deze QR-code met je authenticator-app (of tik op de link op je iPhone).")}</p>
       <div className="w-56 rounded-xl border border-line bg-white p-2" dangerouslySetInnerHTML={{ __html: setup.qr }} />
-      <a href={setup.uri} className="text-sm text-accent-deep underline">Open in authenticator-app</a>
-      <p className="text-sm text-muted">Of voer deze sleutel handmatig in: <code className="break-all">{setup.secret}</code></p>
+      <a href={setup.uri} className="text-sm text-accent-deep underline">{t("Open in authenticator-app")}</a>
+      <p className="text-sm text-muted">{t("Of voer deze sleutel handmatig in:")} <code className="break-all">{setup.secret}</code></p>
       <Field label="2. Vul de code van zes cijfers in"><Input name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} required /></Field>
       {state.error && <Notice tone="error">{state.error}</Notice>}
-      <SubmitButton>Bevestigen en inschakelen</SubmitButton>
+      <SubmitButton>{t("Bevestigen en inschakelen")}</SubmitButton>
     </form>
   );
 }
