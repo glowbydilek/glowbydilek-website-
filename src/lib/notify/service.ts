@@ -18,7 +18,7 @@
 import { createHash } from "node:crypto";
 import { and, desc, eq, inArray, isNull, lt, ne, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { appointments, inquiries, notifications, outbox, pushSubscriptions, users } from "../db/schema";
+import { appointments, inquiries, intakeDocuments, notifications, outbox, pushSubscriptions, users } from "../db/schema";
 import { isAllowedEndpoint, sendPush, type PushResult, type PushTarget, type VapidKeys } from "../push/webpush";
 
 export type Category = "afspraak" | "bericht" | "intake" | "factuur" | "systeem";
@@ -71,7 +71,7 @@ type Pending = NewNotification & { since: Date };
 
 /** Everything that currently needs Dilek's attention, read from the source tables. */
 async function pendingItems(db: DB): Promise<Pending[]> {
-  const [reqs, msgs, mails] = await Promise.all([
+  const [reqs, msgs, mails, intakes] = await Promise.all([
     db
       .select({ id: appointments.id, createdAt: appointments.createdAt })
       .from(appointments)
@@ -81,6 +81,10 @@ async function pendingItems(db: DB): Promise<Pending[]> {
       .select({ id: outbox.id, kind: outbox.kind, appointmentId: outbox.appointmentId, ref: outbox.attachmentRef, createdAt: outbox.createdAt })
       .from(outbox)
       .where(eq(outbox.status, "failed")),
+    db
+      .select({ id: intakeDocuments.id, customerId: intakeDocuments.customerId, createdAt: intakeDocuments.createdAt })
+      .from(intakeDocuments)
+      .where(and(eq(intakeDocuments.source, "digital"), eq(intakeDocuments.status, "current"), isNull(intakeDocuments.reviewedAt))),
   ]);
   const out: Pending[] = [];
   // Lock-screen safe wording: no names, treatments, health or invoice details.
@@ -88,6 +92,8 @@ async function pendingItems(db: DB): Promise<Pending[]> {
     out.push({ dedupeKey: `appt-request:${r.id}`, kind: "appointment_request", category: "afspraak", title: "Nieuwe afspraakaanvraag", body: "Open de agenda om te bevestigen of af te wijzen.", url: `/agenda/afspraak/${r.id}`, entityType: "appointment", entityId: r.id, actionable: true, since: r.createdAt });
   for (const m of msgs)
     out.push({ dedupeKey: `inquiry:${m.id}`, kind: "customer_message", category: "bericht", title: "Nieuw bericht van een klant", body: "Open de agenda om het bericht te lezen.", url: `/agenda/berichten/${m.id}`, entityType: "inquiry", entityId: m.id, actionable: true, since: m.createdAt });
+  for (const d of intakes)
+    out.push({ dedupeKey: `intake-digital:${d.id}`, kind: "intake_digital", category: "intake", title: "Nieuw intakeformulier ingevuld", body: "Open de agenda om het te controleren.", url: `/agenda/klanten/${d.customerId}`, entityType: "intake", entityId: d.id, actionable: true, since: d.createdAt });
   for (const e of mails) {
     if (e.kind === "owner_request") continue; // a notice to Dilek herself, not a customer action
     const invoice = e.kind === "invoice" && e.ref;
@@ -119,7 +125,7 @@ export async function syncNotifications(db: DB, now = new Date()): Promise<{ cre
   const open = await db
     .select({ id: notifications.id, dedupeKey: notifications.dedupeKey })
     .from(notifications)
-    .where(and(eq(notifications.state, "open"), eq(notifications.actionable, true), inArray(notifications.entityType, ["appointment", "inquiry", "outbox"])));
+    .where(and(eq(notifications.state, "open"), eq(notifications.actionable, true), inArray(notifications.entityType, ["appointment", "inquiry", "outbox", "intake"])));
   const stale = open.filter((n) => !keys.has(n.dedupeKey)).map((n) => n.id);
   if (stale.length) await db.update(notifications).set({ state: "resolved", resolvedAt: now }).where(inArray(notifications.id, stale));
   // A resolved item never needs a late push.
