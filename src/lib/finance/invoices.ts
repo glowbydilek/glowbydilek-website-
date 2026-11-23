@@ -6,6 +6,7 @@ import { audit } from "../db/audit";
 import { appointments, appointmentTreatments, customers, invoiceCounters, invoices, payments, treatments } from "../db/schema";
 import { defaultInvoiceSettings, getSetting, type InvoiceSettings } from "../db/settings";
 import { enqueue } from "../notifications/outbox";
+import { paragraphsToHtml } from "../notifications/templates";
 import { todayLocal, toLocalParts } from "../time";
 import { allocateDiscount, computeTotals, formatInvoiceNumber, invoiceReadiness, lineErrors, VAT_CATS, vatLineErrors, type ComputedLine, type InvoiceLine, type VatCat } from "./invoice-core";
 import { formatCents } from "./money";
@@ -247,7 +248,7 @@ export async function emailInvoice(db: DB, id: number, ctx: Ctx): Promise<void> 
   const paragraphs = en
     ? [`Dear ${first},`, `Please find attached ${credit ? "credit note" : "invoice"} ${inv.number} for ${formatCents(inv.totalCents, "en")}.`, "Do you have a question about it? Simply reply to this email.", "Kind regards,\nDilek — Glow by Dilek"]
     : [`Beste ${first},`, `In de bijlage vind je ${credit ? "creditfactuur" : "factuur"} ${inv.number} van ${formatCents(inv.totalCents)}.`, "Heb je er een vraag over? Beantwoord dan gewoon deze e-mail.", "Hartelijke groet,\nDilek — Glow by Dilek"];
-  const html = paragraphs.map((p) => `<p>${p.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>")}</p>`).join("");
+  const html = paragraphsToHtml(paragraphs);
   // Per-minute key: a double click sends once; a deliberate resend later is allowed.
   const bucket = Math.floor(Date.now() / 60_000);
   const queued = await enqueue(db, {
