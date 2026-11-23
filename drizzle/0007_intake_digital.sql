@@ -16,4 +16,6 @@ CREATE TABLE `intake_requests` (
 CREATE INDEX `intake_req_customer_idx` ON `intake_requests` (`customer_id`,`status`);--> statement-breakpoint
 ALTER TABLE `intake_documents` ADD `source` varchar(10) DEFAULT 'upload' NOT NULL;--> statement-breakpoint
 ALTER TABLE `intake_documents` ADD `reviewed_at` datetime(3);--> statement-breakpoint
-ALTER TABLE `intake_documents` ADD `reviewed_by` int;
+ALTER TABLE `intake_documents` ADD `reviewed_by` int;--> statement-breakpoint
+ALTER TABLE `intake_documents` ADD `copy_token_hash` varchar(64);--> statement-breakpoint
+ALTER TABLE `intake_documents` ADD `copy_expires_at` datetime(3);
