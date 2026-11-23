@@ -1,7 +1,7 @@
 import { requireCan } from "@/lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { asc, desc, eq, ne } from "drizzle-orm";
+import { and, asc, desc, eq, ne } from "drizzle-orm";
 import { type CatalogueOption, InvoiceEditor, InvoiceOpButton, IssueForm, PaymentForm, VoidPaymentForm } from "@/components/private/finance/FinanceForms";
 import { Badge, Card, Notice, PageHeader } from "@/components/private/ui";
 import { getDb } from "@/lib/db/client";
@@ -30,7 +30,7 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
     db.select().from(customers).where(eq(customers.id, inv.customerId)),
     getInvoiceSettings(db),
     invoicePaid(db, id),
-    db.select().from(outbox).where(eq(outbox.attachmentRef, id)).orderBy(desc(outbox.createdAt)),
+    db.select().from(outbox).where(and(eq(outbox.attachmentKind, "invoice"), eq(outbox.attachmentRef, id))).orderBy(desc(outbox.createdAt)),
   ]);
   const missing = invoiceReadiness(settings);
   // Treatments with the price saved right now (Prijzen beheren), for the Omschrijving picker.
@@ -137,17 +137,18 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
             <>
               <Card title={t("Versturen")}>
                 {buyer.email ? (
-                  <InvoiceOpButton id={id} op="email" label={`PDF mailen naar ${buyer.email}`} variant="primary" />
+                  <InvoiceOpButton id={id} op="email" label={`${mails.length ? t("PDF opnieuw mailen naar") : t("PDF mailen naar")} ${buyer.email}`} variant="primary" />
                 ) : (
                   <p className="text-sm text-muted">{t("Geen e-mailadres op de factuur: download de PDF en geef hem zelf mee.")}</p>
                 )}
+                {mails.length > 0 && <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-muted">{t("Verzendgeschiedenis")}</p>}
                 {mails.length > 0 && (
-                  <ul className="mt-3 space-y-1 text-sm">
+                  <ul className="mt-2 space-y-1 text-sm">
                     {mails.map((m) => (
                       <li key={m.id} className="flex justify-between gap-3">
                         <span>{formatLocal(m.createdAt, "nl", { dateStyle: "short", timeStyle: "short" })}</span>
                         <span className={m.status === "failed" ? "text-[#8e2f24]" : "text-muted"}>
-                          {MAIL[m.status] ?? m.status}
+                          {t(MAIL[m.status] ?? m.status)}
                           {m.sentAt ? ` ${formatLocal(m.sentAt, "nl", { timeStyle: "short" })}` : ""}
                           {m.lastError ? ` (${m.lastError})` : ""}
                         </span>
@@ -155,7 +156,7 @@ export default async function InvoicePage({ params, searchParams }: { params: Pr
                     ))}
                   </ul>
                 )}
-                <p className="mt-2 text-xs text-muted">&quot;Verstuurd&quot; betekent: de mailserver heeft het bericht geaccepteerd.</p>
+                <p className="mt-2 text-xs text-muted">{t("„Verstuurd” betekent: de mailserver heeft het bericht geaccepteerd.")}</p>
               </Card>
               {!credit && (
                 <Card title={`Betalingen (${formatCents(paid.cents)} van ${formatCents(inv.totalCents)})`}>
