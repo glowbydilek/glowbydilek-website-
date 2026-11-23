@@ -32,7 +32,6 @@ export default async function Consultation({ params, searchParams }: { params: P
   return (
     <>
       <PageHeader title={t("Consultatie (vertrouwelijk)")} subtitle={`${c.firstName} ${c.lastName}`.trim()} />
-      <p className="mb-4 text-sm"><Link href={`/agenda/klanten/${id}`} className="text-accent-deep underline">← Terug naar het klantprofiel</Link></p>
       {sp.verwijderd && <div className="mb-4"><Notice tone="success">{t("✓ De consultatiegegevens zijn verwijderd.")}</Notice></div>}
       {blocked ? (
         <Notice tone="warning">{blocked} <Link href="/admin/privacy" className="underline">{t("Meer informatie")}</Link></Notice>
