@@ -41,7 +41,7 @@ export const en: Dictionary = {
       booking: {
         title: "Book an appointment in Amsterdam",
         description:
-          "Request your appointment online at Glow by Dilek in Amsterdam. Choose your treatment and a preferred time; Dilek reviews your request and confirms the appointment personally.",
+          "Request your appointment at Glow by Dilek in Amsterdam online. Choose a treatment and a preferred time; Dilek confirms your appointment personally.",
       },
       reviews: {
         title: "Client reviews",

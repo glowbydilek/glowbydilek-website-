@@ -358,7 +358,7 @@ export const wellnessTreatments: Record<string, T> = {
   "facial-deep-cleansing": {
     nl: {
       seoTitle: "Dieptereinigende gezichtsbehandeling in Amsterdam",
-      seoDescription: "Professionele dieptereinigende gezichtsbehandeling voor vrouwen in Amsterdam: huidanalyse, peeling, stoom, mee-eters verwijderen, masker en gezichtsmassage. Op afspraak.",
+      seoDescription: "Dieptereinigende gezichtsbehandeling voor vrouwen in Amsterdam: huidanalyse, peeling, stoom, mee-eters verwijderen, masker en massage. Op afspraak.",
       title: "Dieptereinigende gezichtsbehandeling",
       lead: "Een professionele dieptereiniging die je huid helpt er schoner, gezonder, gladder, frisser en stralender uit te laten zien — altijd afgestemd op jouw huidtype en wat je huid nodig heeft.",
       teaser: "Tien zorgvuldige stappen voor een frisse, schone en stralende huid.",
@@ -731,7 +731,7 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
   facial: {
     nl: {
       seoTitle: "Gezichtsbehandeling voor vrouwen in Amsterdam",
-      seoDescription: "Gezichtsbehandelingen bij Glow by Dilek in Amsterdam: dieptereinigende gezichtsbehandeling, gezichtsbehandeling met stoom en wenkbrauwen & wimpers verven. Persoonlijk afgestemd, voor vrouwen en op afspraak.",
+      seoDescription: "Gezichtsbehandelingen in Amsterdam: dieptereinigend, met stoom, en wenkbrauwen & wimpers verven. Persoonlijk afgestemd, voor vrouwen, op afspraak.",
       hero: { eyebrow: "Gezichtsbehandelingen", title: "Tijd voor", titleEm: "je huid.", subtitle: "Verzorging voor je gezicht in een rustig tempo, afgestemd op hoe je huid zich voelt." },
       intro: { title: "Rustig en persoonlijk", paragraphs: ["Elke gezichtsbehandeling begint met een kort gesprek over je huid en de producten die je dagelijks gebruikt. Daarop wordt de behandeling afgestemd.", "Een gezichtsbehandeling is een verzorgende behandeling, geen medische. Bij huidaandoeningen of twijfel overleg je eerst met je huisarts of dermatoloog."] },
       listTitle: "Gezichtsbehandelingen",
@@ -742,7 +742,7 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
     },
     en: {
       seoTitle: "Facials for women in Amsterdam",
-      seoDescription: "Facial treatments at Glow by Dilek in Amsterdam: deep cleansing facial, facial care with steam and eyebrow & eyelash tinting. Personally tailored, for women only and by appointment.",
+      seoDescription: "Facials in Amsterdam: deep cleansing facial, facial with steam, and eyebrow & lash tinting. Personally tailored, for women only, by appointment.",
       hero: { eyebrow: "Facial treatments", title: "Time for", titleEm: "your skin.", subtitle: "Care for your face at a calm pace, adjusted to how your skin feels." },
       intro: { title: "Calm and personal", paragraphs: ["Every facial starts with a short conversation about your skin and the products you use day to day. The treatment is adjusted to that.", "A facial is a caring treatment, not a medical one. With skin conditions or doubts, check with your GP or dermatologist first."] },
       listTitle: "Facial treatments",
