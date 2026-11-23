@@ -64,9 +64,10 @@
 @layer base {
   :root {
     --header-safe: calc(4rem + env(safe-area-inset-top, 0px));
-    --space-section: clamp(3.5rem, 2rem + 5vw, 7rem);
-    --space-section-tight: clamp(2.5rem, 1.5rem + 3.5vw, 4.75rem);
-    --space-block: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+    /* One spacing scale: phone ≈ 48/36/28 px, laptop ≈ 80/56/40 px. */
+    --space-section: clamp(3rem, 1.75rem + 4vw, 6rem);
+    --space-section-tight: clamp(2.25rem, 1.25rem + 3vw, 4rem);
+    --space-block: clamp(1.75rem, 1.25rem + 1.5vw, 2.75rem);
     --heading-weight: 500;
   }
   @media (min-width: 1024px) {
@@ -86,6 +87,7 @@
   }
 
   body {
+    overflow-x: clip;
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -297,6 +299,11 @@
   }
   .mt-block {
     margin-top: var(--space-block);
+  }
+  /* Two plain sections in a row (same background) would add up to a double
+     gap; the second one starts closer so the rhythm stays even. */
+  :is(.section, .section-tight):not([class*="bg-"], [class*="atelier"], [class*="band"]) + :is(.section, .section-tight):not([class*="bg-"], [class*="atelier"], [class*="band"]) {
+    padding-top: calc(var(--space-section-tight) * 0.5);
   }
   .pt-header {
     padding-top: clamp(1.5rem, 1rem + 2.5vw, 3.25rem);
@@ -909,4 +916,53 @@ footer p {
 }
 :root:has(.sticky-actions) {
   scroll-padding-bottom: 10rem;
+}
+
+/* Star glint: menu links, treatment cards and rows get a small champagne
+   four-point star and a soft golden glow on hover, keyboard focus and tap.
+   CSS only; nothing at all for visitors who prefer reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .star-glint {
+    position: relative;
+  }
+  .star-glint::before {
+    content: "";
+    position: absolute;
+    top: 0.3rem;
+    right: 0.15rem;
+    z-index: 3;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--color-champagne);
+    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    opacity: 0;
+    transform: scale(0.3) rotate(-35deg);
+    pointer-events: none;
+    transition:
+      opacity 0.35s var(--ease-soft),
+      transform 0.55s var(--ease-luxe);
+  }
+  .star-glint:hover::before,
+  .star-glint:focus-visible::before,
+  .star-glint:focus-within::before,
+  .star-glint:active::before {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    animation: star-twinkle 1.1s var(--ease-soft) 0.45s 1 both;
+  }
+  .star-glint-card {
+    transition: box-shadow 0.45s var(--ease-soft);
+  }
+  .star-glint-card:hover,
+  .star-glint-card:focus-within {
+    box-shadow: 0 0 0 1px rgb(198 155 115 / 0.28), 0 18px 40px -30px rgb(198 155 115 / 0.55);
+  }
+  .star-glint-text:hover,
+  .star-glint-text:focus-visible {
+    text-shadow: 0 0 14px rgb(198 155 115 / 0.45);
+  }
+}
+@keyframes star-twinkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0); }
+  45% { opacity: 0.55; transform: scale(0.75) rotate(20deg); }
 }
