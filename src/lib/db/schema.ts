@@ -990,6 +990,9 @@ export const intakeDocuments = mysqlTable(
     source: varchar("source", { length: 10 }).notNull().default("upload"),
     reviewedAt: ts("reviewed_at"),
     reviewedBy: int("reviewed_by"),
+    /** After approval: hash of a one-time-per-period download link for the customer's own copy. */
+    copyTokenHash: varchar("copy_token_hash", { length: 64 }),
+    copyExpiresAt: ts("copy_expires_at"),
   },
   (t) => [index("intake_doc_customer_idx").on(t.customerId, t.status)],
 );
