@@ -4,8 +4,10 @@ import { useState } from "react";
 import { sectionsAction } from "@/lib/private/cmsActions";
 import { ActionForm } from "../ActionForm";
 import { SubmitButton } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function SectionsEditor({ page, defs, order, hidden }: { page: string; defs: { id: string; label: string; locked?: boolean }[]; order: string[]; hidden: string[] }) {
+  const t = useT();
   const [list, setList] = useState(() => {
     const ids = [...order.filter((id) => defs.some((d) => d.id === id)), ...defs.map((d) => d.id).filter((id) => !order.includes(id))];
     return ids.map((id) => defs.find((d) => d.id === id)!).sort((a, b) => Number(Boolean(b.locked)) - Number(Boolean(a.locked)));
@@ -27,7 +29,7 @@ export function SectionsEditor({ page, defs, order, hidden }: { page: string; de
             <label className="flex flex-1 items-center gap-3">
               <input type="checkbox" name={`show-${d.id}`} defaultChecked={d.locked || !hidden.includes(d.id)} disabled={d.locked} className="h-5 w-5" />
               <span>{d.label}</span>
-              {d.locked && <span className="text-xs text-muted">(vast)</span>}
+              {d.locked && <span className="text-xs text-muted">{t("(vast)")}</span>}
             </label>
             {!d.locked && (
               <span className="flex gap-1">
@@ -38,7 +40,7 @@ export function SectionsEditor({ page, defs, order, hidden }: { page: string; de
           </li>
         ))}
       </ul>
-      <SubmitButton>Volgorde opslaan en publiceren</SubmitButton>
+      <SubmitButton>{t("Volgorde opslaan en publiceren")}</SubmitButton>
     </ActionForm>
   );
 }

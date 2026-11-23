@@ -4,6 +4,7 @@ import { useState } from "react";
 import { contentAction } from "@/lib/private/cmsActions";
 import { ActionForm } from "../ActionForm";
 import { SubmitButton } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
@@ -67,6 +68,7 @@ function blank(v: Json): Json {
 }
 
 function Node({ k, v, path, onChange, depth }: { k: string; v: Json; path: string; onChange: (v: Json) => void; depth: number }) {
+  const t = useT();
   const id = `f-${path.replace(/[^\w-]/g, "-")}`;
   if (typeof v === "string") {
     const long = LONG.test(k) || v.length > 90;
@@ -78,7 +80,7 @@ function Node({ k, v, path, onChange, depth }: { k: string; v: Json; path: strin
         ) : (
           <input id={id} value={v} onChange={(e) => onChange(e.target.value)} disabled={k === "icon"} className="block w-full rounded-xl border border-ink/20 bg-white px-3 py-2 text-[0.95rem] outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent/40 disabled:bg-sand" />
         )}
-        {!v.trim() && k !== "icon" && <p className="text-xs text-[#8e2f24]">Leeg veld</p>}
+        {!v.trim() && k !== "icon" && <p className="text-xs text-[#8e2f24]">{t("Leeg veld")}</p>}
       </div>
     );
   }
@@ -93,15 +95,15 @@ function Node({ k, v, path, onChange, depth }: { k: string; v: Json; path: strin
             <div className="mb-1.5 flex items-center justify-between gap-2 text-xs text-muted">
               <span>#{i + 1}</span>
               <span className="flex gap-1">
-                <button type="button" aria-label="Omhoog" disabled={i === 0} onClick={() => { const n = [...v]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; onChange(n); }} className="h-9 w-9 rounded-full hover:bg-ink/6 disabled:opacity-30">↑</button>
-                <button type="button" aria-label="Omlaag" disabled={i === v.length - 1} onClick={() => { const n = [...v]; [n[i + 1], n[i]] = [n[i], n[i + 1]]; onChange(n); }} className="h-9 w-9 rounded-full hover:bg-ink/6 disabled:opacity-30">↓</button>
-                <button type="button" aria-label="Verwijderen" onClick={() => { if (confirm("Dit onderdeel verwijderen?")) onChange(v.filter((_, j) => j !== i)); }} className="h-9 w-9 rounded-full text-[#8e2f24] hover:bg-[#8e2f24]/10">✕</button>
+                <button type="button" aria-label={t("Omhoog")} disabled={i === 0} onClick={() => { const n = [...v]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; onChange(n); }} className="h-9 w-9 rounded-full hover:bg-ink/6 disabled:opacity-30">↑</button>
+                <button type="button" aria-label={t("Omlaag")} disabled={i === v.length - 1} onClick={() => { const n = [...v]; [n[i + 1], n[i]] = [n[i], n[i + 1]]; onChange(n); }} className="h-9 w-9 rounded-full hover:bg-ink/6 disabled:opacity-30">↓</button>
+                <button type="button" aria-label={t("Verwijderen")} onClick={() => { if (confirm("Dit onderdeel verwijderen?")) onChange(v.filter((_, j) => j !== i)); }} className="h-9 w-9 rounded-full text-[#8e2f24] hover:bg-[#8e2f24]/10">✕</button>
               </span>
             </div>
             <Node k={typeof item === "string" ? k.replace(/s$/, "") : "item"} v={item} path={`${path}.${i}`} depth={depth + 1} onChange={(nv) => onChange(v.map((x, j) => (j === i ? nv : x)))} />
           </div>
         ))}
-        <button type="button" onClick={() => onChange([...v, blank(template)])} className="min-h-10 rounded-full border border-dashed border-ink/30 px-4 text-sm">＋ Toevoegen</button>
+        <button type="button" onClick={() => onChange([...v, blank(template)])} className="min-h-10 rounded-full border border-dashed border-ink/30 px-4 text-sm">{t("＋ Toevoegen")}</button>
       </fieldset>
     );
   }
@@ -139,6 +141,7 @@ export function Buttons({ op, children, short, variant, confirm, className }: { 
 }
 
 export function ContentEditor({ docKey, locale, initial, path, hasDraft, canReset }: { docKey: string; locale: string; initial: Json; path: string; hasDraft: boolean; canReset: boolean }) {
+  const t = useT();
   const [value, setValue] = useState<Json>(initial);
   const [dirty, setDirty] = useState(false);
   const data = JSON.stringify(value);
@@ -153,12 +156,12 @@ export function ContentEditor({ docKey, locale, initial, path, hasDraft, canRese
       </div>
       {/* Phones: one compact row (short labels) so the bar never covers half the form. */}
       <div className="sticky-actions sticky z-20 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-2 shadow-lg backdrop-blur sm:p-3 [&>button]:max-sm:flex-1 [&>button]:max-sm:px-2">
-        <Buttons op="save" variant="outline" short="Opslaan">Concept opslaan</Buttons>
-        <Buttons op="preview" variant="outline" short="Voorbeeld">Voorbeeld bekijken</Buttons>
-        <Buttons op="publish">Publiceren</Buttons>
-        {hasDraft && !dirty && <Buttons op="discard" variant="ghost" confirm="Het concept verwijderen? De gepubliceerde versie blijft staan.">Concept verwijderen</Buttons>}
-        {canReset && <Buttons op="reset" variant="ghost" confirm="De oorspronkelijke tekst terugzetten op de website? Je wijzigingen blijven in de geschiedenis.">Oorspronkelijke tekst</Buttons>}
-        {dirty && <span className="self-center text-xs text-muted">Niet-opgeslagen wijzigingen</span>}
+        <Buttons op="save" variant="outline" short="Opslaan">{t("Concept opslaan")}</Buttons>
+        <Buttons op="preview" variant="outline" short="Voorbeeld">{t("Voorbeeld bekijken")}</Buttons>
+        <Buttons op="publish">{t("Publiceren")}</Buttons>
+        {hasDraft && !dirty && <Buttons op="discard" variant="ghost" confirm="Het concept verwijderen? De gepubliceerde versie blijft staan.">{t("Concept verwijderen")}</Buttons>}
+        {canReset && <Buttons op="reset" variant="ghost" confirm="De oorspronkelijke tekst terugzetten op de website? Je wijzigingen blijven in de geschiedenis.">{t("Oorspronkelijke tekst")}</Buttons>}
+        {dirty && <span className="self-center text-xs text-muted">{t("Niet-opgeslagen wijzigingen")}</span>}
       </div>
     </ActionForm>
   );

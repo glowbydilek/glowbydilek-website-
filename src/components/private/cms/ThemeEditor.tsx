@@ -6,6 +6,7 @@ import { APPROVED_THEME, COLOR_LABELS, PAIRS, THEME_PRESETS, contrast, validateT
 import { ActionForm } from "../ActionForm";
 import { Notice, Select } from "../ui";
 import { Buttons } from "./ContentEditor";
+import { useT } from "@/components/private/PanelLangProvider";
 
 const OPTIONS: { key: keyof Theme; label: string; options: [string, string][] }[] = [
   { key: "buttonShape", label: "Vorm van knoppen", options: [["pill", "Rond (standaard)"], ["rounded", "Licht afgerond"], ["square", "Recht"]] },
@@ -19,6 +20,7 @@ const OPTIONS: { key: keyof Theme; label: string; options: [string, string][] }[
 ];
 
 export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme; hasDraft: boolean; customised: boolean }) {
+  const t = useT();
   const [theme, setTheme] = useState<Theme>(initial);
   const { errors } = useMemo(() => validateTheme(theme), [theme]);
   const c = theme.colors;
@@ -30,7 +32,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
       <input type="hidden" name="data" value={JSON.stringify(theme)} />
 
       <div>
-        <p className="mb-2 text-sm font-medium">Snelle keuze</p>
+        <p className="mb-2 text-sm font-medium">{t("Snelle keuze")}</p>
         <div className="flex flex-wrap gap-2">
           {THEME_PRESETS.map((p) => (
             <button key={p.id} type="button" onClick={() => setTheme(p.theme)} className="min-h-10 rounded-full border border-line bg-white px-4 text-sm hover:border-ink/40">
@@ -41,7 +43,7 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
       </div>
 
       <div>
-        <p className="mb-2 text-sm font-medium">Kleuren</p>
+        <p className="mb-2 text-sm font-medium">{t("Kleuren")}</p>
         <div className="grid [&>*]:min-w-0 gap-3 sm:grid-cols-2">
           {(Object.keys(COLOR_LABELS) as (keyof Theme["colors"])[]).map((k) => (
             <label key={k} className="flex items-center gap-3 rounded-xl border border-line bg-white p-2">
@@ -69,15 +71,15 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
       </div>
 
       <div className="rounded-2xl p-5" style={{ background: c.paper, color: c.ink }}>
-        <p className="text-xs uppercase tracking-[0.22em]" style={{ color: c.accentDeep }}>Voorbeeld</p>
+        <p className="text-xs uppercase tracking-[0.22em]" style={{ color: c.accentDeep }}>{t("Voorbeeld")}</p>
         <p className="mt-2 text-3xl" style={{ fontFamily: theme.headingFont === "instrument" ? "var(--font-instrument), sans-serif" : theme.headingFont === "newsreader" ? "var(--font-newsreader-stack)" : "var(--font-bodoni-stack)", fontWeight: theme.headingWeight }}>
-          Jouw moment <em style={{ color: c.accent }}>om te stralen.</em>
+          {t("Jouw moment")} <em style={{ color: c.accent }}>{t("om te stralen.")}</em>
         </p>
-        <p className="mt-2 text-sm" style={{ color: c.inkSoft }}>Zo ziet lopende tekst eruit, met <span style={{ color: c.muted }}>gedempte tekst</span>.</p>
-        <span className="mt-4 inline-block px-6 py-3 text-sm" style={{ background: c.ink, color: c.paper, borderRadius: theme.buttonShape === "pill" ? 999 : theme.buttonShape === "rounded" ? 8 : 2 }}>Afspraak aanvragen</span>
-        <span className="ml-2 mt-4 inline-block px-6 py-3 text-sm" style={{ background: c.accent, color: c.paper, borderRadius: theme.buttonShape === "pill" ? 999 : theme.buttonShape === "rounded" ? 8 : 2 }}>Accentknop</span>
+        <p className="mt-2 text-sm" style={{ color: c.inkSoft }}>{t("Zo ziet lopende tekst eruit, met")} <span style={{ color: c.muted }}>{t("gedempte tekst")}</span>.</p>
+        <span className="mt-4 inline-block px-6 py-3 text-sm" style={{ background: c.ink, color: c.paper, borderRadius: theme.buttonShape === "pill" ? 999 : theme.buttonShape === "rounded" ? 8 : 2 }}>{t("Afspraak aanvragen")}</span>
+        <span className="ml-2 mt-4 inline-block px-6 py-3 text-sm" style={{ background: c.accent, color: c.paper, borderRadius: theme.buttonShape === "pill" ? 999 : theme.buttonShape === "rounded" ? 8 : 2 }}>{t("Accentknop")}</span>
         <div className="mt-4 rounded-xl p-4" style={{ background: c.ink, color: c.paper }}>
-          Donkere sectie met <span style={{ color: c.glow }}>gloed-accent</span>.
+          {t("Donkere sectie met")} <span style={{ color: c.glow }}>{t("gloed-accent")}</span>.
         </div>
       </div>
 
@@ -99,11 +101,11 @@ export function ThemeEditor({ initial, hasDraft, customised }: { initial: Theme;
       {errors.length > 0 && <Notice tone="error">{errors.join(" ")} Pas de kleuren aan; publiceren is pas mogelijk als alles leesbaar is.</Notice>}
 
       <div className="sticky-actions sticky z-20 flex flex-wrap gap-2 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur">
-        <Buttons op="save" variant="outline">Concept opslaan</Buttons>
-        <Buttons op="preview" variant="outline">Voorbeeld op de website</Buttons>
-        {errors.length === 0 && <Buttons op="publish">Publiceren</Buttons>}
-        {hasDraft && <Buttons op="discard" variant="ghost" confirm="Concept verwijderen?">Concept verwijderen</Buttons>}
-        {customised && <Buttons op="reset" variant="ghost" confirm="Het goedgekeurde Glow-thema herstellen?">Goedgekeurd thema herstellen</Buttons>}
+        <Buttons op="save" variant="outline">{t("Concept opslaan")}</Buttons>
+        <Buttons op="preview" variant="outline">{t("Voorbeeld op de website")}</Buttons>
+        {errors.length === 0 && <Buttons op="publish">{t("Publiceren")}</Buttons>}
+        {hasDraft && <Buttons op="discard" variant="ghost" confirm="Concept verwijderen?">{t("Concept verwijderen")}</Buttons>}
+        {customised && <Buttons op="reset" variant="ghost" confirm="Het goedgekeurde Glow-thema herstellen?">{t("Goedgekeurd thema herstellen")}</Buttons>}
       </div>
     </ActionForm>
   );

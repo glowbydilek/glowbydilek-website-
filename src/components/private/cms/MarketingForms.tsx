@@ -4,6 +4,7 @@ import { useState } from "react";
 import { campaignAction, promotionAction } from "@/lib/private/marketingActions";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton, Textarea } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export type PromoView = {
   id: number | null;
@@ -33,6 +34,7 @@ const STATUS = [
 ];
 
 export function PromotionForm({ p, opts }: { p: PromoView; opts: ScopeOpts }) {
+  const t = useT();
   const [kind, setKind] = useState(p.kind || "percent");
   const [scope, setScope] = useState(p.scope || "all");
   const groups = [...new Set(opts.items.map((i) => i.group))];
@@ -40,18 +42,18 @@ export function PromotionForm({ p, opts }: { p: PromoView; opts: ScopeOpts }) {
     <ActionForm action={promotionAction} resetOnSuccess={!p.id}>
       {p.id && <input type="hidden" name="id" value={p.id} />}
       <div className="grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
-        <Field label="Naam van de actie (NL)"><Input name="nameNl" defaultValue={p.nameNl} required placeholder="bijv. Voorjaarsactie" /></Field>
+        <Field label="Naam van de actie (NL)"><Input name="nameNl" defaultValue={p.nameNl} required placeholder={t("bijv. Voorjaarsactie")} /></Field>
         <Field label="Naam (EN)"><Input name="nameEn" defaultValue={p.nameEn} /></Field>
       </div>
       <div className="grid gap-3 sm:grid-cols-4 [&>*]:min-w-0">
         <Field label="Soort korting">
           <Select name="kind" value={kind} onChange={(e) => setKind(e.target.value)}>
-            <option value="percent">Percentage</option>
-            <option value="fixed">Vast bedrag</option>
+            <option value="percent">{t("Percentage")}</option>
+            <option value="fixed">{t("Vast bedrag")}</option>
           </Select>
         </Field>
         <Field label={kind === "percent" ? "Percentage" : "Bedrag in euro"}><Input name="value" inputMode="decimal" defaultValue={p.value} required placeholder={kind === "percent" ? "bijv. 15" : "bijv. 10"} /></Field>
-        <Field label="Actiecode" hint="Leeg = automatisch toegepast"><Input name="code" defaultValue={p.code} placeholder="bijv. LENTE15" className="uppercase" /></Field>
+        <Field label="Actiecode" hint="Leeg = automatisch toegepast"><Input name="code" defaultValue={p.code} placeholder={t("bijv. LENTE15")} className="uppercase" /></Field>
         <Field label="Status">
           <Select name="status" defaultValue={p.status || "draft"}>
             {STATUS.map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -64,9 +66,9 @@ export function PromotionForm({ p, opts }: { p: PromoView; opts: ScopeOpts }) {
       </div>
       <Field label="Geldt voor">
         <Select name="scope" value={scope} onChange={(e) => setScope(e.target.value)}>
-          <option value="all">Alle behandelingen met een vaste prijs</option>
-          <option value="section">Bepaalde categorieën</option>
-          <option value="items">Bepaalde behandelingen of pakketten</option>
+          <option value="all">{t("Alle behandelingen met een vaste prijs")}</option>
+          <option value="section">{t("Bepaalde categorieën")}</option>
+          <option value="items">{t("Bepaalde behandelingen of pakketten")}</option>
         </Select>
       </Field>
       {scope === "section" && (
@@ -97,8 +99,8 @@ export function PromotionForm({ p, opts }: { p: PromoView; opts: ScopeOpts }) {
       <label className="flex min-h-11 items-start gap-3">
         <input type="checkbox" name="showPublic" defaultChecked={p.showPublic} className="mt-1 h-5 w-5" />
         <span className="text-sm">
-          Toon de actie op de website (tarieven en behandelpagina&apos;s)
-          <span className="block text-xs text-muted">De site toont de korting, de periode en — als de prijsgeschiedenis 30 dagen beslaat — de laagste prijs van de afgelopen 30 dagen. Nooit een verzonnen ‘van’-prijs.</span>
+          {t("Toon de actie op de website (tarieven en behandelpagina's)")}
+          <span className="block text-xs text-muted">{t("De site toont de korting, de periode en — als de prijsgeschiedenis 30 dagen beslaat — de laagste prijs van de afgelopen 30 dagen. Nooit een verzonnen ‘van’-prijs.")}</span>
         </span>
       </label>
       <div className="grid gap-3 sm:grid-cols-2 [&>*]:min-w-0">
@@ -127,6 +129,7 @@ export type CampaignView = {
 };
 
 export function CampaignForm({ c, media }: { c: CampaignView; media: { id: number; name: string }[] }) {
+  const t = useT();
   return (
     <ActionForm action={campaignAction} resetOnSuccess={!c.id}>
       {c.id && <input type="hidden" name="id" value={c.id} />}
@@ -135,12 +138,12 @@ export function CampaignForm({ c, media }: { c: CampaignView; media: { id: numbe
         <Field label="Titel (EN)"><Input name="titleEn" defaultValue={c.titleEn} maxLength={140} /></Field>
         <Field label="Tekst (NL)"><Textarea name="textNl" rows={2} defaultValue={c.textNl} maxLength={400} /></Field>
         <Field label="Tekst (EN)"><Textarea name="textEn" rows={2} defaultValue={c.textEn} maxLength={400} /></Field>
-        <Field label="Knoptekst (NL)"><Input name="ctaNl" defaultValue={c.ctaNl} maxLength={60} placeholder="bijv. Bekijk de actie" /></Field>
+        <Field label="Knoptekst (NL)"><Input name="ctaNl" defaultValue={c.ctaNl} maxLength={60} placeholder={t("bijv. Bekijk de actie")} /></Field>
         <Field label="Knoptekst (EN)"><Input name="ctaEn" defaultValue={c.ctaEn} maxLength={60} /></Field>
         <Field label="Link (pagina op deze site)" hint="bijv. /prijzen"><Input name="href" defaultValue={c.href} pattern="/[a-z0-9\-/]*" /></Field>
         <Field label="Foto (uit Media)">
           <Select name="mediaId" defaultValue={c.mediaId ?? ""}>
-            <option value="">— geen foto —</option>
+            <option value="">{t("— geen foto —")}</option>
             {media.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
           </Select>
         </Field>

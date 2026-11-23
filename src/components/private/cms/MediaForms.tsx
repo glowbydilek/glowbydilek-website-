@@ -4,8 +4,10 @@ import { assignSlotAction, deleteMediaAction, updateMediaAction, uploadMediaActi
 import { FOCUS_PRESETS } from "@/lib/cms/focus";
 import { ActionForm } from "../ActionForm";
 import { Field, Input, Select, SubmitButton } from "../ui";
+import { useT } from "@/components/private/PanelLangProvider";
 
 export function UploadForm() {
+  const t = useT();
   return (
     <ActionForm action={uploadMediaAction} resetOnSuccess>
       <Field label="Foto (JPG, PNG of WebP, max. 12 MB)">
@@ -17,8 +19,8 @@ export function UploadForm() {
         <Field label="Bron" hint="Bijv. eigen foto, Adobe Stock #123"><Input name="source" maxLength={300} /></Field>
         <Field label="Licentie" hint="Bijv. eigen werk, Adobe Stock Standard"><Input name="license" maxLength={300} /></Field>
       </div>
-      <p className="text-xs text-muted">Gebruik alleen foto&apos;s die je commercieel mag gebruiken. Gebruik geen foto&apos;s van klanten zonder schriftelijke toestemming.</p>
-      <SubmitButton pending="Bezig met uploaden…">Uploaden</SubmitButton>
+      <p className="text-xs text-muted">{t("Gebruik alleen foto's die je commercieel mag gebruiken. Gebruik geen foto's van klanten zonder schriftelijke toestemming.")}</p>
+      <SubmitButton pending="Bezig met uploaden…">{t("Uploaden")}</SubmitButton>
     </ActionForm>
   );
 }
@@ -26,6 +28,7 @@ export function UploadForm() {
 type M = { id: number; filename: string; altNl: string; altEn: string; focusMobile: string; focusDesktop: string; source: string; license: string; width: number; height: number; version: number };
 
 export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
+  const t = useT();
   const sel = (name: string, value: string) => (
     <Select name={name} defaultValue={value}>
       {FOCUS_PRESETS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -40,7 +43,7 @@ export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
         <p className="truncate font-medium">{m.filename}</p>
         <p className="text-xs text-muted">{m.width}×{m.height}{usage.length ? ` · gebruikt: ${usage.join(", ")}` : " · niet in gebruik"}</p>
         <details className="mt-2">
-          <summary className="cursor-pointer text-accent-deep">Bewerken</summary>
+          <summary className="cursor-pointer text-accent-deep">{t("Bewerken")}</summary>
           <ActionForm action={updateMediaAction} className="mt-3 space-y-3">
             <input type="hidden" name="id" value={m.id} />
             <Field label="Omschrijving (NL)"><Input name="altNl" defaultValue={m.altNl} maxLength={300} /></Field>
@@ -52,12 +55,12 @@ export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
             <Field label="Bron"><Input name="source" defaultValue={m.source} /></Field>
             <Field label="Licentie"><Input name="license" defaultValue={m.license} /></Field>
             <Field label="Vervangen door nieuw bestand (optioneel)"><input type="file" name="file" accept="image/jpeg,image/png,image/webp" className="block w-full text-xs" /></Field>
-            <SubmitButton>Opslaan</SubmitButton>
+            <SubmitButton>{t("Opslaan")}</SubmitButton>
           </ActionForm>
           {usage.length === 0 && (
             <ActionForm action={deleteMediaAction} className="mt-2">
               <input type="hidden" name="id" value={m.id} />
-              <SubmitButton variant="danger" confirm="Deze foto definitief verwijderen?">Verwijderen</SubmitButton>
+              <SubmitButton variant="danger" confirm="Deze foto definitief verwijderen?">{t("Verwijderen")}</SubmitButton>
             </ActionForm>
           )}
         </details>
@@ -67,6 +70,7 @@ export function MediaItem({ m, usage }: { m: M; usage: string[] }) {
 }
 
 export function SlotForm({ slot, label, current, options, preview }: { slot: string; label: string; current: number | null; options: { id: number; name: string }[]; preview: string }) {
+  const t = useT();
   return (
     <ActionForm action={assignSlotAction} className="flex flex-wrap items-end gap-3 rounded-xl border border-line bg-white p-3">
       <input type="hidden" name="slot" value={slot} />
@@ -75,11 +79,11 @@ export function SlotForm({ slot, label, current, options, preview }: { slot: str
       <div className="min-w-[12rem] flex-1">
         <p className="text-sm font-medium">{label}</p>
         <Select name="mediaId" defaultValue={current ?? ""} aria-label={`Foto voor ${label}`}>
-          <option value="">Oorspronkelijke foto</option>
+          <option value="">{t("Oorspronkelijke foto")}</option>
           {options.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
         </Select>
       </div>
-      <SubmitButton variant="outline">Toepassen</SubmitButton>
+      <SubmitButton variant="outline">{t("Toepassen")}</SubmitButton>
     </ActionForm>
   );
 }
