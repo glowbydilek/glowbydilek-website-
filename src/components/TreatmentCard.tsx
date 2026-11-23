@@ -18,7 +18,7 @@ export function TreatmentCard({ locale, id, withPhoto = false }: { locale: Local
   const copy = itemCopy(locale, id, item);
   const price = item.pricing.mode === "on_request" ? null : priceLabel(item, locale, { from: dict.prices.from, onRequest: dict.service.priceOnRequest });
   return (
-    <article className="group relative flex h-full flex-col">
+    <article className="star-glint group relative flex h-full flex-col">
       {withPhoto && hasPhoto(item.photo) && (
         <div className="zoom-frame mb-5 overflow-hidden rounded-[var(--radius-media)]">
           <Photo id={item.photo} locale={locale} ratio={3 / 2} sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 92vw" />
