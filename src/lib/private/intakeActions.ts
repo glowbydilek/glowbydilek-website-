@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { assertCan, assertOwner } from "../auth/session";
 import { getDb } from "../db/client";
 import { activateDraft, createRevision, deleteDraft, deleteIntakeDocument, IntakeError, saveDraft, uploadSignedIntake } from "../intake/service";
-import { reviewIntakeDocument, sendIntakeRequest } from "../intake/digital";
+import { approveAndSendIntake, sendIntakeRequest } from "../intake/digital";
 import type { FormState } from "./authActions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
@@ -100,9 +100,12 @@ export async function sendIntakeLinkAction(_: FormState, f: FormData): Promise<F
 export async function reviewIntakeAction(_: FormState, f: FormData): Promise<FormState> {
   const s = await assertCan("health.view");
   const customerId = Number(f.get("customerId"));
-  const r = await guard(() => reviewIntakeDocument(getDb(), customerId, Number(f.get("id")), { userId: s.user.id }));
+  let sent = false;
+  const r = await guard(async () => {
+    sent = (await approveAndSendIntake(getDb(), customerId, Number(f.get("id")), { userId: s.user.id })).sent;
+  });
   if (r.error) return r;
   revalidatePath(`/agenda/klanten/${customerId}`);
   revalidatePath("/agenda", "layout");
-  return { ok: true, message: "Gemarkeerd als gecontroleerd." };
+  return { ok: true, message: sent ? "Goedgekeurd. De klant krijgt een e-mail met een beveiligde link naar haar ondertekende kopie (14 dagen geldig)." : "Goedgekeurd. Deze klant heeft geen e-mailadres, dus er is geen kopie verstuurd." };
 }
