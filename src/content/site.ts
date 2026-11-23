@@ -53,7 +53,8 @@ export const siteConfig: SiteConfig = {
  * put the number in `whatsappNumberFallback` below. While no valid number is
  * configured, the WhatsApp button is not rendered at all.
  */
-const whatsappNumberFallback = "";
+// Owner confirmed (23 Nov 2026): 020 550 0400 is the business number and WhatsApp.
+const whatsappNumberFallback = "31205500400";
 
 export function whatsappNumber(): string | null {
   const raw = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || whatsappNumberFallback).replace(/[\s+()-]/g, "");
