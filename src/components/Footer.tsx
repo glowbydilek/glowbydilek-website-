@@ -41,7 +41,7 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
             <div>
               <p className={heading}>{dict.footer.studio}</p>
               <ul className="mt-3">
-                {nav.studio.map((l) => (
+                {nav.studio.filter((l) => l.key !== "booking").map((l) => (
                   <li key={l.key}>
                     <Link href={l.href} className={linkCls}>
                       {l.label}
@@ -97,66 +97,24 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
           </div>
         </div>
 
-        {/* Every published treatment, grouped by category (same source as the menus) */}
-        <nav aria-label={dict.footer.treatments} className="border-b border-paper/10 py-10">
+        {/* Treatment categories: one compact row (each category page lists its treatments) */}
+        <nav aria-label={dict.footer.treatments} className="border-b border-paper/10 py-8">
           <p className={heading}>{dict.footer.treatments}</p>
-          <div className="mt-4 grid gap-x-10 gap-y-2 md:mt-6 md:grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] md:gap-y-8">
-            {nav.categories.map((c) => {
-              const body = (
-                <>
-                  {c.groups.map((g, gi) => (
-                    <div key={g.href ?? gi} className="mt-2">
-                      {g.label &&
-                        (g.href ? (
-                          <Link href={g.href} className="inline-flex min-h-10 items-center text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-glow/90 hover:text-glow md:min-h-0 md:py-1">
-                            {g.label}
-                          </Link>
-                        ) : (
-                          <p className="py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-glow/90">{g.label}</p>
-                        ))}
-                      <ul className="grid grid-cols-2 gap-x-4 md:grid-cols-1">
-                        {g.items.map((t) => (
-                          <li key={t.href}>
-                            <Link href={t.href} className={linkCls}>
-                              {t.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                  <Link href={c.href} className="mt-2 inline-flex min-h-10 items-center gap-1.5 text-sm text-glow hover:text-paper md:min-h-0 md:py-1">
-                    {c.label}
-                    <Icon name="arrow" className="h-3 w-3" />
-                  </Link>
-                </>
-              );
-              return (
-                <div key={c.href}>
-                  {/* Phones: compact accordion */}
-                  <details className="group border-b border-paper/10 md:hidden">
-                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                      <span className="min-w-0 font-serif text-[1.3rem] leading-tight text-paper [hyphens:auto]">{c.label}</span>
-                      <span className="flex shrink-0 items-center gap-2 text-xs text-paper/60">
-                        {c.treatments.length}
-                        <Icon name="chevron" className="h-3.5 w-3.5 rotate-90 text-glow transition-transform duration-300 group-open:-rotate-90" />
-                      </span>
-                    </summary>
-                    <div className="pb-4">{body}</div>
-                  </details>
-                  {/* Larger screens: always visible columns */}
-                  <div className="hidden md:block">
-                    <p className="min-w-0 font-serif text-[1.3rem] leading-tight text-paper [hyphens:auto]">{c.label}</p>
-                    {body}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <Link href={nav.allHref} className="btn btn-outline mt-8 min-h-11 border-paper/30 px-5 py-2 text-sm text-paper hover:border-paper">
-            {dict.nav.allTreatments}
-            <Icon name="arrow" className="h-4 w-4" />
-          </Link>
+          <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+            {nav.categories.map((c) => (
+              <li key={c.href}>
+                <Link href={c.href} className={linkCls}>
+                  {c.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link href={nav.allHref} className="inline-flex min-h-10 items-center gap-1.5 text-glow hover:text-paper sm:min-h-0 sm:py-1">
+                {dict.nav.allTreatments}
+                <Icon name="arrow" className="h-3 w-3" />
+              </Link>
+            </li>
+          </ul>
         </nav>
 
         <div className="flex flex-col gap-3 py-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">

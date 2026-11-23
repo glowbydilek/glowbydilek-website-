@@ -50,7 +50,7 @@ const PRIVATE = [
   "/admin/e-mails",
   "/admin/privacy",
 ];
-const PUBLIC = ["/", "/contact", "/afspraak-maken", "/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling"];
+const PUBLIC = ["/", "/behandelingen", "/contact", "/afspraak-maken", "/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling"];
 const name = (u) => (u === "/" ? "home" : u.replace(/^\//, "").replace(/\//g, "_"));
 
 (async () => {
@@ -109,6 +109,20 @@ const name = (u) => (u === "/" ? "home" : u.replace(/^\//, "").replace(/\//g, "_
         log.push(`✗ ${label} ${u}: ${String(e.message).split("\n")[0]}`);
       }
     }
+  }
+  // Mobile menu as a visitor sees it: closed list, then Behandelingen opened.
+  try {
+    const v = await (await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true })).newPage();
+    await v.goto(`${BASE}/`, { waitUntil: "networkidle" });
+    await v.locator('button[aria-controls="mobile-menu"]').click();
+    await v.locator("#mobile-menu").waitFor();
+    await v.screenshot({ path: path.join(SHOTS, "iphone-menu.png") });
+    await v.locator("#mobile-menu").getByRole("button", { name: /^Behandelingen/ }).click();
+    await v.waitForTimeout(300);
+    await v.screenshot({ path: path.join(SHOTS, "iphone-menu-behandelingen.png") });
+    log.push("✓ iphone mobile menu");
+  } catch (e) {
+    log.push(`✗ mobile menu: ${String(e.message).split("\n")[0]}`);
   }
   // NL/TR switch: Turkish versions of a few daily screens.
   try {

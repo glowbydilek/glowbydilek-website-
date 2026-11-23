@@ -68,7 +68,18 @@ jobs:
         run: |
           npm i --no-save playwright@1
           npx playwright install --with-deps chromium
+      - name: Customer journey (menu, booking form, request submission)
+        run: |
+          mkdir -p /tmp/shots
+          E2E_EXPECT_MAIL=1 node scripts/e2e-navigation.cjs http://localhost:3123 | tee /tmp/shots/journey.txt
+      - name: Request arrived in the Agenda (test database)
+        if: always()
+        run: |
+          n=$(mysql -h127.0.0.1 -uglow -pci-only-password glow_e2e -N -e "SELECT COUNT(*) FROM appointments WHERE status='requested'")
+          echo "requested appointments: $n"
+          test "$n" -ge 1
       - name: Screenshots and checks
+        if: always()
         run: node scripts/e2e-screens.cjs http://localhost:3123
       - name: Logs (no secrets)
         if: always()
@@ -78,7 +89,7 @@ jobs:
       - name: Report in job summary
         if: always()
         run: |
-          { echo '```'; cat /tmp/shots/report.txt 2>/dev/null || echo "no report"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo '```'; cat /tmp/shots/journey.txt 2>/dev/null; cat /tmp/shots/report.txt 2>/dev/null || echo "no report"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Publish screenshots to e2e-previews branch (preview only, not deployed)
         if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         env:
