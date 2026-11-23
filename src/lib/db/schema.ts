@@ -986,8 +986,34 @@ export const intakeDocuments = mysqlTable(
     deletedAt: ts("deleted_at"),
     deletedBy: int("deleted_by"),
     deleteReason: varchar("delete_reason", { length: 200 }),
+    /** upload = scan of the signed paper form; digital = filled in and signed online (migration 0007). */
+    source: varchar("source", { length: 10 }).notNull().default("upload"),
+    reviewedAt: ts("reviewed_at"),
+    reviewedBy: int("reviewed_by"),
   },
   (t) => [index("intake_doc_customer_idx").on(t.customerId, t.status)],
+);
+
+/**
+ * Digital intake invitations (migration 0007): a one-time link sent to the
+ * customer. Only the SHA-256 of the token is stored; the link expires.
+ */
+export const intakeRequests = mysqlTable(
+  "intake_requests",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    customerId: int("customer_id").notNull(),
+    tokenHash: varchar("token_hash", { length: 64 }).notNull().unique(),
+    locale: varchar("locale", { length: 2 }).notNull(),
+    templateVersion: varchar("template_version", { length: 40 }).notNull(),
+    status: varchar("status", { length: 12 }).notNull().default("sent"), // sent | completed | cancelled
+    expiresAt: ts("expires_at").notNull(),
+    completedAt: ts("completed_at"),
+    documentId: int("document_id"),
+    createdBy: int("created_by"),
+    createdAt: created(),
+  },
+  (t) => [index("intake_req_customer_idx").on(t.customerId, t.status)],
 );
 
 // ─────────────────────────────────────────────────────── Notifications (0005)
