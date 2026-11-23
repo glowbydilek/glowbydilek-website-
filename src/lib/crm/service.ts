@@ -237,3 +237,32 @@ export async function mergeCustomers(db: DB, fromId: number, intoId: number, ctx
 export async function recentCustomers(db: DB, limit = 40) {
   return db.select().from(customers).where(activeCustomer).orderBy(desc(customers.updatedAt)).limit(limit);
 }
+
+// ──────────────────────────────────────────────────────── Blocking
+
+/**
+ * Block or unblock a customer (owner decision). A blocked profile keeps all
+ * history; only new online requests with the same email or phone are refused.
+ * The reason is internal and never shown to the customer.
+ */
+export async function setCustomerBlocked(db: DB, id: number, blocked: boolean, reason: string | null, ctx: Ctx) {
+  const [c] = await db.select({ id: customers.id, anonymizedAt: customers.anonymizedAt }).from(customers).where(eq(customers.id, id)).limit(1);
+  if (!c || c.anonymizedAt) throw new CrmError("notFound", "Klant niet gevonden.");
+  const why = blocked ? (reason ?? "").trim().slice(0, 300) || null : null;
+  await db.update(customers).set({ blockedAt: blocked ? new Date() : null, blockReason: why }).where(eq(customers.id, id));
+  await audit(db, { userId: ctx.userId ?? null, action: blocked ? "customer.blocked" : "customer.unblocked", entity: "customer", entityId: String(id) });
+}
+
+/** True when an active, blocked profile has this email or phone (normalised). */
+export async function isBlockedContact(db: DB, contact: { email?: string | null; phone?: string | null }): Promise<boolean> {
+  const email = normalizeEmail(contact.email);
+  const phone = normalizePhone(contact.phone);
+  const conds = [email ? eq(customers.emailNorm, email) : undefined, phone ? eq(customers.phoneNorm, phone) : undefined].filter(Boolean);
+  if (!conds.length) return false;
+  const rows = await db
+    .select({ id: customers.id })
+    .from(customers)
+    .where(and(isNotNull(customers.blockedAt), isNull(customers.anonymizedAt), or(...conds)))
+    .limit(1);
+  return rows.length > 0;
+}
