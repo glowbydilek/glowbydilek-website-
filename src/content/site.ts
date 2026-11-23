@@ -87,4 +87,4 @@ export function telHref(international?: string): string | null {
 }
 
 /** Human-readable, scraper-resistant form of the public address (see ProtectedEmail). */
-export const emailDisplay = "hello [at] glowbydilek.nl";
+export const emailDisplay = "hello@glowbydilek.nl";
