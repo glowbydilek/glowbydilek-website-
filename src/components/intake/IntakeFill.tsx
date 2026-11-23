@@ -9,7 +9,7 @@ const UI: Record<Loc, Record<string, string>> = {
   nl: {
     hello: "Hallo", lead: "Vul dit formulier rustig in vóór je afspraak. Het duurt ongeveer 5 minuten. Je antwoorden gaan alleen naar Dilek en worden versleuteld bewaard.",
     agree: "Klopt", name: "Je volledige naam", sign: "Teken hieronder met je vinger of muis", clear: "Opnieuw tekenen",
-    send: "Versturen en ondertekenen", sending: "Bezig met versturen…", doneT: "Dank je wel!", doneB: "Je intakeformulier is veilig ontvangen. Je kunt een kopie voor jezelf bewaren.",
+    send: "Versturen en ondertekenen", sending: "Bezig met versturen…", doneT: "Dank je wel!", doneB: "Je intakeformulier is veilig ontvangen. Dilek bekijkt het en stuurt je daarna per e-mail een beveiligde link naar je ondertekende kopie. Je kunt nu ook meteen een kopie bewaren.",
     copy: "Mijn kopie downloaden (PDF)", basic: "Dit is een eenvoudige elektronische handtekening (op het scherm getekend).",
     missing: "Beantwoord alle vragen en bevestig alle punten.", needSig: "Zet nog je handtekening.", needConsent: "Geef toestemming om verder te gaan.", needName: "Vul je naam in.",
     expired: "Deze link werkt niet meer. Vraag Dilek om een nieuwe link: 020 550 0400.", error: "Versturen lukte niet. Probeer het zo nog eens of bel 020 550 0400.", rate: "Even te veel pogingen. Probeer het over een paar minuten opnieuw.",
@@ -18,7 +18,7 @@ const UI: Record<Loc, Record<string, string>> = {
   en: {
     hello: "Hello", lead: "Please fill in this form calmly before your appointment. It takes about 5 minutes. Your answers go only to Dilek and are stored encrypted.",
     agree: "Agreed", name: "Your full name", sign: "Sign below with your finger or mouse", clear: "Draw again",
-    send: "Submit and sign", sending: "Sending…", doneT: "Thank you!", doneB: "Your intake form has been received securely. You can keep a copy for yourself.",
+    send: "Submit and sign", sending: "Sending…", doneT: "Thank you!", doneB: "Your intake form has been received securely. Dilek will review it and then e-mail you a secure link to your signed copy. You can also keep a copy right now.",
     copy: "Download my copy (PDF)", basic: "This is a simple electronic signature (drawn on screen).",
     missing: "Please answer every question and confirm every statement.", needSig: "Please add your signature.", needConsent: "Please give consent to continue.", needName: "Please enter your name.",
     expired: "This link no longer works. Please ask Dilek for a new link: 020 550 0400.", error: "Sending failed. Please try again shortly or call 020 550 0400.", rate: "Too many attempts. Please try again in a few minutes.",
@@ -27,7 +27,7 @@ const UI: Record<Loc, Record<string, string>> = {
   tr: {
     hello: "Merhaba", lead: "Randevundan önce bu formu sakince doldur. Yaklaşık 5 dakika sürer. Cevapların sadece Dilek'e gider ve şifreli olarak saklanır.",
     agree: "Onaylıyorum", name: "Adın ve soyadın", sign: "Aşağıya parmağınla veya fareyle imza at", clear: "Yeniden çiz",
-    send: "Gönder ve imzala", sending: "Gönderiliyor…", doneT: "Teşekkürler!", doneB: "Intake formun güvenle alındı. Kendin için bir kopya saklayabilirsin.",
+    send: "Gönder ve imzala", sending: "Gönderiliyor…", doneT: "Teşekkürler!", doneB: "Intake formun güvenle alındı. Dilek formu inceleyip sana imzalı kopyana giden güvenli bir bağlantıyı e-postayla gönderecek. İstersen şimdi de bir kopya saklayabilirsin.",
     copy: "Kopyamı indir (PDF)", basic: "Bu basit bir elektronik imzadır (ekranda çizildi).",
     missing: "Lütfen tüm soruları cevapla ve tüm maddeleri onayla.", needSig: "Lütfen imzanı ekle.", needConsent: "Devam etmek için onay ver.", needName: "Lütfen adını yaz.",
     expired: "Bu bağlantı artık çalışmıyor. Dilek'ten yeni bir bağlantı iste: 020 550 0400.", error: "Gönderilemedi. Birazdan tekrar dene veya 020 550 0400'ı ara.", rate: "Çok fazla deneme. Birkaç dakika sonra tekrar dene.",
