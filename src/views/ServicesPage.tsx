@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { PageHero } from "@/components/PageHero";
-import { TreatmentCard } from "@/components/TreatmentCard";
+import { TreatmentRow } from "@/components/TreatmentRow";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -13,9 +13,9 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { groupHref, publicGroups, publicItems, publicSections, sectionHref } from "@/lib/catalogue";
 
 /**
- * "Alle behandelingen": every published, translated treatment on one page,
- * grouped by category and sub-category. Each card links to its detail page
- * and to the booking page with the treatment preselected.
+ * "Alle behandelingen": every published, translated treatment on one page as
+ * a compact price list, grouped by category and sub-category. Each row opens
+ * its detail page; the page has one booking button (hero) and the closing CTA.
  */
 export function ServicesPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -79,9 +79,9 @@ export function ServicesPage({ locale }: { locale: Locale }) {
               )}
             </div>
             {groups.map((g) => (
-              <div key={g.id} className="mt-12">
+              <div key={g.id} className="mt-10">
                 {g.label && (
-                  <h3 className="mb-6 text-[0.78rem] font-medium uppercase tracking-[0.18em] text-muted">
+                  <h3 className="mb-2 text-[0.78rem] font-medium uppercase tracking-[0.18em] text-muted">
                     {g.href ? (
                       <Link href={g.href} className="hover:text-accent-deep">
                         {g.label}
@@ -91,10 +91,10 @@ export function ServicesPage({ locale }: { locale: Locale }) {
                     )}
                   </h3>
                 )}
-                <ul className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="grid border-t border-line md:grid-cols-2 md:gap-x-10">
                   {g.items.map((t) => (
                     <li key={t.id}>
-                      <TreatmentCard locale={locale} id={t.id} />
+                      <TreatmentRow locale={locale} id={t.id} />
                     </li>
                   ))}
                 </ul>
