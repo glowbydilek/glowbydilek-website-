@@ -3,6 +3,7 @@ import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { PageHero } from "@/components/PageHero";
 import { TreatmentRow } from "@/components/TreatmentRow";
+import { PopularLinks } from "@/components/PopularLinks";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -103,6 +104,11 @@ export function ServicesPage({ locale }: { locale: Locale }) {
           </Container>
         </section>
       ))}
+      <section className="section-tight bg-paper">
+        <Container>
+          <PopularLinks locale={locale} />
+        </Container>
+      </section>
       <ClosingCta locale={locale} dict={dict} />
     </>
   );

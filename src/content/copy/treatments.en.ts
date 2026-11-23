@@ -6,7 +6,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Eyebrow waxing in Amsterdam, shaped naturally to suit your face. Women only. Read how the appointment works and request your appointment online.",
     title: "Eyebrow waxing",
-    lead: "A groomed brow line that suits your face — built calmly from your natural shape, without taking away too much.",
+    lead: "A groomed brow line that suits your face — built calmly from your natural shape, without taking away too much. At Glow by Dilek in Amsterdam, women only.",
     teaser: "A natural, groomed shape that suits your features.",
     area: "The hairs beneath and between the brows, and stray hairs above the arch where needed. The eyelid itself is never waxed.",
     appointment: [
@@ -59,7 +59,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Upper lip waxing in Amsterdam for smooth skin without shaving or tweezing. Women only. Read how it works and request your appointment online.",
     title: "Upper lip waxing",
-    lead: "Quick, precise removal of upper lip hair for smooth, polished skin — without stubble or shadow.",
+    lead: "Quick, precise removal of upper lip hair for smooth, polished skin — without stubble or shadow. Women only, by appointment in Amsterdam.",
     teaser: "Smooth and polished, without the shadow shaving leaves.",
     area: "The skin between your nose and upper lip, including the corners of the mouth. The lips themselves and the inside of the nose are not waxed.",
     appointment: [
@@ -100,7 +100,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Chin and jawline waxing for smooth skin. Read how it works, how to prevent ingrown hairs and when it is wise to see your GP first.",
     title: "Chin waxing",
-    lead: "A smooth chin and jawline, with care for the sensitive skin along your jaw and the direction in which the hair grows there.",
+    lead: "A smooth chin and jawline, with care for the sensitive skin along your jaw and the direction in which the hair grows there. At Glow by Dilek in Amsterdam — women only and by appointment.",
     teaser: "A smooth chin area, with care for the skin along your jawline.",
     area: "The chin and, if you wish, the skin just beneath the chin and along the jawline. Exactly which area is included, you agree beforehand.",
     appointment: [
@@ -141,7 +141,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Eyebrows, upper lip, chin and cheeks waxed in one appointment. Read how a full face treatment works and how to care for your skin afterwards.",
     title: "Full face waxing",
-    lead: "Eyebrows, upper lip, chin and cheeks in one calm appointment — for an even, groomed complexion that make-up sits beautifully on.",
+    lead: "Eyebrows, upper lip, chin and cheeks in one calm appointment — for an even, groomed complexion that make-up sits beautifully on. Calm and women only, here in Amsterdam.",
     teaser: "Eyebrows, upper lip, chin and cheeks in one appointment.",
     area: "Eyebrows, upper lip, chin and cheeks, and if you wish the sides of the face along the ears. The nose and ears themselves are not waxed.",
     appointment: [
@@ -182,7 +182,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Underarm waxing for smooth skin without stubble or razor irritation. Read how it works, what to know beforehand and what to do about deodorant.",
     title: "Underarm waxing",
-    lead: "Fresh, smooth underarms, without the stubble, itching and red bumps that shaving often leaves behind.",
+    lead: "Fresh, smooth underarms, without the stubble, itching and red bumps that shaving often leaves behind. At Glow by Dilek in Amsterdam, women only.",
     teaser: "Fresh and smooth, without stubble or razor irritation.",
     area: "The full underarm on both sides.",
     appointment: [
@@ -223,7 +223,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Half arm waxing, from wrist to elbow, for soft arms without stubble. Read what to expect, how to prepare and how to care for your skin.",
     title: "Half arm waxing",
-    lead: "Soft, groomed forearms from wrist to elbow — without the coarse stubble that returns within days of shaving.",
+    lead: "Soft, groomed forearms from wrist to elbow — without the coarse stubble that returns within days of shaving. Women only, by appointment in Amsterdam.",
     teaser: "From wrist to elbow, for soft and polished arms.",
     area: "From your wrist to just above the elbow, front and back. Would you like the backs of the hands and fingers included too? Mention it beforehand.",
     appointment: [
@@ -264,7 +264,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Full arm waxing in Amsterdam, from wrist to shoulder. Women only. Read how the treatment works and request your appointment online.",
     title: "Full arm waxing",
-    lead: "Smooth arms from wrist to shoulder in one careful treatment — ideal if you love sleeveless clothing or simply want to stay smooth for longer.",
+    lead: "Smooth arms from wrist to shoulder in one careful treatment — ideal if you love sleeveless clothing or simply want to stay smooth for longer. At Glow by Dilek in Amsterdam — women only and by appointment.",
     teaser: "The complete arms, from wrist to shoulder.",
     area: "The full arm, from wrist to shoulder, all the way round. Underarms are not included by default; you can add them separately.",
     appointment: [
@@ -305,7 +305,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Half leg waxing in Amsterdam, from ankle to knee, for silky legs. Women only. Read how it works and request your appointment online.",
     title: "Half leg waxing",
-    lead: "Silky legs from ankle to knee for weeks — without shaving every day, and without stubble that is back before the weekend.",
+    lead: "Silky legs from ankle to knee for weeks — without shaving every day, and without stubble that is back before the weekend. Calm and women only, here in Amsterdam.",
     teaser: "From ankle to knee, for silky smooth legs.",
     area: "From your ankle up to and including the knee, all the way round. Feet and toes can be included on request.",
     appointment: [
@@ -346,7 +346,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Full leg waxing, from ankle to upper thigh. Read how the treatment works, how to prepare and how to care for your skin in the days afterwards.",
     title: "Full leg waxing",
-    lead: "Smooth legs from ankle to upper thigh in one treatment — for summer, a holiday or simply because it feels good.",
+    lead: "Smooth legs from ankle to upper thigh in one treatment — for summer, a holiday or simply because it feels good. At Glow by Dilek in Amsterdam, women only.",
     teaser: "The complete legs, from ankle to upper thigh.",
     area: "The full legs from ankle to upper thigh, all the way round. The bikini line is not included by default; you can add it separately.",
     appointment: [
@@ -387,7 +387,7 @@ export const treatmentsEn: TreatmentCopySet = {
     seoDescription:
       "Back waxing in Amsterdam for smooth skin in a place that is hard to reach yourself. Women only. Request your appointment online.",
     title: "Back waxing",
-    lead: "A smooth back, in the one place you can barely reach yourself — thorough, comfortable and without rushing.",
+    lead: "A smooth back, in the one place you can barely reach yourself — thorough, comfortable and without rushing. Women only, by appointment in Amsterdam.",
     teaser: "A smooth back, thorough and comfortable.",
     area: "The back from the lower back up to and including the shoulders. Would you like the neck or shoulder blades given extra attention? Mention it beforehand.",
     appointment: [
@@ -426,9 +426,9 @@ export const treatmentsEn: TreatmentCopySet = {
   "bikini-line": {
     seoTitle: "Bikini line waxing in Amsterdam",
     seoDescription:
-      "Bikini line waxing: a neat line along your bikini or underwear. Read discreetly how the treatment works and how to prevent irritation.",
+      "Bikini line waxing in Amsterdam, women only: a neat line along your bikini or underwear. Read discreetly how it works and how to prevent irritation.",
     title: "Bikini line waxing",
-    lead: "A neat line along the edges of your bikini or underwear — the most understated intimate treatment, and a calm first step if you have never had an intimate wax.",
+    lead: "A neat line along the edges of your bikini or underwear — the most understated intimate treatment, and a calm first step if you have never had an intimate wax. At Glow by Dilek in Amsterdam — women only and by appointment.",
     teaser: "A neat line along your bikini or underwear.",
     area: "Only the hair visible outside your bikini bottoms or underwear: along the groin and at the top. How high or wide the line runs is your choice.",
     appointment: [
@@ -465,11 +465,11 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   brazilian: {
-    seoTitle: "Brazilian wax in Amsterdam",
+    seoTitle: "Brazilian wax in Amsterdam, women only",
     seoDescription:
-      "Brazilian wax: almost everything removed, leaving a small strip or triangle if you like. Read discreetly how the treatment works and how to prepare.",
-    title: "Brazilian wax",
-    lead: "Almost everything removed, leaving a small strip or triangle if you like — discreet, in small steps and at a pace that feels right for you.",
+      "Brazilian wax in Amsterdam, women only: almost everything removed, with a small strip if you like. Read discreetly how it works and how to prepare.",
+    title: "Brazilian wax in Amsterdam",
+    lead: "Almost everything removed, leaving a small strip or triangle if you like — discreet, in small steps and at a pace that feels right for you. Calm and women only, here in Amsterdam.",
     teaser: "Almost everything removed, with a strip or triangle if you like.",
     area: "The front of the bikini area, the groin and the intimate area, with your choice of leaving a small strip or triangle. Whether the area between the buttocks is included, you agree beforehand.",
     appointment: [
@@ -521,9 +521,9 @@ export const treatmentsEn: TreatmentCopySet = {
   hollywood: {
     seoTitle: "Hollywood wax in Amsterdam",
     seoDescription:
-      "Hollywood wax: completely smooth in the intimate area. Read discreetly what the treatment involves, how to prepare and how to care for your skin afterwards.",
-    title: "Hollywood wax",
-    lead: "Completely smooth, for fresh and well-cared-for skin — with the same discretion, explanation and calm as every intimate treatment.",
+      "Hollywood wax in Amsterdam, women only: completely smooth in the intimate area. Read discreetly what it involves and how to care for your skin afterwards.",
+    title: "Hollywood wax in Amsterdam",
+    lead: "Completely smooth, for fresh and well-cared-for skin — with the same discretion, explanation and calm as every intimate treatment. At Glow by Dilek in Amsterdam, women only.",
     teaser: "Completely smooth, discreet and careful.",
     area: "The full intimate area: the front, the groin, the intimate area and the area between the buttocks. No hair is left.",
     appointment: [

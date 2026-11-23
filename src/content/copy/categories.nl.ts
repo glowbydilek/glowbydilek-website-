@@ -17,7 +17,7 @@ export const categoriesNl: CategoryCopySet = {
     intro: {
       title: "Fijn werk voor een gevoelige huid",
       paragraphs: [
-        "De huid van je gezicht is dunner dan die van je lichaam, reageert sneller op warmte en is elke dag zichtbaar. Daarom wordt hier in kleine, overzichtelijke delen gewerkt en wordt na elke stap gekeken hoe je huid reageert.",
+        "De huid van je gezicht is dunner dan die van je lichaam, reageert sneller op warmte en is elke dag zichtbaar. Daarom wordt hier in kleine, overzichtelijke delen gewerkt en wordt na elke stap gekeken hoe je huid reageert. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
         "Een gezichtsbehandeling begint altijd met kijken: naar de vorm van je wenkbrauwen, de richting waarin het haar groeit en wat jij mooi vindt. Het doel is een verzorgd resultaat, geen uitgesproken verandering.",
       ],
     },
@@ -95,7 +95,7 @@ export const categoriesNl: CategoryCopySet = {
     intro: {
       title: "Grotere zones, hetzelfde oog voor detail",
       paragraphs: [
-        "Waar scheren alleen het haar aan het oppervlak weghaalt, verwijdert waxen het met wortel en al. Daardoor blijft je huid weken glad in plaats van dagen, zonder de stoppels en de jeuk die na het scheren vaak volgen.",
+        "Waar scheren alleen het haar aan het oppervlak weghaalt, verwijdert waxen het met wortel en al. Daardoor blijft je huid weken glad in plaats van dagen, zonder de stoppels en de jeuk die na het scheren vaak volgen. Uitsluitend voor vrouwen, op afspraak in Amsterdam.",
         "Op het lichaam groeit haar in verschillende richtingen — vooral in de oksels en rond de knieën. Daarom wordt er in banen gewerkt die de haargroei volgen, zodat er zo min mogelijk haartjes breken en je huid rustig blijft.",
       ],
     },
@@ -173,7 +173,7 @@ export const categoriesNl: CategoryCopySet = {
     intro: {
       title: "Persoonlijk, zonder ongemakkelijkheid",
       paragraphs: [
-        "Een intieme wax voelt voor veel mensen de eerste keer spannend. Dat is begrijpelijk, en daar wordt rekening mee gehouden: met een rustig gesprek vooraf, een duidelijke uitleg en een werkwijze waarin jij je zo comfortabel mogelijk voelt.",
+        "Een intieme wax voelt voor veel mensen de eerste keer spannend. Dat is begrijpelijk, en daar wordt rekening mee gehouden: met een rustig gesprek vooraf, een duidelijke uitleg en een werkwijze waarin jij je zo comfortabel mogelijk voelt. Bij Glow by Dilek in Amsterdam — uitsluitend voor vrouwen en op afspraak.",
         "Er is één klant tegelijk en er is geen haast. Wat je vertelt of vraagt, blijft tussen jou en Dilek.",
       ],
     },

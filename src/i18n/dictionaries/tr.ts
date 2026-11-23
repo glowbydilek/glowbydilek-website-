@@ -758,6 +758,15 @@ export const tr: Dictionary = {
     afterTitle: "Talebinden sonra ne olur?",
     afterLink: "Sürecin tamamını gör",
     infoTitle: "Randevuna iyi hazırlan",
+    popularTitle: "Amsterdam'da en çok arananlar",
+    popular: {
+      brazilian: "Amsterdam'da Brezilya ağdası",
+      hollywood: "Amsterdam'da Hollywood ağdası",
+      "bikini-line": "Amsterdam'da bikini çizgisi ağdası",
+      eyebrows: "Amsterdam'da kaş ağdası",
+      massage: "Amsterdam'da kadınlara özel masaj",
+      facial: "Amsterdam'da yüz bakımı",
+    },
   },
   notFound: {
     title: "Bu sayfa yok (ya da artık yok)",

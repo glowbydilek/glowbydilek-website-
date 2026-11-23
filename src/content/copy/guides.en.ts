@@ -292,6 +292,18 @@ export const faqPageEn: FaqPageCopy = {
           a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
         },
         {
+          q: "Is Glow by Dilek ladies-only?",
+          a: "Yes. Glow by Dilek in Amsterdam is for women only: every treatment, from waxing to massage and facials, is for female clients only.",
+        },
+        {
+          q: "Which part of Amsterdam is Glow by Dilek in?",
+          a: "Glow by Dilek is in Amsterdam and works by appointment only. Dilek shares the address and practical location details personally once your appointment is confirmed.",
+        },
+        {
+          q: "How much does a Brazilian wax cost?",
+          a: "The price of a Brazilian wax is on the Prices page. If it says ‘upon request’ there, you’ll hear the price personally when you request your appointment.",
+        },
+        {
           q: "What does a treatment cost?",
           a: "You’ll receive the current rates personally by email. Feel free to mention which treatments you’re interested in.",
         },
