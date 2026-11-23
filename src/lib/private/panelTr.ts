@@ -1190,6 +1190,21 @@ export const TR: Record<string, string> = {
   "Eén ZIP met het overzicht (CSV), het financiële rapport (PDF), alle facturen en alle bonnen.": "Özet (CSV), finans raporu (PDF), tüm faturalar ve tüm fişler tek bir ZIP dosyasında.",
   "Vorige maand downloaden": "Geçen ayı indir",
   "Gekozen periode": "Seçilen dönem",
+  "Digitaal laten invullen": "Dijital olarak doldurt",
+  "De klant krijgt een e-mail met een persoonlijke link. Ze vult het formulier op haar telefoon in, geeft toestemming en tekent op het scherm. Het formulier wordt versleuteld bewaard.": "Müşteri kişisel bir bağlantı içeren bir e-posta alır. Formu telefonunda doldurur, onay verir ve ekranda imzalar. Form şifreli olarak saklanır.",
+  "Digitaal ingevuld en op het scherm ondertekend.": "Dijital olarak dolduruldu ve ekranda imzalandı.",
+  "Gecontroleerd": "Kontrol edildi",
+  "Gecontroleerd op": "Kontrol tarihi",
+  "Getekend": "İmzalandı",
+  "Link verstuurd, nog niet ingevuld. Geldig tot": "Bağlantı gönderildi, henüz doldurulmadı. Geçerlilik sonu",
+  "De link is per e-mail naar de klant verstuurd. Hij werkt 7 dagen en één keer.": "Bağlantı müşteriye e-postayla gönderildi. 7 gün geçerlidir ve tek kullanımlıktır.",
+  "Gemarkeerd als gecontroleerd.": "Kontrol edildi olarak işaretlendi.",
+  "Klant niet gevonden.": "Müşteri bulunamadı.",
+  "Deze klant heeft geen e-mailadres. Vul het eerst in bij Gegevens.": "Bu müşterinin e-posta adresi yok. Önce Bilgiler bölümüne ekle.",
+  "Er is nog geen actief intakeformulier in deze taal.": "Bu dilde henüz aktif bir intake formu yok.",
+  "Document niet gevonden.": "Belge bulunamadı.",
+  "Nieuwe link versturen": "Yeni bağlantı gönder",
+  "Link naar de klant mailen": "Bağlantıyı müşteriye e-postayla gönder",
 };
 
 /** Texts with a variable part (numbers, amounts, names). */
