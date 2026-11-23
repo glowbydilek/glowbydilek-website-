@@ -69,6 +69,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
           )
         }
       />
+      {c.blockedAt && !c.anonymizedAt && <div className="mb-4"><Notice tone="warning">{t("Deze klant is geblokkeerd: online aanvragen worden geweigerd.")}</Notice></div>}
       {sp.samengevoegd && <div className="mb-4"><Notice tone="success">{t("✓ De profielen zijn samengevoegd. Alle afspraken, betalingen en facturen staan nu in dit profiel.")}</Notice></div>}
       {dups.some((d) => d.strong) && (
         <div className="mb-4">
@@ -96,7 +97,7 @@ export default async function CustomerPage({ params, searchParams }: { params: P
             {c.anonymizedAt ? (
               <Notice>Deze klantgegevens zijn geanonimiseerd.</Notice>
             ) : perms.has("customers.manage") ? (
-              <CustomerForm c={c} />
+              <CustomerForm c={c} owner={session.user.role === "owner"} />
             ) : (
               <dl className="grid gap-1 text-sm">
                 <dt className="text-muted">{t("E-mail")}</dt>
