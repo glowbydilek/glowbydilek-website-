@@ -6,6 +6,7 @@ import { amsterdamToday, validateAppointment, type AppointmentInput } from "@/li
 import { isClosedDay, requestCalendar } from "@/lib/booking/public";
 import { appointmentCustomerMail, appointmentOwnerMail } from "@/lib/mail/templates";
 import { createLegacyRequest } from "@/lib/booking/service";
+import { isBlockedContact } from "@/lib/crm/service";
 import { databaseConfigured, getDb } from "@/lib/db/client";
 import { applyPromotion, checkCode } from "@/lib/promotions/service";
 import { notifySoon } from "@/lib/notify/service";
@@ -37,6 +38,8 @@ export async function POST(req: NextRequest) {
       if (v.ok && v.data.promoCode && databaseConfigured() && (await checkCode(getDb(), v.data.promoCode))) return { ok: false as const, errors: { promoCode: "invalid" as const } };
       return v;
     },
+    // The owner can block a customer; requests with that email or phone are refused.
+    refuse: async (d) => databaseConfigured() && (await isBlockedContact(getDb(), { email: d.email, phone: d.phone ?? null })),
     // Also appears in Agenda → Aanvragen, where Dilek confirms it at an exact time.
     store: async (d) => {
       if (!databaseConfigured()) return;
