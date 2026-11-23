@@ -270,6 +270,19 @@ async function step(name, fn) {
     });
   }
 
+  await step("all treatments page: a compact price list, one booking button, no duplicates", async () => {
+    const p = await mobile.newPage();
+    await p.goto(`${BASE}/behandelingen`);
+    const rows = await p.$$eval("main a[data-treatment-row]", (as) => as.map((a) => a.getAttribute("href")));
+    assert.ok(rows.length >= 10, `only ${rows.length} treatments listed`);
+    assert.equal(new Set(rows).size, rows.length, "a treatment is listed twice");
+    const booking = await p.$$eval("main a[href^='/afspraak-maken']", (as) => as.length);
+    assert.ok(booking <= 2, `${booking} booking links on the overview (expected the hero and the closing call to action)`);
+    const height = await p.evaluate(() => document.documentElement.scrollHeight);
+    assert.ok(height < 14000, `overview is ${height}px tall on a phone`);
+    await p.close();
+  });
+
   await step("every header and footer link resolves", async () => {
     const p = await desktop.newPage();
     await p.goto(`${BASE}/`);
