@@ -104,7 +104,7 @@ export function Header({
       ? catalogueRoots.some((r) => pathname === r || pathname.startsWith(`${r}/`))
       : pathname === target;
   const navLinkCls = (active: boolean) =>
-    `relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-2.5 text-[0.875rem] xl:px-3 xl:text-[0.95rem] transition-colors duration-300 ${
+    `star-glint star-glint-text relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-2.5 text-[0.875rem] xl:px-3 xl:text-[0.95rem] transition-colors duration-300 ${
       active ? "text-ink" : "text-ink-soft hover:text-ink"
     }`;
   const activeMark = (active: boolean) =>
@@ -304,7 +304,7 @@ export function Header({
                   href={href(locale, "home")}
                   onClick={close}
                   aria-current={pathname === href(locale, "home") ? "page" : undefined}
-                  className={`flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === href(locale, "home") ? "text-accent" : "text-ink"}`}
+                  className={`star-glint flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === href(locale, "home") ? "text-accent" : "text-ink"}`}
                 >
                   {dict.nav.home}
                 </Link>
@@ -331,7 +331,7 @@ export function Header({
                             href={c.href}
                             onClick={close}
                             aria-current={pathname === c.href ? "page" : undefined}
-                            className={`flex min-h-12 items-center justify-between gap-3 rounded-xl px-3 text-[1.05rem] ${pathname === c.href ? "bg-glow-soft text-accent-deep" : "text-ink-soft"}`}
+                            className={`star-glint flex min-h-12 items-center justify-between gap-3 rounded-xl px-3 text-[1.05rem] ${pathname === c.href ? "bg-glow-soft text-accent-deep" : "text-ink-soft"}`}
                           >
                             {c.label}
                             <span className="text-xs tabular-nums text-muted">{c.treatments.length}</span>
@@ -352,7 +352,7 @@ export function Header({
                       href={l.href}
                       onClick={close}
                       aria-current={pathname === l.href ? "page" : undefined}
-                      className={`flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === l.href ? "text-accent" : "text-ink"}`}
+                      className={`star-glint flex min-h-14 items-center justify-between font-serif text-[1.7rem] leading-tight ${pathname === l.href ? "text-accent" : "text-ink"}`}
                     >
                       {l.label}
                     </Link>

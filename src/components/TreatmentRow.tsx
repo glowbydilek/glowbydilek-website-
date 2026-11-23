@@ -18,7 +18,7 @@ export function TreatmentRow({ locale, id }: { locale: Locale; id: string }) {
   const price = priceLabel(item, locale, { from: dict.prices.from, onRequest: dict.service.priceOnRequest });
   const duration = item.durationMinutes ? `${item.durationMinutes} ${dict.prices.minutes}` : null;
   return (
-    <Link href={itemHref(locale, item)} data-treatment-row="" className="group flex min-h-16 items-center gap-4 border-b border-line py-4 transition-colors hover:bg-paper/60">
+    <Link href={itemHref(locale, item)} data-treatment-row="" className="star-glint group relative flex min-h-16 items-center gap-4 border-b border-line py-4 pr-3 transition-colors hover:bg-paper/60">
       <span className="min-w-0 flex-1">
         <span className="block font-serif text-[1.25rem] leading-snug text-ink transition-colors group-hover:text-accent-deep">{item.name[locale]}</span>
         {copy.teaser && <span className="mt-0.5 line-clamp-1 block text-sm text-ink-soft">{copy.teaser}</span>}
