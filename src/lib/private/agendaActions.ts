@@ -28,7 +28,7 @@ import { deliverSoon } from "../notifications/deliver";
 import { resend } from "../notifications/outbox";
 import { hhmmToMinutes, isLocalDate, localToUtc } from "../time";
 import { parseEuroToCents } from "../finance/money";
-import { CrmError, mergeCustomers } from "../crm/service";
+import { CrmError, mergeCustomers, setCustomerBlocked } from "../crm/service";
 import type { FormState } from "./authActions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
@@ -194,6 +194,12 @@ export async function customerAction(_: FormState, f: FormData): Promise<FormSta
       await anonymizeCustomer(getDb(), id, { userId: s.user.id });
       refresh();
       return { ok: true, message: "De persoonsgegevens zijn verwijderd. De anonieme afspraakgeschiedenis blijft bewaard." };
+    }
+    if (op === "block" || op === "unblock") {
+      await assertOwner();
+      await setCustomerBlocked(getDb(), id, op === "block", str(f, "reason") || null, { userId: s.user.id });
+      refresh();
+      return { ok: true, message: op === "block" ? "Klant geblokkeerd. Online aanvragen met dit e-mailadres of telefoonnummer worden geweigerd." : "Blokkade opgeheven." };
     }
     const email = str(f, "email");
     if (email && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) return { error: "Controleer het e-mailadres." };

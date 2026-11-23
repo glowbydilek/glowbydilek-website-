@@ -1155,6 +1155,18 @@ export const TR: Record<string, string> = {
   "＋ Nieuwe slide": "＋ Yeni slayt",
   "＋ Stap toevoegen": "＋ Adım ekle",
   "＋ Toevoegen": "＋ Ekle",
+
+  // ── Customer blocking
+  "Turks": "Türkçe",
+  "Geblokkeerd": "Engellendi",
+  "Klant blokkeren": "Müşteriyi engelle",
+  "Blokkade opheffen": "Engeli kaldır",
+  "Deze klant blokkeren?": "Bu müşteri engellensin mi?",
+  "Online aanvragen met dit e-mailadres of telefoonnummer worden geweigerd. De geschiedenis blijft bewaard.": "Bu e-posta adresi veya telefon numarasıyla gelen online talepler reddedilir. Geçmiş saklanır.",
+  "Na blokkeren worden online aanvragen met dit e-mailadres of telefoonnummer vriendelijk geweigerd. Bestaande afspraken en facturen blijven staan.": "Engellendikten sonra bu e-posta adresi veya telefon numarasıyla gelen online talepler nazikçe reddedilir. Mevcut randevular ve faturalar kalır.",
+  "Deze klant is geblokkeerd: online aanvragen worden geweigerd.": "Bu müşteri engellendi: online talepler reddedilir.",
+  "Klant geblokkeerd. Online aanvragen met dit e-mailadres of telefoonnummer worden geweigerd.": "Müşteri engellendi. Bu e-posta adresi veya telefon numarasıyla gelen online talepler reddedilir.",
+  "Blokkade opgeheven.": "Engel kaldırıldı.",
 };
 
 /** Texts with a variable part (numbers, amounts, names). */
