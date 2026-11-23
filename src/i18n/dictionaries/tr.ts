@@ -22,7 +22,7 @@ export const tr: Dictionary = {
       treatments: {
         title: "Yüz, vücut ve bikini bölgesi ağdası",
         description:
-          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini çizgisi, Brezilya ve Hollywood ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve nasıl hazırlanacağını öğren.",
+          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini, Brezilya ve Hollywood ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve hazırlığı öğren.",
       },
       prices: {
         title: "Fiyatlar",
