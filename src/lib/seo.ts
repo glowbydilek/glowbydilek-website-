@@ -183,6 +183,9 @@ export function businessJsonLd(locale: Locale) {
   };
 }
 
+/** Where the services are offered: the business city (no street address, no districts). */
+const AREA = { "@type": "City", name: siteConfig.contact.region ?? "Amsterdam" } as const;
+
 /** Service + catalogue of published treatments (prices only when confirmed). */
 export function serviceJsonLd(locale: Locale) {
   const sections = publicSections(locale);
@@ -191,6 +194,7 @@ export function serviceJsonLd(locale: Locale) {
     "@type": "Service",
     serviceType: sections.map((c) => c.name[locale]).join(", "),
     provider: { "@id": `${siteConfig.url}/#business` },
+    areaServed: AREA,
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: sections.map((c) => c.name[locale]).join(", "),
@@ -232,6 +236,7 @@ export function singleServiceJsonLd(locale: Locale, name: string, description: s
     url: absoluteUrl(path),
     serviceType: name,
     provider: { "@id": `${siteConfig.url}/#business` },
+    areaServed: AREA,
     inLanguage: localeLabels[locale].hrefLang,
   };
 }
