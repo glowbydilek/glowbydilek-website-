@@ -538,6 +538,7 @@ export const nl = {
       unavailable: "Het formulier is tijdelijk niet beschikbaar. Mail je bericht gerust direct naar",
       sendFailed: "Er ging iets mis bij het versturen. Probeer het later opnieuw of mail direct naar",
       rateLimited: "Je hebt kort na elkaar meerdere berichten gestuurd. Probeer het over een paar minuten opnieuw.",
+      refused: "Deze aanvraag kunnen we niet online verwerken. Neem gerust contact op via 020 550 0400 of mail naar",
       generic: "Er ging iets mis. Probeer het opnieuw of mail direct naar",
       challenge: "De beveiligingscontrole is verlopen of mislukt. Je ingevulde gegevens zijn bewaard — rond de controle opnieuw af en verstuur nogmaals.",
       duplicate: "Deze aanvraag is al ontvangen. Je hoeft hem niet opnieuw te versturen.",

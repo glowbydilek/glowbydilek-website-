@@ -532,6 +532,7 @@ export const tr: Dictionary = {
       unavailable: "Form geçici olarak kullanılamıyor. Lütfen mesajını doğrudan şu adrese gönder:",
       sendFailed: "Gönderirken bir sorun oluştu. Lütfen daha sonra tekrar dene ya da doğrudan şu adrese yaz:",
       rateLimited: "Kısa sürede birkaç mesaj gönderdin. Lütfen birkaç dakika sonra tekrar dene.",
+      refused: "Bu talebi online olarak işleyemiyoruz. Lütfen 020 550 0400 numarasından bize ulaş veya e-posta gönder:",
       generic: "Bir sorun oluştu. Lütfen tekrar dene ya da doğrudan şu adrese yaz:",
       challenge: "Güvenlik kontrolünün süresi doldu ya da başarısız oldu. Bilgilerin saklandı; lütfen kontrolü yeniden tamamla ve tekrar gönder.",
       duplicate: "Bu talep zaten alındı. Yeniden göndermene gerek yok.",

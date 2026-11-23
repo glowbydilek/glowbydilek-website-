@@ -535,6 +535,7 @@ export const en: Dictionary = {
       unavailable: "The form is temporarily unavailable. Please email your message directly to",
       sendFailed: "Something went wrong while sending. Please try again later or email directly to",
       rateLimited: "You've sent several messages in a short time. Please try again in a few minutes.",
+      refused: "We can't process this request online. Please contact us on 020 550 0400 or email",
       generic: "Something went wrong. Please try again or email directly to",
       challenge: "The security check expired or failed. Your details have been kept — please complete the check again and resend.",
       duplicate: "This request has already been received. There is no need to send it again.",
