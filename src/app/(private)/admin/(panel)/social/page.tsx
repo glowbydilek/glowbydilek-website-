@@ -4,10 +4,12 @@ import { Card, PageHeader } from "@/components/private/ui";
 import { DEFAULT_SOCIAL, validateBusiness, validateSocial } from "@/lib/cms/menu";
 import { editorValue } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "Social media" };
 
 export default async function SocialPage() {
+  const t = await panelT();
   await requireOwner("admin");
   const db = getDb();
   const [social, biz] = await Promise.all([editorValue(db, "social", "all", DEFAULT_SOCIAL), editorValue(db, "business", "all", {})]);
@@ -17,7 +19,7 @@ export default async function SocialPage() {
   const links = value.links.map((l) => (l.network === "instagram" && !l.url && ig ? { ...l, url: `https://www.instagram.com/${ig}` } : l));
   return (
     <>
-      <PageHeader title="Social media" subtitle="Links naar je eigen profielen. Ze verschijnen als icoon in de footer zodra je ze invult en aanzet." />
+      <PageHeader title={t("Social media")} subtitle="Links naar je eigen profielen. Ze verschijnen als icoon in de footer zodra je ze invult en aanzet." />
       <Card>
         <SocialEditor initial={{ links }} />
       </Card>
