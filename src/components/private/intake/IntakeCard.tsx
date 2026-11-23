@@ -60,10 +60,10 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
                 <ActionForm action={reviewIntakeAction} className="mt-2">
                   <input type="hidden" name="customerId" value={customerId} />
                   <input type="hidden" name="id" value={d.id} />
-                  <SubmitButton variant="gold">{t("Gecontroleerd")}</SubmitButton>
+                  <SubmitButton variant="gold" pending="Versturen…">{t("Goedkeuren en verzenden")}</SubmitButton>
                 </ActionForm>
               )}
-              {d.reviewedAt && <p className="mt-1 text-xs text-muted">✓ {t("Gecontroleerd op")} {formatLocal(d.reviewedAt, "nl", { day: "numeric", month: "short", year: "numeric" })}</p>}
+              {d.reviewedAt && <p className="mt-1 text-xs text-muted">✓ {t("Goedgekeurd op")} {formatLocal(d.reviewedAt, "nl", { day: "numeric", month: "short", year: "numeric" })}</p>}
               {d.status === "deleted" ? (
                 <p className="mt-1 text-xs text-muted">Reden: {d.deleteReason}</p>
               ) : (
