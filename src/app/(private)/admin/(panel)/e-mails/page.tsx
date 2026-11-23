@@ -7,10 +7,12 @@ import { loadTemplate } from "@/lib/booking/service";
 import { getDb } from "@/lib/db/client";
 import { notificationTemplates } from "@/lib/db/schema";
 import { TEMPLATE_KEYS, TEMPLATE_LABELS, type TemplateKey } from "@/lib/notifications/templates";
+import { panelT } from "@/lib/private/panelLangServer";
 
 export const metadata = { title: "E-mailteksten" };
 
 export default async function Emails({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const t = await panelT();
   await requireOwner("admin");
   const sp = await searchParams;
   const key = (TEMPLATE_KEYS.includes(sp.mail as TemplateKey) ? sp.mail : "confirmed") as TemplateKey;
@@ -19,7 +21,7 @@ export default async function Emails({ searchParams }: { searchParams: Promise<R
   const [t, customRows] = await Promise.all([loadTemplate(db, key, locale), db.select({ key: notificationTemplates.key }).from(notificationTemplates)]);
   return (
     <>
-      <PageHeader title="E-mailteksten" subtitle="De berichten die klanten automatisch ontvangen. Datum, tijd en behandeling worden automatisch ingevuld." />
+      <PageHeader title={t("E-mailteksten")} subtitle="De berichten die klanten automatisch ontvangen. Datum, tijd en behandeling worden automatisch ingevuld." />
       <div className="grid [&>*]:min-w-0 gap-5 lg:grid-cols-[16rem_1fr]">
         <Card>
           <ul className="space-y-1">
