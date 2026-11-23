@@ -1,0 +1,23 @@
+import "../globals.css";
+import { fontVariables } from "../fonts";
+import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
+
+/** Root layout for the private intake link (never indexed, no tracking). */
+export const metadata: Metadata = {
+  title: "Intake · Glow by Dilek",
+  robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
+  referrer: "no-referrer",
+};
+
+export const viewport: Viewport = { themeColor: "#2b202b", width: "device-width", initialScale: 1, viewportFit: "cover" };
+
+export const dynamic = "force-dynamic";
+
+export default function IntakeRoot({ children }: { children: ReactNode }) {
+  return (
+    <html lang="nl" className={fontVariables}>
+      <body className="min-h-dvh bg-[#f4f1ea] text-ink antialiased">{children}</body>
+    </html>
+  );
+}

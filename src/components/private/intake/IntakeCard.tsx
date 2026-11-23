@@ -3,7 +3,8 @@ import { Badge, Card, Field, Input, LinkButton, Notice, Select, SubmitButton } f
 import type { DB } from "@/lib/db/client";
 import { INTAKE_ACCEPT } from "@/lib/intake/files";
 import { intakeDocumentsFor, intakeStorageStatus, listTemplates } from "@/lib/intake/service";
-import { deleteIntakeDocumentAction, uploadIntakeAction } from "@/lib/private/intakeActions";
+import { deleteIntakeDocumentAction, reviewIntakeAction, sendIntakeLinkAction, uploadIntakeAction } from "@/lib/private/intakeActions";
+import { openRequestsFor } from "@/lib/intake/digital";
 import { formatLocal, todayLocal } from "@/lib/time";
 import { panelT } from "@/lib/private/panelLangServer";
 
@@ -14,11 +15,27 @@ const dateNl = (d: string) => d.split("-").reverse().join("-");
 /** Signed intake & consent forms for one customer (metadata only; files via the private route). */
 export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: number; mfa: boolean }) {
   const t = await panelT();
-  const [docs, status, templates] = await Promise.all([intakeDocumentsFor(db, customerId), intakeStorageStatus(db, mfa), listTemplates(db)]);
+  const [docs, status, templates, requests] = await Promise.all([intakeDocumentsFor(db, customerId), intakeStorageStatus(db, mfa), listTemplates(db), openRequestsFor(db, customerId)]);
+  const openLink = requests.find((r) => r.status === "sent" && r.expiresAt > new Date());
   const versions = templates.filter((t) => t.status !== "draft");
   const active = templates.filter((t) => t.status === "active");
   return (
     <Card title="Intake & toestemming (vertrouwelijk)">
+      {status.enabled && (
+        <div className="mb-4 rounded-2xl bg-surface p-4">
+          <p className="font-medium">{t("Digitaal laten invullen")}</p>
+          <p className="mt-1 text-sm text-muted">{t("De klant krijgt een e-mail met een persoonlijke link. Ze vult het formulier op haar telefoon in, geeft toestemming en tekent op het scherm. Het formulier wordt versleuteld bewaard.")}</p>
+          {openLink && (
+            <p className="mt-2 text-sm">
+              {t("Link verstuurd, nog niet ingevuld. Geldig tot")} {formatLocal(openLink.expiresAt, "nl", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}.
+            </p>
+          )}
+          <ActionForm action={sendIntakeLinkAction} className="mt-3">
+            <input type="hidden" name="customerId" value={customerId} />
+            <SubmitButton pending="Versturen…">{t(openLink ? "Nieuwe link versturen" : "Link naar de klant mailen")}</SubmitButton>
+          </ActionForm>
+        </div>
+      )}
       <div className="flex flex-wrap gap-2">
         {active.map((t) => (
           <LinkButton key={t.id} href={`/agenda/intake-afdruk/${t.id}`}>Formulier afdrukken ({t.locale.toUpperCase()})</LinkButton>
@@ -29,7 +46,7 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
           {docs.map((d) => (
             <li key={d.id} className="py-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="font-medium">Getekend {dateNl(d.signedOn)} · {d.templateVersion} ({d.locale.toUpperCase()})</span>
+                <span className="font-medium">{t("Getekend")} {dateNl(d.signedOn)} · {d.templateVersion} ({d.locale.toUpperCase()})</span>
                 <Badge tone={STATUS[d.status as keyof typeof STATUS]?.[1] ?? "neutral"}>{STATUS[d.status as keyof typeof STATUS]?.[0] ?? d.status}</Badge>
               </div>
               <p className="mt-1 text-xs text-muted">
@@ -37,7 +54,16 @@ export async function IntakeCard({ db, customerId, mfa }: { db: DB; customerId: 
                 {d.status !== "deleted" && ` · ${d.mime.replace("application/", "").replace("image/", "").toUpperCase()} · ${kb(d.size)}${d.metadataStripped ? " · metadata (EXIF/GPS) verwijderd" : ""}`}
                 {` · SHA-256 ${d.sha256.slice(0, 12)}…`}
               </p>
+              {d.source === "digital" && <p className="mt-1 text-xs">{t("Digitaal ingevuld en op het scherm ondertekend.")}</p>}
               {d.note && <p className="mt-1 text-xs">{d.note}</p>}
+              {d.status === "current" && d.source === "digital" && !d.reviewedAt && (
+                <ActionForm action={reviewIntakeAction} className="mt-2">
+                  <input type="hidden" name="customerId" value={customerId} />
+                  <input type="hidden" name="id" value={d.id} />
+                  <SubmitButton variant="gold" pending="Versturen…">{t("Goedkeuren en verzenden")}</SubmitButton>
+                </ActionForm>
+              )}
+              {d.reviewedAt && <p className="mt-1 text-xs text-muted">✓ {t("Goedgekeurd op")} {formatLocal(d.reviewedAt, "nl", { day: "numeric", month: "short", year: "numeric" })}</p>}
               {d.status === "deleted" ? (
                 <p className="mt-1 text-xs text-muted">Reden: {d.deleteReason}</p>
               ) : (

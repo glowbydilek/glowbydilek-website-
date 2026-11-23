@@ -273,6 +273,8 @@ export async function intakeDocumentsFor(db: DB, customerId: number) {
       supersededAt: intakeDocuments.supersededAt,
       deletedAt: intakeDocuments.deletedAt,
       deleteReason: intakeDocuments.deleteReason,
+      source: intakeDocuments.source,
+      reviewedAt: intakeDocuments.reviewedAt,
     })
     .from(intakeDocuments)
     .where(eq(intakeDocuments.customerId, customerId))
