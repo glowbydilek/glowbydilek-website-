@@ -93,7 +93,7 @@ async function pendingItems(db: DB): Promise<Pending[]> {
   for (const m of msgs)
     out.push({ dedupeKey: `inquiry:${m.id}`, kind: "customer_message", category: "bericht", title: "Nieuw bericht van een klant", body: "Open de agenda om het bericht te lezen.", url: `/agenda/berichten/${m.id}`, entityType: "inquiry", entityId: m.id, actionable: true, since: m.createdAt });
   for (const d of intakes)
-    out.push({ dedupeKey: `intake-digital:${d.id}`, kind: "intake_digital", category: "intake", title: "Nieuw intakeformulier ingevuld", body: "Open de agenda om het te controleren.", url: `/agenda/klanten/${d.customerId}`, entityType: "intake", entityId: d.id, actionable: true, since: d.createdAt });
+    out.push({ dedupeKey: `intake-digital:${d.id}`, kind: "intake_digital", category: "intake", title: "Nieuw intakeformulier ingevuld", body: "Open de agenda om het te controleren en goed te keuren.", url: `/agenda/klanten/${d.customerId}`, entityType: "intake", entityId: d.id, actionable: true, since: d.createdAt });
   for (const e of mails) {
     if (e.kind === "owner_request") continue; // a notice to Dilek herself, not a customer action
     const invoice = e.kind === "invoice" && e.ref;
