@@ -11,22 +11,22 @@ export const en: Dictionary = {
       services: {
         title: "All treatments in Amsterdam",
         description:
-          "All Glow by Dilek treatments in one place: relaxing massages, waxing and more personal beauty treatments for women. By appointment only.",
+          "All Glow by Dilek treatments in Amsterdam: facials, massages and waxing, women only. Personal and by appointment.",
       },
       home: {
-        title: "Glow by Dilek — Beauty salon for women in Amsterdam",
+        title: "Ladies-only beauty salon in Amsterdam | Glow by Dilek",
         description:
-          "Facials, relaxing massages and waxing for women in Amsterdam. Personal, calm and by appointment; clients from Amstelveen, Diemen and Haarlem are welcome too.",
+          "Ladies-only beauty salon in Amsterdam: facials, massages and waxing, women only and by appointment. Clients from Amstelveen, Diemen and Haarlem welcome.",
       },
       treatments: {
-        title: "Waxing in Amsterdam — face, body and bikini",
+        title: "Women-only waxing in Amsterdam",
         description:
-          "Eyebrow, upper lip, underarm, arm, leg, back, bikini line, Brazilian and Hollywood waxing. Find out who each treatment suits, what to expect and how to prepare.",
+          "Women-only waxing in Amsterdam: face, body and bikini area, from eyebrows to Brazilian. Find out what to expect and how to prepare for your appointment.",
       },
       prices: {
-        title: "Prices",
+        title: "Prices for waxing, massage and facials in Amsterdam",
         description:
-          "Every Glow by Dilek treatment in one overview, with price, duration or ‘upon request’. A question about a price? Email hello@glowbydilek.nl.",
+          "Prices for waxing, massage and facials in Amsterdam, women only: the price, duration or ‘upon request’ for every treatment at Glow by Dilek.",
       },
       about: {
         title: "About Dilek",
@@ -289,8 +289,8 @@ export const en: Dictionary = {
     count: "{n} treatment(s)",
     hero: {
       eyebrow: "Treatments",
-      title: "Careful waxing,",
-      titleEm: "area by area.",
+      title: "Women-only waxing",
+      titleEm: "in Amsterdam.",
       subtitle:
         "Face, body and bikini area. Below you'll find, for each area, the treatments available, who they suit and how best to prepare.",
     },
@@ -334,7 +334,7 @@ export const en: Dictionary = {
   prices: {
     hero: {
       eyebrow: "Prices",
-      title: "Clear pricing,",
+      title: "Prices,",
       titleEm: "personally tailored.",
       subtitle:
         "Every treatment, at a glance. Dilek is happy to send you the current prices personally, so you know exactly where you stand.",
@@ -761,6 +761,15 @@ export const en: Dictionary = {
     afterTitle: "What happens after your request?",
     afterLink: "See the full process",
     infoTitle: "Well prepared for your appointment",
+    popularTitle: "Popular in Amsterdam",
+    popular: {
+      brazilian: "Brazilian wax in Amsterdam",
+      hollywood: "Hollywood wax in Amsterdam",
+      "bikini-line": "Bikini line waxing in Amsterdam",
+      eyebrows: "Eyebrow waxing in Amsterdam",
+      massage: "Massage for women in Amsterdam",
+      facial: "Facials in Amsterdam",
+    },
   },
   notFound: {
     title: "This page doesn't exist (anymore)",

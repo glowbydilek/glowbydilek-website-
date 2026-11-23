@@ -13,22 +13,22 @@ export const nl = {
       services: {
         title: "Alle behandelingen in Amsterdam",
         description:
-          "Alle behandelingen van Glow by Dilek op één plek: ontspannende massages, waxen en meer persoonlijke schoonheidsbehandelingen voor vrouwen. Uitsluitend op afspraak.",
+          "Alle behandelingen van Glow by Dilek in Amsterdam: gezichtsbehandelingen, massages en waxen, uitsluitend voor vrouwen. Persoonlijk en op afspraak.",
       },
       home: {
         title: "Glow by Dilek — Schoonheidssalon voor vrouwen in Amsterdam",
         description:
-          "Gezichtsbehandelingen, ontspannende massages en waxen voor vrouwen in Amsterdam. Persoonlijk, rustig en op afspraak; ook welkom uit Amstelveen, Diemen en Haarlem.",
+          "Gezichtsbehandelingen, massages en waxen in Amsterdam, uitsluitend voor vrouwen. Persoonlijk en op afspraak; ook welkom uit Amstelveen, Diemen en Haarlem.",
       },
       treatments: {
-        title: "Waxen in Amsterdam — gezicht, lichaam en bikinizone",
+        title: "Waxen in Amsterdam, alleen voor vrouwen",
         description:
-          "Waxen (harsen) voor gezicht, lichaam en bikinizone: van wenkbrauwen tot Brazilian. Lees per zone wat je kunt verwachten en hoe je je voorbereidt.",
+          "Waxen in Amsterdam, uitsluitend voor vrouwen: gezicht, lichaam en bikinizone, van wenkbrauwen tot Brazilian. Lees wat je kunt verwachten per zone.",
       },
       prices: {
-        title: "Tarieven",
+        title: "Prijzen waxen, massage en gezicht in Amsterdam",
         description:
-          "Alle behandelingen van Glow by Dilek op een rij, met tarief, duur of ‘op aanvraag’. Heb je een vraag over een tarief? Mail naar hello@glowbydilek.nl.",
+          "Prijzen voor waxen, massage en gezichtsbehandelingen in Amsterdam, uitsluitend voor vrouwen: per behandeling het tarief, de duur of ‘op aanvraag’.",
       },
       about: {
         title: "Over Dilek",
@@ -291,8 +291,8 @@ export const nl = {
     count: "{n} behandeling(en)",
     hero: {
       eyebrow: "Behandelingen",
-      title: "Waxen met aandacht,",
-      titleEm: "zone voor zone.",
+      title: "Waxen in Amsterdam,",
+      titleEm: "alleen voor vrouwen.",
       subtitle:
         "Gezicht, lichaam en bikinizone. Hieronder lees je per zone welke behandelingen er zijn, voor wie ze geschikt zijn en hoe je je het beste voorbereidt.",
     },
@@ -336,7 +336,7 @@ export const nl = {
   prices: {
     hero: {
       eyebrow: "Tarieven",
-      title: "Helder geprijsd,",
+      title: "Tarieven,",
       titleEm: "persoonlijk afgestemd.",
       subtitle:
         "Hieronder staan alle behandelingen op een rij. De actuele tarieven stuurt Dilek je graag persoonlijk toe, zodat je precies weet waar je aan toe bent.",
@@ -764,6 +764,15 @@ export const nl = {
     afterTitle: "Wat gebeurt er na je aanvraag?",
     afterLink: "Bekijk het hele proces",
     infoTitle: "Goed voorbereid naar je afspraak",
+    popularTitle: "Veelgezocht in Amsterdam",
+    popular: {
+      brazilian: "Brazilian wax in Amsterdam",
+      hollywood: "Hollywood wax in Amsterdam",
+      "bikini-line": "Bikinilijn waxen in Amsterdam",
+      eyebrows: "Wenkbrauwen waxen in Amsterdam",
+      massage: "Massage voor vrouwen in Amsterdam",
+      facial: "Gezichtsbehandeling in Amsterdam",
+    },
   },
   notFound: {
     title: "Deze pagina bestaat niet (meer)",
