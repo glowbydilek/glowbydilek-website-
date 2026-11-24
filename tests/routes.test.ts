@@ -18,7 +18,7 @@ test("every page has a unique path per language", () => {
     }
   }
   // static pages + categories + treatments, in three languages (NL, EN, TR)
-  assert.equal(seen.size, (15 + 3 + 13 + 3) * 3); // 15 static (incl. reviews, services overview, Noord, blog) + 3 categories + 13 treatments + 3 articles
+  assert.equal(seen.size, (15 + 3 + 13 + 8) * 3); // 15 static (incl. reviews, services overview, Noord, blog) + 3 categories + 13 treatments + 8 articles
 });
 
 test("category routes match the agreed URLs", () => {
