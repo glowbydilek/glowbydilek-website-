@@ -18,7 +18,7 @@ export const nl = {
       home: {
         title: "Glow by Dilek — Schoonheidssalon voor vrouwen in Amsterdam",
         description:
-          "Gezichtsbehandelingen, massages en waxen in Amsterdam, uitsluitend voor vrouwen. Persoonlijk en op afspraak; ook welkom uit Amstelveen, Diemen en Haarlem.",
+          "Gezichtsbehandelingen, massages en waxen in Amsterdam-Noord, uitsluitend voor vrouwen. Persoonlijk en op afspraak; welkom uit heel Amsterdam en omgeving.",
       },
       treatments: {
         title: "Waxen in Amsterdam, alleen voor vrouwen",
@@ -49,6 +49,10 @@ export const nl = {
         title: "Beoordelingen van klanten",
         description: "Lees eerlijke ervaringen van klanten van Glow by Dilek, of deel je eigen ervaring na je behandeling. Elke beoordeling wordt gelezen voordat hij verschijnt.",
       },
+      blog: {
+        title: "Blog: tips over waxen en huidverzorging",
+        description: "Praktische tips en eerlijke uitleg over waxen, voorbereiding en nazorg, van Glow by Dilek: schoonheidssalon voor vrouwen in Amsterdam-Noord.",
+      },
       privacy: {
         title: "Privacyverklaring",
         description: "Welke gegevens Glow by Dilek ontvangt via het contact- en afspraakformulier, waarvoor ze worden gebruikt en welke rechten je hebt.",
@@ -70,6 +74,8 @@ export const nl = {
     aftercare: "Nazorg",
     faq: "Veelgestelde vragen",
     reviews: "Beoordelingen",
+    noord: "Amsterdam-Noord",
+    blog: "Blog",
     categories: "Behandelingen per categorie",
     allTreatments: "Alle behandelingen",
     info: "Goed om te weten",
@@ -96,7 +102,8 @@ export const nl = {
   },
   common: {
     byAppointment: "Uitsluitend op afspraak",
-    location: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+    location: "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
+    homeVisit: "Op verzoek komt Dilek ook bij jou langs, op je eigen adres; vermeld het gerust bij je aanvraag.",
     onRequest: "Op aanvraag",
     goodToKnow: "Goed om te weten",
     moodImage: "Sfeerbeeld",
@@ -233,7 +240,7 @@ export const nl = {
       },
       {
         q: "Waar vinden de behandelingen plaats?",
-        a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+        a: "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
       },
       {
         q: "Is Glow by Dilek alleen voor vrouwen?",
@@ -750,6 +757,17 @@ export const nl = {
       body: "In het formulier staat deze behandeling al voor je geselecteerd. Kies een voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
     },
   },
+  blog: {
+    eyebrow: "Blog",
+    title: "Tips en uitleg",
+    titleEm: "over waxen en verzorging.",
+    intro: "Eerlijke uitleg van Dilek over waxen, voorbereiding en nazorg — zodat je weet wat je kunt verwachten en goed voorbereid naar je afspraak komt.",
+    readMore: "Lees verder",
+    published: "Gepubliceerd op",
+    related: "Meer over deze behandelingen",
+    readAlso: "Verder lezen",
+    faqTitle: "Vragen over dit onderwerp",
+  },
   guide: {
     readMore: "Verder lezen",
     caveat: "Goed om te weten",
@@ -766,6 +784,7 @@ export const nl = {
     infoTitle: "Goed voorbereid naar je afspraak",
     popularTitle: "Veelgezocht in Amsterdam",
     popular: {
+      noord: "Schoonheidssalon in Amsterdam-Noord",
       brazilian: "Brazilian wax in Amsterdam",
       hollywood: "Hollywood wax in Amsterdam",
       "bikini-line": "Bikinilijn waxen in Amsterdam",

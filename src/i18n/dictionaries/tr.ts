@@ -48,6 +48,10 @@ export const tr: Dictionary = {
         title: "Müşteri yorumları",
         description: "Glow by Dilek müşterilerinin dürüst deneyimlerini oku ya da bakımından sonra kendi deneyimini paylaş. Her yorum yayımlanmadan önce okunur.",
       },
+      blog: {
+        title: "Blog: ağda ve cilt bakımı ipuçları",
+        description: "Ağda, hazırlık ve bakım sonrası hakkında pratik ipuçları ve dürüst açıklamalar; Amsterdam-Noord'daki kadınlara özel güzellik salonu Glow by Dilek'ten.",
+      },
       privacy: {
         title: "Gizlilik bildirimi",
         description: "Glow by Dilek'in iletişim ve randevu formları aracılığıyla hangi bilgileri aldığı, bunları nasıl kullandığı ve haklarının neler olduğu.",
@@ -69,6 +73,8 @@ export const tr: Dictionary = {
     aftercare: "Bakım sonrası",
     faq: "Sık sorulan sorular",
     reviews: "Yorumlar",
+    noord: "Amsterdam-Noord",
+    blog: "Blog",
     categories: "Kategoriye göre bakımlar",
     allTreatments: "Tüm bakımlar",
     info: "Bilmekte fayda var",
@@ -95,7 +101,8 @@ export const tr: Dictionary = {
   },
   common: {
     byAppointment: "Yalnızca randevuyla",
-    location: "Bakımlar yalnızca randevuyla yapılır. Konumla ilgili pratik bilgiler onaydan sonra kişisel olarak paylaşılır.",
+    location: "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
+    homeVisit: "İstek üzerine Dilek evine de gelir; talebinde belirtmen yeterli.",
     onRequest: "Talep üzerine",
     goodToKnow: "Bilmekte fayda var",
     moodImage: "Atmosfer görseli",
@@ -232,7 +239,7 @@ export const tr: Dictionary = {
       },
       {
         q: "Bakımlar nerede yapılıyor?",
-        a: "Bakımlar yalnızca randevuyla yapılır. Konumla ilgili pratik bilgiler onaydan sonra kişisel olarak paylaşılır.",
+        a: "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
       },
       {
         q: "Glow by Dilek yalnızca kadınlara mı hizmet veriyor?",
@@ -744,6 +751,17 @@ export const tr: Dictionary = {
       body: "Bu bakım formda senin için zaten seçili. Tercih ettiğin zamanı seç; Dilek talebini inceler ve randevuyu kişisel olarak onaylar.",
     },
   },
+  blog: {
+    eyebrow: "Blog",
+    title: "İpuçları ve açıklamalar",
+    titleEm: "ağda ve bakım üzerine.",
+    intro: "Dilek'ten ağda, hazırlık ve bakım sonrası üzerine dürüst açıklamalar; böylece ne bekleyeceğini bilir ve randevuna iyi hazırlanmış gelirsin.",
+    readMore: "Devamını oku",
+    published: "Yayın tarihi",
+    related: "Bu bakımlar hakkında daha fazlası",
+    readAlso: "Daha fazlasını oku",
+    faqTitle: "Bu konuyla ilgili sorular",
+  },
   guide: {
     readMore: "Devamını oku",
     caveat: "Bilmekte fayda var",
@@ -760,6 +778,7 @@ export const tr: Dictionary = {
     infoTitle: "Randevuna iyi hazırlan",
     popularTitle: "Amsterdam'da en çok arananlar",
     popular: {
+      noord: "Amsterdam-Noord'da güzellik salonu",
       brazilian: "Amsterdam'da Brezilya ağdası",
       hollywood: "Amsterdam'da Hollywood ağdası",
       "bikini-line": "Amsterdam'da bikini çizgisi ağdası",
