@@ -824,6 +824,732 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
       pages: ["preparation", "aftercare", "noord"],
     },
   },
+  "waxing-or-harsen": {
+    nl: {
+      seoTitle: "Waxen of harsen: is er een verschil?",
+      seoDescription: "Waxen of harsen: twee woorden voor hetzelfde? Lees wat het betekent, hoe lang het resultaat blijft en hoe je je voorbereidt. Glow by Dilek, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Waxen",
+        title: "Waxen of harsen:",
+        titleEm: "is er een verschil?",
+        subtitle: "In Nederland hoor je allebei. Zo zit het, en dit wil je weten voordat je je eerste afspraak maakt.",
+      },
+      sections: [
+        {
+          title: "Twee woorden, één behandeling",
+          paragraphs: [
+            "In Nederland worden ‘waxen’ en ‘harsen’ allebei gebruikt voor het verwijderen van haar met wax. Bij beide wordt het haar met wortel en al verwijderd, waardoor het resultaat weken meegaat. Bij Glow by Dilek heet het waxen, maar zoek je op harsen, dan bedoel je hetzelfde.",
+          ],
+        },
+        {
+          title: "Waarom waxen in plaats van scheren?",
+          items: [
+            "Het haar wordt met wortel en al verwijderd, dus het groeit langzamer en zachter terug dan na scheren.",
+            "Het resultaat blijft meestal drie tot vijf weken, afhankelijk van je haargroei en de zone.",
+            "Bij regelmatig waxen groeit het haar vaak fijner en egaler terug.",
+            "Geen stugge stoppels die na een paar dagen alweer voelbaar zijn.",
+          ],
+        },
+        {
+          title: "Welke zones kun je laten waxen?",
+          paragraphs: [
+            "Bij Glow by Dilek kun je terecht voor het gezicht (wenkbrauwen, bovenlip, kin, wangen en kaaklijn, hals, volledig gezicht), het lichaam (oksels, armen, benen, rug, buik, borst, decolleté, billen) en de bikinizone (bikinilijn, Brazilian, Hollywood). Alles uitsluitend voor vrouwen en op afspraak.",
+          ],
+        },
+        {
+          title: "Zo bereid je je voor",
+          items: [
+            "Laat het haar twee tot vier weken groeien, tot minimaal 0,5 cm.",
+            "Scrub een of twee dagen van tevoren licht, niet op de dag zelf.",
+            "Kom zonder bodylotion, olie of deodorant op de zone.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is harsen hetzelfde als waxen?", a: "Ja. In Nederland worden beide woorden gebruikt voor het verwijderen van haar met wax." },
+        { q: "Hoe vaak moet je harsen of waxen?", a: "Voor de meeste zones is elke vier tot zes weken een prettig ritme." },
+      ],
+      treatments: ["half-legs", "underarms", "bikini-line"],
+      pages: ["treatments", "prices", "preparation"],
+    },
+    en: {
+      seoTitle: "Waxen or harsen: what do the Dutch words mean?",
+      seoDescription: "Waxen or harsen? Both Dutch words mean hair removal with wax. Learn how long results last and how to prepare. Glow by Dilek, women-only, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Waxing",
+        title: "Waxen or harsen:",
+        titleEm: "what’s the difference?",
+        subtitle: "In the Netherlands you hear both words. Here is what they mean, and what to know before your first appointment.",
+      },
+      sections: [
+        {
+          title: "Two words, one treatment",
+          paragraphs: [
+            "In Dutch, ‘waxen’ and ‘harsen’ are both used for hair removal with wax. In both cases the hair is removed from the root, so the result lasts for weeks. At Glow by Dilek it is called waxing, but if you search for harsen, you mean the same thing.",
+          ],
+        },
+        {
+          title: "Why wax instead of shaving?",
+          items: [
+            "Hair is removed from the root, so it grows back more slowly and softer than after shaving.",
+            "The result usually lasts three to five weeks, depending on your hair growth and the area.",
+            "With regular waxing, hair often grows back finer and more even.",
+            "No stubble that you can feel again after a few days.",
+          ],
+        },
+        {
+          title: "Which areas can you have waxed?",
+          paragraphs: [
+            "At Glow by Dilek you can book the face (eyebrows, upper lip, chin, cheeks and jawline, neck, full face), the body (underarms, arms, legs, back, belly, chest, décolletage, buttocks) and the bikini area (bikini line, Brazilian, Hollywood). All for women only and by appointment.",
+          ],
+        },
+        {
+          title: "How to prepare",
+          items: [
+            "Let the hair grow for two to four weeks, to at least 0.5 cm.",
+            "Exfoliate lightly one or two days before, not on the day itself.",
+            "Come without body lotion, oil or deodorant on the area.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is harsen the same as waxing?", a: "Yes. In Dutch both words are used for hair removal with wax." },
+        { q: "How often should you wax?", a: "For most areas, every four to six weeks is a comfortable rhythm." },
+      ],
+      treatments: ["half-legs", "underarms", "bikini-line"],
+      pages: ["treatments", "prices", "preparation"],
+    },
+    tr: {
+      seoTitle: "Waxen mi harsen mi: fark var mı?",
+      seoDescription: "Hollanda'da waxen ve harsen aynı anlama gelir: ağdayla tüy alma. Sonucun ne kadar kaldığını ve nasıl hazırlanacağını oku. Amsterdam-Noord'dan Glow by Dilek.",
+      hero: {
+        eyebrow: "Blog · Ağda",
+        title: "Waxen mi harsen mi:",
+        titleEm: "fark var mı?",
+        subtitle: "Hollanda'da iki kelimeyi de duyarsın. Ne anlama geldiklerini ve ilk randevundan önce bilmen gerekenleri oku.",
+      },
+      sections: [
+        {
+          title: "İki kelime, tek bakım",
+          paragraphs: [
+            "Felemenkçede ‘waxen’ ve ‘harsen’ ikisi de ağdayla tüy almayı anlatır. İkisinde de kıl kökünden alınır, bu yüzden sonuç haftalarca sürer. Glow by Dilek'te buna waxen denir; harsen diye arıyorsan aynı şeyi kastediyorsun.",
+          ],
+        },
+        {
+          title: "Neden tıraş yerine ağda?",
+          items: [
+            "Kıl kökünden alınır; tıraştan sonra olduğundan daha yavaş ve daha yumuşak çıkar.",
+            "Sonuç kıl çıkışına ve bölgeye göre genellikle üç ila beş hafta kalır.",
+            "Düzenli ağdayla kıllar çoğu zaman daha ince ve düzgün çıkar.",
+          ],
+        },
+        {
+          title: "Hangi bölgeler yapılır?",
+          paragraphs: [
+            "Glow by Dilek'te yüz (kaş, üst dudak, çene, yanak ve çene hattı, boyun, tüm yüz), vücut (koltuk altı, kollar, bacaklar, sırt, karın, göğüs, dekolte, kalça) ve bikini bölgesi (bikini çizgisi, Brezilya, Hollywood) yapılır. Hepsi yalnızca kadınlara ve randevuyla.",
+          ],
+        },
+        {
+          title: "Nasıl hazırlanırsın",
+          items: [
+            "Kılları iki ila dört hafta, en az 0,5 cm olana kadar uzat.",
+            "Bir iki gün önce hafif peeling yap, aynı gün yapma.",
+            "Bölgeye losyon, yağ veya deodorant sürmeden gel.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Harsen ile waxen aynı mı?", a: "Evet. Felemenkçede iki kelime de ağdayla tüy almayı anlatır." },
+        { q: "Ne sıklıkla ağda yapılmalı?", a: "Çoğu bölge için dört ila altı haftada bir rahat bir aralıktır." },
+      ],
+      treatments: ["half-legs", "underarms", "bikini-line"],
+      pages: ["treatments", "prices", "preparation"],
+    },
+  },
+
+  "leg-waxing": {
+    nl: {
+      seoTitle: "Benen waxen: onderbenen, bovenbenen of hele benen?",
+      seoDescription: "Onderbenen, bovenbenen of hele benen waxen? Lees wat het verschil is, hoe je je voorbereidt en hoe je je huid daarna verzorgt. Alleen voor vrouwen, Amsterdam.",
+      hero: {
+        eyebrow: "Blog · Benen waxen",
+        title: "Onderbenen, bovenbenen",
+        titleEm: "of hele benen?",
+        subtitle: "Gladde benen voor weken, zonder stoppels. Zo kies je de juiste zone en bereid je je goed voor.",
+      },
+      sections: [
+        {
+          title: "Welke zone kies je?",
+          items: [
+            "Onderbenen: van enkel tot net boven de knie. Een goede keuze als je vooral je onderbenen bloot draagt.",
+            "Bovenbenen: van de knie tot de bikinilijn, aan de voor-, achter- en binnenkant.",
+            "Hele benen: onder- en bovenbenen samen, voor helemaal gladde benen.",
+          ],
+        },
+        {
+          title: "Zo verloopt de afspraak",
+          paragraphs: [
+            "De huid wordt gereinigd en de wax wordt baan voor baan aangebracht, met de haargroei mee. Rond de knie, waar de huid beweegt, wordt extra rustig gewerkt. Daarna worden losse haartjes nagelopen en krijgt je huid een verzachtende verzorging.",
+          ],
+        },
+        {
+          title: "Zo bereid je je voor",
+          items: [
+            "Laat het haar twee tot vier weken groeien, tot minimaal 0,5 cm.",
+            "Scrub een of twee dagen van tevoren licht.",
+            "Ga 48 uur van tevoren niet zonnebaden en kom zonder bodylotion of olie.",
+            "Draag ruime kleding, zodat er na de behandeling niets schuurt.",
+          ],
+        },
+        {
+          title: "Na het waxen",
+          items: [
+            "Vermijd 24 uur lang zon, zonnebank, sauna, hete douches en strakke broeken.",
+            "Houd de huid soepel met een milde, ongeparfumeerde crème.",
+            "Begin na twee dagen met af en toe mild scrubben tegen ingegroeide haartjes.",
+            "Scheer liever niet tussen twee afspraken; zo blijft je haargroei in hetzelfde ritme.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Hoe lang blijven mijn benen glad?", a: "Meestal drie tot vijf weken, afhankelijk van je haargroei." },
+        { q: "Kan ik benen combineren met een bikinibehandeling?", a: "Ja. Kies in je aanvraag beide behandelingen; Dilek plant ze samen in." },
+      ],
+      treatments: ["half-legs", "upper-legs", "full-legs"],
+      pages: ["prices", "aftercare", "noord"],
+    },
+    en: {
+      seoTitle: "Leg waxing: lower legs, upper legs or full legs?",
+      seoDescription: "Lower legs, upper legs or full legs? Learn the difference, how to prepare and how to care for your skin afterwards. Women-only leg waxing in Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Leg waxing",
+        title: "Lower legs, upper legs",
+        titleEm: "or full legs?",
+        subtitle: "Smooth legs for weeks, without stubble. Here is how to choose the right area and prepare well.",
+      },
+      sections: [
+        {
+          title: "Which area do you choose?",
+          items: [
+            "Lower legs: from ankle to just above the knee. A good choice if it is mainly your lower legs that show.",
+            "Upper legs: from the knee to the bikini line, at the front, back and inside.",
+            "Full legs: lower and upper legs together, for completely smooth legs.",
+          ],
+        },
+        {
+          title: "How the appointment goes",
+          paragraphs: [
+            "The skin is cleansed and the wax is applied strip by strip, with the direction of hair growth. Around the knee, where the skin moves, the work is done extra calmly. Stray hairs are then tidied and your skin receives a soothing finish.",
+          ],
+        },
+        {
+          title: "How to prepare",
+          items: [
+            "Let the hair grow for two to four weeks, to at least 0.5 cm.",
+            "Exfoliate lightly one or two days before.",
+            "Avoid sunbathing for 48 hours before and come without body lotion or oil.",
+            "Wear loose clothing so nothing rubs after the treatment.",
+          ],
+        },
+        {
+          title: "After waxing",
+          items: [
+            "Avoid sun, sunbeds, sauna, hot showers and tight trousers for 24 hours.",
+            "Keep the skin supple with a mild, unscented cream.",
+            "Start gentle exfoliation now and then after two days to prevent ingrown hairs.",
+            "Preferably don’t shave between appointments, so your hair growth stays in the same rhythm.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "How long do my legs stay smooth?", a: "Usually three to five weeks, depending on your hair growth." },
+        { q: "Can I combine legs with a bikini treatment?", a: "Yes. Choose both treatments in your request; Dilek schedules them together." },
+      ],
+      treatments: ["half-legs", "upper-legs", "full-legs"],
+      pages: ["prices", "aftercare", "noord"],
+    },
+    tr: {
+      seoTitle: "Bacak ağdası: alt bacak, üst bacak mı tüm bacak mı?",
+      seoDescription: "Alt bacak, üst bacak ya da tüm bacak ağdası? Farkı, nasıl hazırlanacağını ve sonrasında cildine nasıl bakacağını oku. Amsterdam'da kadınlara özel.",
+      hero: {
+        eyebrow: "Blog · Bacak ağdası",
+        title: "Alt bacak, üst bacak",
+        titleEm: "mı tüm bacak mı?",
+        subtitle: "Haftalarca pürüzsüz bacaklar. Doğru bölgeyi seçmek ve iyi hazırlanmak için ipuçları.",
+      },
+      sections: [
+        {
+          title: "Hangi bölgeyi seçmeli?",
+          items: [
+            "Alt bacak: bilekten dizin hemen üstüne kadar.",
+            "Üst bacak: dizden bikini çizgisine kadar; ön, arka ve iç taraf.",
+            "Tüm bacak: alt ve üst bacak birlikte, tamamen pürüzsüz bacaklar için.",
+          ],
+        },
+        {
+          title: "Randevu nasıl geçer",
+          paragraphs: [
+            "Cilt temizlenir ve ağda kıl yönünde şerit şerit sürülür. Dizin çevresinde, cildin hareket ettiği yerde daha da sakin çalışılır. Ardından tek tük kıllar düzeltilir ve cilt yatıştırılır.",
+          ],
+        },
+        {
+          title: "Hazırlık ve sonrası",
+          items: [
+            "Kılları iki ila dört hafta, en az 0,5 cm olana kadar uzat; bir iki gün önce hafif peeling yap.",
+            "48 saat önce güneşlenme; losyon veya yağ sürmeden gel.",
+            "24 saat güneş, sauna, sıcak duş ve dar pantolondan kaçın.",
+            "İki gün sonra batık kıllara karşı hafif peelinge başla; aralarda tıraş olmamaya çalış.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Bacaklarım ne kadar pürüzsüz kalır?", a: "Kıl çıkışına göre genellikle üç ila beş hafta." },
+        { q: "Bacak ağdasını bikini bakımıyla birleştirebilir miyim?", a: "Evet. Talebinde ikisini seç; Dilek birlikte planlar." },
+      ],
+      treatments: ["half-legs", "upper-legs", "full-legs"],
+      pages: ["prices", "aftercare", "noord"],
+    },
+  },
+
+  "arm-back-waxing": {
+    nl: {
+      seoTitle: "Armen en rug waxen voor vrouwen: zo werkt het",
+      seoDescription: "Onderarmen, bovenarmen, hele armen of rug laten waxen? Lees wat er gebeurt, hoe je je voorbereidt en wat je daarna doet. Alleen voor vrouwen, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Armen en rug",
+        title: "Armen en rug waxen",
+        titleEm: "voor vrouwen.",
+        subtitle: "Ook fijn of licht haar op armen en rug kan prima worden gewaxt. Zo werkt het, rustig en discreet.",
+      },
+      sections: [
+        {
+          title: "Armen: welke zone?",
+          items: [
+            "Onderarmen: van pols tot net boven de elleboog.",
+            "Bovenarmen: van elleboog tot schouder.",
+            "Hele armen: onder- en bovenarmen samen.",
+            "Licht of fijn armhaar kan ook worden gewaxt, zolang het lang genoeg is.",
+          ],
+        },
+        {
+          title: "Rug waxen voor vrouwen",
+          paragraphs: [
+            "Veel vrouwen hebben fijne haartjes op de rug, bijvoorbeeld onderaan de rug of tussen de schouderbladen. Op de rug kun je zelf moeilijk bij, dus waxen is een praktische oplossing. Je bespreekt vooraf welk deel van de rug je wilt laten doen.",
+          ],
+        },
+        {
+          title: "Voorbereiding",
+          items: [
+            "Laat het haar twee tot vier weken groeien, tot minimaal 0,5 cm.",
+            "Ga 48 uur van tevoren niet zonnebaden; kom zonder bodylotion of olie.",
+            "Draag een top of shirt dat je makkelijk uit en aan doet.",
+          ],
+        },
+        {
+          title: "Nazorg",
+          items: [
+            "Vermijd 24 uur lang zon, zonnebank, sauna en hete douches.",
+            "Draag ruime kleding op de behandelde huid.",
+            "Begin na twee dagen met af en toe mild scrubben.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Wordt armhaar dikker als ik ermee begin?", a: "Nee. Bij regelmatig waxen groeit het haar vaak juist fijner en egaler terug." },
+        { q: "Kan ik mijn rug laten waxen als vrouw?", a: "Ja, natuurlijk. Glow by Dilek is uitsluitend voor vrouwen; je bespreekt vooraf welk deel van de rug je wilt laten doen." },
+      ],
+      treatments: ["half-arms", "upper-arms", "back"],
+      pages: ["prices", "preparation", "noord"],
+    },
+    en: {
+      seoTitle: "Arm and back waxing for women: how it works",
+      seoDescription: "Forearms, upper arms, full arms or back waxing? Learn what happens, how to prepare and what to do afterwards. Women-only waxing in Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Arms and back",
+        title: "Arm and back waxing",
+        titleEm: "for women.",
+        subtitle: "Fine or light hair on arms and back can be waxed too. Here is how it works, calmly and discreetly.",
+      },
+      sections: [
+        {
+          title: "Arms: which area?",
+          items: [
+            "Forearms: from wrist to just above the elbow.",
+            "Upper arms: from elbow to shoulder.",
+            "Full arms: forearms and upper arms together.",
+            "Light or fine arm hair can be waxed too, as long as it is long enough.",
+          ],
+        },
+        {
+          title: "Back waxing for women",
+          paragraphs: [
+            "Many women have fine hairs on the back, for example on the lower back or between the shoulder blades. You can hardly reach your own back, so waxing is a practical solution. You agree beforehand which part of the back you want done.",
+          ],
+        },
+        {
+          title: "Preparation",
+          items: [
+            "Let the hair grow for two to four weeks, to at least 0.5 cm.",
+            "Avoid sunbathing for 48 hours before; come without body lotion or oil.",
+            "Wear a top that is easy to take off and put on.",
+          ],
+        },
+        {
+          title: "Aftercare",
+          items: [
+            "Avoid sun, sunbeds, sauna and hot showers for 24 hours.",
+            "Wear loose clothing on the treated skin.",
+            "Start gentle exfoliation now and then after two days.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Does arm hair get thicker once I start waxing?", a: "No. With regular waxing, hair often grows back finer and more even." },
+        { q: "Can I have my back waxed as a woman?", a: "Yes, of course. Glow by Dilek is for women only; you agree beforehand which part of the back you want done." },
+      ],
+      treatments: ["half-arms", "upper-arms", "back"],
+      pages: ["prices", "preparation", "noord"],
+    },
+    tr: {
+      seoTitle: "Kadınlar için kol ve sırt ağdası: nasıl yapılır",
+      seoDescription: "Ön kol, üst kol, tüm kol ya da sırt ağdası? Ne yapıldığını, nasıl hazırlanacağını ve sonrasında ne yapacağını oku. Amsterdam-Noord'da kadınlara özel.",
+      hero: {
+        eyebrow: "Blog · Kol ve sırt",
+        title: "Kadınlar için",
+        titleEm: "kol ve sırt ağdası.",
+        subtitle: "Kollardaki ve sırttaki ince ya da açık renkli tüyler de ağdayla alınabilir. Sakin ve gizlilik içinde nasıl yapıldığını oku.",
+      },
+      sections: [
+        {
+          title: "Kollar: hangi bölge?",
+          items: [
+            "Ön kol: bilekten dirseğin hemen üstüne kadar.",
+            "Üst kol: dirsekten omza kadar.",
+            "Tüm kol: ön ve üst kol birlikte.",
+            "Açık renkli veya ince kol tüyleri de yeterince uzunsa ağdayla alınabilir.",
+          ],
+        },
+        {
+          title: "Kadınlar için sırt ağdası",
+          paragraphs: [
+            "Birçok kadının sırtında, örneğin bel kısmında veya kürek kemiklerinin arasında ince tüyler olur. Kendi sırtına ulaşmak zor olduğundan ağda pratik bir çözümdür. Sırtın hangi kısmının yapılacağını önceden konuşursunuz.",
+          ],
+        },
+        {
+          title: "Hazırlık ve sonrası",
+          items: [
+            "Kılları iki ila dört hafta, en az 0,5 cm olana kadar uzat.",
+            "48 saat önce güneşlenme; losyon veya yağ sürmeden gel.",
+            "24 saat güneş, solaryum, sauna ve sıcak duştan kaçın; bol giysiler giy.",
+            "İki gün sonra ara sıra hafif peeling yap.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Ağdaya başlayınca kol tüyleri kalınlaşır mı?", a: "Hayır. Düzenli ağdayla kıllar çoğu zaman daha ince ve düzgün çıkar." },
+        { q: "Kadın olarak sırt ağdası yaptırabilir miyim?", a: "Elbette. Glow by Dilek yalnızca kadınlara hizmet verir; sırtın hangi kısmının yapılacağını önceden konuşursunuz." },
+      ],
+      treatments: ["half-arms", "upper-arms", "back"],
+      pages: ["prices", "preparation", "noord"],
+    },
+  },
+
+  "facial-and-head-massage": {
+    nl: {
+      seoTitle: "Gezichtsmassage en hoofdmassage: wat kun je verwachten?",
+      seoDescription: "Wat is een gezichtsmassage of hoofdmassage en wat kun je verwachten? Lees hoe de afspraak verloopt en wat je vooraf bespreekt. Alleen voor vrouwen, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Massage",
+        title: "Gezichtsmassage en hoofdmassage:",
+        titleEm: "wat kun je verwachten?",
+        subtitle: "Een rustig moment voor jezelf, met een aanraking die voor jou prettig voelt. Zo verloopt het.",
+      },
+      sections: [
+        {
+          title: "Gezichtsmassage",
+          paragraphs: [
+            "Een gezichtsmassage is een zachte, ontspannende verzorging met de aandacht op je gezicht. Vooraf vertel je hoe je huid zich voelt en of je ergens gevoelig voor bent, en bespreek je of hals en decolleté erbij horen. Make-up wordt eerst verwijderd, zodat de massage rustig kan beginnen.",
+          ],
+        },
+        {
+          title: "Hoofdmassage",
+          paragraphs: [
+            "Een hoofdmassage is een ontspannende massage van het hoofd. Vooraf bespreek je of de hoofdhuid erbij hoort en of nek en schouders aandacht mogen krijgen. Het is een ontspanningsmoment, geen haarbehandeling.",
+          ],
+        },
+        {
+          title: "Massage of gezichtsbehandeling?",
+          paragraphs: [
+            "Wil je naast ontspanning ook dat je huid grondig wordt gereinigd? Kies dan de dieptereinigende gezichtsbehandeling: daarin zitten onder meer stoom, een masker en ook een gezichtsmassage.",
+          ],
+        },
+        {
+          title: "Goed om te weten",
+          items: [
+            "Praten mag, stil zijn ook: jij bepaalt de sfeer.",
+            "Je kunt altijd aangeven of je meer of minder druk wilt, of wilt pauzeren.",
+            "Meld vooraf een gevoelige huid of hoofdhuid, allergieën of een recente behandeling.",
+            "Een ontspanningsmassage is geen medische of therapeutische behandeling; er worden geen resultaten beloofd.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is een gezichtsmassage hetzelfde als een gezichtsbehandeling?", a: "Nee. De massage is een ontspannend verzorgingsmoment; de dieptereinigende gezichtsbehandeling reinigt en verzorgt je huid in tien stappen." },
+        { q: "Wordt bij een hoofdmassage mijn haar behandeld?", a: "Nee, het is een ontspannende massage en geen haarbehandeling." },
+      ],
+      treatments: ["massage-face", "massage-head", "facial-deep-cleansing"],
+      pages: ["prices", "booking", "noord"],
+    },
+    en: {
+      seoTitle: "Facial massage and head massage: what to expect",
+      seoDescription: "What is a facial massage or head massage and what can you expect? Read how the appointment goes and what you discuss beforehand. Women only, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Massage",
+        title: "Facial and head massage:",
+        titleEm: "what to expect.",
+        subtitle: "A calm moment for yourself, with a touch that feels comfortable to you. Here is how it goes.",
+      },
+      sections: [
+        {
+          title: "Facial massage",
+          paragraphs: [
+            "A facial massage is gentle, relaxing care focused on your face. Beforehand you share how your skin feels and whether you are sensitive to anything, and you discuss whether the neck and décolleté are included. Make-up is removed first so the massage can begin calmly.",
+          ],
+        },
+        {
+          title: "Head massage",
+          paragraphs: [
+            "A head massage is a relaxing massage of the head. Beforehand you discuss whether the scalp is included and whether the neck and shoulders may receive attention. It is a moment of relaxation, not a hair treatment.",
+          ],
+        },
+        {
+          title: "Massage or facial?",
+          paragraphs: [
+            "Would you like your skin to be thoroughly cleansed as well as relaxing? Then choose the deep cleansing facial: it includes steam, a mask and a facial massage, among other steps.",
+          ],
+        },
+        {
+          title: "Good to know",
+          items: [
+            "Talking is fine, and so is silence: you set the mood.",
+            "You can always ask for more or less pressure, or a pause.",
+            "Mention sensitive skin or scalp, allergies or a recent treatment beforehand.",
+            "A relaxation massage is not a medical or therapeutic treatment; no results are promised.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is a facial massage the same as a facial?", a: "No. The massage is a relaxing moment of care; the deep cleansing facial cleanses and cares for your skin in ten steps." },
+        { q: "Is my hair treated during a head massage?", a: "No, it is a relaxing massage, not a hair treatment." },
+      ],
+      treatments: ["massage-face", "massage-head", "facial-deep-cleansing"],
+      pages: ["prices", "booking", "noord"],
+    },
+    tr: {
+      seoTitle: "Yüz masajı ve baş masajı: neler beklemelisin?",
+      seoDescription: "Yüz masajı ya da baş masajı nedir, neler beklemelisin? Randevunun nasıl geçtiğini ve önceden neleri konuştuğunu oku. Kadınlara özel, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Masaj",
+        title: "Yüz ve baş masajı:",
+        titleEm: "neler beklemelisin?",
+        subtitle: "Kendin için sakin bir an; sana iyi gelen bir dokunuşla. Nasıl geçtiğini oku.",
+      },
+      sections: [
+        {
+          title: "Yüz masajı",
+          paragraphs: [
+            "Yüz masajı, yüzüne odaklanan nazik ve rahatlatıcı bir bakımdır. Önceden cildinin nasıl hissettiğini ve hassasiyetlerini anlatır, boyun ve dekoltenin dahil olup olmayacağını konuşursunuz. Masaj sakince başlayabilsin diye önce makyaj temizlenir.",
+          ],
+        },
+        {
+          title: "Baş masajı",
+          paragraphs: [
+            "Baş masajı, başa yapılan rahatlatıcı bir masajdır. Saçlı derinin dahil olup olmayacağını ve boyun ile omuzlara da ilgi gösterilip gösterilmeyeceğini önceden konuşursunuz. Bu bir saç bakımı değil, bir rahatlama anıdır.",
+          ],
+        },
+        {
+          title: "Masaj mı yüz bakımı mı?",
+          paragraphs: [
+            "Rahatlamanın yanında cildinin de derinlemesine temizlenmesini istiyorsan derin temizleyici yüz bakımını seç: buhar, maske ve yüz masajı da dahil olmak üzere on adımdan oluşur.",
+          ],
+        },
+        {
+          title: "Bilmekte fayda var",
+          items: [
+            "Sohbet edebilirsin, sessiz de kalabilirsin: ortamı sen belirlersin.",
+            "Baskının artırılmasını veya azaltılmasını ya da ara verilmesini her zaman isteyebilirsin.",
+            "Hassas cilt veya saçlı deri, alerji ya da yakın zamanda yapılan bir uygulamayı önceden belirt.",
+            "Rahatlama masajı tıbbi veya terapötik bir uygulama değildir; sonuç vaat edilmez.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Yüz masajı yüz bakımıyla aynı mı?", a: "Hayır. Masaj rahatlatıcı bir bakım anıdır; derin temizleyici yüz bakımı cildini on adımda temizler ve besler." },
+        { q: "Baş masajında saçıma bir işlem yapılır mı?", a: "Hayır, bu rahatlatıcı bir masajdır, saç bakımı değildir." },
+      ],
+      treatments: ["massage-face", "massage-head", "facial-deep-cleansing"],
+      pages: ["prices", "booking", "noord"],
+    },
+  },
+
+  "deep-cleansing-facial-steps": {
+    nl: {
+      seoTitle: "Dieptereinigende gezichtsbehandeling: de 10 stappen",
+      seoDescription: "Wat gebeurt er bij een dieptereinigende gezichtsbehandeling met stoom? Lees de tien stappen, de voordelen en hoe je je voorbereidt. Alleen voor vrouwen, Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Gezichtsbehandeling",
+        title: "Dieptereinigende gezichtsbehandeling:",
+        titleEm: "de tien stappen.",
+        subtitle: "Van huidanalyse en stoom tot masker, massage en zonbescherming: zo verloopt een dieptereiniging bij Glow by Dilek.",
+      },
+      sections: [
+        {
+          title: "De tien stappen",
+          items: [
+            "Huidanalyse en de keuze van de verzorging die past bij jouw huidtype.",
+            "Make-up, dagelijks vuil en onzuiverheden worden verwijderd.",
+            "Een peeling verwijdert dode huidcellen.",
+            "Stoom maakt de poriën zachter en bereidt de huid voor op de reiniging.",
+            "Mee-eters en milia (gerstekorrels) worden verwijderd.",
+            "Passende serums en verzorgingsproducten worden aangebracht.",
+            "Een ontspannend en hydraterend gezichtsmasker.",
+            "Een gezichtsmassage, voor ontspanning en verzorging.",
+            "Intensieve hydraterende en voedende verzorging.",
+            "Je huid wordt afgesloten met een zonnebescherming.",
+          ],
+        },
+        {
+          title: "De voordelen",
+          items: [
+            "Een schonere en gezuiverde huid.",
+            "Een zachtere en gladdere uitstraling.",
+            "Een gehydrateerde, frisse en stralende huid.",
+            "Verzorging die helpt je poriën te reinigen.",
+            "Een heerlijk ontspannen moment voor jezelf.",
+          ],
+        },
+        {
+          title: "Goed om te weten",
+          items: [
+            "Kom gerust met make-up: die wordt aan het begin verwijderd.",
+            "Meld vooraf een gevoelige huid, allergieën, een recente huidbehandeling of gevoeligheid voor warmte.",
+            "Na stoom en het verwijderen van mee-eters kan je huid even rood of warm aanvoelen; dat trekt meestal snel weg.",
+            "Dit is een verzorgende, geen medische behandeling; resultaten verschillen per huid.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is stoom onderdeel van de behandeling?", a: "Ja. Stoom maakt de poriën zachter en bereidt de huid voor op de reiniging. Ben je gevoelig voor warmte, meld het dan vooraf." },
+        { q: "Is de behandeling geschikt voor mijn huidtype?", a: "De behandeling begint met een huidanalyse en wordt afgestemd op jouw huidtype en wat je huid nodig heeft." },
+      ],
+      treatments: ["facial-deep-cleansing", "brow-lash-tint", "massage-face"],
+      pages: ["prices", "booking", "noord"],
+    },
+    en: {
+      seoTitle: "Deep cleansing facial: the 10 steps",
+      seoDescription: "What happens during a deep cleansing facial with steam? Read the ten steps, the benefits and how to prepare. Women-only beauty salon in Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Facial",
+        title: "Deep cleansing facial:",
+        titleEm: "the ten steps.",
+        subtitle: "From skin analysis and steam to mask, massage and sun protection: this is how a deep cleanse goes at Glow by Dilek.",
+      },
+      sections: [
+        {
+          title: "The ten steps",
+          items: [
+            "Skin analysis and a choice of care that suits your skin type.",
+            "Make-up, everyday dirt and impurities are removed.",
+            "An exfoliation removes dead skin cells.",
+            "Steam softens the pores and prepares the skin for cleansing.",
+            "Blackheads and milia are removed.",
+            "Suitable serums and skincare products are applied.",
+            "A relaxing, hydrating face mask.",
+            "A facial massage, for relaxation and care.",
+            "Intensive hydrating and nourishing care.",
+            "Your skin is finished with sun protection.",
+          ],
+        },
+        {
+          title: "The benefits",
+          items: [
+            "Cleaner, purified skin.",
+            "A softer, smoother appearance.",
+            "Hydrated, fresh and radiant-looking skin.",
+            "Care that helps cleanse your pores.",
+            "A lovely relaxing moment for yourself.",
+          ],
+        },
+        {
+          title: "Good to know",
+          items: [
+            "Feel free to come with make-up: it is removed at the start.",
+            "Mention sensitive skin, allergies, a recent skin treatment or sensitivity to heat beforehand.",
+            "After steam and blackhead removal your skin may feel a little red or warm; this usually fades quickly.",
+            "This is a caring, not a medical treatment; results differ per skin.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Is steam part of the treatment?", a: "Yes. Steam softens the pores and prepares the skin for cleansing. If you are sensitive to heat, mention it beforehand." },
+        { q: "Is the treatment suitable for my skin type?", a: "The treatment starts with a skin analysis and is tailored to your skin type and what your skin needs." },
+      ],
+      treatments: ["facial-deep-cleansing", "brow-lash-tint", "massage-face"],
+      pages: ["prices", "booking", "noord"],
+    },
+    tr: {
+      seoTitle: "Derin temizleyici yüz bakımı: 10 adım",
+      seoDescription: "Buharlı derin temizleyici yüz bakımında neler yapılır? On adımı, faydalarını ve nasıl hazırlanacağını oku. Amsterdam-Noord'da kadınlara özel güzellik salonu.",
+      hero: {
+        eyebrow: "Blog · Yüz bakımı",
+        title: "Derin temizleyici yüz bakımı:",
+        titleEm: "on adım.",
+        subtitle: "Cilt analizinden ve buhardan maskeye, masaja ve güneş korumasına: Glow by Dilek'te derin temizlik böyle yapılır.",
+      },
+      sections: [
+        {
+          title: "On adım",
+          items: [
+            "Cilt analizi ve cilt tipine uygun bakımın seçilmesi.",
+            "Makyaj, günlük kir ve kirliliklerin temizlenmesi.",
+            "Peeling ile ölü hücrelerin arındırılması.",
+            "Buharla gözeneklerin yumuşatılması ve cildin temizliğe hazırlanması.",
+            "Siyah nokta ve milia (yağ bezecikleri) temizliği.",
+            "Uygun serum ve bakım ürünlerinin uygulanması.",
+            "Rahatlatıcı ve nemlendirici yüz maskesi.",
+            "Rahatlama ve bakım için yüz masajı.",
+            "Yoğun nemlendirici ve besleyici bakım.",
+            "Güneş koruyucu ile bakımın tamamlanması.",
+          ],
+        },
+        {
+          title: "Faydaları",
+          items: [
+            "Daha temiz ve arınmış bir cilt.",
+            "Daha yumuşak ve pürüzsüz bir görünüm.",
+            "Nemlenmiş, taze ve ışıltılı bir cilt.",
+            "Gözeneklerin temizlenmesine yardımcı bakım.",
+            "Kendine ayırdığın keyifli ve rahatlatıcı bir an.",
+          ],
+        },
+        {
+          title: "Bilmekte fayda var",
+          items: [
+            "Makyajlı gelebilirsin: başta temizlenir.",
+            "Hassas cilt, alerji, yakın zamanda yapılan bir cilt uygulaması veya sıcağa hassasiyetini önceden belirt.",
+            "Buhar ve siyah nokta temizliğinden sonra cildin biraz kızarık veya sıcak hissedebilir; genellikle çabuk geçer.",
+            "Bu tıbbi değil, bakım amaçlı bir uygulamadır; sonuçlar cilde göre değişir.",
+          ],
+        },
+      ],
+      faqs: [
+        { q: "Buhar bakımın bir parçası mı?", a: "Evet. Buhar gözenekleri yumuşatır ve cildi temizliğe hazırlar. Sıcağa hassassan önceden belirt." },
+        { q: "Bakım cilt tipime uygun mu?", a: "Bakım cilt analiziyle başlar ve cilt tipine ve cildinin ihtiyacına göre ayarlanır." },
+      ],
+      treatments: ["facial-deep-cleansing", "brow-lash-tint", "massage-face"],
+      pages: ["prices", "booking", "noord"],
+    },
+  },
 };
 
 export function noordCopy(locale: Locale): ArticleCopy {
