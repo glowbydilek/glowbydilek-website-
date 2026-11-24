@@ -64,6 +64,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
               <Icon name="pin" className="h-6 w-6 text-accent-deep" />
               <h3 className="mt-4 font-serif text-2xl text-ink">{t.locationTitle}</h3>
               <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.location}</p>
+              <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.homeVisit}</p>
               <h3 className="mt-6 font-serif text-2xl text-ink">{t.hoursTitle}</h3>
               <p className="mt-2 leading-relaxed text-ink-soft">{t.hoursBody}</p>
             </div>

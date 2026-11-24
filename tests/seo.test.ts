@@ -2,11 +2,12 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { Metadata } from "next";
 import { allPages, locales, pagePath, type Locale, type PageRef } from "@/i18n/config";
-import { businessJsonLd, categoryMetadata, pageMetadata, treatmentMetadata } from "@/lib/seo";
+import { businessJsonLd, categoryMetadata, pageMetadata, postMetadata, treatmentMetadata } from "@/lib/seo";
 
 function meta(locale: Locale, page: PageRef): Metadata {
   if (page.type === "static") return pageMetadata(locale, page.key);
   if (page.type === "category") return categoryMetadata(locale, page.id);
+  if (page.type === "post") return postMetadata(locale, page.id);
   return treatmentMetadata(locale, page.id);
 }
 

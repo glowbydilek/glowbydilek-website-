@@ -6,7 +6,8 @@ import { DeleteRedirect, RedirectForm } from "@/components/private/cms/RedirectF
 import { SeoForm, type Seo } from "@/components/private/cms/SeoForm";
 import { Card, PageHeader } from "@/components/private/ui";
 import { categoryCopy, treatmentCopy } from "@/content/copy";
-import { categoryIds, treatmentIds } from "@/content/slugs";
+import { postCopy } from "@/content/copy/blog";
+import { categoryIds, postIds, treatmentIds } from "@/content/slugs";
 import { allPages, pagePath, routeKeys, type PageRef } from "@/i18n/config";
 import { editorValue } from "@/lib/cms/service";
 import { getDb } from "@/lib/db/client";
@@ -21,6 +22,7 @@ const items: Item[] = [
   ...routeKeys.map((k) => ({ key: k, label: staticPageMeta("nl", k).title, ref: { type: "static" as const, key: k } })),
   ...categoryIds.map((id) => ({ key: `category-${id}`, label: categoryCopy("nl", id).seoTitle, ref: { type: "category" as const, id } })),
   ...treatmentIds.map((id) => ({ key: `treatment-${id}`, label: treatmentCopy("nl", id).seoTitle, ref: { type: "treatment" as const, id } })),
+  ...postIds.map((id) => ({ key: `post-${id}`, label: `Blog: ${postCopy("nl", id).seoTitle}`, ref: { type: "post" as const, id } })),
 ];
 
 function defaultsFor(item: Item, locale: "nl" | "en" | "tr") {
@@ -28,6 +30,10 @@ function defaultsFor(item: Item, locale: "nl" | "en" | "tr") {
   if (item.ref.type === "category") {
     const c = categoryCopy(locale, item.ref.id);
     return { title: c.seoTitle, description: c.seoDescription };
+  }
+  if (item.ref.type === "post") {
+    const p = postCopy(locale, item.ref.id);
+    return { title: p.seoTitle, description: p.seoDescription };
   }
   const t = treatmentCopy(locale, item.ref.id);
   return { title: t.seoTitle, description: t.seoDescription };

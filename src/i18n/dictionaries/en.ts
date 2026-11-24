@@ -16,7 +16,7 @@ export const en: Dictionary = {
       home: {
         title: "Ladies-only beauty salon in Amsterdam | Glow by Dilek",
         description:
-          "Ladies-only beauty salon in Amsterdam: facials, massages and waxing, women only and by appointment. Clients from Amstelveen, Diemen and Haarlem welcome.",
+          "Ladies-only beauty salon in Amsterdam-Noord: facials, massages and waxing, women only and by appointment. Clients from all over Amsterdam and the region welcome.",
       },
       treatments: {
         title: "Women-only waxing in Amsterdam",
@@ -47,6 +47,10 @@ export const en: Dictionary = {
         title: "Client reviews",
         description: "Read honest experiences from Glow by Dilek clients, or share your own after your treatment. Every review is read before it appears.",
       },
+      blog: {
+        title: "Blog: tips on waxing and skincare",
+        description: "Practical tips and honest explanations about waxing, preparation and aftercare from Glow by Dilek, a women-only beauty salon in Amsterdam-Noord.",
+      },
       privacy: {
         title: "Privacy statement",
         description: "What information Glow by Dilek receives through the contact and appointment forms, how it is used and what your rights are.",
@@ -68,6 +72,8 @@ export const en: Dictionary = {
     aftercare: "Aftercare",
     faq: "FAQ",
     reviews: "Reviews",
+    noord: "Amsterdam-Noord",
+    blog: "Blog",
     categories: "Treatments by category",
     allTreatments: "All treatments",
     info: "Good to know",
@@ -94,7 +100,8 @@ export const en: Dictionary = {
   },
   common: {
     byAppointment: "By appointment only",
-    location: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+    location: "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
+    homeVisit: "On request, Dilek can also come to you, at your own address; just mention it in your request.",
     onRequest: "On request",
     goodToKnow: "Good to know",
     moodImage: "Mood image",
@@ -231,7 +238,7 @@ export const en: Dictionary = {
       },
       {
         q: "Where do treatments take place?",
-        a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+        a: "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
       },
       {
         q: "Is Glow by Dilek for women only?",
@@ -747,6 +754,17 @@ export const en: Dictionary = {
       body: "This treatment is already selected for you in the form. Choose a preferred moment; Dilek reviews your request and confirms the appointment personally.",
     },
   },
+  blog: {
+    eyebrow: "Blog",
+    title: "Tips and advice",
+    titleEm: "on waxing and skincare.",
+    intro: "Honest explanations from Dilek about waxing, preparation and aftercare — so you know what to expect and arrive well prepared for your appointment.",
+    readMore: "Read more",
+    published: "Published on",
+    related: "More about these treatments",
+    readAlso: "Read more",
+    faqTitle: "Questions about this topic",
+  },
   guide: {
     readMore: "Read on",
     caveat: "Good to know",
@@ -763,6 +781,7 @@ export const en: Dictionary = {
     infoTitle: "Well prepared for your appointment",
     popularTitle: "Popular in Amsterdam",
     popular: {
+      noord: "Beauty salon in Amsterdam-Noord",
       brazilian: "Brazilian wax in Amsterdam",
       hollywood: "Hollywood wax in Amsterdam",
       "bikini-line": "Bikini line waxing in Amsterdam",

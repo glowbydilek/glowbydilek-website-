@@ -30,7 +30,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
         title: "3. You receive a personal confirmation",
         paragraphs: [
           "Your appointment is only fixed once Dilek has confirmed it personally. That confirmation includes the date, the time and the practical information you need.",
-          "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+          "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
         ],
       },
       {
@@ -65,7 +65,7 @@ export const guidesEn: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Where do treatments take place?",
-        a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+        a: "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
       },
       {
         q: "Can I ask a question first?",
@@ -289,7 +289,7 @@ export const faqPageEn: FaqPageCopy = {
         },
         {
           q: "Where do treatments take place?",
-          a: "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+          a: "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
         },
         {
           q: "Is Glow by Dilek ladies-only?",
@@ -297,7 +297,11 @@ export const faqPageEn: FaqPageCopy = {
         },
         {
           q: "Which part of Amsterdam is Glow by Dilek in?",
-          a: "Glow by Dilek is in Amsterdam and works by appointment only. Dilek shares the address and practical location details personally once your appointment is confirmed.",
+          a: "Glow by Dilek is in Amsterdam-Noord. Clients come from all over Amsterdam and the region, for example from Amstelveen, Diemen, Zaandam and Haarlem. Dilek shares the exact address personally once your appointment is confirmed.",
+        },
+        {
+          q: "Can Dilek also come to me?",
+          a: "Yes, on request Dilek can also come to you, at your own address. Just mention it in your request or a message, and Dilek will discuss personally what is possible.",
         },
         {
           q: "How much does a Brazilian wax cost?",

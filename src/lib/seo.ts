@@ -3,8 +3,9 @@ import { siteConfig } from "@/content/site";
 import { publicItems, publicSections } from "@/lib/catalogue";
 import { categoryCopy, faqPageCopy, guideCopy, treatmentCopy } from "@/content/copy";
 import { override } from "@/lib/cms/current";
-import type { CategoryId, TreatmentId } from "@/content/slugs";
-import { categoryHref, localeLabels, locales, routes, treatmentHref, type Locale, type RouteKey } from "@/i18n/config";
+import { noordCopy, postCopy } from "@/content/copy/blog";
+import { postDates, type CategoryId, type PostId, type TreatmentId } from "@/content/slugs";
+import { categoryHref, localeLabels, locales, postHref, routes, treatmentHref, type Locale, type RouteKey } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 /**
@@ -20,7 +21,7 @@ export const isIndexedLocale = (l: Locale) => INDEXED_LOCALES.includes(l);
  * the sitemap's last-modified date for pages without a newer owner edit —
  * a real date, never "now". Update it when built-in page copy changes.
  */
-export const BUILTIN_CONTENT_DATE = new Date("2026-11-04T00:00:00Z");
+export const BUILTIN_CONTENT_DATE = new Date("2026-11-24T00:00:00Z");
 
 export function absoluteUrl(path: string): string {
   return `${siteConfig.url}${path === "/" ? "" : path}`;
@@ -103,12 +104,47 @@ export function staticPageMeta(locale: Locale, key: RouteKey): { title: string; 
     const f = faqPageCopy(locale);
     return { title: f.seoTitle, description: f.seoDescription };
   }
+  if (key === "noord") {
+    const n = noordCopy(locale);
+    return { title: n.seoTitle, description: n.seoDescription };
+  }
   return getDictionary(locale).meta.pages[key];
 }
 
 export function pageMetadata(locale: Locale, key: RouteKey): Metadata {
   const page = staticPageMeta(locale, key);
   return buildMetadata({ locale, paths: routes[key], ...page, absolute: key === "home", seoKey: key });
+}
+
+export function postMetadata(locale: Locale, id: PostId): Metadata {
+  const p = postCopy(locale, id);
+  return buildMetadata({
+    locale,
+    paths: { nl: postHref("nl", id), en: postHref("en", id), tr: postHref("tr", id) },
+    title: p.seoTitle,
+    description: p.seoDescription,
+    seoKey: `post-${id}`,
+  });
+}
+
+/** BlogPosting structured data for an article (no invented author credentials or ratings). */
+export function postJsonLd(locale: Locale, id: PostId) {
+  const p = postCopy(locale, id);
+  const url = absoluteUrl(postHref(locale, id));
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: p.seoTitle,
+    description: p.seoDescription,
+    inLanguage: localeLabels[locale].hrefLang,
+    datePublished: postDates[id],
+    dateModified: postDates[id],
+    mainEntityOfPage: url,
+    url,
+    image: `${siteConfig.url}/images/og-${locale}.png`,
+    author: { "@type": "Person", name: siteConfig.owner, worksFor: { "@id": `${siteConfig.url}/#business` } },
+    publisher: { "@id": `${siteConfig.url}/#business` },
+  };
 }
 
 export function categoryMetadata(locale: Locale, id: CategoryId): Metadata {
@@ -167,7 +203,12 @@ export function businessJsonLd(locale: Locale) {
     image: `${siteConfig.url}/images/og-${locale}.png`,
     description: dict.meta.pages.home.description,
     ...(c.phone && { telephone: c.phone }),
-    ...(c.welcomesFrom?.length && { areaServed: c.welcomesFrom.map((name) => ({ "@type": "City", name })) }),
+    ...(c.welcomesFrom?.length && {
+      areaServed: [
+        ...(c.district ? [{ "@type": "Place", name: `${c.district}, ${c.region ?? "Amsterdam"}` }] : []),
+        ...c.welcomesFrom.map((name) => ({ "@type": "City", name })),
+      ],
+    }),
     ...(c.region && !c.address && { address: { "@type": "PostalAddress", addressLocality: c.region, addressCountry: siteConfig.country } }),
     ...(c.address && {
       address: {
@@ -183,8 +224,11 @@ export function businessJsonLd(locale: Locale) {
   };
 }
 
-/** Where the services are offered: the business city (no street address, no districts). */
-const AREA = { "@type": "City", name: siteConfig.contact.region ?? "Amsterdam" } as const;
+/** Where the services are offered: the business district and city (no street address). */
+const AREA = [
+  ...(siteConfig.contact.district ? [{ "@type": "Place", name: `${siteConfig.contact.district}, ${siteConfig.contact.region ?? "Amsterdam"}` }] : []),
+  { "@type": "City", name: siteConfig.contact.region ?? "Amsterdam" },
+];
 
 /** Service + catalogue of published treatments (prices only when confirmed). */
 export function serviceJsonLd(locale: Locale) {

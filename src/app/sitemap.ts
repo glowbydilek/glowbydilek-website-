@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { localeLabels, locales, routeKeys, routes, type Locale, type RouteKey } from "@/i18n/config";
+import { postDates, postIds } from "@/content/slugs";
+import { localeLabels, locales, postHref, routeKeys, routes, type Locale, type RouteKey } from "@/i18n/config";
 import { groupHref, itemHref, publicGroups, publicItems, publicSections, sectionHref, translated } from "@/lib/catalogue";
 import { currentSnapshot } from "@/lib/cms/current";
 import { ensureContent } from "@/lib/cms/store";
@@ -52,6 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .flatMap((s) => publicGroups(s.id))
       .map((g) => ({ seoKey: `category-${g.id}`, path: (l: Locale) => groupHref(l, g), priority: 0.8, langs: langsOf(g), docs: [`category:${g.id}`], dates: [rowDate(rows?.groups as never, g.id)] })),
     ...publicItems().map((i) => ({ seoKey: `treatment-${i.id}`, path: (l: Locale) => itemHref(l, i), priority: 0.7, langs: langsOf(i), docs: [`treatment:${i.id}`], dates: [snap.treatments.get(i.id)?.updatedAt] })),
+    ...postIds.map((id) => ({ seoKey: `post-${id}`, path: (l: Locale) => postHref(l, id), priority: 0.6, docs: [`post:${id}`], dates: [new Date(`${postDates[id]}T00:00:00Z`)] })),
     ...LEGAL_KEYS.map((k) => ({ seoKey: `legal-${k}`, path: (l: Locale) => LEGAL_PATHS[k][l], priority: 0.3, langs: locales.filter((l) => isLegalOnline(l, k)), docs: [`legal:${k}`] })),
   ];
   const now = Date.now();

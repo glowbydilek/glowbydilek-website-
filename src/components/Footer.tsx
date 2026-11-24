@@ -60,6 +60,13 @@ export function Footer({ locale, dict, nav }: { locale: Locale; dict: Dictionary
                     </Link>
                   </li>
                 ))}
+                {(["noord", "blog"] as const).map((key) => (
+                  <li key={key}>
+                    <Link href={href(locale, key)} className={linkCls}>
+                      {dict.nav[key]}
+                    </Link>
+                  </li>
+                ))}
                 {currentSnapshot().marketing?.productsPage && (
                   <li>
                     <Link href={pick(locale, { nl: "/producten", en: "/en/products", tr: "/tr/urunler" })} className={linkCls}>

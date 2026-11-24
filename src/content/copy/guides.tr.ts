@@ -31,7 +31,7 @@ export const guidesTr: Record<GuideKey, GuideCopy> = {
         title: "3. Kişisel bir onay alırsın",
         paragraphs: [
           "Randevun ancak Dilek kişisel olarak onayladığında kesinleşir. Bu onayda tarih, saat ve ihtiyacın olan pratik bilgiler yer alır.",
-          "Bakımlar yalnızca randevuyla yapılır. Konumla ilgili pratik bilgiler onaydan sonra kişisel olarak paylaşılır.",
+          "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
         ],
       },
       {
@@ -66,7 +66,7 @@ export const guidesTr: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Bakımlar nerede yapılıyor?",
-        a: "Bakımlar yalnızca randevuyla yapılır. Konumla ilgili pratik bilgiler onaydan sonra kişisel olarak paylaşılır.",
+        a: "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
       },
       {
         q: "Önce bir soru sorabilir miyim?",
@@ -308,7 +308,11 @@ export const faqPageTr: FaqPageCopy = {
         },
         {
           q: "Bakımlar nerede yapılıyor?",
-          a: "Bakımlar yalnızca randevuyla yapılır. Konumla ilgili pratik bilgiler onaydan sonra kişisel olarak paylaşılır.",
+          a: "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
+        },
+        {
+          q: "Dilek evime de gelebilir mi?",
+          a: "Evet, istek üzerine Dilek evine de gelir. Bunu talebinde ya da bir mesajda belirtmen yeterli; Dilek neyin mümkün olduğunu seninle kişisel olarak konuşur.",
         },
         {
           q: "Bir bakım ne kadar tutuyor?",

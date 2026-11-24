@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Locale } from "@/i18n/config";
+import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { isPublicItem, itemById, itemHref, publicSections, sectionHref } from "@/lib/catalogue";
 
@@ -14,13 +14,13 @@ export function PopularLinks({ locale, className = "" }: { locale: Locale; class
   const dict = getDictionary(locale).hub;
   const live = new Set(publicSections(locale).map((s) => s.id));
   const links = [
+    { href: href(locale, "noord"), label: dict.popular.noord },
     ...ITEMS.flatMap((id) => {
       const it = itemById(id);
       return it && isPublicItem(it) && (locale !== "tr" || it.name.tr.trim()) ? [{ href: itemHref(locale, it), label: dict.popular[id] }] : [];
     }),
     ...SECTIONS.filter((id) => live.has(id)).map((id) => ({ href: sectionHref(locale, id), label: dict.popular[id] })),
   ];
-  if (!links.length) return null;
   return (
     <nav aria-label={dict.popularTitle} className={className}>
       <p className="eyebrow">{dict.popularTitle}</p>

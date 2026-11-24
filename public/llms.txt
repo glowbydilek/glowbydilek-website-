@@ -1,8 +1,8 @@
 # Glow by Dilek
 
-> Glow by Dilek is a ladies-only beauty salon in Amsterdam (Dutch: "uitsluitend voor vrouwen, op afspraak"), run by Dilek, a qualified beauty specialist (level 3). Treatments are for women only and by appointment only: facials (deep cleansing facial, facial with steam, eyebrow and eyelash tinting), relaxing massages, body wrap and waxing (face, body, bikini and intimate, including Brazilian and Hollywood wax). Clients from Amstelveen, Diemen and Haarlem are also welcome. The website is in Dutch, with English and Turkish versions.
+> Glow by Dilek is a ladies-only beauty salon in Amsterdam-Noord, Amsterdam (Dutch: "uitsluitend voor vrouwen, op afspraak"), run by Dilek, a qualified beauty specialist (level 3). Treatments are for women only and by appointment only: facials (deep cleansing facial, facial with steam, eyebrow and eyelash tinting), relaxing massages, body wrap and waxing (face, body, bikini and intimate, including Brazilian and Hollywood wax). Clients from all over Amsterdam and from Amstelveen, Diemen, Zaandam and Haarlem are also welcome. On request, Dilek can also come to the client's own address. The website is in Dutch, with English and Turkish versions.
 
-Appointments are requested online. The visitor chooses one or more treatments and a preferred moment, receives an automatic receipt, and Dilek confirms the appointment personally by email. A request is not yet a confirmed appointment. Practical location details are shared personally after confirmation. Prices and durations are given personally with the request until the price list is published. Contact: hello@glowbydilek.nl.
+Appointments are requested online. The visitor chooses one or more treatments and a preferred moment, receives an automatic receipt, and Dilek confirms the appointment personally by email. A request is not yet a confirmed appointment. The salon is in Amsterdam-Noord; the exact address is shared personally after confirmation. Prices and durations are given personally with the request until the price list is published. Contact: hello@glowbydilek.nl.
 
 ## Main pages (Dutch)
 
@@ -17,6 +17,8 @@ Appointments are requested online. The visitor chooses one or more treatments an
 - [About Dilek](https://glowbydilek.nl/over-dilek)
 - [Reviews](https://glowbydilek.nl/beoordelingen)
 - [Contact](https://glowbydilek.nl/contact)
+- [Beauty salon in Amsterdam-Noord](https://glowbydilek.nl/schoonheidssalon-amsterdam-noord): the women-only salon in Amsterdam-Noord, and visits on request
+- [Blog](https://glowbydilek.nl/blog): [Brazilian, Hollywood or bikini line](https://glowbydilek.nl/blog/verschil-brazilian-hollywood-bikinilijn), [eyebrow waxing or plucking](https://glowbydilek.nl/blog/wenkbrauwen-waxen-of-epileren), [first time waxing](https://glowbydilek.nl/blog/voor-het-eerst-waxen)
 
 ## Treatments (Dutch)
 
@@ -42,6 +44,8 @@ Appointments are requested online. The visitor chooses one or more treatments an
 - [FAQ](https://glowbydilek.nl/en/faq)
 - [About Dilek](https://glowbydilek.nl/en/about-dilek)
 - [Contact](https://glowbydilek.nl/en/contact)
+- [Beauty salon in Amsterdam-Noord](https://glowbydilek.nl/en/beauty-salon-amsterdam-noord)
+- [Blog](https://glowbydilek.nl/en/blog)
 
 ## Optional
 

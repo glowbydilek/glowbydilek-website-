@@ -44,11 +44,11 @@ test("no public source mentions a home-based location", () => {
 test("the approved location sentence is used in both languages", () => {
   assert.equal(
     getDictionary("nl").common.location,
-    "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+    "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
   );
   assert.equal(
     getDictionary("en").common.location,
-    "Treatments are available by appointment only. Practical location details are shared personally after confirmation.",
+    "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
   );
 });
 

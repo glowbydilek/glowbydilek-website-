@@ -2,9 +2,12 @@ import {
   bookingParam,
   categoryIds,
   categorySlugs,
+  postIds,
+  postSlugs,
   treatmentIds,
   treatmentSlugs,
   type CategoryId,
+  type PostId,
   type TreatmentId,
 } from "@/content/slugs";
 
@@ -47,6 +50,8 @@ export const routeKeys = [
   "faq",
   "reviews",
   "privacy",
+  "noord",
+  "blog",
 ] as const;
 export type RouteKey = (typeof routeKeys)[number];
 
@@ -64,6 +69,8 @@ export const routes: Record<RouteKey, Record<Locale, string>> = {
   faq: { nl: "/veelgestelde-vragen", en: "/en/faq", tr: "/tr/sss" },
   reviews: { nl: "/beoordelingen", en: "/en/reviews", tr: "/tr/yorumlar" },
   privacy: { nl: "/privacy", en: "/en/privacy", tr: "/tr/gizlilik" },
+  noord: { nl: "/schoonheidssalon-amsterdam-noord", en: "/en/beauty-salon-amsterdam-noord", tr: "/tr/amsterdam-noord-guzellik-salonu" },
+  blog: { nl: "/blog", en: "/en/blog", tr: "/tr/blog" },
 };
 
 /**
@@ -108,11 +115,22 @@ export function preselectedTreatment(search: string): string | null {
 export type PageRef =
   | { type: "static"; key: RouteKey }
   | { type: "category"; id: CategoryId }
-  | { type: "treatment"; id: TreatmentId };
+  | { type: "treatment"; id: TreatmentId }
+  | { type: "post"; id: PostId };
+
+/** A blog article, under the blog overview of its language. */
+export function postHref(locale: Locale, id: PostId): string {
+  return `${routes.blog[locale]}/${postSlugs[id][locale]}`;
+}
+
+export function findPost(locale: Locale, slug: string): PostId | undefined {
+  return postIds.find((id) => postSlugs[id][locale] === slug);
+}
 
 export function pagePath(locale: Locale, page: PageRef): string {
   if (page.type === "static") return href(locale, page.key);
   if (page.type === "category") return categoryHref(locale, page.id);
+  if (page.type === "post") return postHref(locale, page.id);
   return treatmentHref(locale, page.id);
 }
 
@@ -122,6 +140,7 @@ export function allPages(): PageRef[] {
     ...routeKeys.map((key) => ({ type: "static" as const, key })),
     ...categoryIds.map((id) => ({ type: "category" as const, id })),
     ...treatmentIds.map((id) => ({ type: "treatment" as const, id })),
+    ...postIds.map((id) => ({ type: "post" as const, id })),
   ];
 }
 
