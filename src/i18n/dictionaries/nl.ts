@@ -89,8 +89,8 @@ export const nl = {
     menu: "Menu",
   },
   cta: {
-    requestShort: "Aanvragen",
-    request: "Afspraak aanvragen",
+    requestShort: "Afspraak maken",
+    request: "Afspraak maken",
     explore: "Ontdek de behandelingen",
     viewTreatments: "Alle behandelingen",
     viewPrices: "Tarieven",
@@ -248,7 +248,7 @@ export const nl = {
       },
       {
         q: "Wat kan ik verwachten van een ontspanningsmassage?",
-        a: "Een rustig moment om even helemaal tot jezelf te komen. Voor de massage bespreek je kort met Dilek wat je prettig vindt en of er iets is waar ze rekening mee moet houden. De prijs en de duur hoor je persoonlijk bij je aanvraag.",
+        a: "Een rustig moment om even helemaal tot jezelf te komen. Voor de massage bespreek je kort met Dilek wat je prettig vindt en of er iets is waar ze rekening mee moet houden. Prijs en duur staan bij elke massage en op de pagina Tarieven.",
       },
       {
         q: "Doet waxen pijn?",
@@ -729,7 +729,7 @@ export const nl = {
     categoryPage: "Uitleg, voorbereiding en nazorg",
     inThisArea: "Behandelingen in deze zone",
     inThisAreaIntro: "Kies een behandeling voor alle details, of vraag direct een afspraak aan.",
-    viewTreatment: "Lees meer",
+    viewTreatment: "Bekijk",
     viewCategory: "Alles over {name}",
     requestThis: "Vraag deze behandeling aan",
     area: "Om welke zone gaat het?",
@@ -744,7 +744,7 @@ export const nl = {
     related: "Gerelateerde behandelingen",
     otherAreas: "Andere zones",
     price: "Tarief",
-    priceOnRequest: "Op aanvraag",
+    priceOnRequest: "Prijs op aanvraag",
     duration: "Duur",
     minutes: "{n} minuten",
     included: "Inbegrepen in dit pakket",

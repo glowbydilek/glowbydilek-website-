@@ -88,8 +88,8 @@ export const tr: Dictionary = {
     menu: "Menü",
   },
   cta: {
-    requestShort: "Talep et",
-    request: "Randevu talep et",
+    requestShort: "Randevu al",
+    request: "Randevu al",
     explore: "Bakımları keşfet",
     viewTreatments: "Tüm bakımlar",
     viewPrices: "Fiyatlar",
@@ -247,7 +247,7 @@ export const tr: Dictionary = {
       },
       {
         q: "Rahatlama masajından ne beklemeliyim?",
-        a: "Yalnızca kendine ayırdığın sakin bir zaman. Masajdan önce Dilek ile neyin rahat olduğunu ve dikkat etmesi gereken bir şey olup olmadığını kısaca konuşursunuz. Fiyatı ve süreyi talebini gönderdiğinde kişisel olarak öğrenirsin.",
+        a: "Yalnızca kendine ayırdığın sakin bir zaman. Masajdan önce Dilek ile neyin rahat olduğunu ve dikkat etmesi gereken bir şey olup olmadığını kısaca konuşursunuz. Fiyat ve süre her masajın yanında ve Fiyatlar sayfasında yer alır.",
       },
       {
         q: "Ağda acıtır mı?",
@@ -723,7 +723,7 @@ export const tr: Dictionary = {
     categoryPage: "Rehber, hazırlık ve bakım sonrası",
     inThisArea: "Bu bölgedeki uygulamalar",
     inThisAreaIntro: "Tüm ayrıntılar için bir uygulama seç ya da hemen randevu talep et.",
-    viewTreatment: "Devamını oku",
+    viewTreatment: "İncele",
     viewCategory: "{name} hakkında her şey",
     requestThis: "Bu bakımı talep et",
     area: "Hangi bölgeye uygulanır?",
@@ -738,7 +738,7 @@ export const tr: Dictionary = {
     related: "İlgili bakımlar",
     otherAreas: "Diğer bölgeler",
     price: "Fiyat",
-    priceOnRequest: "Talep üzerine",
+    priceOnRequest: "Fiyat talep üzerine",
     duration: "Süre",
     minutes: "{n} dakika",
     included: "Bu pakete dahil",
