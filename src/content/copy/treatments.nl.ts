@@ -41,7 +41,7 @@ export const treatmentsNl: TreatmentCopySet = {
       },
       {
         q: "Wat kost wenkbrauwen waxen?",
-        a: "Het tarief hoor je persoonlijk bij je aanvraag. Zodra het vastligt, staat het ook op de pagina Tarieven.",
+        a: "Het tarief staat bovenaan deze pagina en op de pagina Tarieven.",
       },
       {
         q: "Kan ik mijn wenkbrauwen ook laten verven?",
@@ -505,7 +505,7 @@ export const treatmentsNl: TreatmentCopySet = {
       },
       {
         q: "Wat kost een Brazilian wax?",
-        a: "Het tarief hoor je persoonlijk bij je aanvraag. Zodra het vastligt, staat het ook op de pagina Tarieven.",
+        a: "Het tarief staat bovenaan deze pagina en op de pagina Tarieven.",
       },
       {
         q: "Wat als ik me tijdens de behandeling ongemakkelijk voel?",

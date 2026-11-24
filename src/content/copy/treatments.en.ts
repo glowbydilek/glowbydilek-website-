@@ -41,7 +41,7 @@ export const treatmentsEn: TreatmentCopySet = {
       },
       {
         q: "How much does eyebrow waxing cost?",
-        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+        a: "The price is shown at the top of this page and on the Prices page.",
       },
       {
         q: "Can I have my brows tinted too?",
@@ -505,7 +505,7 @@ export const treatmentsEn: TreatmentCopySet = {
       },
       {
         q: "How much does a Brazilian wax cost?",
-        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+        a: "The price is shown at the top of this page and on the Prices page.",
       },
       {
         q: "What if I feel uncomfortable during the treatment?",
