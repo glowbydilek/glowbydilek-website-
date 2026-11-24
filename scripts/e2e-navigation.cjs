@@ -77,11 +77,11 @@ async function step(name, fn) {
 
   await step("treatment page CTA preselects the treatment (NL)", async () => {
     const p = await desktop.newPage();
-    await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/brazilian-wax`);
+    await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/hollywood-wax`);
     await p.getByRole("link", { name: "Vraag deze behandeling aan" }).first().click();
-    await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
+    await p.waitForURL(/\/afspraak-maken\?behandeling=hollywood$/);
     await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
-    assert.deepEqual(await checked(p), ["Brazilian"]);
+    assert.deepEqual(await checked(p), ["Hollywood (full Brazilian)"]);
     await p.close();
   });
 
@@ -154,7 +154,7 @@ async function step(name, fn) {
     await pickLang("en");
     await p.waitForURL(/\/en\/book-appointment\?treatment=hollywood/);
     await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
-    assert.deepEqual(await checked(p), ["Hollywood"]);
+    assert.deepEqual(await checked(p), ["Hollywood (full Brazilian)"]);
     await p.close();
   });
 
@@ -212,7 +212,7 @@ async function step(name, fn) {
     await form.waitFor();
     const names = await form.locator("input[type=checkbox]").evaluateAll((els) => els.map((e) => e.closest("label")?.textContent?.trim() ?? ""));
     assert.equal(new Set(names).size, names.length, `duplicate treatments: ${names.join(", ")}`);
-    const brazilian = form.locator("label", { hasText: "Brazilian" });
+    const brazilian = form.locator("label", { hasText: "Hollywood" });
     assert.equal(await brazilian.isVisible(), false, "waxing list shown before choosing the category");
     await form.getByRole("button", { name: /^Waxbehandelingen/ }).click();
     assert.ok(await brazilian.isVisible(), "waxing list after choosing the category");
@@ -221,7 +221,7 @@ async function step(name, fn) {
     await form.locator("label", { hasText: "Handmassage" }).click();
     assert.equal(await form.locator("input[type=checkbox]:checked").count(), 2, "selection kept across categories");
     assert.ok(await form.getByText("Jouw keuze (2)").count(), "selection summary");
-    await form.getByRole("button", { name: /Brazilian: verwijderen/ }).click();
+    await form.getByRole("button", { name: /Hollywood \(full Brazilian\): verwijderen/ }).click();
     assert.equal(await form.locator("input[type=checkbox]:checked").count(), 1, "remove from summary");
     await p.close();
   });
@@ -238,13 +238,13 @@ async function step(name, fn) {
         const header = await p.locator("header").boundingBox();
         assert.ok(h1 && header && h1.y >= header.y + header.height, `${what}: heading hidden under the header`);
       };
-      await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/brazilian-wax`);
+      await p.goto(`${BASE}/waxbehandelingen/bikini-intiem/hollywood-wax`);
       await p.mouse.wheel(0, 2400);
       await p.waitForTimeout(400);
-      await p.locator('a[href="/afspraak-maken?behandeling=brazilian"]').last().click();
-      await p.waitForURL(/\/afspraak-maken\?behandeling=brazilian$/);
+      await p.locator('a[href="/afspraak-maken?behandeling=hollywood"]').last().click();
+      await p.waitForURL(/\/afspraak-maken\?behandeling=hollywood$/);
       await atTop("booking page from a treatment CTA");
-      assert.ok(await p.getByRole("status").filter({ hasText: "Brazilian" }).count(), "preselection notice visible");
+      assert.ok(await p.getByRole("status").filter({ hasText: "Hollywood" }).count(), "preselection notice visible");
       await p.waitForFunction(() => document.querySelectorAll("form:not([hidden] form) input[type=checkbox]:checked").length === 1);
       await p.mouse.wheel(0, 3000);
       await p.waitForTimeout(400);

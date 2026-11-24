@@ -234,7 +234,7 @@ function mailsSince(since) {
 
     await step("Prices: set price and duration; shown on the prices page", async () => {
       await p.goto(`${BASE}/admin/behandelingen`);
-      const row = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Brazilian" }) }).first();
+      const row = p.locator("details").filter({ has: p.locator(":scope > summary").filter({ hasText: "Hollywood" }) }).first();
       await row.locator(":scope > summary").click();
       await row.locator('select[name="pricingMode"]').selectOption("fixed");
       await row.locator('input[name="price"]').fill("45");
@@ -256,7 +256,7 @@ function mailsSince(since) {
       const c = await browser.newContext({ viewport: { width: 390, height: 844 } });
       await c.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: stub }));
       const v = await c.newPage();
-      await v.goto(`${BASE}/afspraak-maken?behandeling=brazilian`);
+      await v.goto(`${BASE}/afspraak-maken?behandeling=hollywood`);
       await v.getByText("Kies een dag en tijd").waitFor();
       await v.locator('[role="listbox"] [role="option"]').first().click();
       await v.locator('[role="listbox"]').nth(1).locator('[role="option"]').first().click();
