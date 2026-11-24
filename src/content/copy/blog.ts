@@ -1,0 +1,835 @@
+/**
+ * Long-form local content: the Amsterdam-Noord page and the blog articles.
+ *
+ * Truthfulness (same rules as the rest of the copy): no prices, durations,
+ * reviews, addresses or promises. Facts come from the treatment and guide
+ * copy (hair length, preparation, aftercare) and from the owner:
+ * the salon is in Amsterdam-Noord (24 Nov 2026), women only, by appointment,
+ * and Dilek also comes to the client's own address on request.
+ */
+import type { Locale, RouteKey } from "../../i18n/config";
+import type { PostId, TreatmentId } from "../slugs";
+import type { QA } from "./types";
+
+export type ArticleSection = { title: string; paragraphs?: string[]; items?: string[] };
+
+export type ArticleCopy = {
+  seoTitle: string;
+  seoDescription: string;
+  hero: { eyebrow: string; title: string; titleEm: string; subtitle: string };
+  sections: ArticleSection[];
+  faqs?: QA[];
+  /** Treatment pages linked at the end. */
+  treatments: TreatmentId[];
+  /** Static pages linked at the end. */
+  pages: RouteKey[];
+};
+
+// ─────────────────────────────────────────────────────────── Amsterdam-Noord
+
+const noord: Record<Locale, ArticleCopy> = {
+  nl: {
+    seoTitle: "Schoonheidssalon voor vrouwen in Amsterdam-Noord",
+    seoDescription:
+      "Waxen, gezichtsbehandelingen en massages in Amsterdam-Noord, uitsluitend voor vrouwen en op afspraak. Ook welkom uit de rest van Amsterdam en de regio.",
+    hero: {
+      eyebrow: "Amsterdam-Noord",
+      title: "Schoonheidssalon voor vrouwen",
+      titleEm: "in Amsterdam-Noord.",
+      subtitle:
+        "Glow by Dilek zit in Amsterdam-Noord: waxen, gezichtsbehandelingen en massages, uitsluitend voor vrouwen en altijd op afspraak. Dilek ontvangt je persoonlijk en komt op verzoek ook bij jou langs.",
+    },
+    sections: [
+      {
+        title: "Uitsluitend voor vrouwen",
+        paragraphs: [
+          "Bij Glow by Dilek in Amsterdam-Noord zijn alle behandelingen alleen voor vrouwen. Je wordt persoonlijk geholpen door Dilek zelf, in alle rust en zonder haast. Zo voelt ook een eerste afspraak of een intieme behandeling vertrouwd.",
+          "Er is geen automatisch boekingssysteem: Dilek leest elke aanvraag zelf en bevestigt je afspraak persoonlijk.",
+        ],
+      },
+      {
+        title: "Wat je kunt laten doen",
+        items: [
+          "Waxen van gezicht, lichaam en bikinizone: van wenkbrauwen en bovenlip tot benen, Brazilian en Hollywood.",
+          "Gezichtsbehandelingen, afgestemd op wat jouw huid nodig heeft.",
+          "Ontspannende massages en lichaamsbehandelingen.",
+        ],
+      },
+      {
+        title: "Welkom uit heel Amsterdam en de regio",
+        paragraphs: [
+          "Woon je in Noord, dan is Glow by Dilek dichtbij. Maar ook vanuit andere delen van Amsterdam en uit de regio, zoals Amstelveen, Diemen, Zaandam en Haarlem, ben je van harte welkom.",
+          "Het exacte adres en praktische informatie over de route ontvang je persoonlijk zodra je afspraak is bevestigd.",
+        ],
+      },
+      {
+        title: "Ook bij jou langs",
+        paragraphs: [
+          "Liever een behandeling op je eigen adres? Op verzoek komt Dilek ook bij jou langs. Vermeld het gerust bij je aanvraag of stuur een bericht; Dilek bespreekt dan persoonlijk wat er mogelijk is.",
+        ],
+      },
+      {
+        title: "Zo vraag je een afspraak aan",
+        paragraphs: [
+          "Kies op de pagina ‘Afspraak aanvragen’ je behandeling en een voorkeursmoment. Je ontvangt meteen een ontvangstbevestiging; de afspraak is definitief zodra Dilek hem persoonlijk heeft bevestigd.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Waar in Amsterdam-Noord zit Glow by Dilek?",
+        a: "Glow by Dilek werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging van je afspraak.",
+      },
+      {
+        q: "Is Glow by Dilek echt alleen voor vrouwen?",
+        a: "Ja. Alle behandelingen, van waxen tot massage en gezichtsbehandelingen, zijn uitsluitend voor vrouwelijke klanten.",
+      },
+      {
+        q: "Kan ik ook komen als ik niet in Noord woon?",
+        a: "Natuurlijk. Klanten komen uit heel Amsterdam en de regio. Je bent overal vandaan welkom.",
+      },
+    ],
+    treatments: ["brazilian", "eyebrows", "full-legs"],
+    pages: ["prices", "process", "faq"],
+  },
+  en: {
+    seoTitle: "Women-only beauty salon in Amsterdam-Noord",
+    seoDescription:
+      "Waxing, facials and massages in Amsterdam-Noord, for women only and by appointment. Clients from the rest of Amsterdam and the region are welcome too.",
+    hero: {
+      eyebrow: "Amsterdam-Noord",
+      title: "Women-only beauty salon",
+      titleEm: "in Amsterdam-Noord.",
+      subtitle:
+        "Glow by Dilek is in Amsterdam-Noord: waxing, facials and massages, for women only and always by appointment. Dilek welcomes you personally and, on request, can also come to you.",
+    },
+    sections: [
+      {
+        title: "For women only",
+        paragraphs: [
+          "At Glow by Dilek in Amsterdam-Noord, every treatment is for women only. You are looked after personally by Dilek herself, calmly and without rushing. That makes even a first appointment or an intimate treatment feel familiar.",
+          "There is no automatic booking system: Dilek reads every request herself and confirms your appointment personally.",
+        ],
+      },
+      {
+        title: "What you can book",
+        items: [
+          "Waxing for face, body and bikini area: from eyebrows and upper lip to legs, Brazilian and Hollywood.",
+          "Facials, tailored to what your skin needs.",
+          "Relaxing massages and body treatments.",
+        ],
+      },
+      {
+        title: "Welcome from all over Amsterdam and the region",
+        paragraphs: [
+          "If you live in Noord, Glow by Dilek is close by. Clients from other parts of Amsterdam and the region, such as Amstelveen, Diemen, Zaandam and Haarlem, are just as welcome.",
+          "You receive the exact address and practical directions personally once your appointment is confirmed.",
+        ],
+      },
+      {
+        title: "Dilek can also come to you",
+        paragraphs: [
+          "Prefer a treatment at your own address? On request, Dilek can also come to you. Just mention it in your request or send a message, and Dilek will discuss personally what is possible.",
+        ],
+      },
+      {
+        title: "How to request an appointment",
+        paragraphs: [
+          "On the ‘Book an appointment’ page, choose your treatment and a preferred time. You receive an acknowledgement straight away; the appointment is final once Dilek has confirmed it personally.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Where in Amsterdam-Noord is Glow by Dilek?",
+        a: "Glow by Dilek works by appointment only. Dilek shares the exact address personally once your appointment is confirmed.",
+      },
+      {
+        q: "Is Glow by Dilek really for women only?",
+        a: "Yes. Every treatment, from waxing to massage and facials, is for female clients only.",
+      },
+      {
+        q: "Can I come if I don’t live in Noord?",
+        a: "Of course. Clients come from all over Amsterdam and the region. You are welcome wherever you live.",
+      },
+    ],
+    treatments: ["brazilian", "eyebrows", "full-legs"],
+    pages: ["prices", "process", "faq"],
+  },
+  tr: {
+    seoTitle: "Amsterdam-Noord'da kadınlara özel güzellik salonu",
+    seoDescription:
+      "Amsterdam-Noord'da ağda, yüz bakımı ve masaj; yalnızca kadınlara ve randevuyla. Amsterdam'ın diğer semtlerinden ve çevreden gelenler de hoş geldiniz.",
+    hero: {
+      eyebrow: "Amsterdam-Noord",
+      title: "Kadınlara özel güzellik salonu",
+      titleEm: "Amsterdam-Noord'da.",
+      subtitle:
+        "Glow by Dilek Amsterdam-Noord'dadır: ağda, yüz bakımı ve masaj; yalnızca kadınlara ve her zaman randevuyla. Dilek seni kişisel olarak karşılar ve istersen sana da gelir.",
+    },
+    sections: [
+      {
+        title: "Yalnızca kadınlara",
+        paragraphs: [
+          "Amsterdam-Noord'daki Glow by Dilek'te tüm bakımlar yalnızca kadınlara yöneliktir. Seninle Dilek bizzat, sakin ve acele etmeden ilgilenir. Böylece ilk randevu ya da intim bir bakım bile güven verir.",
+          "Otomatik bir rezervasyon sistemi yoktur: Dilek her talebi kendisi okur ve randevunu kişisel olarak onaylar.",
+        ],
+      },
+      {
+        title: "Neler yaptırabilirsin",
+        items: [
+          "Yüz, vücut ve bikini bölgesi ağdası: kaş ve üst dudaktan bacaklara, Brezilya ve Hollywood ağdasına kadar.",
+          "Cildinin ihtiyacına göre şekillenen yüz bakımları.",
+          "Rahatlatıcı masajlar ve vücut bakımları.",
+        ],
+      },
+      {
+        title: "Tüm Amsterdam'dan ve çevreden hoş geldin",
+        paragraphs: [
+          "Noord'da oturuyorsan Glow by Dilek sana yakın. Amsterdam'ın diğer bölgelerinden ve Amstelveen, Diemen, Zaandam ve Haarlem gibi çevre yerlerden gelen müşteriler de aynı şekilde hoş karşılanır.",
+          "Tam adresi ve yol tarifini randevun onaylandığında kişisel olarak alırsın.",
+        ],
+      },
+      {
+        title: "Dilek sana da gelebilir",
+        paragraphs: [
+          "Bakımı kendi adresinde mi tercih edersin? İstek üzerine Dilek sana da gelir. Bunu talebinde ya da bir mesajda belirtmen yeterli; Dilek neyin mümkün olduğunu seninle kişisel olarak konuşur.",
+        ],
+      },
+      {
+        title: "Nasıl randevu talep edilir",
+        paragraphs: [
+          "'Randevu talep et' sayfasında bakımını ve tercih ettiğin zamanı seç. Hemen bir alındı bilgisi alırsın; randevu, Dilek kişisel olarak onayladığında kesinleşir.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Glow by Dilek Amsterdam-Noord'da tam olarak nerede?",
+        a: "Glow by Dilek yalnızca randevuyla çalışır. Tam adresi Dilek randevun onaylandıktan sonra kişisel olarak paylaşır.",
+      },
+      {
+        q: "Glow by Dilek gerçekten yalnızca kadınlara mı hizmet veriyor?",
+        a: "Evet. Ağdadan masaja ve yüz bakımına kadar tüm bakımlar yalnızca kadın müşterilere yöneliktir.",
+      },
+      {
+        q: "Noord'da oturmuyorsam da gelebilir miyim?",
+        a: "Elbette. Müşteriler tüm Amsterdam'dan ve çevreden gelir. Nerede oturursan otur, hoş geldin.",
+      },
+    ],
+    treatments: ["brazilian", "eyebrows", "full-legs"],
+    pages: ["prices", "process", "faq"],
+  },
+};
+
+// ─────────────────────────────────────────────────────────────── Blog posts
+
+const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
+  "intimate-waxing-guide": {
+    nl: {
+      seoTitle: "Brazilian, Hollywood of bikinilijn: wat is het verschil?",
+      seoDescription:
+        "Brazilian, Hollywood of bikinilijn waxen? Lees het verschil, welke past bij jou en hoe je je voorbereidt. Uitleg van Glow by Dilek in Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Intiem waxen",
+        title: "Brazilian, Hollywood of bikinilijn:",
+        titleEm: "wat is het verschil?",
+        subtitle:
+          "Drie intieme waxbehandelingen, drie resultaten. Zo zie je in één oogopslag wat er bij elke behandeling verdwijnt, welke bij jou past en hoe je je voorbereidt.",
+      },
+      sections: [
+        {
+          title: "Bikinilijn: een nette lijn",
+          paragraphs: [
+            "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikinibroekje of ondergoed zichtbaar is, langs de liezen en de bovenkant. Hoe hoog of breed de lijn loopt, bepaal je zelf. Het is de meest ingetogen intieme behandeling en een rustige eerste stap als je nog nooit intiem hebt gewaxt.",
+          ],
+        },
+        {
+          title: "Brazilian: bijna alles weg",
+          paragraphs: [
+            "Bij een Brazilian wax wordt bijna al het haar verwijderd, met naar wens een smal strookje of klein driehoekje. Het resultaat is verzorgd, terwijl je zelf kiest hoeveel er blijft staan.",
+          ],
+        },
+        {
+          title: "Hollywood: volledig glad",
+          paragraphs: [
+            "Een Hollywood wax is volledig glad: al het haar in de intieme zone wordt verwijderd. Met dezelfde discretie, uitleg en rust als bij elke intieme behandeling.",
+          ],
+        },
+        {
+          title: "Welke past bij jou?",
+          items: [
+            "Voor het eerst intiem waxen? Begin gerust met de bikinilijn; later kun je altijd kiezen voor een Brazilian of Hollywood.",
+            "Wil je een verzorgd resultaat met nog een klein beetje haar? Kies een Brazilian.",
+            "Wil je helemaal glad? Kies een Hollywood.",
+            "Twijfel je? Vraag het gerust bij je aanvraag; Dilek denkt eerlijk met je mee.",
+          ],
+        },
+        {
+          title: "Zo bereid je je voor",
+          items: [
+            "Laat het haar twee tot vier weken groeien, tot minimaal 0,5 cm — ongeveer de lengte van een rijstkorrel.",
+            "Scrub een of twee dagen van tevoren licht, niet op de dag zelf.",
+            "Gebruik op de dag van je afspraak geen olie of lotion in de zone en draag schoon katoenen ondergoed.",
+          ],
+        },
+        {
+          title: "Na het waxen",
+          items: [
+            "Draag 24 uur lang ruim katoenen ondergoed en geen strakke broek.",
+            "Vermijd de eerste dag zwembad, sauna, zon en intensief sporten.",
+            "Begin na twee dagen met een milde scrub tegen ingegroeide haartjes.",
+            "Elke vier tot zes weken is een prettig ritme.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Wat is het verschil tussen een Brazilian en een Hollywood wax?",
+          a: "Bij een Brazilian blijft naar wens een smal strookje of klein driehoekje staan; een Hollywood is volledig glad.",
+        },
+        {
+          q: "Is een bikinilijn een goede eerste keer?",
+          a: "Voor veel vrouwen wel: het is de kleinste intieme zone en je ervaart rustig hoe waxen voelt.",
+        },
+      ],
+      treatments: ["bikini-line", "brazilian", "hollywood"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    en: {
+      seoTitle: "Brazilian, Hollywood or bikini line: the difference",
+      seoDescription:
+        "Brazilian, Hollywood or bikini line wax? Learn the difference, which one suits you and how to prepare. A guide by Glow by Dilek in Amsterdam-Noord.",
+      hero: {
+        eyebrow: "Blog · Intimate waxing",
+        title: "Brazilian, Hollywood or bikini line:",
+        titleEm: "what’s the difference?",
+        subtitle:
+          "Three intimate wax treatments, three results. See at a glance what each treatment removes, which one suits you and how to prepare.",
+      },
+      sections: [
+        {
+          title: "Bikini line: a neat line",
+          paragraphs: [
+            "A bikini line wax only removes the hair that shows outside your bikini bottoms or underwear, along the groin and the top. You decide how high or wide the line goes. It is the most modest intimate treatment and a calm first step if you have never had intimate waxing before.",
+          ],
+        },
+        {
+          title: "Brazilian: almost everything",
+          paragraphs: [
+            "A Brazilian wax removes almost all hair, leaving a narrow strip or small triangle if you like. The result is neat, while you choose how much stays.",
+          ],
+        },
+        {
+          title: "Hollywood: completely smooth",
+          paragraphs: [
+            "A Hollywood wax is completely smooth: all hair in the intimate area is removed — with the same discretion, explanation and calm as every intimate treatment.",
+          ],
+        },
+        {
+          title: "Which one suits you?",
+          items: [
+            "First intimate wax? Start with the bikini line; you can always choose a Brazilian or Hollywood later.",
+            "Want a neat result with a little hair left? Choose a Brazilian.",
+            "Want to be completely smooth? Choose a Hollywood.",
+            "Not sure? Ask in your request; Dilek will give you honest advice.",
+          ],
+        },
+        {
+          title: "How to prepare",
+          items: [
+            "Let the hair grow for two to four weeks, to at least 0.5 cm — about the length of a grain of rice.",
+            "Exfoliate lightly one or two days before, not on the day itself.",
+            "On the day of your appointment, use no oil or lotion on the area and wear clean cotton underwear.",
+          ],
+        },
+        {
+          title: "After waxing",
+          items: [
+            "Wear loose cotton underwear and no tight trousers for 24 hours.",
+            "Avoid swimming pools, sauna, sun and intensive exercise on the first day.",
+            "Start gentle exfoliation after two days to prevent ingrown hairs.",
+            "Every four to six weeks is a comfortable rhythm.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "What is the difference between a Brazilian and a Hollywood wax?",
+          a: "With a Brazilian, a narrow strip or small triangle can stay if you like; a Hollywood is completely smooth.",
+        },
+        {
+          q: "Is a bikini line a good first time?",
+          a: "For many women it is: it is the smallest intimate area and you calmly experience what waxing feels like.",
+        },
+      ],
+      treatments: ["bikini-line", "brazilian", "hollywood"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    tr: {
+      seoTitle: "Brezilya, Hollywood mu bikini çizgisi mi: farkı ne?",
+      seoDescription:
+        "Brezilya, Hollywood ya da bikini çizgisi ağdası? Farkları, sana hangisinin uygun olduğunu ve nasıl hazırlanacağını oku. Amsterdam-Noord'dan Glow by Dilek.",
+      hero: {
+        eyebrow: "Blog · İntim ağda",
+        title: "Brezilya, Hollywood mu bikini çizgisi mi:",
+        titleEm: "farkı ne?",
+        subtitle:
+          "Üç intim ağda, üç farklı sonuç. Her bakımda nelerin alındığını, hangisinin sana uyduğunu ve nasıl hazırlanacağını bir bakışta gör.",
+      },
+      sections: [
+        {
+          title: "Bikini çizgisi: düzgün bir hat",
+          paragraphs: [
+            "Bikini çizgisi ağdasında yalnızca bikini altının ya da iç çamaşırının dışında kalan kıllar, kasık kenarı ve üst kısım boyunca alınır. Hattın ne kadar yüksek veya geniş olacağına sen karar verirsin. En sade intim bakımdır ve daha önce hiç intim ağda yaptırmadıysan sakin bir ilk adımdır.",
+          ],
+        },
+        {
+          title: "Brezilya: neredeyse tamamı",
+          paragraphs: [
+            "Brezilya ağdasında kılların neredeyse tamamı alınır; istersen ince bir şerit ya da küçük bir üçgen bırakılır. Ne kadarının kalacağını sen seçersin.",
+          ],
+        },
+        {
+          title: "Hollywood: tamamen pürüzsüz",
+          paragraphs: [
+            "Hollywood ağdasında intim bölgedeki kılların tamamı alınır. Her intim bakımda olduğu gibi aynı gizlilik, açıklama ve sakinlikle.",
+          ],
+        },
+        {
+          title: "Hangisi sana uygun?",
+          items: [
+            "İlk kez intim ağda mı? Bikini çizgisiyle başla; daha sonra her zaman Brezilya ya da Hollywood seçebilirsin.",
+            "Biraz kıl kalan bakımlı bir sonuç mu istiyorsun? Brezilya ağdasını seç.",
+            "Tamamen pürüzsüz mü olmak istiyorsun? Hollywood ağdasını seç.",
+            "Emin değil misin? Talebinde sor; Dilek seninle dürüstçe düşünür.",
+          ],
+        },
+        {
+          title: "Nasıl hazırlanırsın",
+          items: [
+            "Kılları iki ila dört hafta, en az 0,5 cm (yaklaşık bir pirinç tanesi) olana kadar uzat.",
+            "Bir iki gün önce hafifçe peeling yap, aynı gün yapma.",
+            "Randevu günü bölgeye yağ veya losyon sürme ve temiz pamuklu iç çamaşırı giy.",
+          ],
+        },
+        {
+          title: "Ağdadan sonra",
+          items: [
+            "24 saat boyunca bol, pamuklu iç çamaşırı giy; dar pantolon giyme.",
+            "İlk gün havuz, sauna, güneş ve yoğun spordan kaçın.",
+            "Batık kıllara karşı iki gün sonra hafif peelinge başla.",
+            "Dört ila altı haftada bir rahat bir aralıktır.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Brezilya ve Hollywood ağdası arasındaki fark nedir?",
+          a: "Brezilya ağdasında istersen ince bir şerit ya da küçük bir üçgen kalır; Hollywood tamamen pürüzsüzdür.",
+        },
+        {
+          q: "Bikini çizgisi ilk kez için uygun mu?",
+          a: "Birçok kadın için evet: en küçük intim bölgedir ve ağdanın nasıl hissettirdiğini sakince deneyimlersin.",
+        },
+      ],
+      treatments: ["bikini-line", "brazilian", "hollywood"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+  },
+
+  "eyebrows-wax-or-pluck": {
+    nl: {
+      seoTitle: "Wenkbrauwen waxen of epileren: wat past bij jou?",
+      seoDescription:
+        "Wenkbrauwen waxen of epileren? Lees de verschillen, waarom ze vaak samen worden gebruikt en hoe je je wenkbrauwen mooi in vorm houdt. Glow by Dilek, Amsterdam.",
+      hero: {
+        eyebrow: "Blog · Wenkbrauwen",
+        title: "Wenkbrauwen waxen of epileren:",
+        titleEm: "wat past bij jou?",
+        subtitle:
+          "Wax en pincet doen elk iets anders. Zo werken ze, waarom ze vaak worden gecombineerd en hoe je de vorm tussen twee afspraken behoudt.",
+      },
+      sections: [
+        {
+          title: "Waxen: snel een gelijkmatige lijn",
+          paragraphs: [
+            "Met wax gaan meerdere haartjes in één keer weg, ook de fijne donshaartjes rond de wenkbrauw. Daardoor wordt de lijn snel en gelijkmatig. Omdat het haar met wortel en al wordt verwijderd, groeit het langzamer terug dan na scheren.",
+          ],
+        },
+        {
+          title: "Epileren: precies per haartje",
+          paragraphs: [
+            "Met een pincet haal je haartje voor haartje weg. Dat is precies, maar kost meer tijd, en het is makkelijk om — zeker voor de spiegel — net te veel weg te halen.",
+          ],
+        },
+        {
+          title: "Het beste van beide",
+          paragraphs: [
+            "Daarom worden ze bij Glow by Dilek gecombineerd: eerst wordt de lijn met wax gezet, daarna worden losse haartjes die de wax laat zitten met een pincet bijgewerkt. De vorm wordt rustig opgebouwd vanuit je natuurlijke wenkbrauw, zonder te veel weg te halen, en je kijkt aan het eind zelf mee in de spiegel.",
+          ],
+        },
+        {
+          title: "Tips voor mooie wenkbrauwen",
+          items: [
+            "Laat je wenkbrauwen voor je afspraak twee à drie weken ongemoeid; hoe meer haar er is, hoe beter de vorm kan worden bepaald.",
+            "Epileer tussen twee afspraken bij voorkeur niet zelf, zodat de lijn rustig kan teruggroeien.",
+            "Elke drie tot vijf weken is een prettig ritme om de vorm bij te werken.",
+            "Gebruik je retinol of zuren rond je ogen? Stop daar minimaal een week van tevoren mee.",
+          ],
+        },
+        {
+          title: "Wanneer niet waxen?",
+          paragraphs: [
+            "Gebruik je retinoïden op recept of heb je recent een kuur met isotretinoïne gevolgd, dan is waxen rond de ogen niet geschikt. Overleg bij twijfel met je arts en vermeld het bij je aanvraag.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Wat is beter: wenkbrauwen epileren of waxen?",
+          a: "Met wax wordt de lijn snel en gelijkmatig; met een pincet werk je losse haartjes bij. Samen geven ze het mooiste resultaat.",
+        },
+        {
+          q: "Hoe vaak moet je je wenkbrauwen laten waxen?",
+          a: "Meestal elke drie tot vijf weken. Dan is er genoeg teruggegroeid om de vorm netjes bij te werken.",
+        },
+      ],
+      treatments: ["eyebrows", "upper-lip", "full-face"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    en: {
+      seoTitle: "Eyebrow waxing or plucking: which suits you?",
+      seoDescription:
+        "Eyebrow waxing or plucking? Learn the differences, why they are often combined and how to keep your brows in shape. Glow by Dilek, Amsterdam.",
+      hero: {
+        eyebrow: "Blog · Eyebrows",
+        title: "Eyebrow waxing or plucking:",
+        titleEm: "which suits you?",
+        subtitle:
+          "Wax and tweezers each do something different. Here is how they work, why they are often combined and how to keep the shape between appointments.",
+      },
+      sections: [
+        {
+          title: "Waxing: an even line, quickly",
+          paragraphs: [
+            "Wax removes several hairs at once, including the fine downy hairs around the brow. That makes the line quick and even. Because the hair is removed from the root, it grows back more slowly than after shaving.",
+          ],
+        },
+        {
+          title: "Plucking: precise, hair by hair",
+          paragraphs: [
+            "With tweezers you remove one hair at a time. That is precise but takes longer, and it is easy — especially in front of a mirror — to take away just a little too much.",
+          ],
+        },
+        {
+          title: "The best of both",
+          paragraphs: [
+            "That is why Glow by Dilek combines them: first the line is set with wax, then stray hairs the wax leaves behind are tidied with tweezers. The shape is built calmly from your natural brow without removing too much, and at the end you check the result in the mirror yourself.",
+          ],
+        },
+        {
+          title: "Tips for beautiful brows",
+          items: [
+            "Leave your brows alone for two to three weeks before your appointment; the more hair there is, the better the shape can be defined.",
+            "Preferably don’t pluck yourself between appointments, so the line can grow back evenly.",
+            "Every three to five weeks is a comfortable rhythm to maintain the shape.",
+            "Using retinol or acids around your eyes? Stop at least a week before.",
+          ],
+        },
+        {
+          title: "When not to wax",
+          paragraphs: [
+            "If you use prescription retinoids or have recently taken a course of isotretinoin, waxing around the eyes is not suitable. If in doubt, consult your doctor and mention it in your request.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Which is better: plucking or waxing eyebrows?",
+          a: "Wax makes the line quick and even; tweezers tidy up stray hairs. Together they give the best result.",
+        },
+        {
+          q: "How often should you have your eyebrows waxed?",
+          a: "Usually every three to five weeks. By then enough has grown back to neatly maintain the shape.",
+        },
+      ],
+      treatments: ["eyebrows", "upper-lip", "full-face"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    tr: {
+      seoTitle: "Kaş ağdası mı cımbız mı: hangisi sana uygun?",
+      seoDescription:
+        "Kaş ağdası mı cımbız mı? Farkları, neden sık sık birlikte kullanıldıklarını ve kaşlarının şeklini nasıl koruyacağını oku. Glow by Dilek, Amsterdam.",
+      hero: {
+        eyebrow: "Blog · Kaşlar",
+        title: "Kaş ağdası mı cımbız mı:",
+        titleEm: "hangisi sana uygun?",
+        subtitle:
+          "Ağda ve cımbız farklı işler yapar. Nasıl çalıştıklarını, neden birlikte kullanıldıklarını ve iki randevu arasında şekli nasıl koruyacağını öğren.",
+      },
+      sections: [
+        {
+          title: "Ağda: hızlı ve düzgün bir hat",
+          paragraphs: [
+            "Ağda, kaşın çevresindeki ince tüyler dahil birçok kılı tek seferde alır. Böylece hat hızlı ve düzgün olur. Kıl kökünden alındığı için tıraştan sonra olduğundan daha yavaş çıkar.",
+          ],
+        },
+        {
+          title: "Cımbız: kıl kıl, hassas",
+          paragraphs: [
+            "Cımbızla kılları tek tek alırsın. Hassastır ama daha uzun sürer ve özellikle aynanın karşısında gereğinden biraz fazlasını almak kolaydır.",
+          ],
+        },
+        {
+          title: "İkisinin en iyisi",
+          paragraphs: [
+            "Bu yüzden Glow by Dilek'te ikisi birlikte kullanılır: önce hat ağdayla belirlenir, sonra ağdanın bıraktığı tek tük kıllar cımbızla düzeltilir. Şekil, doğal kaşından yola çıkarak ve fazla almadan sakince oluşturulur; sonunda aynadan sen de bakarsın.",
+          ],
+        },
+        {
+          title: "Güzel kaşlar için ipuçları",
+          items: [
+            "Randevundan önce kaşlarına iki üç hafta dokunma; ne kadar çok kıl olursa şekil o kadar iyi belirlenir.",
+            "İki randevu arasında mümkünse kendin cımbız kullanma, böylece hat düzgün çıkar.",
+            "Şekli korumak için üç ila beş haftada bir rahat bir aralıktır.",
+            "Göz çevrende retinol veya asit mi kullanıyorsun? En az bir hafta önce bırak.",
+          ],
+        },
+        {
+          title: "Ne zaman ağda yapılmaz?",
+          paragraphs: [
+            "Reçeteli retinoid kullanıyorsan ya da yakın zamanda izotretinoin kürü aldıysan göz çevresine ağda uygun değildir. Emin değilsen doktoruna danış ve talebinde belirt.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Hangisi daha iyi: kaş ağdası mı cımbız mı?",
+          a: "Ağda hattı hızlı ve düzgün yapar; cımbız tek tük kılları düzeltir. Birlikte en güzel sonucu verirler.",
+        },
+        {
+          q: "Kaşlar ne sıklıkla ağdayla alınmalı?",
+          a: "Genellikle üç ila beş haftada bir. O zamana kadar şekli düzgünce yenilemeye yetecek kadar kıl çıkar.",
+        },
+      ],
+      treatments: ["eyebrows", "upper-lip", "full-face"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+  },
+
+  "first-time-waxing": {
+    nl: {
+      seoTitle: "Voor het eerst waxen: zo bereid je je voor",
+      seoDescription:
+        "Voor het eerst waxen? Lees hoe lang je haar moet zijn, hoe je je voorbereidt, wat je kunt verwachten en wat je daarna doet. Glow by Dilek, alleen voor vrouwen.",
+      hero: {
+        eyebrow: "Blog · Eerste keer",
+        title: "Voor het eerst waxen:",
+        titleEm: "zo bereid je je voor.",
+        subtitle:
+          "Spannend? Dat hoeft niet. Met een paar eenvoudige stappen vooraf wordt je eerste waxafspraak rustiger, comfortabeler en mooier.",
+      },
+      sections: [
+        {
+          title: "Hoe lang moet je haar zijn?",
+          paragraphs: [
+            "Het haar moet minimaal 0,5 cm lang zijn — ongeveer de lengte van een rijstkorrel. Dat is meestal twee tot vier weken na het scheren. Is het korter, dan pakt de wax het haar niet goed vast; is het veel langer dan een centimeter, dan wordt het vooraf iets ingekort.",
+          ],
+        },
+        {
+          title: "De dagen ervoor",
+          items: [
+            "Scrub de huid een of twee dagen van tevoren licht, niet op de dag zelf.",
+            "Ga in de 48 uur voor je afspraak niet zonnebaden en sla de zonnebank over.",
+            "Stop minimaal een week van tevoren met retinol, AHA, BHA en andere exfoliërende producten op de zone.",
+          ],
+        },
+        {
+          title: "Op de dag zelf",
+          items: [
+            "Gebruik geen bodylotion, olie, deodorant of zelfbruiner op de zone die wordt behandeld.",
+            "Draag comfortabele, losse kleding; bij een intieme behandeling schoon katoenen ondergoed.",
+            "Stel gerust al je vragen vooraf: je krijgt een rustige, duidelijke uitleg tijdens de behandeling.",
+          ],
+        },
+        {
+          title: "Hoe voelt het?",
+          paragraphs: [
+            "Je voelt een korte, felle prikkel die snel wegtrekt. Hoe dat voelt, verschilt per persoon en per zone; de eerste keer is meestal het gevoeligst. Bij regelmatig waxen groeit het haar vaak fijner terug, waardoor veel vrouwen het daarna minder intens vinden.",
+          ],
+        },
+        {
+          title: "Na je afspraak",
+          items: [
+            "Roodheid en kleine bultjes rond de haarzakjes trekken meestal binnen een à twee dagen weg.",
+            "Vermijd de eerste dag zon, sauna en intensief sporten.",
+            "Scheer liever niet tussen twee afspraken; zo blijft je haargroei in hetzelfde ritme.",
+          ],
+        },
+        {
+          title: "Goed om te weten",
+          paragraphs: [
+            "Gebruik je retinoïden op recept of heb je recent een kuur met isotretinoïne gevolgd, dan is waxen niet geschikt. Gebruik je bloedverdunners, heb je diabetes of een huidaandoening op de zone, overleg dan vooraf met je arts en vermeld het bij je aanvraag.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Welke behandeling is fijn voor de eerste keer?",
+          a: "Dat hangt af van wat je wilt. Voor intiem waxen is de bikinilijn een rustige eerste stap; voor het gezicht beginnen veel vrouwen met de wenkbrauwen of bovenlip.",
+        },
+        {
+          q: "Hoe lang blijft het resultaat?",
+          a: "Meestal drie tot vijf weken, afhankelijk van je haargroei en de zone.",
+        },
+      ],
+      treatments: ["bikini-line", "eyebrows", "half-legs"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    en: {
+      seoTitle: "First time waxing: how to prepare",
+      seoDescription:
+        "Waxing for the first time? Learn how long your hair should be, how to prepare, what to expect and what to do afterwards. Glow by Dilek, women only.",
+      hero: {
+        eyebrow: "Blog · First time",
+        title: "Waxing for the first time:",
+        titleEm: "how to prepare.",
+        subtitle:
+          "Nervous? No need. A few simple steps beforehand make your first waxing appointment calmer, more comfortable and more beautiful.",
+      },
+      sections: [
+        {
+          title: "How long should your hair be?",
+          paragraphs: [
+            "Hair needs to be at least 0.5 cm long — about the length of a grain of rice. That is usually two to four weeks after shaving. If it is shorter, the wax can’t grip it properly; if it is much longer than a centimetre, it is trimmed a little first.",
+          ],
+        },
+        {
+          title: "The days before",
+          items: [
+            "Exfoliate lightly one or two days before, not on the day itself.",
+            "Avoid sunbathing and sunbeds in the 48 hours before your appointment.",
+            "Stop retinol, AHA, BHA and other exfoliating products on the area at least a week before.",
+          ],
+        },
+        {
+          title: "On the day",
+          items: [
+            "Use no body lotion, oil, deodorant or self-tanner on the area being treated.",
+            "Wear comfortable, loose clothing; for an intimate treatment, clean cotton underwear.",
+            "Ask all your questions beforehand: you get a calm, clear explanation during the treatment.",
+          ],
+        },
+        {
+          title: "What does it feel like?",
+          paragraphs: [
+            "You feel a short, sharp sting that fades quickly. How it feels differs per person and per area; the first time is usually the most sensitive. With regular waxing, hair often grows back finer, so many women find it less intense afterwards.",
+          ],
+        },
+        {
+          title: "After your appointment",
+          items: [
+            "Redness and small bumps around the follicles usually fade within one or two days.",
+            "Avoid sun, sauna and intensive exercise on the first day.",
+            "Preferably don’t shave between appointments, so your hair growth stays in the same rhythm.",
+          ],
+        },
+        {
+          title: "Good to know",
+          paragraphs: [
+            "If you use prescription retinoids or have recently taken a course of isotretinoin, waxing is not suitable. If you use blood thinners, have diabetes or a skin condition on the area, consult your doctor beforehand and mention it in your request.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Which treatment is nice for a first time?",
+          a: "It depends on what you want. For intimate waxing the bikini line is a calm first step; for the face many women start with eyebrows or upper lip.",
+        },
+        {
+          q: "How long does the result last?",
+          a: "Usually three to five weeks, depending on your hair growth and the area.",
+        },
+      ],
+      treatments: ["bikini-line", "eyebrows", "half-legs"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+    tr: {
+      seoTitle: "İlk kez ağda: nasıl hazırlanılır",
+      seoDescription:
+        "İlk kez mi ağda yaptıracaksın? Kılların ne uzunlukta olmalı, nasıl hazırlanmalısın, neler beklemelisin ve sonrasında ne yapmalısın, oku. Glow by Dilek, kadınlara özel.",
+      hero: {
+        eyebrow: "Blog · İlk kez",
+        title: "İlk kez ağda:",
+        titleEm: "nasıl hazırlanılır.",
+        subtitle:
+          "Heyecanlı mısın? Gerek yok. Önceden atacağın birkaç basit adım ilk ağda randevunu daha sakin, daha rahat ve daha güzel yapar.",
+      },
+      sections: [
+        {
+          title: "Kılların ne uzunlukta olmalı?",
+          paragraphs: [
+            "Kıllar en az 0,5 cm, yani yaklaşık bir pirinç tanesi uzunluğunda olmalı. Bu genellikle tıraştan iki ila dört hafta sonradır. Daha kısaysa ağda kılı iyi tutamaz; bir santimden çok daha uzunsa önce biraz kısaltılır.",
+          ],
+        },
+        {
+          title: "Önceki günler",
+          items: [
+            "Bir iki gün önce cildine hafif peeling yap, aynı gün yapma.",
+            "Randevundan önceki 48 saat güneşlenme ve solaryuma girme.",
+            "Bölgede retinol, AHA, BHA ve diğer peeling ürünlerini en az bir hafta önce bırak.",
+          ],
+        },
+        {
+          title: "Randevu günü",
+          items: [
+            "Bakım yapılacak bölgeye vücut losyonu, yağ, deodorant veya bronzlaştırıcı sürme.",
+            "Rahat, bol giysiler giy; intim bakımda temiz pamuklu iç çamaşırı.",
+            "Tüm sorularını önceden sor: bakım sırasında sakin ve net açıklamalar alırsın.",
+          ],
+        },
+        {
+          title: "Nasıl hissettirir?",
+          paragraphs: [
+            "Kısa, keskin ve çabuk geçen bir acı hissedersin. Bu his kişiden kişiye ve bölgeden bölgeye değişir; ilk sefer genellikle en hassas olanıdır. Düzenli ağdayla kıllar çoğu zaman daha ince çıkar, bu yüzden birçok kadın sonrasında daha az yoğun bulur.",
+          ],
+        },
+        {
+          title: "Randevundan sonra",
+          items: [
+            "Kıl dipleri çevresindeki kızarıklık ve küçük kabarıklıklar genellikle bir iki gün içinde geçer.",
+            "İlk gün güneş, sauna ve yoğun spordan kaçın.",
+            "İki randevu arasında mümkünse tıraş olma; böylece kıl çıkışın aynı ritimde kalır.",
+          ],
+        },
+        {
+          title: "Bilmekte fayda var",
+          paragraphs: [
+            "Reçeteli retinoid kullanıyorsan ya da yakın zamanda izotretinoin kürü aldıysan ağda uygun değildir. Kan sulandırıcı kullanıyorsan, diyabetin ya da bölgede bir cilt rahatsızlığın varsa önceden doktoruna danış ve talebinde belirt.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "İlk kez için hangi bakım uygun?",
+          a: "Ne istediğine bağlı. İntim ağdada bikini çizgisi sakin bir ilk adımdır; yüzde birçok kadın kaş veya üst dudakla başlar.",
+        },
+        {
+          q: "Sonuç ne kadar kalıcı?",
+          a: "Kıl çıkışına ve bölgeye bağlı olarak genellikle üç ila beş hafta.",
+        },
+      ],
+      treatments: ["bikini-line", "eyebrows", "half-legs"],
+      pages: ["preparation", "aftercare", "noord"],
+    },
+  },
+};
+
+export function noordCopy(locale: Locale): ArticleCopy {
+  return noord[locale];
+}
+
+export function postCopy(locale: Locale, id: PostId): ArticleCopy {
+  return posts[id][locale];
+}

@@ -30,7 +30,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
         title: "3. Je ontvangt een persoonlijke bevestiging",
         paragraphs: [
           "Pas als Dilek de afspraak persoonlijk heeft bevestigd, staat hij vast. In die bevestiging staan de datum, het tijdstip en de praktische informatie die je nodig hebt.",
-          "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+          "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
         ],
       },
       {
@@ -65,7 +65,7 @@ export const guidesNl: Record<GuideKey, GuideCopy> = {
       },
       {
         q: "Waar vindt de behandeling plaats?",
-        a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+        a: "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
       },
       {
         q: "Kan ik ook eerst een vraag stellen?",
@@ -289,7 +289,7 @@ export const faqPageNl: FaqPageCopy = {
         },
         {
           q: "Waar vinden de behandelingen plaats?",
-          a: "Behandelingen zijn uitsluitend op afspraak. Praktische locatiegegevens worden na bevestiging persoonlijk gedeeld.",
+          a: "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
         },
         {
           q: "Is Glow by Dilek ladies-only?",
@@ -297,7 +297,11 @@ export const faqPageNl: FaqPageCopy = {
         },
         {
           q: "In welk deel van Amsterdam zit Glow by Dilek?",
-          a: "Glow by Dilek is in Amsterdam en werkt uitsluitend op afspraak. Het adres en de praktische locatiegegevens deelt Dilek persoonlijk zodra je afspraak is bevestigd.",
+          a: "Glow by Dilek zit in Amsterdam-Noord. Klanten komen uit heel Amsterdam en de regio, bijvoorbeeld uit Amstelveen, Diemen, Zaandam en Haarlem. Het exacte adres deelt Dilek persoonlijk zodra je afspraak is bevestigd.",
+        },
+        {
+          q: "Kan Dilek ook bij mij langskomen?",
+          a: "Ja, op verzoek komt Dilek ook bij jou langs, op je eigen adres. Vermeld het gerust bij je aanvraag of in een bericht; Dilek bespreekt dan persoonlijk wat er mogelijk is.",
         },
         {
           q: "Wat kost een Brazilian wax?",
