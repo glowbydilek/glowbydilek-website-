@@ -50,7 +50,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "Wat je kunt laten doen",
         items: [
-          "Waxen van gezicht, lichaam en bikinizone: van wenkbrauwen en bovenlip tot benen, Brazilian en Hollywood.",
+          "Waxen van gezicht, lichaam en bikinizone: van wenkbrauwen en bovenlip tot benen en Hollywood (full Brazilian).",
           "Gezichtsbehandelingen, afgestemd op wat jouw huid nodig heeft.",
           "Ontspannende massages en lichaamsbehandelingen.",
         ],
@@ -89,7 +89,7 @@ const noord: Record<Locale, ArticleCopy> = {
         a: "Natuurlijk. Klanten komen uit heel Amsterdam en de regio. Je bent overal vandaan welkom.",
       },
     ],
-    treatments: ["brazilian", "eyebrows", "full-legs"],
+    treatments: ["hollywood", "eyebrows", "full-legs"],
     pages: ["prices", "process", "faq"],
   },
   en: {
@@ -114,7 +114,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "What you can book",
         items: [
-          "Waxing for face, body and bikini area: from eyebrows and upper lip to legs, Brazilian and Hollywood.",
+          "Waxing for face, body and bikini area: from eyebrows and upper lip to legs and Hollywood (full Brazilian).",
           "Facials, tailored to what your skin needs.",
           "Relaxing massages and body treatments.",
         ],
@@ -153,7 +153,7 @@ const noord: Record<Locale, ArticleCopy> = {
         a: "Of course. Clients come from all over Amsterdam and the region. You are welcome wherever you live.",
       },
     ],
-    treatments: ["brazilian", "eyebrows", "full-legs"],
+    treatments: ["hollywood", "eyebrows", "full-legs"],
     pages: ["prices", "process", "faq"],
   },
   tr: {
@@ -178,7 +178,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "Neler yaptırabilirsin",
         items: [
-          "Yüz, vücut ve bikini bölgesi ağdası: kaş ve üst dudaktan bacaklara, Brezilya ve Hollywood ağdasına kadar.",
+          "Yüz, vücut ve bikini bölgesi ağdası: kaş ve üst dudaktan bacaklara ve Hollywood (full Brazilian) ağdasına kadar.",
           "Cildinin ihtiyacına göre şekillenen yüz bakımları.",
           "Rahatlatıcı masajlar ve vücut bakımları.",
         ],
@@ -217,7 +217,7 @@ const noord: Record<Locale, ArticleCopy> = {
         a: "Elbette. Müşteriler tüm Amsterdam'dan ve çevreden gelir. Nerede oturursan otur, hoş geldin.",
       },
     ],
-    treatments: ["brazilian", "eyebrows", "full-legs"],
+    treatments: ["hollywood", "eyebrows", "full-legs"],
     pages: ["prices", "process", "faq"],
   },
 };
@@ -227,15 +227,15 @@ const noord: Record<Locale, ArticleCopy> = {
 const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
   "intimate-waxing-guide": {
     nl: {
-      seoTitle: "Brazilian, Hollywood of bikinilijn: wat is het verschil?",
+      seoTitle: "Bikinilijn of full Brazilian (Hollywood): het verschil",
       seoDescription:
-        "Brazilian, Hollywood of bikinilijn waxen? Lees het verschil, welke past bij jou en hoe je je voorbereidt. Uitleg van Glow by Dilek in Amsterdam-Noord.",
+        "Bikinilijn of full Brazilian (Hollywood) waxen? Lees het verschil, wat bij jou past en hoe je je voorbereidt. Uitleg van Glow by Dilek in Amsterdam-Noord.",
       hero: {
         eyebrow: "Blog · Intiem waxen",
-        title: "Brazilian, Hollywood of bikinilijn:",
+        title: "Bikinilijn of full Brazilian:",
         titleEm: "wat is het verschil?",
         subtitle:
-          "Drie intieme waxbehandelingen, drie resultaten. Zo zie je in één oogopslag wat er bij elke behandeling verdwijnt, welke bij jou past en hoe je je voorbereidt.",
+          "Twee intieme waxbehandelingen, twee resultaten. Zo zie je in één oogopslag wat er verdwijnt, wat bij jou past en hoe je je voorbereidt.",
       },
       sections: [
         {
@@ -245,23 +245,16 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
           ],
         },
         {
-          title: "Brazilian: bijna alles weg",
+          title: "Full Brazilian (Hollywood): volledig glad",
           paragraphs: [
-            "Bij een Brazilian wax wordt bijna al het haar verwijderd, met naar wens een smal strookje of klein driehoekje. Het resultaat is verzorgd, terwijl je zelf kiest hoeveel er blijft staan.",
-          ],
-        },
-        {
-          title: "Hollywood: volledig glad",
-          paragraphs: [
-            "Een Hollywood wax is volledig glad: al het haar in de intieme zone wordt verwijderd. Met dezelfde discretie, uitleg en rust als bij elke intieme behandeling.",
+            "Een Hollywood wax wordt ook wel full Brazilian genoemd: het is dezelfde behandeling. Al het haar in de intieme zone wordt verwijderd, ook tussen de billen, zodat je helemaal glad bent. Met dezelfde discretie, uitleg en rust als bij elke intieme behandeling.",
           ],
         },
         {
           title: "Welke past bij jou?",
           items: [
-            "Voor het eerst intiem waxen? Begin gerust met de bikinilijn; later kun je altijd kiezen voor een Brazilian of Hollywood.",
-            "Wil je een verzorgd resultaat met nog een klein beetje haar? Kies een Brazilian.",
-            "Wil je helemaal glad? Kies een Hollywood.",
+            "Voor het eerst intiem waxen? Begin gerust met de bikinilijn; later kun je altijd kiezen voor een full Brazilian (Hollywood).",
+            "Wil je helemaal glad? Kies een full Brazilian (Hollywood).",
             "Twijfel je? Vraag het gerust bij je aanvraag; Dilek denkt eerlijk met je mee.",
           ],
         },
@@ -284,28 +277,21 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         },
       ],
       faqs: [
-        {
-          q: "Wat is het verschil tussen een Brazilian en een Hollywood wax?",
-          a: "Bij een Brazilian blijft naar wens een smal strookje of klein driehoekje staan; een Hollywood is volledig glad.",
-        },
-        {
-          q: "Is een bikinilijn een goede eerste keer?",
-          a: "Voor veel vrouwen wel: het is de kleinste intieme zone en je ervaart rustig hoe waxen voelt.",
-        },
+        { q: "Is een full Brazilian hetzelfde als een Hollywood?", a: "Ja. Beide namen worden gebruikt voor dezelfde behandeling: de intieme zone wordt volledig glad gewaxt." },
+        { q: "Is een bikinilijn een goede eerste keer?", a: "Voor veel vrouwen wel: het is de kleinste intieme zone en je ervaart rustig hoe waxen voelt." },
       ],
-      treatments: ["bikini-line", "brazilian", "hollywood"],
+      treatments: ["bikini-line", "hollywood", "buttocks"],
       pages: ["preparation", "aftercare", "noord"],
     },
     en: {
-      seoTitle: "Brazilian, Hollywood or bikini line: the difference",
+      seoTitle: "Bikini line or full Brazilian (Hollywood)?",
       seoDescription:
-        "Brazilian, Hollywood or bikini line wax? Learn the difference, which one suits you and how to prepare. A guide by Glow by Dilek in Amsterdam-Noord.",
+        "Bikini line or full Brazilian (Hollywood) wax? Learn the difference, which one suits you and how to prepare. A guide by Glow by Dilek in Amsterdam-Noord.",
       hero: {
         eyebrow: "Blog · Intimate waxing",
-        title: "Brazilian, Hollywood or bikini line:",
+        title: "Bikini line or full Brazilian:",
         titleEm: "what’s the difference?",
-        subtitle:
-          "Three intimate wax treatments, three results. See at a glance what each treatment removes, which one suits you and how to prepare.",
+        subtitle: "Two intimate wax treatments, two results. See at a glance what is removed, which one suits you and how to prepare.",
       },
       sections: [
         {
@@ -315,23 +301,16 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
           ],
         },
         {
-          title: "Brazilian: almost everything",
+          title: "Full Brazilian (Hollywood): completely smooth",
           paragraphs: [
-            "A Brazilian wax removes almost all hair, leaving a narrow strip or small triangle if you like. The result is neat, while you choose how much stays.",
-          ],
-        },
-        {
-          title: "Hollywood: completely smooth",
-          paragraphs: [
-            "A Hollywood wax is completely smooth: all hair in the intimate area is removed — with the same discretion, explanation and calm as every intimate treatment.",
+            "A Hollywood wax is also called a full Brazilian: it is the same treatment. All hair in the intimate area is removed, including between the buttocks, so you are completely smooth — with the same discretion, explanation and calm as every intimate treatment.",
           ],
         },
         {
           title: "Which one suits you?",
           items: [
-            "First intimate wax? Start with the bikini line; you can always choose a Brazilian or Hollywood later.",
-            "Want a neat result with a little hair left? Choose a Brazilian.",
-            "Want to be completely smooth? Choose a Hollywood.",
+            "First intimate wax? Start with the bikini line; you can always choose a full Brazilian (Hollywood) later.",
+            "Want to be completely smooth? Choose a full Brazilian (Hollywood).",
             "Not sure? Ask in your request; Dilek will give you honest advice.",
           ],
         },
@@ -354,28 +333,21 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         },
       ],
       faqs: [
-        {
-          q: "What is the difference between a Brazilian and a Hollywood wax?",
-          a: "With a Brazilian, a narrow strip or small triangle can stay if you like; a Hollywood is completely smooth.",
-        },
-        {
-          q: "Is a bikini line a good first time?",
-          a: "For many women it is: it is the smallest intimate area and you calmly experience what waxing feels like.",
-        },
+        { q: "Is a full Brazilian the same as a Hollywood?", a: "Yes. Both names are used for the same treatment: the intimate area is waxed completely smooth." },
+        { q: "Is a bikini line a good first time?", a: "For many women it is: it is the smallest intimate area and you calmly experience what waxing feels like." },
       ],
-      treatments: ["bikini-line", "brazilian", "hollywood"],
+      treatments: ["bikini-line", "hollywood", "buttocks"],
       pages: ["preparation", "aftercare", "noord"],
     },
     tr: {
-      seoTitle: "Brezilya, Hollywood mu bikini çizgisi mi: farkı ne?",
+      seoTitle: "Bikini çizgisi mi full Brazilian (Hollywood) mı?",
       seoDescription:
-        "Brezilya, Hollywood ya da bikini çizgisi ağdası? Farkları, sana hangisinin uygun olduğunu ve nasıl hazırlanacağını oku. Amsterdam-Noord'dan Glow by Dilek.",
+        "Bikini çizgisi mi, full Brazilian (Hollywood) ağdası mı? Farkı, sana hangisinin uygun olduğunu ve nasıl hazırlanacağını oku. Amsterdam-Noord'dan Glow by Dilek.",
       hero: {
         eyebrow: "Blog · İntim ağda",
-        title: "Brezilya, Hollywood mu bikini çizgisi mi:",
+        title: "Bikini çizgisi mi full Brazilian mı:",
         titleEm: "farkı ne?",
-        subtitle:
-          "Üç intim ağda, üç farklı sonuç. Her bakımda nelerin alındığını, hangisinin sana uyduğunu ve nasıl hazırlanacağını bir bakışta gör.",
+        subtitle: "İki intim ağda, iki farklı sonuç. Nelerin alındığını, hangisinin sana uyduğunu ve nasıl hazırlanacağını bir bakışta gör.",
       },
       sections: [
         {
@@ -385,23 +357,16 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
           ],
         },
         {
-          title: "Brezilya: neredeyse tamamı",
+          title: "Full Brazilian (Hollywood): tamamen pürüzsüz",
           paragraphs: [
-            "Brezilya ağdasında kılların neredeyse tamamı alınır; istersen ince bir şerit ya da küçük bir üçgen bırakılır. Ne kadarının kalacağını sen seçersin.",
-          ],
-        },
-        {
-          title: "Hollywood: tamamen pürüzsüz",
-          paragraphs: [
-            "Hollywood ağdasında intim bölgedeki kılların tamamı alınır. Her intim bakımda olduğu gibi aynı gizlilik, açıklama ve sakinlikle.",
+            "Hollywood ağdasına full Brazilian da denir: ikisi aynı bakımdır. İntim bölgedeki kılların tamamı, kalça arası dahil alınır; tamamen pürüzsüz olursun. Her intim bakımda olduğu gibi aynı gizlilik, açıklama ve sakinlikle.",
           ],
         },
         {
           title: "Hangisi sana uygun?",
           items: [
-            "İlk kez intim ağda mı? Bikini çizgisiyle başla; daha sonra her zaman Brezilya ya da Hollywood seçebilirsin.",
-            "Biraz kıl kalan bakımlı bir sonuç mu istiyorsun? Brezilya ağdasını seç.",
-            "Tamamen pürüzsüz mü olmak istiyorsun? Hollywood ağdasını seç.",
+            "İlk kez intim ağda mı? Bikini çizgisiyle başla; daha sonra her zaman full Brazilian (Hollywood) seçebilirsin.",
+            "Tamamen pürüzsüz mü olmak istiyorsun? Full Brazilian (Hollywood) seç.",
             "Emin değil misin? Talebinde sor; Dilek seninle dürüstçe düşünür.",
           ],
         },
@@ -424,16 +389,10 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         },
       ],
       faqs: [
-        {
-          q: "Brezilya ve Hollywood ağdası arasındaki fark nedir?",
-          a: "Brezilya ağdasında istersen ince bir şerit ya da küçük bir üçgen kalır; Hollywood tamamen pürüzsüzdür.",
-        },
-        {
-          q: "Bikini çizgisi ilk kez için uygun mu?",
-          a: "Birçok kadın için evet: en küçük intim bölgedir ve ağdanın nasıl hissettirdiğini sakince deneyimlersin.",
-        },
+        { q: "Full Brazilian ile Hollywood aynı şey mi?", a: "Evet. İki ad da aynı bakım için kullanılır: intim bölge tamamen pürüzsüz olacak şekilde ağdayla alınır." },
+        { q: "Bikini çizgisi ilk kez için uygun mu?", a: "Birçok kadın için evet: en küçük intim bölgedir ve ağdanın nasıl hissettirdiğini sakince deneyimlersin." },
       ],
-      treatments: ["bikini-line", "brazilian", "hollywood"],
+      treatments: ["bikini-line", "hollywood", "buttocks"],
       pages: ["preparation", "aftercare", "noord"],
     },
   },
@@ -853,7 +812,7 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         {
           title: "Welke zones kun je laten waxen?",
           paragraphs: [
-            "Bij Glow by Dilek kun je terecht voor het gezicht (wenkbrauwen, bovenlip, kin, wangen en kaaklijn, hals, volledig gezicht), het lichaam (oksels, armen, benen, rug, buik, borst, decolleté, billen) en de bikinizone (bikinilijn, Brazilian, Hollywood). Alles uitsluitend voor vrouwen en op afspraak.",
+            "Bij Glow by Dilek kun je terecht voor het gezicht (wenkbrauwen, bovenlip, kin, wangen en kaaklijn, hals, volledig gezicht), het lichaam (oksels, armen, benen, rug, buik, borst, decolleté, billen) en de bikinizone (bikinilijn, Hollywood / full Brazilian). Alles uitsluitend voor vrouwen en op afspraak.",
           ],
         },
         {
@@ -900,7 +859,7 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         {
           title: "Which areas can you have waxed?",
           paragraphs: [
-            "At Glow by Dilek you can book the face (eyebrows, upper lip, chin, cheeks and jawline, neck, full face), the body (underarms, arms, legs, back, belly, chest, décolletage, buttocks) and the bikini area (bikini line, Brazilian, Hollywood). All for women only and by appointment.",
+            "At Glow by Dilek you can book the face (eyebrows, upper lip, chin, cheeks and jawline, neck, full face), the body (underarms, arms, legs, back, belly, chest, décolletage, buttocks) and the bikini area (bikini line, Hollywood / full Brazilian). All for women only and by appointment.",
           ],
         },
         {
@@ -946,7 +905,7 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
         {
           title: "Hangi bölgeler yapılır?",
           paragraphs: [
-            "Glow by Dilek'te yüz (kaş, üst dudak, çene, yanak ve çene hattı, boyun, tüm yüz), vücut (koltuk altı, kollar, bacaklar, sırt, karın, göğüs, dekolte, kalça) ve bikini bölgesi (bikini çizgisi, Brezilya, Hollywood) yapılır. Hepsi yalnızca kadınlara ve randevuyla.",
+            "Glow by Dilek'te yüz (kaş, üst dudak, çene, yanak ve çene hattı, boyun, tüm yüz), vücut (koltuk altı, kollar, bacaklar, sırt, karın, göğüs, dekolte, kalça) ve bikini bölgesi (bikini çizgisi, Hollywood / full Brazilian) yapılır. Hepsi yalnızca kadınlara ve randevuyla.",
           ],
         },
         {

@@ -267,8 +267,8 @@ export const faqPageNl: FaqPageCopy = {
       title: "Intieme behandelingen",
       items: [
         {
-          q: "Wat is het verschil tussen bikinilijn, Brazilian en Hollywood?",
-          a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Brazilian wordt bijna alles verwijderd, met naar wens een smal strookje of klein driehoekje. Een Hollywood is volledig glad.",
+          q: "Wat is het verschil tussen bikinilijn en Hollywood (full Brazilian)?",
+          a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Hollywood, ook wel full Brazilian genoemd, wordt de intieme zone volledig glad gewaxt.",
         },
         {
           q: "Ik vind een intieme behandeling spannend. Is dat normaal?",
@@ -304,8 +304,8 @@ export const faqPageNl: FaqPageCopy = {
           a: "Ja, op verzoek komt Dilek ook bij jou langs, op je eigen adres. Vermeld het gerust bij je aanvraag of in een bericht; Dilek bespreekt dan persoonlijk wat er mogelijk is.",
         },
         {
-          q: "Wat kost een Brazilian wax?",
-          a: "Het tarief van een Brazilian wax staat op de pagina Tarieven. Staat daar ‘op aanvraag’, dan hoor je het tarief persoonlijk bij je aanvraag.",
+          q: "Wat kost een full Brazilian (Hollywood) wax?",
+          a: "Het tarief van een full Brazilian (Hollywood) staat op de pagina Tarieven. Staat daar ‘op aanvraag’, dan hoor je het tarief persoonlijk bij je aanvraag.",
         },
         {
           q: "Wat kost een behandeling?",

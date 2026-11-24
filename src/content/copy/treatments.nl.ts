@@ -376,7 +376,7 @@ export const treatmentsNl: TreatmentCopySet = {
         a: "De exacte duur hangt af van je haargroei en of je zones combineert. Je hoort het bij de bevestiging van je afspraak.",
       },
       {
-        q: "Kan ik hele benen combineren met een Brazilian?",
+        q: "Kan ik hele benen combineren met een Hollywood (full Brazilian)?",
         a: "Ja. Vermeld beide behandelingen bij je aanvraag, dan wordt de afspraak daarop afgestemd.",
       },
     ],
@@ -455,7 +455,7 @@ export const treatmentsNl: TreatmentCopySet = {
     faqs: [
       {
         q: "Is een bikinilijn een goede eerste keer?",
-        a: "Voor veel mensen wel: het is de kleinste intieme zone en je ervaart rustig hoe waxen voelt. Later kun je altijd kiezen voor een Brazilian of Hollywood.",
+        a: "Voor veel mensen wel: het is de kleinste intieme zone en je ervaart rustig hoe waxen voelt. Later kun je altijd kiezen voor een Hollywood (full Brazilian).",
       },
       {
         q: "Hoe bepaal ik waar de lijn loopt?",
@@ -519,11 +519,11 @@ export const treatmentsNl: TreatmentCopySet = {
   },
 
   hollywood: {
-    seoTitle: "Hollywood wax in Amsterdam",
+    seoTitle: "Hollywood wax (full Brazilian) in Amsterdam",
     seoDescription:
-      "Hollywood wax in Amsterdam, uitsluitend voor vrouwen: volledig glad in de intieme zone. Lees discreet wat het inhoudt en hoe je je huid erna verzorgt.",
-    title: "Hollywood wax in Amsterdam",
-    lead: "Volledig glad, voor een frisse en verzorgde huid — met dezelfde discretie, uitleg en rust als bij elke intieme behandeling. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
+      "Hollywood wax (full Brazilian) in Amsterdam, uitsluitend voor vrouwen: volledig glad in de intieme zone. Lees discreet wat het inhoudt en hoe je je huid erna verzorgt.",
+    title: "Hollywood wax (full Brazilian) in Amsterdam",
+    lead: "Volledig glad (ook wel full Brazilian genoemd), voor een frisse en verzorgde huid — met dezelfde discretie, uitleg en rust als bij elke intieme behandeling. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "Volledig glad, discreet en zorgvuldig.",
     area: "De volledige intieme zone: de voorkant, de liezen, het intieme gebied en de zone tussen de billen. Er blijft geen haar staan.",
     appointment: [
@@ -531,7 +531,7 @@ export const treatmentsNl: TreatmentCopySet = {
       "Er wordt in kleine stukjes gewerkt, met de huid goed strak en elke stap vooraf aangekondigd. Je kunt altijd om een pauze vragen. Na afloop wordt de huid gekalmeerd en krijg je concreet advies voor de dagen erna.",
     ],
     know: [
-      "Heb je nog nooit intiem gewaxt? Dan kun je ook eerst kiezen voor een bikinilijn of Brazilian. Dat wordt eerlijk met je besproken.",
+      "Heb je nog nooit intiem gewaxt? Dan kun je ook eerst kiezen voor een bikinilijn. Dat wordt eerlijk met je besproken.",
       "Laat het haar twee tot vier weken groeien, gebruik die dag geen olie of lotion en draag schoon katoenen ondergoed.",
       "Bij aambeien, wondjes, een huidinfectie of een andere actieve aandoening in de zone is waxen niet verstandig. Raadpleeg bij twijfel je huisarts.",
     ],
@@ -550,12 +550,12 @@ export const treatmentsNl: TreatmentCopySet = {
       "Geef je huid de eerste dag rust en plan geen strand- of zwemdag direct na de afspraak. Bij een ritme van vier tot vijf weken blijft het resultaat het mooist.",
     faqs: [
       {
-        q: "Is een Hollywood pijnlijker dan een Brazilian?",
-        a: "Het gaat om een grotere zone, dus het duurt iets langer. Hoe het voelt, verschilt per persoon. Bij een vast ritme ervaren de meeste mensen het als minder intens.",
+        q: "Is een Hollywood hetzelfde als een full Brazilian?",
+        a: "Ja. Beide namen worden gebruikt voor dezelfde behandeling: de intieme zone wordt volledig glad gewaxt.",
       },
       {
-        q: "Kan ik later terug naar een Brazilian?",
-        a: "Natuurlijk. Je kiest bij elke afspraak opnieuw wat je wilt.",
+        q: "Kan er een strookje blijven staan?",
+        a: "Bij Glow by Dilek wordt de intieme zone volledig glad gewaxt. Wil je alleen een nette lijn langs je ondergoed, kies dan de bikinilijn.",
       },
     ],
   },
