@@ -41,7 +41,7 @@ export const treatmentsEn: TreatmentCopySet = {
       },
       {
         q: "How much does eyebrow waxing cost?",
-        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+        a: "The price is shown at the top of this page and on the Prices page.",
       },
       {
         q: "Can I have my brows tinted too?",
@@ -376,7 +376,7 @@ export const treatmentsEn: TreatmentCopySet = {
         a: "The exact time depends on your hair growth and whether you combine areas. You’ll hear it when your appointment is confirmed.",
       },
       {
-        q: "Can I combine full legs with a Brazilian?",
+        q: "Can I combine full legs with a Hollywood (full Brazilian)?",
         a: "Yes. Mention both treatments in your request and the appointment will be planned accordingly.",
       },
     ],
@@ -455,7 +455,7 @@ export const treatmentsEn: TreatmentCopySet = {
     faqs: [
       {
         q: "Is a bikini line a good first time?",
-        a: "For many people, yes: it is the smallest intimate area and a calm way to experience how waxing feels. You can always choose a Brazilian or Hollywood later.",
+        a: "For many people, yes: it is the smallest intimate area and a calm way to experience how waxing feels. You can always choose a Hollywood (full Brazilian) later.",
       },
       {
         q: "How do I decide where the line runs?",
@@ -505,7 +505,7 @@ export const treatmentsEn: TreatmentCopySet = {
       },
       {
         q: "How much does a Brazilian wax cost?",
-        a: "You hear the price personally when you send your request. Once it is fixed, it also appears on the Prices page.",
+        a: "The price is shown at the top of this page and on the Prices page.",
       },
       {
         q: "What if I feel uncomfortable during the treatment?",
@@ -519,11 +519,11 @@ export const treatmentsEn: TreatmentCopySet = {
   },
 
   hollywood: {
-    seoTitle: "Hollywood wax in Amsterdam",
+    seoTitle: "Hollywood wax (full Brazilian) in Amsterdam",
     seoDescription:
-      "Hollywood wax in Amsterdam, women only: completely smooth in the intimate area. Read discreetly what it involves and how to care for your skin afterwards.",
-    title: "Hollywood wax in Amsterdam",
-    lead: "Completely smooth, for fresh and well-cared-for skin — with the same discretion, explanation and calm as every intimate treatment. At Glow by Dilek in Amsterdam, women only.",
+      "Hollywood wax (full Brazilian) in Amsterdam, women only: completely smooth in the intimate area. Read what it involves and how to care for your skin afterwards.",
+    title: "Hollywood wax (full Brazilian) in Amsterdam",
+    lead: "Completely smooth (also called a full Brazilian), for fresh and well-cared-for skin — with the same discretion, explanation and calm as every intimate treatment. At Glow by Dilek in Amsterdam, women only.",
     teaser: "Completely smooth, discreet and careful.",
     area: "The full intimate area: the front, the groin, the intimate area and the area between the buttocks. No hair is left.",
     appointment: [
@@ -531,7 +531,7 @@ export const treatmentsEn: TreatmentCopySet = {
       "The work is done in small sections, with the skin held taut and each step announced beforehand. You can always ask for a pause. Afterwards the skin is soothed and you receive practical advice for the days that follow.",
     ],
     know: [
-      "Never had an intimate wax? You can also start with a bikini line or Brazilian. That will be discussed honestly with you.",
+      "Never had an intimate wax? You can also start with a bikini line. That will be discussed honestly with you.",
       "Let the hair grow for two to four weeks, skip oil or lotion on the day and wear clean cotton underwear.",
       "With haemorrhoids, cuts, a skin infection or another active condition in the area, waxing is not advisable. When in doubt, see your GP.",
     ],
@@ -550,12 +550,12 @@ export const treatmentsEn: TreatmentCopySet = {
       "Give your skin a day of rest and don’t plan a beach or swimming day straight after the appointment. With a rhythm of four to five weeks the result stays at its best.",
     faqs: [
       {
-        q: "Is a Hollywood more painful than a Brazilian?",
-        a: "It covers a larger area, so it takes a little longer. How it feels differs from person to person. With a regular rhythm, most people find it less intense.",
+        q: "Is a Hollywood the same as a full Brazilian?",
+        a: "Yes. Both names are used for the same treatment: the intimate area is waxed completely smooth.",
       },
       {
-        q: "Can I go back to a Brazilian later?",
-        a: "Of course. You choose again at every appointment.",
+        q: "Can a small strip be left?",
+        a: "At Glow by Dilek the intimate area is waxed completely smooth. If you only want a neat line along your underwear, choose the bikini line.",
       },
     ],
   },
