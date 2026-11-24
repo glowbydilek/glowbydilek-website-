@@ -65,7 +65,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "eyebrows",
-        photo: "zone-face",
+        photo: "wax-brows",
         name: { nl: "Wenkbrauwen", en: "Eyebrows", tr: "Kaşlar" },
         description: {
           nl: "Wenkbrauwen in een natuurlijke vorm die past bij jouw gezicht en gelaatstrekken.",
@@ -83,7 +83,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "chin",
-        photo: "wax-lip",
+        photo: "wax-chin",
         name: { nl: "Kin", en: "Chin", tr: "Çene" },
         description: {
           nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",
@@ -92,7 +92,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-face",
-        photo: "portrait",
+        photo: "wax-full-face",
         name: { nl: "Volledig gezicht", en: "Full face", tr: "Tüm yüz" },
         description: {
           nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",
@@ -130,7 +130,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-arms",
-        photo: "wax-arms",
+        photo: "wax-forearms",
         name: { nl: "Onderarmen", en: "Half arms", tr: "Kol (dirsek altı)" },
         description: {
           nl: "Van pols tot elleboog, voor zachte en verzorgde armen.",
@@ -157,7 +157,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-legs",
-        photo: "treatments-hero",
+        photo: "wax-full-legs",
         name: { nl: "Hele benen", en: "Full legs", tr: "Tüm bacak" },
         description: {
           nl: "De volledige benen, van enkel tot bovenbeen.",
