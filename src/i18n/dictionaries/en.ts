@@ -87,8 +87,8 @@ export const en: Dictionary = {
     menu: "Menu",
   },
   cta: {
-    requestShort: "Request",
-    request: "Request appointment",
+    requestShort: "Book",
+    request: "Book an appointment",
     explore: "Explore treatments",
     viewTreatments: "All treatments",
     viewPrices: "Prices",
@@ -246,7 +246,7 @@ export const en: Dictionary = {
       },
       {
         q: "What can I expect from a relaxation massage?",
-        a: "A calm moment to take some time entirely for yourself. Before the massage you briefly discuss with Dilek what feels comfortable and whether there is anything she should take into account. You will hear the price and duration personally when you send your request.",
+        a: "A calm moment to take some time entirely for yourself. Before the massage you briefly discuss with Dilek what feels comfortable and whether there is anything she should take into account. Price and duration are shown with each massage and on the Prices page.",
       },
       {
         q: "Does waxing hurt?",
@@ -726,7 +726,7 @@ export const en: Dictionary = {
     categoryPage: "Guide, preparation and aftercare",
     inThisArea: "Treatments in this area",
     inThisAreaIntro: "Choose a treatment for all the details, or request an appointment straight away.",
-    viewTreatment: "Read more",
+    viewTreatment: "View",
     viewCategory: "All about {name}",
     requestThis: "Request this treatment",
     area: "Which area is treated?",
@@ -741,7 +741,7 @@ export const en: Dictionary = {
     related: "Related treatments",
     otherAreas: "Other areas",
     price: "Rate",
-    priceOnRequest: "On request",
+    priceOnRequest: "Price on request",
     duration: "Duration",
     minutes: "{n} minutes",
     included: "Included in this package",
