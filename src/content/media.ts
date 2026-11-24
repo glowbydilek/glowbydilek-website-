@@ -44,7 +44,22 @@ export type PhotoId =
   | "wax-underarm"
   | "wax-lip"
   | "wax-arms"
-  | "wax-back";
+  | "wax-back"
+  | "wax-brows"
+  | "brow-tint"
+  | "wax-full-face"
+  | "wax-jaw"
+  | "wax-neck"
+  | "wax-decollete"
+  | "wax-chest"
+  | "wax-belly"
+  | "wax-full-legs"
+  | "facial-mask"
+  | "body-wrap"
+  | "wax-chin"
+  | "wax-forearms"
+  | "wax-upper-arms"
+  | "wax-upper-legs";
 
 export type Photo = {
   id: PhotoId;
@@ -426,6 +441,201 @@ export const photos: Record<PhotoId, Photo> = {
     },
     brief: "Back waxing: shoulder and upper back. Model, not Dilek or a client.",
     credit: "Adobe Stock #115961544 — Adobe Stock (free collection), Standard License",
+  },
+  "wax-brows": {
+    id: "wax-brows",
+    file: "wax-brows",
+    aspect: 2200 / 1467,
+    focus: { mobile: "50% 40%", desktop: "50% 40%" },
+    alt: {
+      nl: "Close-up van een natuurlijke wenkbrauw en een bruin oog",
+      en: "Close-up of a natural eyebrow and a brown eye",
+      tr: "Doğal bir kaş ve kahverengi bir gözün yakın çekimi",
+    },
+    brief: "Eyebrow waxing: a natural, groomed brow (model).",
+    credit: "Unsplash — photo by Gabrielle Wright (unsplash.com/photos/close-up-of-a-persons-eye-YCMkMQevCIE), Unsplash License",
+  },
+  "brow-tint": {
+    id: "brow-tint",
+    file: "brow-tint",
+    aspect: 2200 / 3300,
+    focus: { mobile: "50% 45%", desktop: "50% 45%" },
+    alt: {
+      nl: "Een wenkbrauw wordt na de behandeling netjes in model geborsteld",
+      en: "An eyebrow being neatly brushed into shape after treatment",
+      tr: "Bakımdan sonra kaş özenle şekline göre taranıyor",
+    },
+    brief: "Brow and lash tinting: brow being groomed (model).",
+    credit: "Unsplash — photo by Le Petit (unsplash.com/photos/woman-with-white-hair-clip-Jp4POW00eE0), Unsplash License",
+  },
+  "wax-full-face": {
+    id: "wax-full-face",
+    file: "wax-full-face",
+    aspect: 2200 / 2966,
+    focus: { mobile: "50% 60%", desktop: "50% 60%" },
+    alt: {
+      nl: "Een vrouw ligt ontspannen terwijl haar gezicht met handschoenen en een wattenschijfje wordt verzorgd",
+      en: "A woman lies relaxed while her face is cared for with gloved hands and a cotton pad",
+      tr: "Bir kadın rahatça uzanırken yüzü eldivenli ellerle ve pamukla bakım görüyor",
+    },
+    brief: "Full face waxing: calm facial care in a salon setting (model).",
+    credit: "Unsplash — photo by Studio Michael França (unsplash.com/photos/a-woman-getting-a-facial-mask-on-her-face-aZliw_XDfUU), Unsplash License",
+  },
+  "wax-jaw": {
+    id: "wax-jaw",
+    file: "wax-jaw",
+    aspect: 2200 / 3305,
+    focus: { mobile: "50% 35%", desktop: "50% 35%" },
+    alt: {
+      nl: "Gezicht van een vrouw van opzij met wangen en kaaklijn in beeld",
+      en: "A woman's face in profile showing the cheeks and jawline",
+      tr: "Yanakları ve çene hattı görünen bir kadın yüzü",
+    },
+    brief: "Cheek and jawline waxing (model).",
+    credit: "Unsplash — photo by Reece van der Merwe (unsplash.com/photos/a-woman-with-freckles-on-her-face-and-neck-4p6XsMzkTsE), Unsplash License",
+  },
+  "wax-neck": {
+    id: "wax-neck",
+    file: "wax-neck",
+    aspect: 2200 / 3300,
+    focus: { mobile: "50% 50%", desktop: "50% 50%" },
+    alt: {
+      nl: "Een hand rust zacht op de hals van een vrouw",
+      en: "A hand rests softly on a woman's neck",
+      tr: "Bir el, bir kadının boynuna yumuşakça dokunuyor",
+    },
+    brief: "Neck waxing (model).",
+    credit: "Unsplash — photo by Angélica Echeverry (unsplash.com/photos/person-with-gold-ring-on-neck-5KY5LP_zc44), Unsplash License",
+  },
+  "wax-decollete": {
+    id: "wax-decollete",
+    file: "wax-decollete",
+    aspect: 2200 / 1467,
+    focus: { mobile: "50% 50%", desktop: "50% 50%" },
+    alt: {
+      nl: "Hals en decolleté van een vrouw in een licht hemdje",
+      en: "A woman's neck and décolletage in a light top",
+      tr: "Açık renkli bir atlette bir kadının boynu ve dekoltesi",
+    },
+    brief: "Décolleté waxing (model).",
+    credit: "Unsplash — photo by El S (unsplash.com/photos/woman-in-white-tank-top-gUPznplBsLI), Unsplash License",
+  },
+  "wax-chest": {
+    id: "wax-chest",
+    file: "wax-chest",
+    aspect: 2200 / 2933,
+    focus: { mobile: "50% 45%", desktop: "50% 45%" },
+    alt: {
+      nl: "Sleutelbeenderen en borstpartij met een handdoek over de schouder",
+      en: "Collarbones and chest area with a towel over the shoulder",
+      tr: "Omuzda havluyla köprücük kemikleri ve göğüs bölgesi",
+    },
+    brief: "Chest waxing (model).",
+    credit: "Unsplash — photo by Alexandra Leru (unsplash.com/photos/a-close-up-of-a-person-with-a-towel-on-TQivHkg290M), Unsplash License",
+  },
+  "wax-belly": {
+    id: "wax-belly",
+    file: "wax-belly",
+    aspect: 2200 / 2200,
+    focus: { mobile: "50% 55%", desktop: "50% 55%" },
+    alt: {
+      nl: "Een vrouw ligt ontspannen in bed met een hand op haar buik",
+      en: "A woman lies relaxed in bed with a hand on her belly",
+      tr: "Bir kadın elini karnına koymuş, yatakta rahatça uzanıyor",
+    },
+    brief: "Belly waxing (model).",
+    credit: "Unsplash — photo by Giorgio Trovato (unsplash.com/photos/a-woman-laying-in-bed-with-her-stomach-exposed-l1UnEhSCxyA), Unsplash License",
+  },
+  "wax-full-legs": {
+    id: "wax-full-legs",
+    file: "wax-full-legs",
+    aspect: 2200 / 1653,
+    focus: { mobile: "55% 50%", desktop: "55% 50%" },
+    alt: {
+      nl: "Gladde benen tegen een witte achtergrond",
+      en: "Smooth legs against a white background",
+      tr: "Beyaz bir arka planda pürüzsüz bacaklar",
+    },
+    brief: "Full leg waxing (model).",
+    credit: "Unsplash — photo by P Shakoori (unsplash.com/photos/woman-in-white-stockings-lying-on-white-textile-wgSoYEdlVQE), Unsplash License",
+  },
+  "facial-mask": {
+    id: "facial-mask",
+    file: "facial-mask",
+    aspect: 2200 / 1467,
+    focus: { mobile: "45% 50%", desktop: "45% 50%" },
+    alt: {
+      nl: "Een vrouw met haarband ontvangt een reinigend gezichtsmasker",
+      en: "A woman with a headband receiving a cleansing face mask",
+      tr: "Saç bantlı bir kadına temizleyici yüz maskesi uygulanıyor",
+    },
+    brief: "Deep cleansing facial: mask step (model, not the studio).",
+    credit: "Unsplash — photo by engin akyurt (unsplash.com/photos/woman-lying-on-blue-towel-with-white-cream-on-face-g-m8EDc4X6Q), Unsplash License",
+  },
+  "body-wrap": {
+    id: "body-wrap",
+    file: "body-wrap",
+    aspect: 2200 / 1467,
+    focus: { mobile: "45% 55%", desktop: "45% 55%" },
+    alt: {
+      nl: "Pompflacon met verzorgende lotion, een opgerolde handdoek en roze tulpen",
+      en: "A pump bottle of caring lotion, a rolled towel and pink tulips",
+      tr: "Bakım losyonlu pompalı şişe, rulo havlu ve pembe laleler",
+    },
+    brief: "Body wrap and skin care: products and towel (still life).",
+    credit: "Unsplash — photo by Camille Brodard (unsplash.com/photos/white-plastic-pump-bottle-beside-pink-tulips-and-gray-towel-VxAwTeiqDao), Unsplash License",
+  },
+  "wax-chin": {
+    id: "wax-chin",
+    file: "wax-chin",
+    aspect: 2200 / 3300,
+    focus: { mobile: "50% 30%", desktop: "50% 30%" },
+    alt: {
+      nl: "Kin en lippen van een vrouw, leunend op haar schouder",
+      en: "A woman's chin and lips, resting on her shoulder",
+      tr: "Omzuna yaslanmış bir kadının çenesi ve dudakları",
+    },
+    brief: "Chin waxing (model).",
+    credit: "Unsplash — photo by Klara Kulikova (unsplash.com/photos/a-close-up-of-a-woman-with-a-ring-on-her-finger-YyvDkdUrZZY), Unsplash License",
+  },
+  "wax-forearms": {
+    id: "wax-forearms",
+    file: "wax-forearms",
+    aspect: 2200 / 3300,
+    focus: { mobile: "50% 50%", desktop: "50% 50%" },
+    alt: {
+      nl: "Een gestrekte arm tegen een lichte muur",
+      en: "An outstretched arm against a light wall",
+      tr: "Açık renkli bir duvara uzanan bir kol",
+    },
+    brief: "Forearm waxing (model).",
+    credit: "Unsplash — photo by Lívia Rocha (unsplash.com/photos/persons-hand-on-white-wall-H4STV63ICrs), Unsplash License",
+  },
+  "wax-upper-arms": {
+    id: "wax-upper-arms",
+    file: "wax-upper-arms",
+    aspect: 2200 / 3124,
+    focus: { mobile: "50% 45%", desktop: "50% 45%" },
+    alt: {
+      nl: "Gebogen bovenarm en elleboog tegen een lichte achtergrond",
+      en: "A bent upper arm and elbow against a light background",
+      tr: "Açık bir arka planda bükülü üst kol ve dirsek",
+    },
+    brief: "Upper arm waxing (model).",
+    credit: "Unsplash — photo by 莎莉 彭 (unsplash.com/photos/human-elbos-5W2WbZhc2oY), Unsplash License",
+  },
+  "wax-upper-legs": {
+    id: "wax-upper-legs",
+    file: "wax-upper-legs",
+    aspect: 2200 / 3300,
+    focus: { mobile: "50% 55%", desktop: "50% 55%" },
+    alt: {
+      nl: "Gebogen benen tegen een lichte achtergrond",
+      en: "Bent legs against a light background",
+      tr: "Açık bir arka planda bükülü bacaklar",
+    },
+    brief: "Upper leg waxing (model).",
+    credit: "Unsplash — photo by semen zhuravlev (unsplash.com/photos/human-legs-bent-at-knees-_XxH_mV8dnk), Unsplash License",
   },
 
 };

@@ -65,7 +65,7 @@ export const treatmentGroups: TreatmentGroup[] = [
     treatments: [
       {
         id: "eyebrows",
-        photo: "zone-face",
+        photo: "wax-brows",
         name: { nl: "Wenkbrauwen", en: "Eyebrows", tr: "Kaşlar" },
         description: {
           nl: "Wenkbrauwen in een natuurlijke vorm die past bij jouw gezicht en gelaatstrekken.",
@@ -83,7 +83,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "chin",
-        photo: "wax-lip",
+        photo: "wax-chin",
         name: { nl: "Kin", en: "Chin", tr: "Çene" },
         description: {
           nl: "Een gladde kinpartij, met aandacht voor de gevoelige huid rond de kaaklijn.",
@@ -92,7 +92,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-face",
-        photo: "portrait",
+        photo: "wax-full-face",
         name: { nl: "Volledig gezicht", en: "Full face", tr: "Tüm yüz" },
         description: {
           nl: "Wenkbrauwen, bovenlip, kin en wangen in één rustige, verzorgende behandeling.",
@@ -130,7 +130,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "half-arms",
-        photo: "wax-arms",
+        photo: "wax-forearms",
         name: { nl: "Onderarmen", en: "Half arms", tr: "Kol (dirsek altı)" },
         description: {
           nl: "Van pols tot elleboog, voor zachte en verzorgde armen.",
@@ -157,7 +157,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       },
       {
         id: "full-legs",
-        photo: "treatments-hero",
+        photo: "wax-full-legs",
         name: { nl: "Hele benen", en: "Full legs", tr: "Tüm bacak" },
         description: {
           nl: "De volledige benen, van enkel tot bovenbeen.",
@@ -185,8 +185,8 @@ export const treatmentGroups: TreatmentGroup[] = [
       en: "The most personal treatment asks for the most care. You decide what stays and what goes; Dilek works discreetly, explains each step beforehand and keeps a pace that feels right for you.", tr: "En kişisel uygulama en fazla özeni ister. Neyin kalıp neyin alınacağına sen karar verirsin; Dilek gizliliğe saygıyla çalışır, her adımı önceden anlatır ve sana uygun bir tempoda ilerler.",
     },
     suitable: {
-      nl: "Voor wie voor het eerst een bikini- of intieme wax overweegt én voor wie dat al jaren doet. Twijfel je tussen bikinilijn, Brazilian of Hollywood? Dat bespreken jullie gewoon vooraf.",
-      en: "For first-timers considering a bikini or intimate wax, and for those who have done it for years. Unsure between bikini line, Brazilian or Hollywood? You simply discuss it beforehand.", tr: "Bikini bölgesi ağdasını ilk kez düşünenler için de, yıllardır yaptıranlar için de. Bikini çizgisi, Brezilya ve Hollywood arasında kararsız mısın? Önceden konuşmanız yeterli.",
+      nl: "Voor wie voor het eerst een bikini- of intieme wax overweegt én voor wie dat al jaren doet. Twijfel je tussen bikinilijn en Hollywood (full Brazilian)? Dat bespreken jullie gewoon vooraf.",
+      en: "For first-timers considering a bikini or intimate wax, and for those who have done it for years. Unsure between bikini line and Hollywood (full Brazilian)? You simply discuss it beforehand.", tr: "Bikini bölgesi ağdasını ilk kez düşünenler için de, yıllardır yaptıranlar için de. Bikini çizgisi ile Hollywood (full Brazilian) arasında kararsız mısın? Önceden konuşmanız yeterli.",
     },
     note: {
       nl: "Twijfel je welke behandeling bij je past? Bespreek het gerust vooraf of tijdens de afspraak — er is geen vraag te gek.",
@@ -214,7 +214,7 @@ export const treatmentGroups: TreatmentGroup[] = [
       {
         id: "hollywood",
         photo: "materials",
-        name: { nl: "Hollywood", en: "Hollywood", tr: "Hollywood ağdası" },
+        name: { nl: "Hollywood (full Brazilian)", en: "Hollywood (full Brazilian)", tr: "Hollywood ağdası (full Brazilian)" },
         description: {
           nl: "Volledig glad, voor een frisse en verzorgde look.",
           en: "Completely smooth, for a fresh and polished feel.", tr: "Tamamen pürüzsüz; ferah ve bakımlı bir his için.",
