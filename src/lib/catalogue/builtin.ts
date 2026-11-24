@@ -64,7 +64,9 @@ const waxing: Item[] = treatmentGroups.flatMap((g, gi) =>
     name: t.name,
     description: t.description,
     photo: t.photo,
-    status: "published" as const,
+    // Owner (24 Nov 2026): only the Hollywood (full Brazilian) is offered; the Brazilian
+    // stays in the catalogue (old bookings and invoices keep its name) but is archived.
+    status: t.id === "brazilian" ? ("archived" as const) : ("published" as const),
     sort: gi * 100 + ti,
     pricing: t.price ? { mode: t.price.from ? ("from" as const) : ("fixed" as const), cents: Math.round(t.price.amount * 100) } : base.pricing,
     durationMinutes: t.durationMinutes ?? null,
@@ -157,7 +159,7 @@ const facial: Item[] = [
         en: "A professional deep cleanse in ten steps, from skin analysis and steam to a mask, facial massage and sun protection, tailored to your skin.",
         tr: "Cilt analizinden ve buhardan maskeye, yüz masajına ve güneş korumasına uzanan on adımlı, cildine göre ayarlanan profesyonel derin temizlik.",
       },
-      photo: "facial",
+      photo: "facial-mask",
       sort: 0,
       related: ["brow-lash-tint", "massage-face", "eyebrows"],
     }),
@@ -176,7 +178,7 @@ const facial: Item[] = [
         en: "Give your eyes a lovely, groomed and expressive look: tinting your brows and lashes brings out the natural beauty of your eyes.",
         tr: "Gözlerine güzel, bakımlı ve etkileyici bir ifade kazandır: kaş ve kirpik boyamayla gözlerinin doğal güzelliğini ön plana çıkarıyoruz.",
       },
-      photo: "botanical",
+      photo: "brow-tint",
       sort: 0,
       related: ["eyebrows", "facial-deep-cleansing", "full-face"],
     }),
@@ -208,7 +210,7 @@ const body: Item[] = [
         en: "A complete caring treatment for soft, smooth and radiant-looking skin on areas such as the back, arms and legs — ideal for skin with impurities, blemishes or a rough texture.",
         tr: "Sırt, kollar ve bacaklar gibi bölgelerde yumuşak, pürüzsüz ve ışıltılı bir cilt için eksiksiz bir bakım; sivilceli, lekeli veya pürüzlü ciltler için ideal.",
       },
-      photo: "bodycare",
+      photo: "body-wrap",
       sort: 0,
     }),
     status: "published" as const,
@@ -347,11 +349,11 @@ const packages: Item[] = [
       sectionId: "packages",
       slug: { nl: "bikini-en-smooth", en: "bikini-and-smooth", tr: "bikini-ve-smooth" },
       name: { nl: "Bikini & Smooth", en: "Bikini & Smooth", tr: "Bikini & Smooth" },
-      description: { nl: "Een Brazilian en hele benen samen, voor wie alles in één keer wil laten doen.", en: "A Brazilian and full legs together, for anyone who wants it all done in one visit.", tr: "Brezilya ağdası ve tüm bacak bir arada; hepsini tek seferde yaptırmak isteyenler için." },
+      description: { nl: "Een Hollywood (full Brazilian) en hele benen samen, voor wie alles in één keer wil laten doen.", en: "A Hollywood (full Brazilian) and full legs together, for anyone who wants it all done in one visit.", tr: "Hollywood (full Brazilian) ve tüm bacak bir arada; hepsini tek seferde yaptırmak isteyenler için." },
       photo: "zone-intimate",
       sort: 3,
       parts: [
-        { treatmentId: "brazilian", quantity: 1 },
+        { treatmentId: "hollywood", quantity: 1 },
         { treatmentId: "full-legs", quantity: 1 },
       ],
     },
@@ -361,14 +363,14 @@ const packages: Item[] = [
 
 /** Zones from the owner's price list (24 Nov 2026), published with price and duration. */
 const zoneSpec: { id: string; group: "face" | "body"; slug: Item["slug"]; photo: Item["photo"]; sort: number; cents: number; minutes: number; related: string[] }[] = [
-  { id: "cheeks-jaw", group: "face", slug: { nl: "wangen-kaaklijn-waxen", en: "cheek-jawline-waxing", tr: "yanak-cene-hatti-agdasi" }, photo: "zone-face", sort: 50, cents: 2250, minutes: 15, related: ["upper-lip", "chin", "full-face"] },
-  { id: "neck", group: "face", slug: { nl: "hals-waxen", en: "neck-waxing", tr: "boyun-agdasi" }, photo: "zone-face", sort: 51, cents: 1200, minutes: 10, related: ["cheeks-jaw", "chin", "decollete"] },
-  { id: "upper-arms", group: "body", slug: { nl: "bovenarmen-waxen", en: "upper-arm-waxing", tr: "ust-kol-agdasi" }, photo: "wax-arms", sort: 150, cents: 1000, minutes: 15, related: ["half-arms", "full-arms", "underarms"] },
-  { id: "upper-legs", group: "body", slug: { nl: "bovenbenen-waxen", en: "upper-leg-waxing", tr: "ust-bacak-agdasi" }, photo: "wax-legs", sort: 151, cents: 3000, minutes: 25, related: ["half-legs", "full-legs", "bikini-line"] },
-  { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "zone-body", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
-  { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "zone-body", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
-  { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "zone-body", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
-  { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "wax-back", sort: 155, cents: 2000, minutes: 15, related: ["brazilian", "hollywood", "upper-legs"] },
+  { id: "cheeks-jaw", group: "face", slug: { nl: "wangen-kaaklijn-waxen", en: "cheek-jawline-waxing", tr: "yanak-cene-hatti-agdasi" }, photo: "wax-jaw", sort: 50, cents: 2250, minutes: 15, related: ["upper-lip", "chin", "full-face"] },
+  { id: "neck", group: "face", slug: { nl: "hals-waxen", en: "neck-waxing", tr: "boyun-agdasi" }, photo: "wax-neck", sort: 51, cents: 1200, minutes: 10, related: ["cheeks-jaw", "chin", "decollete"] },
+  { id: "upper-arms", group: "body", slug: { nl: "bovenarmen-waxen", en: "upper-arm-waxing", tr: "ust-kol-agdasi" }, photo: "wax-upper-arms", sort: 150, cents: 1000, minutes: 15, related: ["half-arms", "full-arms", "underarms"] },
+  { id: "upper-legs", group: "body", slug: { nl: "bovenbenen-waxen", en: "upper-leg-waxing", tr: "ust-bacak-agdasi" }, photo: "wax-upper-legs", sort: 151, cents: 3000, minutes: 25, related: ["half-legs", "full-legs", "bikini-line"] },
+  { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "wax-belly", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
+  { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "wax-chest", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
+  { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "wax-decollete", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
+  { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "wax-back", sort: 155, cents: 2000, minutes: 15, related: ["hollywood", "bikini-line", "upper-legs"] },
 ];
 
 const zones: Item[] = zoneSpec.map((z) => {
@@ -412,14 +414,22 @@ export const LATE_UPDATES = {
     { id: "body-wrap", whenNameNl: "Lichaamspakking", whenStatus: "draft" },
     // Owner (24 Nov 2026): same treatment as the deep cleansing facial → archived.
     { id: "facial-steam", whenNameNl: "Gezichtsbehandeling met stoom", whenStatus: "published" },
+    // Owner (24 Nov 2026): the Hollywood is now named "Hollywood (full Brazilian)".
+    { id: "hollywood", whenNameNl: "Hollywood", whenStatus: "published" },
   ],
+  /**
+   * Owner (24 Nov 2026): the Brazilian (with a strip) is no longer offered; only the
+   * Hollywood (full Brazilian). Archived on the live catalogue (old URLs redirect to the
+   * Hollywood); the built-in entry stays so existing bookings and invoices keep their name.
+   */
+  archive: [{ id: "brazilian", whenStatus: "published" }],
 };
 
 /**
  * Owner's price list (24 Nov 2026), with durations the owner approved the
  * same day. Applied once to rows that are still "on request" without a price,
  * so a price the owner already set in the admin is never overwritten.
- * The owner's "full Brazilian" price is used for Brazilian and Hollywood.
+ * The owner's "full Brazilian" is the Hollywood (24 Nov 2026: Brazilian with a strip is no longer offered).
  * Facial/head/hand/foot massage: prices still to come (on request).
  */
 export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: number }[] = [
@@ -433,7 +443,6 @@ export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: 
   { id: "full-legs", cents: 4500, minutes: 45 },
   { id: "back", cents: 3000, minutes: 20 },
   { id: "bikini-line", cents: 2500, minutes: 20 },
-  { id: "brazilian", cents: 5000, minutes: 35 },
   { id: "hollywood", cents: 5000, minutes: 35 },
   { id: "brow-lash-tint", cents: 2500, minutes: 30 },
   { id: "facial-deep-cleansing", cents: 6500, minutes: 60 },
