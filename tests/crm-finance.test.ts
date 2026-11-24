@@ -190,7 +190,7 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
     assert.equal(s.completed, 2);
     assert.equal(s.cancelled, 1);
     assert.equal(s.receivedCents, 4500);
-    assert.deepEqual(s.treatments.map((t) => t.name).sort(), ["Brazilian", "Wenkbrauwen"].sort());
+    assert.deepEqual(s.treatments.map((t) => t.name).sort(), ["Hollywood (full Brazilian)", "Wenkbrauwen"].sort());
   });
 
   test("duplicates are detected and merged manually with the full history moved", async () => {
@@ -241,7 +241,7 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
     assert.equal(r.completed, 3);
     assert.deepEqual(
       r.byTreatment.map((t) => [t.name, t.cents]),
-      [["Combinatie: Brazilian + Wenkbrauwen", 6500], ["Brazilian", 4000]],
+      [["Combinatie: Hollywood (full Brazilian) + Wenkbrauwen", 6500], ["Hollywood (full Brazilian)", 4000]],
     );
     // a3 has an agreed price (€ 20) but no payment → listed as unpaid, nothing invented.
     assert.deepEqual(r.unpaidAppointments.map((u) => [u.id, u.agreedCents]), [[a3, 2000]]);
