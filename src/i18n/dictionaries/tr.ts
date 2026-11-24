@@ -22,7 +22,7 @@ export const tr: Dictionary = {
       treatments: {
         title: "Yüz, vücut ve bikini bölgesi ağdası",
         description:
-          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini, Brezilya ve Hollywood ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve hazırlığı öğren.",
+          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini ve Hollywood (full Brazilian) ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve hazırlığı öğren.",
       },
       prices: {
         title: "Fiyatlar",
@@ -88,8 +88,8 @@ export const tr: Dictionary = {
     menu: "Menü",
   },
   cta: {
-    requestShort: "Talep et",
-    request: "Randevu talep et",
+    requestShort: "Randevu al",
+    request: "Randevu al",
     explore: "Bakımları keşfet",
     viewTreatments: "Tüm bakımlar",
     viewPrices: "Fiyatlar",
@@ -247,7 +247,7 @@ export const tr: Dictionary = {
       },
       {
         q: "Rahatlama masajından ne beklemeliyim?",
-        a: "Yalnızca kendine ayırdığın sakin bir zaman. Masajdan önce Dilek ile neyin rahat olduğunu ve dikkat etmesi gereken bir şey olup olmadığını kısaca konuşursunuz. Fiyatı ve süreyi talebini gönderdiğinde kişisel olarak öğrenirsin.",
+        a: "Yalnızca kendine ayırdığın sakin bir zaman. Masajdan önce Dilek ile neyin rahat olduğunu ve dikkat etmesi gereken bir şey olup olmadığını kısaca konuşursunuz. Fiyat ve süre her masajın yanında ve Fiyatlar sayfasında yer alır.",
       },
       {
         q: "Ağda acıtır mı?",
@@ -272,8 +272,8 @@ export const tr: Dictionary = {
         a: "Güneş yanığı, tahriş ya da yara olan ciltte, kesik veya iltihap varken ya da peeling veya lazer uygulamasından kısa süre sonra yapılmaz. Retinoid içeren (tretinoin veya izotretinoin gibi) ilaç ya da cilt ürünü kullanıyorsan ağda uygun değildir. Emin değilsen önce doktoruna danış ve mutlaka önceden belirt.",
       },
       {
-        q: "Bikini çizgisi, Brezilya ve Hollywood arasındaki fark nedir?",
-        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında kalan tüyler alınır. Brezilya ağdasında neredeyse tamamı alınır; istersen ince bir şerit ya da küçük bir üçgen bırakılır. Hollywood ağdasında bölge tamamen pürüzsüzdür.",
+        q: "Bikini çizgisi ile Hollywood (full Brazilian) arasındaki fark nedir?",
+        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında kalan tüyler alınır. Hollywood ağdasında (full Brazilian) intim bölge tamamen pürüzsüz olur.",
       },
       {
         q: "Batık tüyleri nasıl önleyebilirim?",
@@ -723,7 +723,7 @@ export const tr: Dictionary = {
     categoryPage: "Rehber, hazırlık ve bakım sonrası",
     inThisArea: "Bu bölgedeki uygulamalar",
     inThisAreaIntro: "Tüm ayrıntılar için bir uygulama seç ya da hemen randevu talep et.",
-    viewTreatment: "Devamını oku",
+    viewTreatment: "İncele",
     viewCategory: "{name} hakkında her şey",
     requestThis: "Bu bakımı talep et",
     area: "Hangi bölgeye uygulanır?",
@@ -738,7 +738,7 @@ export const tr: Dictionary = {
     related: "İlgili bakımlar",
     otherAreas: "Diğer bölgeler",
     price: "Fiyat",
-    priceOnRequest: "Talep üzerine",
+    priceOnRequest: "Fiyat talep üzerine",
     duration: "Süre",
     minutes: "{n} dakika",
     included: "Bu pakete dahil",
@@ -779,8 +779,7 @@ export const tr: Dictionary = {
     popularTitle: "Amsterdam'da en çok arananlar",
     popular: {
       noord: "Amsterdam-Noord'da güzellik salonu",
-      brazilian: "Amsterdam'da Brezilya ağdası",
-      hollywood: "Amsterdam'da Hollywood ağdası",
+      hollywood: "Amsterdam'da Hollywood (full Brazilian) ağdası",
       "bikini-line": "Amsterdam'da bikini çizgisi ağdası",
       eyebrows: "Amsterdam'da kaş ağdası",
       massage: "Amsterdam'da kadınlara özel masaj",

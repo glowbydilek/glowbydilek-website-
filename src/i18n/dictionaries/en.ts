@@ -21,7 +21,7 @@ export const en: Dictionary = {
       treatments: {
         title: "Women-only waxing in Amsterdam",
         description:
-          "Women-only waxing in Amsterdam: face, body and bikini area, from eyebrows to Brazilian. Find out what to expect and how to prepare for your appointment.",
+          "Women-only waxing in Amsterdam: face, body and bikini area, from eyebrows to full Brazilian. Find out what to expect and how to prepare for your appointment.",
       },
       prices: {
         title: "Prices for waxing, massage and facials in Amsterdam",
@@ -87,8 +87,8 @@ export const en: Dictionary = {
     menu: "Menu",
   },
   cta: {
-    requestShort: "Request",
-    request: "Request appointment",
+    requestShort: "Book",
+    request: "Book an appointment",
     explore: "Explore treatments",
     viewTreatments: "All treatments",
     viewPrices: "Prices",
@@ -246,7 +246,7 @@ export const en: Dictionary = {
       },
       {
         q: "What can I expect from a relaxation massage?",
-        a: "A calm moment to take some time entirely for yourself. Before the massage you briefly discuss with Dilek what feels comfortable and whether there is anything she should take into account. You will hear the price and duration personally when you send your request.",
+        a: "A calm moment to take some time entirely for yourself. Before the massage you briefly discuss with Dilek what feels comfortable and whether there is anything she should take into account. Price and duration are shown with each massage and on the Prices page.",
       },
       {
         q: "Does waxing hurt?",
@@ -275,8 +275,8 @@ export const en: Dictionary = {
         a: "Not on sunburnt, irritated or broken skin, with cuts or inflammation, or shortly after a peel or laser treatment. If you use medication or skincare containing retinoids (such as tretinoin or isotretinoin), waxing isn't suitable. If in doubt, check with your doctor first and always mention it beforehand.",
       },
       {
-        q: "What's the difference between bikini line, Brazilian and Hollywood?",
-        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Brazilian removes almost everything, leaving a small strip or triangle if you like. A Hollywood is completely smooth.",
+        q: "What's the difference between bikini line and Hollywood (full Brazilian)?",
+        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Hollywood, also called a full Brazilian, leaves the intimate area completely smooth.",
       },
       {
         q: "How can I prevent ingrown hairs?",
@@ -726,7 +726,7 @@ export const en: Dictionary = {
     categoryPage: "Guide, preparation and aftercare",
     inThisArea: "Treatments in this area",
     inThisAreaIntro: "Choose a treatment for all the details, or request an appointment straight away.",
-    viewTreatment: "Read more",
+    viewTreatment: "View",
     viewCategory: "All about {name}",
     requestThis: "Request this treatment",
     area: "Which area is treated?",
@@ -741,7 +741,7 @@ export const en: Dictionary = {
     related: "Related treatments",
     otherAreas: "Other areas",
     price: "Rate",
-    priceOnRequest: "On request",
+    priceOnRequest: "Price on request",
     duration: "Duration",
     minutes: "{n} minutes",
     included: "Included in this package",
@@ -782,8 +782,7 @@ export const en: Dictionary = {
     popularTitle: "Popular in Amsterdam",
     popular: {
       noord: "Beauty salon in Amsterdam-Noord",
-      brazilian: "Brazilian wax in Amsterdam",
-      hollywood: "Hollywood wax in Amsterdam",
+      hollywood: "Full Brazilian (Hollywood) wax in Amsterdam",
       "bikini-line": "Bikini line waxing in Amsterdam",
       eyebrows: "Eyebrow waxing in Amsterdam",
       massage: "Massage for women in Amsterdam",
