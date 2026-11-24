@@ -64,7 +64,9 @@ const waxing: Item[] = treatmentGroups.flatMap((g, gi) =>
     name: t.name,
     description: t.description,
     photo: t.photo,
-    status: "published" as const,
+    // Owner (24 Nov 2026): only the Hollywood (full Brazilian) is offered; the Brazilian
+    // stays in the catalogue (old bookings and invoices keep its name) but is archived.
+    status: t.id === "brazilian" ? ("archived" as const) : ("published" as const),
     sort: gi * 100 + ti,
     pricing: t.price ? { mode: t.price.from ? ("from" as const) : ("fixed" as const), cents: Math.round(t.price.amount * 100) } : base.pricing,
     durationMinutes: t.durationMinutes ?? null,
