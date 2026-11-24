@@ -40,9 +40,9 @@ const takeItEasy: Record<Locale, string> = {
   tr: "Sonrasında gününe devam etmeden önce biraz zaman tanı ve bir miktar su iç.",
 };
 const priceQ: Record<Locale, { q: string; a: string }> = {
-  nl: { q: "Wat kost het en hoe lang duurt het?", a: "Het tarief en de duur hoor je persoonlijk bij je aanvraag. Zodra ze vastliggen, staan ze ook op de pagina Tarieven." },
-  en: { q: "What does it cost and how long does it take?", a: "You hear the price and duration personally when you send your request. Once they are fixed, they also appear on the Prices page." },
-  tr: { q: "Fiyatı nedir, ne kadar sürer?", a: "Fiyatı ve süreyi talebini gönderdiğinde kişisel olarak öğrenirsin. Kesinleştiklerinde Fiyatlar sayfasında da yer alırlar." },
+  nl: { q: "Wat kost het en hoe lang duurt het?", a: "Het tarief en de duur staan op de pagina Tarieven. Staat er ‘op aanvraag’, dan hoor je ze persoonlijk bij je aanvraag." },
+  en: { q: "What does it cost and how long does it take?", a: "The price and duration are on the Prices page. Where it says ‘on request’, you hear them personally with your request." },
+  tr: { q: "Fiyatı nedir, ne kadar sürer?", a: "Fiyat ve süre Fiyatlar sayfasında yer alır. ‘Talep üzerine’ yazıyorsa, talebinle birlikte kişisel olarak öğrenirsin." },
 };
 const skinNote: Record<Locale, string> = {
   nl: "Heb je een huidaandoening, gebruik je medicatie of twijfel je of een behandeling geschikt is? Overleg dan eerst met je huisarts of dermatoloog. Een schoonheidsbehandeling is geen medische behandeling.",

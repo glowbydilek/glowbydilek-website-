@@ -13,6 +13,7 @@ import { extraSectionsTr, extraTreatmentsTr } from "./extra.tr";
 import { faqPageTr, guidesTr } from "./guides.tr";
 import { treatmentsTr } from "./treatments.tr";
 import { wellnessSections, wellnessTreatments } from "./wellness";
+import { waxZoneTreatments } from "./waxzones";
 import type { CategoryCopy, FaqPageCopy, GuideCopy, GuideKey, SectionCopy, TreatmentCopy } from "./types";
 import { override } from "../../lib/cms/current";
 import { mergeContent } from "../../lib/cms/registry";
@@ -81,7 +82,7 @@ function tidy<T>(v: T): T {
 
 /** Long-form copy of any catalogue item: built-in, draft or owner-created, plus owner edits. */
 export function itemCopy(locale: Locale, id: string, basic: Basic): TreatmentCopy {
-  const builtin = wellnessTreatments[id]?.[locale] ?? (treatments[locale] as Record<string, TreatmentCopy>)[id] ?? extraTreatments[locale][id];
+  const builtin = wellnessTreatments[id]?.[locale] ?? waxZoneTreatments[id]?.[locale] ?? (treatments[locale] as Record<string, TreatmentCopy>)[id] ?? extraTreatments[locale][id];
   return tidy(withOverride(builtin ?? defaultTreatmentCopy(locale, basic), `treatment:${id}`, locale));
 }
 
