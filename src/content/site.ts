@@ -24,6 +24,10 @@ export type SiteConfig = {
     address?: { street: string; postalCode: string; city: string };
     /** Confirmed city for local SEO. */
     region?: string;
+    /** Confirmed district (owner, 24 Nov 2026). No street address is published. */
+    district?: string;
+    /** Owner confirmed home visits on request (24 Nov 2026). */
+    homeVisits?: boolean;
     /** Places clients come from (owner-confirmed). */
     welcomesFrom?: string[];
   };
@@ -41,6 +45,8 @@ export const siteConfig: SiteConfig = {
     instagram: undefined,
     address: undefined,
     region: "Amsterdam",
+    district: "Amsterdam-Noord",
+    homeVisits: true,
     welcomesFrom: ["Amsterdam", "Amstelveen", "Diemen", "Haarlem", "Hoofddorp", "Zaandam", "Zaanstad"],
   },
 };

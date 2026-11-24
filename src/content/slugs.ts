@@ -66,3 +66,24 @@ export const relatedTreatments: Record<TreatmentId, TreatmentId[]> = {
 
 /** Query parameter that preselects a treatment in the appointment form. */
 export const bookingParam: Record<Locale, string> = { nl: "behandeling", en: "treatment", tr: "bakim" };
+
+/** Blog articles (code-based content, see src/content/copy/blog.ts). */
+export const postIds = ["intimate-waxing-guide", "eyebrows-wax-or-pluck", "first-time-waxing"] as const;
+export type PostId = (typeof postIds)[number];
+
+export const postSlugs: Record<PostId, Record<Locale, string>> = {
+  "intimate-waxing-guide": {
+    nl: "verschil-brazilian-hollywood-bikinilijn",
+    en: "brazilian-hollywood-bikini-line-difference",
+    tr: "brezilya-hollywood-bikini-cizgisi-farki",
+  },
+  "eyebrows-wax-or-pluck": { nl: "wenkbrauwen-waxen-of-epileren", en: "eyebrow-waxing-or-plucking", tr: "kas-agdasi-mi-cimbiz-mi" },
+  "first-time-waxing": { nl: "voor-het-eerst-waxen", en: "first-time-waxing", tr: "ilk-kez-agda" },
+};
+
+/** Publication date per article (ISO date). */
+export const postDates: Record<PostId, string> = {
+  "intimate-waxing-guide": "2026-11-24",
+  "eyebrows-wax-or-pluck": "2026-11-24",
+  "first-time-waxing": "2026-11-24",
+};
