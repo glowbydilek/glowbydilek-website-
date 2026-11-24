@@ -74,6 +74,19 @@ export async function applyLatePrices(db: DB): Promise<void> {
   latePricesDone = true;
 }
 
+let lateCatalogueDone = false;
+
+/** New built-in items, confirmed updates and the price list, once per server start (public pages too). */
+export async function applyLateCatalogue(db: DB): Promise<void> {
+  if (lateCatalogueDone) return;
+  const [{ n }] = (await db.select({ n: sql<number>`count(*)` }).from(serviceSections)) as { n: number }[];
+  if (Number(n) < BUILTIN_SECTIONS.length) return; // not seeded yet: the admin seed handles it
+  await seedLateItems(db);
+  await applyLateUpdates(db);
+  await applyLatePrices(db);
+  lateCatalogueDone = true;
+}
+
 export async function seedTreatments(db: DB): Promise<void> {
   await db.insert(serviceSections).ignore().values(
     BUILTIN_SECTIONS.map((s) => ({ id: s.id, kind: s.kind, slugNl: s.slug.nl, slugEn: s.slug.en, nameNl: s.name.nl, nameEn: s.name.en, status: s.status, sort: s.sort })),
