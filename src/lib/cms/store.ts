@@ -99,6 +99,13 @@ export async function ensureContent(): Promise<Snapshot> {
     }
     const cached = cacheState.published;
     if (cached && Date.now() - cached.at <= TTL) return (store.snap = cached.snap);
+    try {
+      // Owner's confirmed price list (24 Nov 2026), applied once per server start.
+      const { applyLatePrices } = await import("../db/seed");
+      await applyLatePrices(getDb());
+    } catch (err) {
+      console.error("[cms] price list could not be applied:", describeDbError(err));
+    }
     const snap = await load("published");
     cacheState.published = { snap, at: Date.now() };
     return (store.snap = snap);
