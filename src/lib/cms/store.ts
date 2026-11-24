@@ -100,9 +100,9 @@ export async function ensureContent(): Promise<Snapshot> {
     const cached = cacheState.published;
     if (cached && Date.now() - cached.at <= TTL) return (store.snap = cached.snap);
     try {
-      // Owner's confirmed price list (24 Nov 2026), applied once per server start.
-      const { applyLatePrices } = await import("../db/seed");
-      await applyLatePrices(getDb());
+      // New built-in treatments and the owner's price list, applied once per server start.
+      const { applyLateCatalogue } = await import("../db/seed");
+      await applyLateCatalogue(getDb());
     } catch (err) {
       console.error("[cms] price list could not be applied:", describeDbError(err));
     }
