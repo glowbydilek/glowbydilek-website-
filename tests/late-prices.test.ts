@@ -14,3 +14,22 @@ test("owner price list (24 Nov 2026) refers to existing treatments with sane val
   assert.equal(LATE_PRICES.find((p) => p.id === "brazilian")?.cents, 5000);
   assert.equal(LATE_PRICES.find((p) => p.id === "eyebrows")?.cents, 1750);
 });
+
+test("new waxing zones from the price list are published with price, duration and copy in three languages", async () => {
+  const { itemCopy } = await import("@/content/copy");
+  for (const id of ["cheeks-jaw", "neck", "upper-arms", "upper-legs", "belly", "chest", "decollete", "buttocks"]) {
+    const it = BUILTIN_ITEMS.find((i) => i.id === id)!;
+    assert.ok(it, id);
+    assert.equal(it.status, "published", id);
+    assert.equal(it.sectionId, "waxing", id);
+    assert.ok(it.pricing.mode === "fixed" && (it.pricing.cents ?? 0) > 0, `${id} price`);
+    assert.ok((it.durationMinutes ?? 0) > 0, `${id} duration`);
+    for (const l of ["nl", "en", "tr"] as const) {
+      assert.ok(it.name[l] && it.slug[l], `${id} ${l} name/slug`);
+      const c = itemCopy(l, id, it);
+      assert.ok(c.seoTitle.length <= 60 && c.seoDescription.length >= 70 && c.seoDescription.length <= 175, `${id} ${l} meta`);
+      assert.ok(c.faqs.length >= 2 && c.know.length >= 3 && c.aftercare.length >= 3, `${id} ${l} copy`);
+    }
+  }
+  assert.equal(BUILTIN_ITEMS.find((i) => i.id === "facial-steam")?.status, "archived");
+});

@@ -77,6 +77,10 @@ const nextConfig = {
       { source: "/en/waxing-treatments/bikini", destination: "/en/waxing-treatments/bikini-intimate", permanent: true },
       { source: "/en/how-it-works", destination: "/en/appointment-process", permanent: true },
       { source: "/en/book", destination: "/en/book-appointment", permanent: true },
+      // Owner (24 Nov 2026): the facial with steam is the deep cleansing facial.
+      { source: "/gezichtsbehandelingen/gezichtsbehandeling-met-stoom", destination: "/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling", permanent: true },
+      { source: "/en/facial-treatments/facial-care-with-steam", destination: "/en/facial-treatments/deep-cleansing-facial", permanent: true },
+      { source: "/tr/yuz-bakimlari/buhar-destekli-yuz-bakimi", destination: "/tr/yuz-bakimlari/derin-temizleyici-yuz-bakimi", permanent: true },
       // The owner's area was renamed from /ajanda to /agenda (old links in emails keep working).
       { source: "/ajanda/agenda", destination: "/agenda/kalender", permanent: true },
       { source: "/ajanda/:path*", destination: "/agenda/:path*", permanent: true },
