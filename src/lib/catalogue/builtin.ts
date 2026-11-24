@@ -16,6 +16,7 @@
 import { categorySlugs, relatedTreatments, treatmentSlugs, type CategoryId } from "@/content/slugs";
 import { treatmentGroups } from "@/content/treatments";
 import type { Group, Item, PackagePart, Section } from "./types";
+import { ZONES } from "@/content/copy/waxzones";
 
 export const BUILTIN_SECTIONS: Section[] = [
   { id: "waxing", kind: "treatments", slug: { nl: "waxbehandelingen", en: "waxing-treatments", tr: "agda" }, name: { nl: "Waxbehandelingen", en: "Waxing", tr: "Ağda" }, status: "published", sort: 0, photo: "treatments-hero", mediaId: null, builtin: true },
@@ -99,9 +100,9 @@ const facial: Item[] = [
       sort: -1,
       related: ["massage-face", "massage-head", "eyebrows"],
     }),
-    // Owner confirmed facial steaming (November 2026). Whether it is a standalone
-    // appointment or part of a longer facial, and price/duration, are still open: on request.
-    status: "published" as const,
+    // Owner (24 Nov 2026): this is the same treatment as the deep cleansing facial.
+    // Archived; its URLs redirect to the deep cleansing facial (next.config.mjs).
+    status: "archived" as const,
   },
   draft({
     id: "facial-manual-cleansing",
@@ -158,7 +159,7 @@ const facial: Item[] = [
       },
       photo: "facial",
       sort: 0,
-      related: ["facial-steam", "brow-lash-tint", "massage-face"],
+      related: ["brow-lash-tint", "massage-face", "eyebrows"],
     }),
     status: "published" as const,
   },
@@ -177,7 +178,7 @@ const facial: Item[] = [
       },
       photo: "botanical",
       sort: 0,
-      related: ["eyebrows", "facial-deep-cleansing", "facial-steam"],
+      related: ["eyebrows", "facial-deep-cleansing", "full-face"],
     }),
     status: "published" as const,
   },
@@ -243,7 +244,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
       tr: "Yüzüne odaklanan nazik bir bakım. Uygulama ve rahatlık tercihlerin önceden birlikte belirlenir.",
     },
     photo: "massage-face",
-    related: ["facial-steam", "massage-head", "massage-relaxation"],
+    related: ["facial-deep-cleansing", "massage-head", "massage-relaxation"],
   },
   {
     id: "massage-head",
@@ -358,14 +359,47 @@ const packages: Item[] = [
   ),
 ];
 
-export const BUILTIN_ITEMS: Item[] = [...waxing, ...facial, ...body, ...massage, ...packages];
+/** Zones from the owner's price list (24 Nov 2026), published with price and duration. */
+const zoneSpec: { id: string; group: "face" | "body"; slug: Item["slug"]; photo: Item["photo"]; sort: number; cents: number; minutes: number; related: string[] }[] = [
+  { id: "cheeks-jaw", group: "face", slug: { nl: "wangen-kaaklijn-waxen", en: "cheek-jawline-waxing", tr: "yanak-cene-hatti-agdasi" }, photo: "zone-face", sort: 50, cents: 2250, minutes: 15, related: ["upper-lip", "chin", "full-face"] },
+  { id: "neck", group: "face", slug: { nl: "hals-waxen", en: "neck-waxing", tr: "boyun-agdasi" }, photo: "zone-face", sort: 51, cents: 1200, minutes: 10, related: ["cheeks-jaw", "chin", "decollete"] },
+  { id: "upper-arms", group: "body", slug: { nl: "bovenarmen-waxen", en: "upper-arm-waxing", tr: "ust-kol-agdasi" }, photo: "wax-arms", sort: 150, cents: 1000, minutes: 15, related: ["half-arms", "full-arms", "underarms"] },
+  { id: "upper-legs", group: "body", slug: { nl: "bovenbenen-waxen", en: "upper-leg-waxing", tr: "ust-bacak-agdasi" }, photo: "wax-legs", sort: 151, cents: 3000, minutes: 25, related: ["half-legs", "full-legs", "bikini-line"] },
+  { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "zone-body", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
+  { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "zone-body", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
+  { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "zone-body", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
+  { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "wax-back", sort: 155, cents: 2000, minutes: 15, related: ["brazilian", "hollywood", "upper-legs"] },
+];
+
+const zones: Item[] = zoneSpec.map((z) => {
+  const c = ZONES[z.id];
+  const name = { nl: c.name.nl.replace(/ waxen$/, ""), en: c.name.en.replace(/ waxing$/, ""), tr: c.name.tr.replace(/ ağdası$/, "") };
+  return {
+    ...base,
+    id: z.id,
+    kind: "treatment" as const,
+    sectionId: "waxing",
+    groupId: z.group,
+    slug: z.slug,
+    name: { nl: name.nl[0].toUpperCase() + name.nl.slice(1), en: name.en[0].toUpperCase() + name.en.slice(1), tr: name.tr },
+    description: c.teaser,
+    photo: z.photo,
+    status: "published" as const,
+    sort: z.sort,
+    pricing: { mode: "fixed" as const, cents: z.cents },
+    durationMinutes: z.minutes,
+    related: z.related,
+  };
+});
+
+export const BUILTIN_ITEMS: Item[] = [...waxing, ...zones, ...facial, ...body, ...massage, ...packages];
 
 /**
  * Items added after the first deployment. The seed only runs on an empty
  * catalogue, so these are inserted on their own when missing (INSERT IGNORE,
  * never touching rows the owner already has).
  */
-export const LATE_ITEM_IDS = ["facial-deep-cleansing", "brow-lash-tint"];
+export const LATE_ITEM_IDS = ["facial-deep-cleansing", "brow-lash-tint", ...zoneSpec.map((z) => z.id)];
 
 /**
  * Built-in rows the owner confirmed later (22 Nov 2026). Applied once, and
@@ -374,7 +408,11 @@ export const LATE_ITEM_IDS = ["facial-deep-cleansing", "brow-lash-tint"];
  */
 export const LATE_UPDATES = {
   sections: [{ id: "bodycare", whenNameNl: "Lichaamsbehandelingen", whenStatus: "draft", set: { status: "published" as const } }],
-  items: [{ id: "body-wrap", whenNameNl: "Lichaamspakking", whenStatus: "draft" }],
+  items: [
+    { id: "body-wrap", whenNameNl: "Lichaamspakking", whenStatus: "draft" },
+    // Owner (24 Nov 2026): same treatment as the deep cleansing facial → archived.
+    { id: "facial-steam", whenNameNl: "Gezichtsbehandeling met stoom", whenStatus: "published" },
+  ],
 };
 
 /**
@@ -382,8 +420,7 @@ export const LATE_UPDATES = {
  * same day. Applied once to rows that are still "on request" without a price,
  * so a price the owner already set in the admin is never overwritten.
  * The owner's "full Brazilian" price is used for Brazilian and Hollywood.
- * No price given yet (stay on request): forearms, facial/head/hand/foot
- * massage and the deep cleansing facial.
+ * Facial/head/hand/foot massage: prices still to come (on request).
  */
 export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: number }[] = [
   { id: "underarms", cents: 1500, minutes: 15 },
@@ -399,7 +436,8 @@ export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: 
   { id: "brazilian", cents: 5000, minutes: 35 },
   { id: "hollywood", cents: 5000, minutes: 35 },
   { id: "brow-lash-tint", cents: 2500, minutes: 30 },
-  { id: "facial-steam", cents: 6500, minutes: 60 },
+  { id: "facial-deep-cleansing", cents: 6500, minutes: 60 },
+  { id: "half-arms", cents: 1000, minutes: 15 },
   { id: "body-wrap", cents: 5000, minutes: 60 },
   // 30 minutes €37,50 or 60 minutes €75: shown as "from €37,50".
   { id: "massage-relaxation", cents: 3750, from: true, minutes: 30 },
