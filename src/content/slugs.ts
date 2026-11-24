@@ -68,7 +68,16 @@ export const relatedTreatments: Record<TreatmentId, TreatmentId[]> = {
 export const bookingParam: Record<Locale, string> = { nl: "behandeling", en: "treatment", tr: "bakim" };
 
 /** Blog articles (code-based content, see src/content/copy/blog.ts). */
-export const postIds = ["intimate-waxing-guide", "eyebrows-wax-or-pluck", "first-time-waxing"] as const;
+export const postIds = [
+  "intimate-waxing-guide",
+  "eyebrows-wax-or-pluck",
+  "first-time-waxing",
+  "waxing-or-harsen",
+  "leg-waxing",
+  "arm-back-waxing",
+  "facial-and-head-massage",
+  "deep-cleansing-facial-steps",
+] as const;
 export type PostId = (typeof postIds)[number];
 
 export const postSlugs: Record<PostId, Record<Locale, string>> = {
@@ -79,6 +88,11 @@ export const postSlugs: Record<PostId, Record<Locale, string>> = {
   },
   "eyebrows-wax-or-pluck": { nl: "wenkbrauwen-waxen-of-epileren", en: "eyebrow-waxing-or-plucking", tr: "kas-agdasi-mi-cimbiz-mi" },
   "first-time-waxing": { nl: "voor-het-eerst-waxen", en: "first-time-waxing", tr: "ilk-kez-agda" },
+  "waxing-or-harsen": { nl: "waxen-of-harsen", en: "waxen-or-harsen", tr: "waxen-mi-harsen-mi" },
+  "leg-waxing": { nl: "benen-waxen-onderbenen-bovenbenen", en: "leg-waxing-lower-upper-full", tr: "bacak-agdasi" },
+  "arm-back-waxing": { nl: "armen-en-rug-waxen-vrouwen", en: "arm-and-back-waxing-women", tr: "kol-ve-sirt-agdasi" },
+  "facial-and-head-massage": { nl: "gezichtsmassage-en-hoofdmassage", en: "facial-and-head-massage", tr: "yuz-ve-bas-masaji" },
+  "deep-cleansing-facial-steps": { nl: "dieptereinigende-gezichtsbehandeling-stappen", en: "deep-cleansing-facial-steps", tr: "derin-yuz-temizligi-adimlari" },
 };
 
 /** Publication date per article (ISO date). */
@@ -86,4 +100,9 @@ export const postDates: Record<PostId, string> = {
   "intimate-waxing-guide": "2026-11-24",
   "eyebrows-wax-or-pluck": "2026-11-24",
   "first-time-waxing": "2026-11-24",
+  "waxing-or-harsen": "2026-11-24",
+  "leg-waxing": "2026-11-24",
+  "arm-back-waxing": "2026-11-24",
+  "facial-and-head-massage": "2026-11-24",
+  "deep-cleansing-facial-steps": "2026-11-24",
 };
