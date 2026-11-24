@@ -26,7 +26,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
     return loose.length ? [...zones, { id: sec.id, title: sec.name[locale], href: link, items: loose }] : zones;
   });
   const anyPrice = tables.some((tb) => tb.items.some((i) => i.pricing.mode !== "on_request"));
-  const price = (i: Item) => (i.pricing.mode === "on_request" ? null : priceLabel(i, locale, { from: t.from, onRequest: dict.common.onRequest }));
+  const price = (i: Item) => (i.pricing.mode === "on_request" ? null : priceLabel(i, locale, { from: t.from, onRequest: dict.service.priceOnRequest }));
 
   return (
     <>
@@ -83,7 +83,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                             {p ? (
                               <span className="font-serif text-2xl text-ink">{p}</span>
                             ) : (
-                              <span className="inline-block rounded-full bg-glow-soft px-3 py-1 text-xs uppercase tracking-[0.14em] text-ink-soft">{dict.common.onRequest}</span>
+                              <span className="inline-block rounded-full bg-glow-soft px-3 py-1 text-xs uppercase tracking-[0.14em] text-ink-soft">{dict.service.priceOnRequest}</span>
                             )}
                           </td>
                         </tr>
