@@ -1,7 +1,7 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
-import { BUILTIN_GROUPS, BUILTIN_ITEMS, BUILTIN_SECTIONS, LATE_ITEM_IDS, LATE_UPDATES } from "../catalogue/builtin";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { BUILTIN_GROUPS, BUILTIN_ITEMS, BUILTIN_SECTIONS, LATE_ITEM_IDS, LATE_PRICES, LATE_UPDATES } from "../catalogue/builtin";
 import type { DB } from "./client";
-import { packageItems, serviceGroups, serviceSections, treatments } from "./schema";
+import { packageItems, priceHistory, serviceGroups, serviceSections, treatments } from "./schema";
 
 /**
  * Seeds the catalogue from the approved site content: sections, waxing zones,
@@ -54,6 +54,26 @@ export async function applyLateUpdates(db: DB): Promise<void> {
   }
 }
 
+let latePricesDone = false;
+
+/**
+ * Owner's price list (24 Nov 2026): fills price and duration only on rows that
+ * are still "on request" without a price, and records the change in the price
+ * history. A price the owner already set is never touched. Idempotent.
+ */
+export async function applyLatePrices(db: DB): Promise<void> {
+  if (latePricesDone) return;
+  for (const p of LATE_PRICES) {
+    const mode = p.from ? "from" : "fixed";
+    const res = (await db
+      .update(treatments)
+      .set({ pricingMode: mode, priceCents: p.cents, priceFrom: Boolean(p.from), durationMinutes: p.minutes })
+      .where(and(eq(treatments.id, p.id), eq(treatments.pricingMode, "on_request"), isNull(treatments.priceCents)))) as unknown as [{ affectedRows?: number }];
+    if ((res?.[0]?.affectedRows ?? 0) > 0) await db.insert(priceHistory).values({ itemId: p.id, pricingMode: mode, priceCents: p.cents, userId: null });
+  }
+  latePricesDone = true;
+}
+
 export async function seedTreatments(db: DB): Promise<void> {
   await db.insert(serviceSections).ignore().values(
     BUILTIN_SECTIONS.map((s) => ({ id: s.id, kind: s.kind, slugNl: s.slug.nl, slugEn: s.slug.en, nameNl: s.name.nl, nameEn: s.name.en, status: s.status, sort: s.sort })),
@@ -75,6 +95,7 @@ export async function ensureSeeded(db: DB) {
     try {
       await seedLateItems(db);
       await applyLateUpdates(db);
+      await applyLatePrices(db);
     } catch (err) {
       console.error("[seed] could not add new built-in treatments:", err instanceof Error ? err.message.slice(0, 120) : err);
     }

@@ -376,3 +376,31 @@ export const LATE_UPDATES = {
   sections: [{ id: "bodycare", whenNameNl: "Lichaamsbehandelingen", whenStatus: "draft", set: { status: "published" as const } }],
   items: [{ id: "body-wrap", whenNameNl: "Lichaamspakking", whenStatus: "draft" }],
 };
+
+/**
+ * Owner's price list (24 Nov 2026), with durations the owner approved the
+ * same day. Applied once to rows that are still "on request" without a price,
+ * so a price the owner already set in the admin is never overwritten.
+ * The owner's "full Brazilian" price is used for Brazilian and Hollywood.
+ * No price given yet (stay on request): forearms, facial/head/hand/foot
+ * massage and the deep cleansing facial.
+ */
+export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: number }[] = [
+  { id: "underarms", cents: 1500, minutes: 15 },
+  { id: "eyebrows", cents: 1750, minutes: 15 },
+  { id: "upper-lip", cents: 1000, minutes: 10 },
+  { id: "chin", cents: 1000, minutes: 10 },
+  { id: "full-face", cents: 3500, minutes: 25 },
+  { id: "full-arms", cents: 2000, minutes: 25 },
+  { id: "half-legs", cents: 2250, minutes: 25 },
+  { id: "full-legs", cents: 4500, minutes: 45 },
+  { id: "back", cents: 3000, minutes: 20 },
+  { id: "bikini-line", cents: 2500, minutes: 20 },
+  { id: "brazilian", cents: 5000, minutes: 35 },
+  { id: "hollywood", cents: 5000, minutes: 35 },
+  { id: "brow-lash-tint", cents: 2500, minutes: 30 },
+  { id: "facial-steam", cents: 6500, minutes: 60 },
+  { id: "body-wrap", cents: 5000, minutes: 60 },
+  // 30 minutes €37,50 or 60 minutes €75: shown as "from €37,50".
+  { id: "massage-relaxation", cents: 3750, from: true, minutes: 30 },
+];

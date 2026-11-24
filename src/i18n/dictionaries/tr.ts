@@ -339,9 +339,9 @@ export const tr: Dictionary = {
     hero: {
       eyebrow: "Fiyatlar",
       title: "Açık fiyatlar,",
-      titleEm: "kişisel olarak.",
+      titleEm: "net ve şeffaf.",
       subtitle:
-        "Tüm bakımlar bir bakışta. Dilek güncel fiyatları sana kişisel olarak gönderir; böylece neyle karşılaşacağını tam olarak bilirsin.",
+        "Tüm bakımlar fiyat ve süresiyle. Bir bakımda 'talep üzerine' yazıyorsa, fiyatı talebinle birlikte kişisel olarak öğrenirsin.",
     },
     notice: {
       title: "Fiyatlar talep üzerine",
