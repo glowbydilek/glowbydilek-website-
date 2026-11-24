@@ -241,7 +241,7 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
     assert.equal(r.completed, 3);
     assert.deepEqual(
       r.byTreatment.map((t) => [t.name, t.cents]),
-      [["Combinatie: Hollywood (full Brazilian) + Wenkbrauwen", 6500], ["Hollywood (full Brazilian)", 4000]],
+      [["Combinatie: Wenkbrauwen + Hollywood (full Brazilian)", 6500], ["Hollywood (full Brazilian)", 4000]],
     );
     // a3 has an agreed price (€ 20) but no payment → listed as unpaid, nothing invented.
     assert.deepEqual(r.unpaidAppointments.map((u) => [u.id, u.agreedCents]), [[a3, 2000]]);
