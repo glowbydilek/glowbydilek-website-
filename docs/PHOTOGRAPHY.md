@@ -96,9 +96,31 @@ Eyebrows `zone-face` · Upper lip `wax-lip` · Chin `wax-lip` · Full face `port
 
 Alt text is written per slot in Dutch and English and describes the actual photo content (`src/content/media.ts`).
 
+## Treatment-specific photos (24 Nov 2026, Unsplash License)
+
+Each treatment page has its own image. Free photos under the Unsplash License (commercial use allowed, no attribution required; credited here anyway). Models only — never presented as Dilek, staff, clients or the studio. Converted in the browser to the same four WebP widths.
+
+| Slot | Used for | Photographer | Unsplash |
+|---|---|---|---|
+| `wax-brows` | Eyebrows | Gabrielle Wright | unsplash.com/photos/close-up-of-a-persons-eye-YCMkMQevCIE |
+| `brow-tint` | Brow & lash tint | Le Petit | unsplash.com/photos/woman-with-white-hair-clip-Jp4POW00eE0 |
+| `wax-full-face` | Full face | Studio Michael França | unsplash.com/photos/a-woman-getting-a-facial-mask-on-her-face-aZliw_XDfUU |
+| `wax-jaw` | Cheeks & jawline | Reece van der Merwe | unsplash.com/photos/a-woman-with-freckles-on-her-face-and-neck-4p6XsMzkTsE |
+| `wax-chin` | Chin | Klara Kulikova | unsplash.com/photos/a-close-up-of-a-woman-with-a-ring-on-her-finger-YyvDkdUrZZY |
+| `wax-neck` | Neck | Angélica Echeverry | unsplash.com/photos/person-with-gold-ring-on-neck-5KY5LP_zc44 |
+| `wax-decollete` | Décolleté | El S | unsplash.com/photos/woman-in-white-tank-top-gUPznplBsLI |
+| `wax-chest` | Chest | Alexandra Leru | unsplash.com/photos/a-close-up-of-a-person-with-a-towel-on-TQivHkg290M |
+| `wax-belly` | Belly | Giorgio Trovato | unsplash.com/photos/a-woman-laying-in-bed-with-her-stomach-exposed-l1UnEhSCxyA |
+| `wax-forearms` | Forearms | Lívia Rocha | unsplash.com/photos/persons-hand-on-white-wall-H4STV63ICrs |
+| `wax-upper-arms` | Upper arms | 莎莉 彭 | unsplash.com/photos/human-elbos-5W2WbZhc2oY |
+| `wax-upper-legs` | Upper legs | semen zhuravlev | unsplash.com/photos/human-legs-bent-at-knees-_XxH_mV8dnk |
+| `wax-full-legs` | Full legs | P Shakoori | unsplash.com/photos/woman-in-white-stockings-lying-on-white-textile-wgSoYEdlVQE |
+| `facial-mask` | Deep cleansing facial | engin akyurt | unsplash.com/photos/woman-lying-on-blue-towel-with-white-cream-on-face-g-m8EDc4X6Q |
+| `body-wrap` | Body wrap | Camille Brodard | unsplash.com/photos/white-plastic-pump-bottle-beside-pink-tulips-and-gray-towel-VxAwTeiqDao |
+
 ## Files
 
-- **Optimised:** `public/images/photos/<slot>-{640,1024,1600,2200}.webp`, 64 files. Sizes are chosen via `srcset`. The hero image loads with high priority; the others are lazy-loaded.
+- **Optimised:** `public/images/photos/<slot>-{640,1024,1600,2200}.webp`, 124 files. Sizes are chosen via `srcset`. The hero image loads with high priority; the others are lazy-loaded.
 - **Originals:** not committed (`assets/photos/*.jpg` is in `.gitignore`). Re-download them from Adobe Stock using the IDs above when needed.
 - **Focal points:** set per slot and breakpoint in `src/content/media.ts` (`focus.mobile` / `focus.desktop`).
 
