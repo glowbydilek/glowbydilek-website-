@@ -97,13 +97,13 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
   beforeEach(async () => {
     db = await resetDb();
     await seedTreatments(db);
-    await db.update(treatments).set({ durationMinutes: 45, priceCents: 4500, bufferMinutes: 0 }).where(eq(treatments.id, "brazilian"));
+    await db.update(treatments).set({ durationMinutes: 45, priceCents: 4500, bufferMinutes: 0 }).where(eq(treatments.id, "hollywood"));
     await db.update(treatments).set({ durationMinutes: 30, priceCents: 2000 }).where(eq(treatments.id, "eyebrows"));
     await db.insert(weeklyHours).values([1, 2, 3, 4, 5].map((weekday) => ({ weekday, kind: "open", startMinute: 540, endMinute: 1020 })));
   });
 
   const manual = (o: Record<string, unknown> = {}) =>
-    createManual(db, { firstName: "Sara", lastName: "de Vries", email: "sara@example.com", phone: "06 12 34 56 78", treatmentIds: ["brazilian"], day: DAY, minute: 600, ...o }, ctx);
+    createManual(db, { firstName: "Sara", lastName: "de Vries", email: "sara@example.com", phone: "06 12 34 56 78", treatmentIds: ["hollywood"], day: DAY, minute: 600, ...o }, ctx);
 
   test("customers from before the migration get normalised contact fields (backfill)", async () => {
     await db.insert(customers).values({ firstName: "Oud", lastName: "Profiel", email: "Oud@Example.com", phone: "06-11 22 33 44" });
@@ -116,14 +116,14 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
     const id = await manual();
     const [sara] = await db.select().from(appointments).where(eq(appointments.id, id));
     // Same email, different surname → a NEW profile (no takeover of Sara's data).
-    await createLegacyRequest(db, { firstName: "Iemand", lastName: "Anders", email: "SARA@example.com", phone: null, treatmentIds: ["brazilian"], preferredDate: DAY, timeRange: "morning" }, ctx);
+    await createLegacyRequest(db, { firstName: "Iemand", lastName: "Anders", email: "SARA@example.com", phone: null, treatmentIds: ["hollywood"], preferredDate: DAY, timeRange: "morning" }, ctx);
     const all = await db.select().from(customers);
     assert.equal(all.length, 2);
     const [orig] = await db.select().from(customers).where(eq(customers.id, sara.customerId));
     assert.equal(orig.firstName, "Sara");
     assert.equal(orig.lastName, "de Vries");
     // Same email + same surname → attached to Sara, name untouched.
-    await createLegacyRequest(db, { firstName: "S.", lastName: "De Vries", email: "sara@example.com", phone: null, treatmentIds: ["brazilian"], preferredDate: DAY, timeRange: "morning" }, ctx);
+    await createLegacyRequest(db, { firstName: "S.", lastName: "De Vries", email: "sara@example.com", phone: null, treatmentIds: ["hollywood"], preferredDate: DAY, timeRange: "morning" }, ctx);
     assert.equal((await db.select().from(customers)).length, 2);
     const [still] = await db.select().from(customers).where(eq(customers.id, sara.customerId));
     assert.equal(still.firstName, "Sara");
@@ -165,8 +165,8 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
   });
 
   test("appointment prices are snapshots: later list-price changes do not rewrite history", async () => {
-    const id = await manual({ treatmentIds: ["brazilian", "eyebrows"] });
-    await db.update(treatments).set({ priceCents: 9900 }).where(eq(treatments.id, "brazilian"));
+    const id = await manual({ treatmentIds: ["hollywood", "eyebrows"] });
+    await db.update(treatments).set({ priceCents: 9900 }).where(eq(treatments.id, "hollywood"));
     const [a] = await db.select().from(appointments).where(eq(appointments.id, id));
     assert.equal(a.priceCents, 6500);
     // A treatment without a confirmed price → no agreed price is invented.
@@ -225,7 +225,7 @@ describe("CRM, finance and invoices against MariaDB", { skip: skipDb }, () => {
   test("finance reports use recorded payments only, with refunds, voids and exact attribution", async () => {
     const a1 = await manual();
     const [c] = await db.select().from(customers);
-    const a2 = await manual({ minute: 720, customerId: c.id, treatmentIds: ["brazilian", "eyebrows"] });
+    const a2 = await manual({ minute: 720, customerId: c.id, treatmentIds: ["hollywood", "eyebrows"] });
     const a3 = await manual({ minute: 840, customerId: c.id, treatmentIds: ["eyebrows"] });
     for (const id of [a1, a2, a3]) await markCompleted(db, id, ctx);
     await recordPayment(db, { customerId: c.id, appointmentId: a1, amountCents: 4500, method: "pin", paidOn: DAY, kind: "payment" }, ctx);

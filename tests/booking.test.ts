@@ -34,7 +34,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   beforeEach(async () => {
     db = await resetDb();
     await seedTreatments(db);
-    await db.update(treatments).set({ durationMinutes: 45, bufferMinutes: 15, bookableOnline: true }).where(eq(treatments.id, "brazilian"));
+    await db.update(treatments).set({ durationMinutes: 45, bufferMinutes: 15, bookableOnline: true }).where(eq(treatments.id, "hollywood"));
     await db.update(treatments).set({ durationMinutes: 30, bufferMinutes: 0, bookableOnline: true }).where(eq(treatments.id, "eyebrows"));
     await db.insert(weeklyHours).values([1, 2, 3, 4, 5].map((weekday) => ({ weekday, kind: "open", startMinute: 540, endMinute: 720 })));
     await setSetting(db, "booking", { onlineBookingEnabled: true, minNoticeHours: 0, maxAdvanceDays: 800, slotStepMinutes: 15, capacity: 1 });
@@ -47,12 +47,12 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
     const all = await db.select().from(treatments);
     // 13 + 8 waxing treatments, 5 massages, 2 facial treatments and the body wrap are published; the rest are drafts
     // (the facial with steam is archived: owner merged it into the deep cleansing facial, 24 Nov 2026).
-    assert.equal(all.filter((t) => t.status === "published").length, 29);
+    assert.equal(all.filter((t) => t.status === "published").length, 28);
     assert.ok(all.filter((t) => t.status !== "published").every((t) => t.status === "draft" || t.id === "facial-steam"));
     // Only the owner's price list (new waxing zones, 24 Nov 2026) carries a price at seed time.
     const zones = ["cheeks-jaw", "neck", "upper-arms", "upper-legs", "belly", "chest", "decollete", "buttocks"];
     assert.ok(all.filter((t) => zones.includes(t.id)).every((t) => t.priceCents !== null && t.durationMinutes !== null));
-    assert.ok(all.filter((t) => ![...zones, "brazilian", "eyebrows"].includes(t.id)).every((t) => t.priceCents === null && t.durationMinutes === null));
+    assert.ok(all.filter((t) => ![...zones, "hollywood", "eyebrows"].includes(t.id)).every((t) => t.priceCents === null && t.durationMinutes === null));
     await db.update(treatments).set({ priceCents: 4500 }).where(eq(treatments.id, "chin"));
     await seedTreatments(db);
     const [chin] = await db.select().from(treatments).where(eq(treatments.id, "chin"));
@@ -60,26 +60,26 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("availability follows working hours, durations and existing bookings", async () => {
-    const a = await getAvailability(db, ["brazilian"], DAY, DAY, new Date("2027-02-01T00:00:00Z"));
+    const a = await getAvailability(db, ["hollywood"], DAY, DAY, new Date("2027-02-01T00:00:00Z"));
     assert.equal(a.duration, 45);
     assert.deepEqual(a.slots[DAY].slice(0, 3), [540, 555, 570]);
     assert.equal(a.slots[DAY].at(-1), 675); // 11:15 + 45 = 12:00
     // treatment without a confirmed duration is never offered
     assert.deepEqual(await getAvailability(db, ["chin"], DAY, DAY), { duration: null, slots: {} });
-    await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
-    const b = await getAvailability(db, ["brazilian"], DAY, DAY, new Date("2027-02-01T00:00:00Z"));
+    await createManual(db, { ...customer, treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx);
+    const b = await getAvailability(db, ["hollywood"], DAY, DAY, new Date("2027-02-01T00:00:00Z"));
     // 10:00–10:45 + 15 buffer occupies until 11:00
     assert.ok(!b.slots[DAY].includes(600) && !b.slots[DAY].includes(570) && b.slots[DAY].includes(660));
   });
 
   test("request → owner notified + customer acknowledged → approve → confirmation + reminder", async () => {
-    const id = await createTimedRequest(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600, consent: true }, ctx);
+    const id = await createTimedRequest(db, { ...customer, treatmentIds: ["hollywood"], day: DAY, minute: 600, consent: true }, ctx);
     let mails = await db.select().from(outbox).where(eq(outbox.appointmentId, id));
     assert.deepEqual(mails.map((m) => m.kind).sort(), ["owner_request", "request_received"]);
     assert.ok(mails.find((m) => m.kind === "request_received")!.textBody.includes("nog geen bevestigde afspraak"));
     assert.ok(!mails.some((m) => m.textBody.includes("Adres volgt")), "no location before confirmation");
     // a pending request does not block the slot
-    assert.ok((await getAvailability(db, ["brazilian"], DAY, DAY, new Date("2027-02-01"))).slots[DAY].includes(600));
+    assert.ok((await getAvailability(db, ["hollywood"], DAY, DAY, new Date("2027-02-01"))).slots[DAY].includes(600));
 
     await approve(db, id, ctx);
     const [a] = await db.select().from(appointments).where(eq(appointments.id, id));
@@ -98,7 +98,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
 
   test("concurrent approvals for the same time never double-book", async () => {
     const ids = [];
-    for (let i = 0; i < 5; i++) ids.push(await createTimedRequest(db, { ...customer, email: `c${i}@example.com`, treatmentIds: ["brazilian"], day: DAY, minute: 600, consent: true }, ctx));
+    for (let i = 0; i < 5; i++) ids.push(await createTimedRequest(db, { ...customer, email: `c${i}@example.com`, treatmentIds: ["hollywood"], day: DAY, minute: 600, consent: true }, ctx));
     const results = await Promise.allSettled(ids.map((id) => approve(db, id, ctx)));
     assert.equal(results.filter((r) => r.status === "fulfilled").length, 1, "exactly one approval wins");
     assert.ok(results.filter((r) => r.status === "rejected").every((r) => ((r as PromiseRejectedResult).reason as BookingError).code === "conflict"));
@@ -115,7 +115,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("taken slot → propose another time → confirm; decline sends a polite email", async () => {
-    await createManual(db, { ...customer, email: "x@example.com", phone: null, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
+    await createManual(db, { ...customer, email: "x@example.com", phone: null, treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx);
     const id = await createTimedRequest(db, { ...customer, treatmentIds: ["eyebrows"], day: DAY, minute: 660, consent: true }, ctx);
     await createManual(db, { ...customer, email: "y@example.com", phone: null, treatmentIds: ["eyebrows"], day: DAY, minute: 660 }, ctx);
     await assert.rejects(approve(db, id, ctx), (e: BookingError) => e.code === "conflict");
@@ -134,7 +134,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("reschedule moves the reminder; cancel frees the slot and cancels the reminder", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
+    const id = await createManual(db, { ...customer, treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx);
     await reschedule(db, id, ctx, { day: "2027-03-02", minute: 540 });
     let mails = await db.select().from(outbox).where(eq(outbox.appointmentId, id));
     assert.equal(mails.filter((m) => m.kind === "reminder" && m.status === "pending").length, 1);
@@ -144,7 +144,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
     mails = await db.select().from(outbox).where(eq(outbox.appointmentId, id));
     assert.equal(mails.filter((m) => m.kind === "reminder" && m.status === "pending").length, 0);
     assert.ok(mails.some((m) => m.kind === "cancelled"));
-    assert.ok((await getAvailability(db, ["brazilian"], "2027-03-02", "2027-03-02", new Date("2027-02-01"))).slots["2027-03-02"].includes(540));
+    assert.ok((await getAvailability(db, ["hollywood"], "2027-03-02", "2027-03-02", new Date("2027-02-01"))).slots["2027-03-02"].includes(540));
     // history is kept
     const [a] = await db.select().from(appointments).where(eq(appointments.id, id));
     assert.equal(a.status, "cancelled");
@@ -159,7 +159,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("outbox: SMTP failure is retried, never lost, never sent twice; reminders skip stale appointments", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
+    const id = await createManual(db, { ...customer, treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx);
     let fail = true;
     const sent: string[] = [];
     const sender = async (m: { subject: string }) => {
@@ -191,9 +191,9 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   test("24h reminder: sent exactly once, not before 24 hours ahead, in the customer's language (NL/EN; Turkish → Dutch)", async () => {
     const start = localToUtc(DAY, 600).getTime();
     const ids = {
-      nl: await createManual(db, { ...customer, email: "nl@example.com", phone: "0611111111", treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx),
+      nl: await createManual(db, { ...customer, email: "nl@example.com", phone: "0611111111", treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx),
       en: await createManual(db, { ...customer, firstName: "Emma", email: "en@example.com", phone: "0622222222", locale: "en", treatmentIds: ["eyebrows"], day: DAY, minute: 660 }, ctx),
-      tr: await createManual(db, { ...customer, firstName: "Ayşe", email: "tr@example.com", phone: "0633333333", locale: "tr", treatmentIds: ["brazilian"], day: "2027-03-02", minute: 600 }, ctx),
+      tr: await createManual(db, { ...customer, firstName: "Ayşe", email: "tr@example.com", phone: "0633333333", locale: "tr", treatmentIds: ["hollywood"], day: "2027-03-02", minute: 600 }, ctx),
     };
     const sent: { to: string; subject: string }[] = [];
     const sender = async (m: { to: string; subject: string }) => void sent.push({ to: m.to, subject: m.subject });
@@ -224,7 +224,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("customer search, GDPR export and anonymisation", async () => {
-    const id = await createManual(db, { ...customer, treatmentIds: ["brazilian"], day: DAY, minute: 600 }, ctx);
+    const id = await createManual(db, { ...customer, treatmentIds: ["hollywood"], day: DAY, minute: 600 }, ctx);
     const [c] = await db.select().from(customers);
     assert.equal((await searchCustomers(db, "sara")).length, 1);
     assert.equal((await searchCustomers(db, "06 1234")).length, 1);
@@ -241,7 +241,7 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
   });
 
   test("legacy request form is stored as a pending request", async () => {
-    const id = await createLegacyRequest(db, { ...customer, treatmentIds: ["brazilian", "eyebrows"], preferredDate: DAY, timeRange: "morning" }, ctx);
+    const id = await createLegacyRequest(db, { ...customer, treatmentIds: ["hollywood", "eyebrows"], preferredDate: DAY, timeRange: "morning" }, ctx);
     const [a] = await db.select().from(appointments).where(eq(appointments.id, id));
     assert.equal(a.status, "requested");
     assert.equal(a.startAt, null);

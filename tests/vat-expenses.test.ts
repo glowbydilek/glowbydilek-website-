@@ -70,14 +70,14 @@ describe("after completion: invoice automation and aftercare (database)", { skip
   beforeEach(async () => {
     db = await resetDb();
     await seedTreatments(db);
-    await db.update(treatments).set({ priceCents: 4500, pricingMode: "fixed", durationMinutes: 45 }).where(eq(treatments.id, "brazilian"));
+    await db.update(treatments).set({ priceCents: 4500, pricingMode: "fixed", durationMinutes: 45 }).where(eq(treatments.id, "hollywood"));
     await db.insert(weeklyHours).values([1, 2, 3, 4, 5].map((weekday) => ({ weekday, kind: "open", startMinute: 540, endMinute: 1020 })));
   });
   after(closeDb);
 
   const ctx = { userId: 1, ownerEmail: "" };
   const done = async (n: number) => {
-    const id = await createManual(db, { firstName: "Iris", lastName: `V${n}`, email: `iris${n}@example.com`, phone: null, treatmentIds: ["brazilian"], day: "2026-03-02", minute: 540 + n * 60, allowOutsideHours: true }, ctx);
+    const id = await createManual(db, { firstName: "Iris", lastName: `V${n}`, email: `iris${n}@example.com`, phone: null, treatmentIds: ["hollywood"], day: "2026-03-02", minute: 540 + n * 60, allowOutsideHours: true }, ctx);
     await markCompleted(db, id, ctx);
     return id;
   };

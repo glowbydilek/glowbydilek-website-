@@ -77,13 +77,13 @@ describe("promotions on appointments (database)", { skip: skipDb }, () => {
   beforeEach(async () => {
     db = await resetDb();
     await seedTreatments(db);
-    await db.update(treatments).set({ priceCents: 4500, pricingMode: "fixed", durationMinutes: 45 }).where(eq(treatments.id, "brazilian"));
+    await db.update(treatments).set({ priceCents: 4500, pricingMode: "fixed", durationMinutes: 45 }).where(eq(treatments.id, "hollywood"));
     await db.insert(weeklyHours).values([1, 2, 3, 4, 5].map((weekday) => ({ weekday, kind: "open", startMinute: 540, endMinute: 1020 })));
   });
   after(closeDb);
 
   const book = (n: number) =>
-    createManual(db, { firstName: "Lot", lastName: `K${n}`, email: `lot${n}@example.com`, phone: null, treatmentIds: ["brazilian"], day: "2027-03-02", minute: 540 + n * 60 }, { userId: 1, ownerEmail: "" });
+    createManual(db, { firstName: "Lot", lastName: `K${n}`, email: `lot${n}@example.com`, phone: null, treatmentIds: ["hollywood"], day: "2027-03-02", minute: 540 + n * 60 }, { userId: 1, ownerEmail: "" });
 
   test("code promotion applies once per appointment, honours its limit, and can be removed", async () => {
     await db.insert(promotions).values({ nameNl: "Lente", nameEn: "Spring", kind: "percent", value: 2000, scope: "all", code: "LENTE20", maxUses: 1, status: "active" });
