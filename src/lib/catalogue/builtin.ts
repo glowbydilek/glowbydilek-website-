@@ -159,7 +159,7 @@ const facial: Item[] = [
         en: "A professional deep cleanse in ten steps, from skin analysis and steam to a mask, facial massage and sun protection, tailored to your skin.",
         tr: "Cilt analizinden ve buhardan maskeye, yüz masajına ve güneş korumasına uzanan on adımlı, cildine göre ayarlanan profesyonel derin temizlik.",
       },
-      photo: "facial",
+      photo: "facial-mask",
       sort: 0,
       related: ["brow-lash-tint", "massage-face", "eyebrows"],
     }),
@@ -178,7 +178,7 @@ const facial: Item[] = [
         en: "Give your eyes a lovely, groomed and expressive look: tinting your brows and lashes brings out the natural beauty of your eyes.",
         tr: "Gözlerine güzel, bakımlı ve etkileyici bir ifade kazandır: kaş ve kirpik boyamayla gözlerinin doğal güzelliğini ön plana çıkarıyoruz.",
       },
-      photo: "botanical",
+      photo: "brow-tint",
       sort: 0,
       related: ["eyebrows", "facial-deep-cleansing", "full-face"],
     }),
@@ -210,7 +210,7 @@ const body: Item[] = [
         en: "A complete caring treatment for soft, smooth and radiant-looking skin on areas such as the back, arms and legs — ideal for skin with impurities, blemishes or a rough texture.",
         tr: "Sırt, kollar ve bacaklar gibi bölgelerde yumuşak, pürüzsüz ve ışıltılı bir cilt için eksiksiz bir bakım; sivilceli, lekeli veya pürüzlü ciltler için ideal.",
       },
-      photo: "bodycare",
+      photo: "body-wrap",
       sort: 0,
     }),
     status: "published" as const,
@@ -363,13 +363,13 @@ const packages: Item[] = [
 
 /** Zones from the owner's price list (24 Nov 2026), published with price and duration. */
 const zoneSpec: { id: string; group: "face" | "body"; slug: Item["slug"]; photo: Item["photo"]; sort: number; cents: number; minutes: number; related: string[] }[] = [
-  { id: "cheeks-jaw", group: "face", slug: { nl: "wangen-kaaklijn-waxen", en: "cheek-jawline-waxing", tr: "yanak-cene-hatti-agdasi" }, photo: "zone-face", sort: 50, cents: 2250, minutes: 15, related: ["upper-lip", "chin", "full-face"] },
-  { id: "neck", group: "face", slug: { nl: "hals-waxen", en: "neck-waxing", tr: "boyun-agdasi" }, photo: "zone-face", sort: 51, cents: 1200, minutes: 10, related: ["cheeks-jaw", "chin", "decollete"] },
-  { id: "upper-arms", group: "body", slug: { nl: "bovenarmen-waxen", en: "upper-arm-waxing", tr: "ust-kol-agdasi" }, photo: "wax-arms", sort: 150, cents: 1000, minutes: 15, related: ["half-arms", "full-arms", "underarms"] },
-  { id: "upper-legs", group: "body", slug: { nl: "bovenbenen-waxen", en: "upper-leg-waxing", tr: "ust-bacak-agdasi" }, photo: "wax-legs", sort: 151, cents: 3000, minutes: 25, related: ["half-legs", "full-legs", "bikini-line"] },
-  { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "zone-body", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
-  { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "zone-body", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
-  { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "zone-body", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
+  { id: "cheeks-jaw", group: "face", slug: { nl: "wangen-kaaklijn-waxen", en: "cheek-jawline-waxing", tr: "yanak-cene-hatti-agdasi" }, photo: "wax-jaw", sort: 50, cents: 2250, minutes: 15, related: ["upper-lip", "chin", "full-face"] },
+  { id: "neck", group: "face", slug: { nl: "hals-waxen", en: "neck-waxing", tr: "boyun-agdasi" }, photo: "wax-neck", sort: 51, cents: 1200, minutes: 10, related: ["cheeks-jaw", "chin", "decollete"] },
+  { id: "upper-arms", group: "body", slug: { nl: "bovenarmen-waxen", en: "upper-arm-waxing", tr: "ust-kol-agdasi" }, photo: "wax-upper-arms", sort: 150, cents: 1000, minutes: 15, related: ["half-arms", "full-arms", "underarms"] },
+  { id: "upper-legs", group: "body", slug: { nl: "bovenbenen-waxen", en: "upper-leg-waxing", tr: "ust-bacak-agdasi" }, photo: "wax-upper-legs", sort: 151, cents: 3000, minutes: 25, related: ["half-legs", "full-legs", "bikini-line"] },
+  { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "wax-belly", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
+  { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "wax-chest", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
+  { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "wax-decollete", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
   { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "wax-back", sort: 155, cents: 2000, minutes: 15, related: ["hollywood", "bikini-line", "upper-legs"] },
 ];
 
