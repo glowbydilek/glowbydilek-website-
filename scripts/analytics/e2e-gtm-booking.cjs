@@ -10,7 +10,7 @@ const B = "http://localhost:3123";
   await c.route("https://challenges.cloudflare.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: "window.turnstile={render(e,o){setTimeout(()=>o.callback('XXXX.DUMMY.TOKEN.XXXX'),50);return 'w'},reset(){},remove(){}};" }));
   await c.addInitScript(() => localStorage.setItem("glow-consent-v2", JSON.stringify({ v: 2, analytics: true, marketing: false, at: new Date().toISOString(), policy: "2026-11-04" })));
   const p = await c.newPage();
-  await p.goto(B + "/afspraak-maken?behandeling=brazilian", { waitUntil: "load" });
+  await p.goto(B + "/afspraak-maken?behandeling=hollywood", { waitUntil: "load" });
   await p.waitForTimeout(1200);
   const layer = () => p.evaluate(() => (window.dataLayer || []).filter((e) => e && e.event).map((e) => ({ ...e })));
   // With opening hours set, "Direct een tijd kiezen" is the default tab: switch to the request form.
