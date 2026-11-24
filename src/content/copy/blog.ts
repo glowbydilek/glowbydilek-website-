@@ -8,7 +8,7 @@
  * and Dilek also comes to the client's own address on request.
  */
 import type { Locale, RouteKey } from "../../i18n/config";
-import type { PostId, TreatmentId } from "../slugs";
+import type { PostId } from "../slugs";
 import type { QA } from "./types";
 
 export type ArticleSection = { title: string; paragraphs?: string[]; items?: string[] };
@@ -19,8 +19,8 @@ export type ArticleCopy = {
   hero: { eyebrow: string; title: string; titleEm: string; subtitle: string };
   sections: ArticleSection[];
   faqs?: QA[];
-  /** Treatment pages linked at the end. */
-  treatments: TreatmentId[];
+  /** Catalogue items (treatments) linked at the end; unpublished ones are skipped. */
+  treatments: string[];
   /** Static pages linked at the end. */
   pages: RouteKey[];
 };
