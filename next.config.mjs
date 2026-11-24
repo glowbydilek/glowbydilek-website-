@@ -77,6 +77,10 @@ const nextConfig = {
       { source: "/en/waxing-treatments/bikini", destination: "/en/waxing-treatments/bikini-intimate", permanent: true },
       { source: "/en/how-it-works", destination: "/en/appointment-process", permanent: true },
       { source: "/en/book", destination: "/en/book-appointment", permanent: true },
+      // Owner (24 Nov 2026): only the Hollywood (full Brazilian) is offered.
+      { source: "/waxbehandelingen/bikini-intiem/brazilian-wax", destination: "/waxbehandelingen/bikini-intiem/hollywood-wax", permanent: true },
+      { source: "/en/waxing-treatments/bikini-intimate/brazilian-wax", destination: "/en/waxing-treatments/bikini-intimate/hollywood-wax", permanent: true },
+      { source: "/tr/agda/bikini-bolgesi/brezilya-agdasi", destination: "/tr/agda/bikini-bolgesi/hollywood-agdasi", permanent: true },
       // Owner (24 Nov 2026): the facial with steam is the deep cleansing facial.
       { source: "/gezichtsbehandelingen/gezichtsbehandeling-met-stoom", destination: "/gezichtsbehandelingen/dieptereinigende-gezichtsbehandeling", permanent: true },
       { source: "/en/facial-treatments/facial-care-with-steam", destination: "/en/facial-treatments/deep-cleansing-facial", permanent: true },

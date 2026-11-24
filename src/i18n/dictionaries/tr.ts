@@ -22,7 +22,7 @@ export const tr: Dictionary = {
       treatments: {
         title: "Yüz, vücut ve bikini bölgesi ağdası",
         description:
-          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini, Brezilya ve Hollywood ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve hazırlığı öğren.",
+          "Kaş, üst dudak, koltuk altı, kol, bacak, sırt, bikini ve Hollywood (full Brazilian) ağdası. Kime uygun olduğunu, neler beklemen gerektiğini ve hazırlığı öğren.",
       },
       prices: {
         title: "Fiyatlar",
@@ -272,8 +272,8 @@ export const tr: Dictionary = {
         a: "Güneş yanığı, tahriş ya da yara olan ciltte, kesik veya iltihap varken ya da peeling veya lazer uygulamasından kısa süre sonra yapılmaz. Retinoid içeren (tretinoin veya izotretinoin gibi) ilaç ya da cilt ürünü kullanıyorsan ağda uygun değildir. Emin değilsen önce doktoruna danış ve mutlaka önceden belirt.",
       },
       {
-        q: "Bikini çizgisi, Brezilya ve Hollywood arasındaki fark nedir?",
-        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında kalan tüyler alınır. Brezilya ağdasında neredeyse tamamı alınır; istersen ince bir şerit ya da küçük bir üçgen bırakılır. Hollywood ağdasında bölge tamamen pürüzsüzdür.",
+        q: "Bikini çizgisi ile Hollywood (full Brazilian) arasındaki fark nedir?",
+        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında kalan tüyler alınır. Hollywood ağdasında (full Brazilian) intim bölge tamamen pürüzsüz olur.",
       },
       {
         q: "Batık tüyleri nasıl önleyebilirim?",
@@ -779,8 +779,7 @@ export const tr: Dictionary = {
     popularTitle: "Amsterdam'da en çok arananlar",
     popular: {
       noord: "Amsterdam-Noord'da güzellik salonu",
-      brazilian: "Amsterdam'da Brezilya ağdası",
-      hollywood: "Amsterdam'da Hollywood ağdası",
+      hollywood: "Amsterdam'da Hollywood (full Brazilian) ağdası",
       "bikini-line": "Amsterdam'da bikini çizgisi ağdası",
       eyebrows: "Amsterdam'da kaş ağdası",
       massage: "Amsterdam'da kadınlara özel masaj",

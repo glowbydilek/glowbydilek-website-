@@ -282,8 +282,8 @@ export const faqPageTr: FaqPageCopy = {
       title: "Bikini bölgesi uygulamaları",
       items: [
         {
-          q: "Bikini çizgisi, Brezilya ve Hollywood arasındaki fark nedir?",
-          a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında görünen tüyler alınır. Brezilya ağdasında neredeyse tamamı alınır; istersen ince bir şerit veya küçük bir üçgen bırakılır. Hollywood ağdasında bölge tamamen pürüzsüzdür.",
+          q: "Bikini çizgisi ile Hollywood (full Brazilian) arasındaki fark nedir?",
+          a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında görünen tüyler alınır. Hollywood ağdasında (full Brazilian) intim bölge tamamen pürüzsüz olur.",
         },
         {
           q: "Bikini bölgesi uygulaması beni geriyor. Bu normal mi?",

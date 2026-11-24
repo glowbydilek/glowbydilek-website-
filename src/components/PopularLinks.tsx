@@ -3,12 +3,12 @@ import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { isPublicItem, itemById, itemHref, publicSections, sectionHref } from "@/lib/catalogue";
 
-const ITEMS = ["brazilian", "hollywood", "bikini-line", "eyebrows"] as const;
+const ITEMS = ["hollywood", "bikini-line", "eyebrows"] as const;
 const SECTIONS = ["massage", "facial"] as const;
 
 /**
  * Descriptive internal links to the most searched treatment pages
- * ("Brazilian wax in Amsterdam", …). Only published pages are linked.
+ * ("Full Brazilian (Hollywood) wax in Amsterdam", …). Only published pages are linked.
  */
 export function PopularLinks({ locale, className = "" }: { locale: Locale; className?: string }) {
   const dict = getDictionary(locale).hub;

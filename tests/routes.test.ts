@@ -87,7 +87,9 @@ test("sitemap lists every page in Dutch and English (Turkish is noindex) with re
   // Besides the fixed pages: the massage landing page and its five massages, the facial landing
   // page with its three confirmed facial treatments, the body-care page with the body wrap,
   // and (of the legal pages) only the cookie policy.
-  assert.equal(entries.length, (allPages().length + 20) * 2);
+  // Minus the archived Brazilian (still a route, redirected to the Hollywood).
+  assert.equal(entries.length, (allPages().length + 19) * 2);
+  assert.ok(!entries.some((e) => e.url.endsWith("/brazilian-wax")), "Brazilian is archived and redirected");
   assert.ok(!entries.some((e) => e.url.includes("/tr/") || e.url.endsWith("/tr")), "no Turkish URLs");
   assert.ok(!entries.some((e) => /\/(admin|agenda|login|api|offerte)(\/|$)|\/en\/quote\//.test(e.url)), "no private URLs");
   assert.equal(new Set(entries.map((e) => e.url)).size, entries.length, "no duplicate URLs");

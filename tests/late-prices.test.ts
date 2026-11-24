@@ -11,7 +11,8 @@ test("owner price list (24 Nov 2026) refers to existing treatments with sane val
     assert.ok(Number.isInteger(p.cents) && p.cents > 0 && p.cents < 50000, `${p.id} price`);
     assert.ok(Number.isInteger(p.minutes) && p.minutes >= 5 && p.minutes <= 240, `${p.id} duration`);
   }
-  assert.equal(LATE_PRICES.find((p) => p.id === "brazilian")?.cents, 5000);
+  assert.equal(LATE_PRICES.find((p) => p.id === "hollywood")?.cents, 5000);
+  assert.equal(LATE_PRICES.find((p) => p.id === "brazilian"), undefined, "Brazilian is no longer offered");
   assert.equal(LATE_PRICES.find((p) => p.id === "eyebrows")?.cents, 1750);
 });
 

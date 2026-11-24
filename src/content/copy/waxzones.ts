@@ -135,9 +135,9 @@ export const ZONES: Record<string, Zone> = {
     name: { nl: "Billen waxen", en: "Buttock waxing", tr: "Kalça ağdası" },
     lower: { nl: "billen", en: "buttocks", tr: "kalça" },
     area: {
-      nl: "Het haar op de billen. Wil je ook de bilnaad laten meenemen, bespreek het dan vooraf; dat kan ook samen met een Brazilian of Hollywood.",
-      en: "The hair on the buttocks. If you would also like the cleft included, discuss it beforehand; this can also be combined with a Brazilian or Hollywood.",
-      tr: "Kalçadaki tüyler. Kalça arasının da yapılmasını istiyorsan önceden konuş; bu, Brezilya veya Hollywood ağdasıyla birlikte de yapılabilir.",
+      nl: "Het haar op de billen. Wil je ook de bilnaad laten meenemen, bespreek het dan vooraf; dat kan ook samen met een Hollywood (full Brazilian).",
+      en: "The hair on the buttocks. If you would also like the cleft included, discuss it beforehand; this can also be combined with a Hollywood (full Brazilian).",
+      tr: "Kalçadaki tüyler. Kalça arasının da yapılmasını istiyorsan önceden konuş; bu, Hollywood (full Brazilian) ağdasıyla birlikte de yapılabilir.",
     },
     teaser: { nl: "Gladde billen, discreet en rustig.", en: "Smooth buttocks, discreetly and calmly.", tr: "Gizlilik ve sakinlik içinde pürüzsüz kalça." },
     faq: {

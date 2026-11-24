@@ -65,10 +65,10 @@ after(() => setSnapshotResolver(() => null));
 
 // ───────────────────────────────────────────────────────── pure
 
-test("without a database: the five massages, the three confirmed facial treatments, the body wrap and the 13 waxing treatments are public; the rest are drafts", () => {
+test("without a database: the five massages, the three confirmed facial treatments, the body wrap and 12 of the 13 waxing treatments (the Brazilian is archived) are public; the rest are drafts", () => {
   withSnapshot({});
   assert.deepEqual(publicSections().map((s) => s.id), ["facial", "massage", "waxing", "bodycare"]);
-  assert.equal(publicItems().length, 29);
+  assert.equal(publicItems().length, 28);
   for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-deep-cleansing", "brow-lash-tint", "body-wrap"]) {
     const m = itemById(id)!;
     assert.equal(isPublicItem(m), true, id);

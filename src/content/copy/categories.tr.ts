@@ -159,11 +159,11 @@ export const categoriesTr: CategoryCopySet = {
   },
 
   intimate: {
-    seoTitle: "Bikini çizgisi, Brezilya ve Hollywood ağdası",
+    seoTitle: "Bikini çizgisi ve Hollywood (full Brazilian) ağdası",
     seoDescription:
-      "Sakin ve gizliliğe saygılı bir ortamda bikini çizgisi, Brezilya veya Hollywood ağdası. Farkları, randevunun nasıl geçtiğini ve nasıl hazırlanacağını oku.",
+      "Sakin ve gizliliğe saygılı bir ortamda bikini çizgisi veya Hollywood (full Brazilian) ağdası. Farkları, randevunun nasıl geçtiğini ve nasıl hazırlanacağını oku.",
     label: "Bikini bölgesi",
-    teaser: "Bikini çizgisi, Brezilya veya Hollywood; gizliliğe saygıyla, senin temponda.",
+    teaser: "Bikini çizgisi veya Hollywood (full Brazilian); gizliliğe saygıyla, senin temponda.",
     hero: {
       eyebrow: "Ağda · Bikini bölgesi",
       title: "Bikini bölgesi,",
@@ -182,7 +182,7 @@ export const categoriesTr: CategoryCopySet = {
       title: "Bikini bölgesi ağdası neleri kapsar",
       paragraphs: [
         "Bikini bölgesindeki cilt ince ve hassastır; oradaki tüyler de çoğu zaman başka yerlere göre daha kalın ve kıvırcıktır. Bu yüzden küçük bölümlerle çalışılır ve her şeritte cilt gergin tutulur.",
-        "Ne kadarının alınacağını sen seçersin: yalnızca iç çamaşırının kenarları boyunca (bikini çizgisi), ince bir şerit veya küçük bir üçgen bırakılarak neredeyse tamamı (Brezilya) ya da tamamen pürüzsüz (Hollywood). Emin değil misin? Birlikte karar verirsiniz.",
+        "Sen seçersin: yalnızca iç çamaşırının kenarları boyunca düzgün bir hat (bikini çizgisi) ya da tamamen pürüzsüz (Hollywood, full Brazilian olarak da bilinir). Emin değil misin? Birlikte karar verirsiniz.",
       ],
     },
     expect: {
@@ -222,8 +222,8 @@ export const categoriesTr: CategoryCopySet = {
     ],
     faqs: [
       {
-        q: "Bikini çizgisi, Brezilya ve Hollywood arasındaki fark nedir?",
-        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında görünen tüyler alınır. Brezilya ağdasında neredeyse tamamı alınır; istersen ince bir şerit veya küçük bir üçgen bırakılır. Hollywood ağdasında bölge tamamen pürüzsüzdür.",
+        q: "Bikini çizgisi ile Hollywood (full Brazilian) arasındaki fark nedir?",
+        a: "Bikini çizgisinde yalnızca bikininin veya iç çamaşırının dışında görünen tüyler alınır. Hollywood ağdasında (full Brazilian) intim bölge tamamen pürüzsüz olur.",
       },
       {
         q: "Bu konuda gerginim. Bu normal mi?",

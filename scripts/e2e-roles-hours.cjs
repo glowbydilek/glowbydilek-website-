@@ -16,7 +16,7 @@ const BASE = (process.argv[2] || "http://localhost:3000").replace(/\/$/, "");
 const EMAIL = process.env.OWNER_EMAIL || "hello@glowbydilek.nl";
 const PASSWORD = process.env.OWNER_PASSWORD;
 const MAIL_DIR = process.env.MAIL_DIR;
-const TREATMENT = process.env.E2E_TREATMENT || "brazilian";
+const TREATMENT = process.env.E2E_TREATMENT || "hollywood";
 const STAFF_EMAIL = `e2e-staff-${Date.now()}@example.invalid`;
 const STAFF_PW = `Rustig-ochtend-${Date.now()}`;
 const stub = "window.turnstile={render(el,o){window.__ts=o;setTimeout(()=>o.callback('XXXX.DUMMY.TOKEN.XXXX'),50);return 'w'},reset(){setTimeout(()=>window.__ts&&window.__ts.callback('XXXX.DUMMY.TOKEN.XXXX'),50)},remove(){}};";

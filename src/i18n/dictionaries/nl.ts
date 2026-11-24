@@ -23,7 +23,7 @@ export const nl = {
       treatments: {
         title: "Waxen in Amsterdam, alleen voor vrouwen",
         description:
-          "Waxen in Amsterdam, uitsluitend voor vrouwen: gezicht, lichaam en bikinizone, van wenkbrauwen tot Brazilian. Lees wat je kunt verwachten per zone.",
+          "Waxen in Amsterdam, uitsluitend voor vrouwen: gezicht, lichaam en bikinizone, van wenkbrauwen tot full Brazilian. Lees wat je kunt verwachten per zone.",
       },
       prices: {
         title: "Prijzen waxen, massage en gezicht in Amsterdam",
@@ -277,8 +277,8 @@ export const nl = {
         a: "Niet op een verbrande, geïrriteerde of beschadigde huid, bij wondjes of ontstekingen, en niet kort na een peeling of laserbehandeling. Gebruik je medicijnen of huidproducten met retinoïden (zoals tretinoïne of isotretinoïne), dan is waxen niet geschikt. Twijfel je? Overleg eerst met je arts en meld het altijd vooraf.",
       },
       {
-        q: "Wat is het verschil tussen bikinilijn, Brazilian en Hollywood?",
-        a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Brazilian wordt bijna alles verwijderd, met naar wens een smal strookje of klein driehoekje. Een Hollywood is volledig glad.",
+        q: "Wat is het verschil tussen bikinilijn en Hollywood (full Brazilian)?",
+        a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Hollywood, ook wel full Brazilian genoemd, wordt de intieme zone volledig glad gewaxt.",
       },
       {
         q: "Hoe voorkom ik ingegroeide haartjes?",
@@ -785,8 +785,7 @@ export const nl = {
     popularTitle: "Veelgezocht in Amsterdam",
     popular: {
       noord: "Schoonheidssalon in Amsterdam-Noord",
-      brazilian: "Brazilian wax in Amsterdam",
-      hollywood: "Hollywood wax in Amsterdam",
+      hollywood: "Full Brazilian (Hollywood) wax in Amsterdam",
       "bikini-line": "Bikinilijn waxen in Amsterdam",
       eyebrows: "Wenkbrauwen waxen in Amsterdam",
       massage: "Massage voor vrouwen in Amsterdam",

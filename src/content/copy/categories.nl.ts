@@ -158,11 +158,11 @@ export const categoriesNl: CategoryCopySet = {
   },
 
   intimate: {
-    seoTitle: "Bikinilijn en Brazilian wax in Amsterdam",
+    seoTitle: "Bikinilijn en full Brazilian wax in Amsterdam",
     seoDescription:
-      "Bikinilijn, Brazilian of Hollywood waxen in een rustige, discrete setting. Lees wat het verschil is, hoe de afspraak verloopt en hoe je je voorbereidt.",
+      "Bikinilijn of Hollywood (full Brazilian) waxen in een rustige, discrete setting. Lees wat het verschil is, hoe de afspraak verloopt en hoe je je voorbereidt.",
     label: "Bikini & intiem",
-    teaser: "Bikinilijn, Brazilian of Hollywood — discreet, in jouw tempo.",
+    teaser: "Bikinilijn of Hollywood (full Brazilian) — discreet, in jouw tempo.",
     hero: {
       eyebrow: "Waxbehandelingen · Bikini & intiem",
       title: "Bikini & intiem,",
@@ -181,7 +181,7 @@ export const categoriesNl: CategoryCopySet = {
       title: "Wat een intieme wax inhoudt",
       paragraphs: [
         "De huid in de bikinizone is dun en gevoelig, en het haar is er vaak dikker en krullender dan elders. Daarom wordt er in kleine stukjes gewerkt en wordt de huid bij elke strook goed strak gehouden.",
-        "Je kiest zelf hoeveel er wordt verwijderd: alleen langs de randen van je ondergoed (bikinilijn), bijna alles met een klein strookje of driehoekje (Brazilian), of volledig glad (Hollywood). Twijfel je, dan bespreken jullie het gewoon samen.",
+        "Je kiest zelf: alleen een nette lijn langs de randen van je ondergoed (bikinilijn), of volledig glad (Hollywood, ook wel full Brazilian genoemd). Twijfel je, dan bespreken jullie het gewoon samen.",
       ],
     },
     expect: {
@@ -221,8 +221,8 @@ export const categoriesNl: CategoryCopySet = {
     ],
     faqs: [
       {
-        q: "Wat is het verschil tussen bikinilijn, Brazilian en Hollywood?",
-        a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Brazilian wordt bijna alles verwijderd, met naar wens een smal strookje of klein driehoekje. Een Hollywood is volledig glad.",
+        q: "Wat is het verschil tussen bikinilijn en Hollywood (full Brazilian)?",
+        a: "Bij de bikinilijn verdwijnt alleen het haar dat buiten je bikini of ondergoed zichtbaar is. Bij een Hollywood, ook wel full Brazilian genoemd, wordt de intieme zone volledig glad gewaxt.",
       },
       {
         q: "Ik vind het spannend. Is dat normaal?",

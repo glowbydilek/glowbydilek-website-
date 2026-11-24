@@ -267,8 +267,8 @@ export const faqPageEn: FaqPageCopy = {
       title: "Intimate treatments",
       items: [
         {
-          q: "What is the difference between bikini line, Brazilian and Hollywood?",
-          a: "A bikini line removes only the hair visible outside your bikini or underwear. A Brazilian removes almost everything, leaving a small strip or triangle if you like. A Hollywood is completely smooth.",
+          q: "What is the difference between bikini line and Hollywood (full Brazilian)?",
+          a: "A bikini line removes only the hair visible outside your bikini or underwear. A Hollywood, also called a full Brazilian, leaves the intimate area completely smooth.",
         },
         {
           q: "An intimate treatment makes me nervous. Is that normal?",
@@ -304,8 +304,8 @@ export const faqPageEn: FaqPageCopy = {
           a: "Yes, on request Dilek can also come to you, at your own address. Just mention it in your request or a message, and Dilek will discuss personally what is possible.",
         },
         {
-          q: "How much does a Brazilian wax cost?",
-          a: "The price of a Brazilian wax is on the Prices page. If it says ‘upon request’ there, you’ll hear the price personally when you request your appointment.",
+          q: "How much does a full Brazilian (Hollywood) wax cost?",
+          a: "The price of a full Brazilian (Hollywood) is on the Prices page. If it says ‘upon request’ there, you’ll hear the price personally when you request your appointment.",
         },
         {
           q: "What does a treatment cost?",

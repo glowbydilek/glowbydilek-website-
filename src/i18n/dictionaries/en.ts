@@ -21,7 +21,7 @@ export const en: Dictionary = {
       treatments: {
         title: "Women-only waxing in Amsterdam",
         description:
-          "Women-only waxing in Amsterdam: face, body and bikini area, from eyebrows to Brazilian. Find out what to expect and how to prepare for your appointment.",
+          "Women-only waxing in Amsterdam: face, body and bikini area, from eyebrows to full Brazilian. Find out what to expect and how to prepare for your appointment.",
       },
       prices: {
         title: "Prices for waxing, massage and facials in Amsterdam",
@@ -275,8 +275,8 @@ export const en: Dictionary = {
         a: "Not on sunburnt, irritated or broken skin, with cuts or inflammation, or shortly after a peel or laser treatment. If you use medication or skincare containing retinoids (such as tretinoin or isotretinoin), waxing isn't suitable. If in doubt, check with your doctor first and always mention it beforehand.",
       },
       {
-        q: "What's the difference between bikini line, Brazilian and Hollywood?",
-        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Brazilian removes almost everything, leaving a small strip or triangle if you like. A Hollywood is completely smooth.",
+        q: "What's the difference between bikini line and Hollywood (full Brazilian)?",
+        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Hollywood, also called a full Brazilian, leaves the intimate area completely smooth.",
       },
       {
         q: "How can I prevent ingrown hairs?",
@@ -782,8 +782,7 @@ export const en: Dictionary = {
     popularTitle: "Popular in Amsterdam",
     popular: {
       noord: "Beauty salon in Amsterdam-Noord",
-      brazilian: "Brazilian wax in Amsterdam",
-      hollywood: "Hollywood wax in Amsterdam",
+      hollywood: "Full Brazilian (Hollywood) wax in Amsterdam",
       "bikini-line": "Bikini line waxing in Amsterdam",
       eyebrows: "Eyebrow waxing in Amsterdam",
       massage: "Massage for women in Amsterdam",

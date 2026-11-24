@@ -44,6 +44,9 @@ export async function applyLateUpdates(db: DB): Promise<void> {
   for (const u of LATE_UPDATES.sections) {
     await db.update(serviceSections).set(u.set).where(and(eq(serviceSections.id, u.id), eq(serviceSections.nameNl, u.whenNameNl), eq(serviceSections.status, u.whenStatus)));
   }
+  for (const a of LATE_UPDATES.archive) {
+    await db.update(treatments).set({ status: "archived" }).where(and(eq(treatments.id, a.id), eq(treatments.status, a.whenStatus)));
+  }
   for (const u of LATE_UPDATES.items) {
     const b = BUILTIN_ITEMS.find((t) => t.id === u.id);
     if (!b) continue;

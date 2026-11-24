@@ -365,7 +365,7 @@ export const treatmentsTr: TreatmentCopySet = {
         a: "Tam süre tüylenmene ve bölgeleri birleştirip birleştirmediğine bağlıdır. Randevun onaylandığında öğrenirsin.",
       },
       {
-        q: "Tüm bacağı Brezilya ağdasıyla birleştirebilir miyim?",
+        q: "Tüm bacağı Hollywood (full Brazilian) ağdasıyla birleştirebilir miyim?",
         a: "Evet. İki uygulamayı da talebinde belirt; randevu buna göre planlanır.",
       },
     ],
@@ -444,7 +444,7 @@ export const treatmentsTr: TreatmentCopySet = {
     faqs: [
       {
         q: "İlk sefer için bikini çizgisi iyi bir seçim mi?",
-        a: "Birçok kişi için evet: en küçük bikini bölgesi uygulamasıdır ve ağdanın nasıl hissettirdiğini sakin bir şekilde deneyimlemeni sağlar. Sonra istediğin zaman Brezilya veya Hollywood ağdasını seçebilirsin.",
+        a: "Birçok kişi için evet: en küçük bikini bölgesi uygulamasıdır ve ağdanın nasıl hissettirdiğini sakin bir şekilde deneyimlemeni sağlar. Sonra istediğin zaman Hollywood (full Brazilian) ağdasını seçebilirsin.",
       },
       {
         q: "Hattın nereden geçeceğine nasıl karar veririm?",
@@ -496,11 +496,11 @@ export const treatmentsTr: TreatmentCopySet = {
   },
 
   hollywood: {
-    seoTitle: "Hollywood ağdası",
+    seoTitle: "Hollywood ağdası (full Brazilian)",
     seoDescription:
-      "Hollywood ağdası: genital bölgede tamamen pürüzsüz. Uygulamanın neleri kapsadığını, nasıl hazırlanacağını ve sonrasında cildine nasıl bakacağını ölçülü bir dille oku.",
-    title: "Hollywood ağdası",
-    lead: "Tamamen pürüzsüz; ferah ve bakımlı bir cilt için. Her bikini bölgesi uygulamasındaki aynı gizlilik, açıklama ve sakinlikle.",
+      "Hollywood ağdası (full Brazilian): intim bölgede tamamen pürüzsüz. Neleri kapsadığını, nasıl hazırlanacağını ve sonrasında cildine nasıl bakacağını oku.",
+    title: "Hollywood ağdası (full Brazilian)",
+    lead: "Tamamen pürüzsüz (full Brazilian olarak da bilinir); ferah ve bakımlı bir cilt için. Her bikini bölgesi uygulamasındaki aynı gizlilik, açıklama ve sakinlikle.",
     teaser: "Tamamen pürüzsüz; gizliliğe saygılı ve özenli.",
     area: "Bikini bölgesinin tamamı: ön kısım, kasık, genital bölge ve kalça arası. Hiç tüy bırakılmaz.",
     appointment: [
@@ -508,7 +508,7 @@ export const treatmentsTr: TreatmentCopySet = {
       "Cilt gergin tutularak küçük bölümlerle çalışılır ve her adım önceden söylenir. Her zaman ara vermek isteyebilirsin. Ardından cilt yatıştırılır ve sonraki günler için pratik tavsiyeler alırsın.",
     ],
     know: [
-      "Daha önce hiç bikini bölgesi ağdası yaptırmadın mı? Bikini çizgisi veya Brezilya ağdasıyla da başlayabilirsin. Bu konu seninle dürüstçe konuşulur.",
+      "Daha önce hiç bikini bölgesi ağdası yaptırmadın mı? Bikini çizgisiyle de başlayabilirsin. Bu konu seninle dürüstçe konuşulur.",
       "Tüylerin iki ila dört hafta uzamasını bekle, o gün yağ veya losyon sürme ve temiz pamuklu iç çamaşırı giy.",
       "Hemoroid, kesik, cilt enfeksiyonu ya da bölgede başka aktif bir rahatsızlık varsa ağda önerilmez. Emin değilsen aile hekimine danış.",
     ],
@@ -527,12 +527,12 @@ export const treatmentsTr: TreatmentCopySet = {
       "Cildine bir gün dinlenme ver ve randevudan hemen sonrasına plaj veya yüzme günü planlama. Dört ila beş haftalık bir aralıkla sonuç en iyi halde kalır.",
     faqs: [
       {
-        q: "Hollywood ağdası Brezilya ağdasından daha mı acılı?",
-        a: "Daha geniş bir alanı kapsadığı için biraz daha uzun sürer. Nasıl hissettirdiği kişiden kişiye değişir. Düzenli bir aralıkla çoğu kişi daha az hisseder.",
+        q: "Hollywood ile full Brazilian aynı şey mi?",
+        a: "Evet. İki ad da aynı bakım için kullanılır: intim bölge tamamen pürüzsüz olacak şekilde ağdayla alınır.",
       },
       {
-        q: "Sonra yeniden Brezilya ağdasına dönebilir miyim?",
-        a: "Elbette. Her randevuda yeniden seçersin.",
+        q: "İnce bir şerit bırakılabilir mi?",
+        a: "Glow by Dilek'te intim bölge tamamen pürüzsüz yapılır. Yalnızca iç çamaşırı kenarında düzgün bir hat istiyorsan bikini çizgisini seç.",
       },
     ],
   },

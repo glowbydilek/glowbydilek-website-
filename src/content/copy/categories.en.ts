@@ -158,11 +158,11 @@ export const categoriesEn: CategoryCopySet = {
   },
 
   intimate: {
-    seoTitle: "Bikini line and Brazilian wax in Amsterdam",
+    seoTitle: "Bikini line and full Brazilian wax in Amsterdam",
     seoDescription:
-      "Bikini line, Brazilian or Hollywood waxing in a calm, discreet setting. Read the difference, how the appointment works and how to prepare.",
+      "Bikini line or Hollywood (full Brazilian) waxing in a calm, discreet setting. Read the difference, how the appointment works and how to prepare.",
     label: "Bikini & intimate",
-    teaser: "Bikini line, Brazilian or Hollywood — discreet, at your pace.",
+    teaser: "Bikini line or Hollywood (full Brazilian) — discreet, at your pace.",
     hero: {
       eyebrow: "Waxing treatments · Bikini & intimate",
       title: "Bikini & intimate,",
@@ -181,7 +181,7 @@ export const categoriesEn: CategoryCopySet = {
       title: "What an intimate wax involves",
       paragraphs: [
         "The skin in the bikini area is thin and sensitive, and the hair there is often thicker and curlier than elsewhere. So the work is done in small sections, holding the skin taut with every strip.",
-        "You choose how much is removed: only along the edges of your underwear (bikini line), almost everything with a small strip or triangle (Brazilian), or completely smooth (Hollywood). Not sure? You simply decide together.",
+        "You choose: just a neat line along the edges of your underwear (bikini line), or completely smooth (Hollywood, also called a full Brazilian). Not sure? You simply decide together.",
       ],
     },
     expect: {
@@ -221,8 +221,8 @@ export const categoriesEn: CategoryCopySet = {
     ],
     faqs: [
       {
-        q: "What is the difference between bikini line, Brazilian and Hollywood?",
-        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Brazilian removes almost everything, leaving a small strip or triangle if you like. A Hollywood is completely smooth.",
+        q: "What is the difference between bikini line and Hollywood (full Brazilian)?",
+        a: "A bikini line removes only the hair visible outside your bikini or underwear. A Hollywood, also called a full Brazilian, leaves the intimate area completely smooth.",
       },
       {
         q: "I feel nervous about it. Is that normal?",

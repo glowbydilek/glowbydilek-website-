@@ -57,11 +57,11 @@ export const relatedTreatments: Record<TreatmentId, TreatmentId[]> = {
   "half-arms": ["full-arms", "underarms", "half-legs"],
   "full-arms": ["half-arms", "underarms", "back"],
   "half-legs": ["full-legs", "bikini-line", "underarms"],
-  "full-legs": ["half-legs", "bikini-line", "brazilian"],
+  "full-legs": ["half-legs", "bikini-line", "hollywood"],
   back: ["full-arms", "underarms", "full-legs"],
-  "bikini-line": ["brazilian", "hollywood", "half-legs"],
+  "bikini-line": ["hollywood", "half-legs", "full-legs"],
   brazilian: ["bikini-line", "hollywood", "full-legs"],
-  hollywood: ["brazilian", "bikini-line", "full-legs"],
+  hollywood: ["bikini-line", "full-legs", "half-legs"],
 };
 
 /** Query parameter that preselects a treatment in the appointment form. */
