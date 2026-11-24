@@ -344,9 +344,9 @@ export const nl = {
     hero: {
       eyebrow: "Tarieven",
       title: "Tarieven,",
-      titleEm: "persoonlijk afgestemd.",
+      titleEm: "helder op een rij.",
       subtitle:
-        "Hieronder staan alle behandelingen op een rij. De actuele tarieven stuurt Dilek je graag persoonlijk toe, zodat je precies weet waar je aan toe bent.",
+        "Alle behandelingen met tarief en duur. Staat er bij een behandeling ‘op aanvraag’, dan hoor je het tarief persoonlijk bij je aanvraag.",
     },
     notice: {
       title: "Tarieven op aanvraag",

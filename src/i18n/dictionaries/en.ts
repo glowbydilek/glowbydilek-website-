@@ -342,9 +342,9 @@ export const en: Dictionary = {
     hero: {
       eyebrow: "Prices",
       title: "Prices,",
-      titleEm: "personally tailored.",
+      titleEm: "clearly listed.",
       subtitle:
-        "Every treatment, at a glance. Dilek is happy to send you the current prices personally, so you know exactly where you stand.",
+        "Every treatment with its price and duration. Where a treatment says ‘on request’, you receive the price personally with your request.",
     },
     notice: {
       title: "Prices on request",
