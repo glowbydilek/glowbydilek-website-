@@ -68,8 +68,8 @@ after(() => setSnapshotResolver(() => null));
 test("without a database: the five massages, the three confirmed facial treatments, the body wrap and the 13 waxing treatments are public; the rest are drafts", () => {
   withSnapshot({});
   assert.deepEqual(publicSections().map((s) => s.id), ["facial", "massage", "waxing", "bodycare"]);
-  assert.equal(publicItems().length, 22);
-  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-steam", "facial-deep-cleansing", "brow-lash-tint", "body-wrap"]) {
+  assert.equal(publicItems().length, 29);
+  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot", "facial-deep-cleansing", "brow-lash-tint", "body-wrap"]) {
     const m = itemById(id)!;
     assert.equal(isPublicItem(m), true, id);
     assert.equal(m.pricing.mode, "on_request", `${id} has no invented price`);

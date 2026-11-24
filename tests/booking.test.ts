@@ -45,10 +45,14 @@ describe("booking against MariaDB", { skip: skipDb }, () => {
 
   test("seeding never invents prices or durations and never overwrites owner edits", async () => {
     const all = await db.select().from(treatments);
-    // 13 waxing treatments, 5 massages, 3 confirmed facial treatments and the body wrap are published; the rest are drafts.
-    assert.equal(all.filter((t) => t.status === "published").length, 22);
-    assert.ok(all.filter((t) => t.status !== "published").every((t) => t.status === "draft"));
-    assert.ok(all.filter((t) => !["brazilian", "eyebrows"].includes(t.id)).every((t) => t.priceCents === null && t.durationMinutes === null));
+    // 13 + 8 waxing treatments, 5 massages, 2 facial treatments and the body wrap are published; the rest are drafts
+    // (the facial with steam is archived: owner merged it into the deep cleansing facial, 24 Nov 2026).
+    assert.equal(all.filter((t) => t.status === "published").length, 29);
+    assert.ok(all.filter((t) => t.status !== "published").every((t) => t.status === "draft" || t.id === "facial-steam"));
+    // Only the owner's price list (new waxing zones, 24 Nov 2026) carries a price at seed time.
+    const zones = ["cheeks-jaw", "neck", "upper-arms", "upper-legs", "belly", "chest", "decollete", "buttocks"];
+    assert.ok(all.filter((t) => zones.includes(t.id)).every((t) => t.priceCents !== null && t.durationMinutes !== null));
+    assert.ok(all.filter((t) => ![...zones, "brazilian", "eyebrows"].includes(t.id)).every((t) => t.priceCents === null && t.durationMinutes === null));
     await db.update(treatments).set({ priceCents: 4500 }).where(eq(treatments.id, "chin"));
     await seedTreatments(db);
     const [chin] = await db.select().from(treatments).where(eq(treatments.id, "chin"));
