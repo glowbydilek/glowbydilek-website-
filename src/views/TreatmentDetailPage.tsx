@@ -62,7 +62,7 @@ export function TreatmentDetailPage({
     onRequest: s.priceOnRequest,
   });
   const duration = itemDuration(item);
-  const portrait = ["portrait", "aftercare", "contact"].includes(
+  const portrait = ["portrait", "aftercare", "contact", "brow-tint", "wax-full-face", "wax-jaw", "wax-neck", "wax-chest", "wax-chin", "wax-forearms", "wax-upper-arms", "wax-upper-legs"].includes(
     item.photo,
   );
   const parts =
@@ -111,7 +111,16 @@ export function TreatmentDetailPage({
               <dt className="text-[0.66rem] uppercase tracking-[0.16em] text-muted">
                 {s.price}
               </dt>
-              <dd className="mt-1 text-ink">{price}</dd>
+              <dd
+                className={
+                  item.pricing.mode === "on_request" || item.pricing.cents == null
+                    ? "mt-1 font-medium text-ink"
+                    : "mt-1 font-serif text-[1.6rem] leading-none tabular-nums text-ink"
+                }
+                data-price-tag=""
+              >
+                {price}
+              </dd>
             </div>
             {duration && (
               <div>

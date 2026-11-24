@@ -5,6 +5,7 @@ import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
+import { TreatmentRow } from "@/components/TreatmentRow";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Photo } from "@/components/ui/Photo";
@@ -12,8 +13,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { hasPhoto } from "@/content/media";
 import { treatmentGroups } from "@/content/treatments";
 import { groupCopy } from "@/content/copy";
-import { bookingHref, href, type Locale } from "@/i18n/config";
-import { groupHref, itemHref, publicGroups, publicItems } from "@/lib/catalogue";
+import { href, type Locale } from "@/i18n/config";
+import { groupHref, publicGroups, publicItems } from "@/lib/catalogue";
 import { getDictionary } from "@/i18n/dictionaries";
 import { serviceJsonLd } from "@/lib/seo";
 
@@ -124,7 +125,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     <p className="eyebrow" data-reveal>
                       0{idx + 1} · {dict.nav.treatments}
                     </p>
-                    <h2 id={`${g.id}-title`} className="display mt-4 text-[2.7rem] sm:text-6xl" data-reveal>
+                    <h2 id={`${g.id}-title`} className="display mt-3 text-[2.1rem] sm:text-5xl" data-reveal>
                       {g.name[locale]}
                     </h2>
                     <p className="lead mt-4" data-reveal>
@@ -145,7 +146,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     <p className="eyebrow" data-reveal>
                       0{idx + 1} · {dict.nav.treatments}
                     </p>
-                    <h2 id={`${g.id}-title`} className="display mt-4 text-[2.7rem] sm:text-6xl" data-reveal>
+                    <h2 id={`${g.id}-title`} className="display mt-3 text-[2.1rem] sm:text-5xl" data-reveal>
                       {g.name[locale]}
                     </h2>
                     <p className="lead mt-4" data-reveal>
@@ -159,25 +160,10 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
                     )}
                   </>
                 )}
-                <ul className={`${photo ? "mt-7" : ""} divide-y divide-line border-y border-line`}>
+                <ul className={`${photo ? "mt-7" : ""} border-t border-line`}>
                   {g.items.map((tr) => (
-                    <li key={tr.id} className="group relative grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8" data-reveal>
-                      <div>
-                        <h3 className="font-serif text-[1.65rem] leading-tight text-ink">
-                          <Link href={itemHref(locale, tr)} className="underline-offset-4 hover:text-accent-deep hover:underline">
-                            {tr.name[locale]}
-                          </Link>
-                        </h3>
-                        <p className="mt-1.5 leading-relaxed text-ink-soft">{tr.description[locale]}</p>
-                      </div>
-                      <Link
-                        href={bookingHref(locale, tr.id)}
-                        className="inline-flex min-h-11 items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-accent-deep transition-colors hover:text-ink"
-                      >
-                        {dict.cta.request}
-                        <span className="sr-only">: {tr.name[locale]}</span>
-                        <Icon name="arrow" className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
-                      </Link>
+                    <li key={tr.id} data-reveal>
+                      <TreatmentRow locale={locale} id={tr.id} />
                     </li>
                   ))}
                 </ul>

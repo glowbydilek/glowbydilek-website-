@@ -108,10 +108,10 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
           );
         })}
         {loose.length > 0 && (
-          <ul className="mt-block grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-block grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {loose.map((i, n) => (
               <li key={i.id} data-reveal style={{ ["--reveal-delay" as string]: `${(n % 3) * 70}ms` }}>
-                <TreatmentCard locale={locale} id={i.id} withPhoto />
+                <TreatmentCard locale={locale} id={i.id} />
               </li>
             ))}
           </ul>
