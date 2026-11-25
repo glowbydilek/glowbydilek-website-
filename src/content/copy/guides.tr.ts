@@ -312,7 +312,7 @@ export const faqPageTr: FaqPageCopy = {
         },
         {
           q: "Dilek evime de gelebilir mi?",
-          a: "Evet, istek üzerine Dilek evine de gelir. Bunu talebinde ya da bir mesajda belirtmen yeterli; Dilek neyin mümkün olduğunu seninle kişisel olarak konuşur.",
+          a: "Evet, ağda randevuyla evinde de yapılabilir; Amsterdam ve çevresinde. Talebinde ‘Kendi adresimde’ seçeneğini işaretle; Dilek randevuyu seninle kişisel olarak ayarlar.",
         },
         {
           q: "Bir bakım ne kadar tutuyor?",

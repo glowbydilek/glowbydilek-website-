@@ -301,7 +301,7 @@ export const faqPageNl: FaqPageCopy = {
         },
         {
           q: "Kan Dilek ook bij mij langskomen?",
-          a: "Ja, op verzoek komt Dilek ook bij jou langs, op je eigen adres. Vermeld het gerust bij je aanvraag of in een bericht; Dilek bespreekt dan persoonlijk wat er mogelijk is.",
+          a: "Ja, waxen kan op afspraak ook op je eigen adres, in Amsterdam en omgeving. Kies bij je aanvraag ‘Op mijn eigen adres’; Dilek stemt de afspraak persoonlijk met je af.",
         },
         {
           q: "Wat kost een full Brazilian (Hollywood) wax?",

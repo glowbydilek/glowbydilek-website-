@@ -301,7 +301,7 @@ export const faqPageEn: FaqPageCopy = {
         },
         {
           q: "Can Dilek also come to me?",
-          a: "Yes, on request Dilek can also come to you, at your own address. Just mention it in your request or a message, and Dilek will discuss personally what is possible.",
+          a: "Yes, waxing can also be done at your own address by appointment, in Amsterdam and the surrounding area. Choose ‘At my own address’ in your request; Dilek arranges the appointment with you personally.",
         },
         {
           q: "How much does a full Brazilian (Hollywood) wax cost?",
