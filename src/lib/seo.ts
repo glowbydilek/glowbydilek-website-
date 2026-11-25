@@ -220,6 +220,8 @@ export function businessJsonLd(locale: Locale) {
       },
     }),
     knowsLanguage: ["nl", "en", "tr"],
+    ...(catalogPriceRange() && { priceRange: catalogPriceRange() }),
+    email: siteConfig.contact.email,
     ...(sameAs && { sameAs }),
   };
 }
@@ -270,8 +272,8 @@ export function breadcrumbJsonLd(crumbs: Crumb[]) {
   };
 }
 
-/** Service schema for one treatment or category page (no prices unless confirmed). */
-export function singleServiceJsonLd(locale: Locale, name: string, description: string, path: string) {
+/** Service schema for one treatment or category page (price only when confirmed in the catalogue). */
+export function singleServiceJsonLd(locale: Locale, name: string, description: string, path: string, offer?: { cents: number; from?: boolean; minutes?: number | null }) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -282,5 +284,24 @@ export function singleServiceJsonLd(locale: Locale, name: string, description: s
     provider: { "@id": `${siteConfig.url}/#business` },
     areaServed: AREA,
     inLanguage: localeLabels[locale].hrefLang,
+    ...(offer && {
+      offers: {
+        "@type": "Offer",
+        url: absoluteUrl(path),
+        priceCurrency: "EUR",
+        availability: "https://schema.org/InStock",
+        ...(offer.from
+          ? { priceSpecification: { "@type": "PriceSpecification", minPrice: (offer.cents / 100).toFixed(2), priceCurrency: "EUR" } }
+          : { price: (offer.cents / 100).toFixed(2) }),
+      },
+    }),
   };
+}
+
+/** "€10 – €75" from the published catalogue (fixed and from-prices), for the business schema. */
+export function catalogPriceRange(): string | undefined {
+  const cents = publicItems({}).flatMap((t) => (t.pricing.mode !== "on_request" && t.pricing.cents ? [t.pricing.cents] : []));
+  if (!cents.length) return undefined;
+  const eur = (c: number) => `€${Math.round(c / 100)}`;
+  return `${eur(Math.min(...cents))} – ${eur(Math.max(...cents))}`;
 }
