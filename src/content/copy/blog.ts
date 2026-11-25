@@ -227,7 +227,7 @@ const noord: Record<Locale, ArticleCopy> = {
 const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
   "intimate-waxing-guide": {
     nl: {
-      seoTitle: "Bikinilijn of full Brazilian (Hollywood): het verschil",
+      seoTitle: "Bikinilijn of Hollywood (full Brazilian)?",
       seoDescription:
         "Bikinilijn of full Brazilian (Hollywood) waxen? Lees het verschil, wat bij jou past en hoe je je voorbereidt. Uitleg van Glow by Dilek in Amsterdam-Noord.",
       hero: {
@@ -928,7 +928,7 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
 
   "leg-waxing": {
     nl: {
-      seoTitle: "Benen waxen: onderbenen, bovenbenen of hele benen?",
+      seoTitle: "Benen waxen: onderbenen of hele benen?",
       seoDescription: "Onderbenen, bovenbenen of hele benen waxen? Lees wat het verschil is, hoe je je voorbereidt en hoe je je huid daarna verzorgt. Alleen voor vrouwen, Amsterdam.",
       hero: {
         eyebrow: "Blog · Benen waxen",
@@ -1215,7 +1215,7 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
 
   "facial-and-head-massage": {
     nl: {
-      seoTitle: "Gezichtsmassage en hoofdmassage: wat kun je verwachten?",
+      seoTitle: "Gezichtsmassage en hoofdmassage: zo werkt het",
       seoDescription: "Wat is een gezichtsmassage of hoofdmassage en wat kun je verwachten? Lees hoe de afspraak verloopt en wat je vooraf bespreekt. Alleen voor vrouwen, Amsterdam-Noord.",
       hero: {
         eyebrow: "Blog · Massage",
@@ -1353,8 +1353,8 @@ const posts: Record<PostId, Record<Locale, ArticleCopy>> = {
 
   "deep-cleansing-facial-steps": {
     nl: {
-      seoTitle: "Dieptereinigende gezichtsbehandeling: de 10 stappen",
-      seoDescription: "Wat gebeurt er bij een dieptereinigende gezichtsbehandeling met stoom? Lees de tien stappen, de voordelen en hoe je je voorbereidt. Alleen voor vrouwen, Amsterdam-Noord.",
+      seoTitle: "Dieptereinigende gezichtsbehandeling: 10 stappen",
+      seoDescription: "Wat gebeurt er bij een dieptereinigende gezichtsbehandeling? De tien stappen, de voordelen en je voorbereiding. Alleen voor vrouwen, Amsterdam-Noord.",
       hero: {
         eyebrow: "Blog · Gezichtsbehandeling",
         title: "Dieptereinigende gezichtsbehandeling:",

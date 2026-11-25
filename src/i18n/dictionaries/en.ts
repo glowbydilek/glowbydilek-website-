@@ -26,15 +26,15 @@ export const en: Dictionary = {
       prices: {
         title: "Prices for waxing, massage and facials in Amsterdam",
         description:
-          "Prices for waxing, massage and facials in Amsterdam, women only: the price, duration or ‘upon request’ for every treatment at Glow by Dilek.",
+          "Prices for waxing, massage and facials in Amsterdam, women only: the price and duration of every treatment at Glow by Dilek, clearly listed.",
       },
       about: {
-        title: "About Dilek",
+        title: "About Dilek, women-only in Amsterdam-Noord",
         description:
           "The story and approach behind Glow by Dilek: personal beauty treatments and relaxation, built around calm, care and honest advice.",
       },
       contact: {
-        title: "Contact",
+        title: "Contact and questions, Amsterdam-Noord",
         description:
           "A question about a treatment or an appointment? Send a message through the form or email hello@glowbydilek.nl. Dilek replies personally.",
       },

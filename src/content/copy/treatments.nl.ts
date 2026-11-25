@@ -521,7 +521,7 @@ export const treatmentsNl: TreatmentCopySet = {
   hollywood: {
     seoTitle: "Hollywood wax (full Brazilian) in Amsterdam",
     seoDescription:
-      "Hollywood wax (full Brazilian) in Amsterdam, uitsluitend voor vrouwen: volledig glad in de intieme zone. Lees discreet wat het inhoudt en hoe je je huid erna verzorgt.",
+      "Hollywood wax (full Brazilian) in Amsterdam, alleen voor vrouwen: volledig glad in de intieme zone. Lees discreet wat het inhoudt en hoe je je huid verzorgt.",
     title: "Hollywood wax (full Brazilian) in Amsterdam",
     lead: "Volledig glad (ook wel full Brazilian genoemd), voor een frisse en verzorgde huid — met dezelfde discretie, uitleg en rust als bij elke intieme behandeling. Bij Glow by Dilek in Amsterdam, uitsluitend voor vrouwen.",
     teaser: "Volledig glad, discreet en zorgvuldig.",
