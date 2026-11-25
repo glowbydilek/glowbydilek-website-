@@ -65,8 +65,8 @@
   :root {
     --header-safe: calc(4rem + env(safe-area-inset-top, 0px));
     /* One spacing scale: phone ≈ 48/36/28 px, laptop ≈ 80/56/40 px. */
-    --space-section: clamp(3rem, 1.75rem + 4vw, 6rem);
-    --space-section-tight: clamp(2.25rem, 1.25rem + 3vw, 4rem);
+    --space-section: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+    --space-section-tight: clamp(2rem, 1.125rem + 2.25vw, 3.25rem);
     --space-block: clamp(1.75rem, 1.25rem + 1.5vw, 2.75rem);
     --heading-weight: 500;
   }
