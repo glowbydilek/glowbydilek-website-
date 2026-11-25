@@ -14,7 +14,7 @@ import { FormError, FormSuccess } from "./FormStatus";
 import { Turnstile, useTurnstileToken } from "./Turnstile";
 import { useFormSubmit } from "./useFormSubmit";
 
-type Group = { id: string; name: string | null; treatments: { id: string; name: string }[] };
+type Group = { id: string; name: string | null; treatments: { id: string; name: string; price?: string | null }[] };
 /** One website category (same order and names as the menu) with its sub-groups. */
 export type FormSection = { id: string; name: string; groups: Group[] };
 
@@ -213,6 +213,7 @@ export function AppointmentForm({
                         />
                         {on && <Icon name="check" className="h-3.5 w-3.5" />}
                         {tr.name}
+                        {tr.price && <span className={`text-xs tabular-nums ${on ? "text-paper/70" : "text-muted"}`}>· {tr.price}</span>}
                       </label>
                     );
                   })}
