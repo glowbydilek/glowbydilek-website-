@@ -27,7 +27,7 @@ export const tr: Dictionary = {
       prices: {
         title: "Fiyatlar",
         description:
-          "Glow by Dilek'in tüm bakımları tek listede; fiyat, süre ya da 'talep üzerine'. Fiyatla ilgili bir sorun mu var? hello@glowbydilek.nl adresine yaz.",
+          "Glow by Dilek'in tüm bakımları tek listede, fiyat ve süreyle. Fiyatla ilgili bir sorun mu var? hello@glowbydilek.nl adresine yaz.",
       },
       about: {
         title: "Dilek hakkında",
@@ -102,7 +102,7 @@ export const tr: Dictionary = {
   common: {
     byAppointment: "Yalnızca randevuyla",
     location: "Glow by Dilek Amsterdam-Noord'dadır ve yalnızca randevuyla çalışır. Tam adresi Dilek onaydan sonra kişisel olarak paylaşır.",
-    homeVisit: "İstek üzerine Dilek evine de gelir; talebinde belirtmen yeterli.",
+    homeVisit: "Ağda randevuyla evinde de yapılabilir; Amsterdam ve çevresinde. Talebinde ‘Kendi adresimde’ seçeneğini işaretle.",
     onRequest: "Talep üzerine",
     goodToKnow: "Bilmekte fayda var",
     moodImage: "Atmosfer görseli",
