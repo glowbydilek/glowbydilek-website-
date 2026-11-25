@@ -31,17 +31,23 @@ function localiseHref(path: string, locale: Locale): string {
   return alt !== routes.home[locale] || path === "/" ? alt : path;
 }
 
-const defaultFeatured = ["massage-relaxation", "eyebrows", "underarms", "full-legs"];
+// Waxing first: the core of the salon. One massage keeps the mix.
+const defaultFeatured = ["eyebrows", "full-legs", "hollywood", "massage-relaxation"];
 
 /**
  * Service discovery rows: the published sections once there are several
  * (waxing, facial, body, massage, packages); with waxing alone, its zones.
  */
 function discovery(locale: Locale) {
-  const sections = publicSections(locale);
+  // Waxing is the core of the salon, so it leads; then massage, face and body.
+  const order = ["waxing", "massage", "facial", "bodycare"];
+  const rank = (id: string) => (order.indexOf(id) === -1 ? order.length : order.indexOf(id));
+  const sections = [...publicSections(locale)].sort((a, b) => rank(a.id) - rank(b.id));
   if (sections.length > 1) {
     return sections.map((sec) => {
       const items = publicItems({ sectionId: sec.id, locale });
+      const priced = items.map((i) => i.pricing.cents).filter((c): c is number => c != null && c > 0);
+      const min = priced.length ? Math.min(...priced) : null;
       const c = sec.id === "waxing" ? null : sectionCopy(locale, sec.id, sec.name[locale]);
       return {
         id: sec.id,
@@ -50,6 +56,7 @@ function discovery(locale: Locale) {
         intro: c ? c.hero.subtitle : getDictionary(locale).nav.waxingTeaser,
         href: sec.id === "waxing" ? href(locale, "treatments") : sectionHref(locale, sec),
         names: items.map((i) => i.name[locale]),
+        fromCents: min,
       };
     });
   }
@@ -64,6 +71,7 @@ function discovery(locale: Locale) {
         intro: b?.intro[locale] ?? c.teaser,
         href: groupHref(locale, g),
         names: publicItems({ sectionId: sec.id, groupId: g.id, locale }).map((i) => i.name[locale]),
+        fromCents: null as number | null,
       };
     }),
   );
@@ -120,7 +128,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             <div className="rise [--rise-delay:120ms]">
               <div className={`relative mx-auto lg:ml-auto lg:mr-0 ${hasPhoto("hero") ? "hero-photo-w [--hero-max:30rem]" : "w-full max-w-[28rem]"}`}>
                 <div className="hero-media">
-                  <HeroVisual photo="hero" locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
+                  <HeroVisual photo="treatments-hero" locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
                 </div>
                 <div className="seal absolute -bottom-6 -left-4 hidden sm:-left-8 md:grid" aria-hidden="true">
                   <span>
@@ -216,22 +224,30 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </ButtonLink>
               </div>
             </div>
-            <ul className={`mt-block grid gap-5 ${rows.length === 2 ? "md:grid-cols-2" : rows.length >= 3 ? "sm:grid-cols-2 lg:grid-cols-3" : ""}`}>
+            <ul className={`mt-block grid gap-5 ${rows.length === 2 || rows.length === 4 ? "md:grid-cols-2" : rows.length >= 3 ? "sm:grid-cols-2 lg:grid-cols-3" : ""}`}>
               {rows.map((g, i) => (
                 <li key={g.id} data-reveal style={{ ["--reveal-delay" as string]: `${i * 90}ms` }}>
                   <Link href={g.href} className="discover-card sheen group">
                     {hasPhoto(g.photo) ? (
                       <div className="zoom-frame">
-                        <Photo id={g.photo} locale={locale} ratio={rows.length <= 2 ? 5 / 4 : 4 / 5} sizes={rows.length <= 2 ? "(min-width: 768px) 46vw, 92vw" : "(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"} />
+                        <Photo id={g.photo} locale={locale} ratio={rows.length <= 2 || rows.length === 4 ? 5 / 4 : 4 / 5} sizes={rows.length <= 2 || rows.length === 4 ? "(min-width: 768px) 46vw, 92vw" : "(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"} />
                       </div>
                     ) : (
                       <div className="aspect-[5/4] bg-accent-deep" />
                     )}
                     <div className="discover-copy">
-                      <p className="text-xs uppercase tracking-[0.2em] text-paper/80">
-                        {g.names.length} {g.names.length === 1 ? t.treatments.countOne : t.treatments.count}
+                      <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-[0.2em] text-paper/80">
+                        <span>
+                          {g.names.length} {g.names.length === 1 ? t.treatments.countOne : t.treatments.count}
+                        </span>
+                        {g.fromCents != null && (
+                          <span className="rounded-full bg-paper/90 px-2.5 py-1 normal-case tracking-normal text-ink">
+                            {dict.prices.from}{" "}
+                            {new Intl.NumberFormat(intlTag(locale), { style: "currency", currency: "EUR", minimumFractionDigits: g.fromCents % 100 ? 2 : 0 }).format(g.fromCents / 100)}
+                          </span>
+                        )}
                       </p>
-                      <h3 className="mt-2 font-serif text-[1.5rem] leading-none text-paper min-[360px]:text-[1.75rem] min-[400px]:text-[2.1rem] sm:text-[2.6rem]">{g.label}</h3>
+                      <h3 className="mt-2 font-serif text-[1.6rem] leading-[1.05] text-paper [overflow-wrap:normal] min-[400px]:text-[1.9rem] sm:text-[2.3rem]">{g.label}</h3>
                       <p className="mt-3 max-w-md leading-relaxed text-paper/85">{g.intro}</p>
                       <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-paper">
                         <span className="sr-only">{t.treatments.more}: </span>

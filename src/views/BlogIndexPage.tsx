@@ -27,7 +27,7 @@ export function BlogIndexPage({ locale }: { locale: Locale }) {
         titleEm={dict.blog.titleEm}
         subtitle={dict.blog.intro}
       />
-      <section className="section-tight border-t border-line/70">
+      <section className="section-tight border-t border-line">
         <Container>
           <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((id) => {

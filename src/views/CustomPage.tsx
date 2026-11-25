@@ -51,7 +51,7 @@ export async function CustomPageView({ locale, slug }: { locale: Locale; slug: s
   const dict = getDictionary(locale);
   return (
     <>
-      <section className="pt-header border-b border-line/70 bg-paper pb-[var(--space-section-tight)]">
+      <section className="pt-header border-b border-line bg-paper pb-[var(--space-section-tight)]">
         <Container>
           <div className="max-w-3xl">
             <div className="mb-6"><Breadcrumbs label={dict.nav.breadcrumb} items={[{ name: dict.nav.home, href: pick(locale, { nl: "/", en: "/en", tr: "/tr" }) }, { name: r.c.title }]} /></div>

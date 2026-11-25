@@ -55,13 +55,13 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
         </ButtonLink>
       </PageHero>
 
-      <section className="section-tight border-t border-line/70">
+      <section className="section-tight border-t border-line">
         <Container className="grid gap-10 lg:grid-cols-[16rem_1fr] lg:gap-16">
           <nav aria-label={g.hero.eyebrow} className="hidden lg:block">
             <ol className="sticky top-[calc(var(--header-safe)+2rem)] space-y-1 border-l border-line">
               {g.sections.map((sec) => (
                 <li key={sec.title}>
-                  <a href={`#${slug(sec.title)}`} className="-ml-px block border-l border-transparent py-1.5 pl-4 text-sm text-muted transition-colors hover:border-accent-deep hover:text-ink">
+                  <a href={`#${slug(sec.title)}`} className="-ml-px block border-l border-transparent py-1.5 pl-4 text-sm text-ink-soft transition-colors hover:border-accent-deep hover:text-ink">
                     {sec.title}
                   </a>
                 </li>
@@ -74,7 +74,7 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
                 key={sec.title}
                 id={slug(sec.title)}
                 aria-labelledby={`${slug(sec.title)}-h`}
-                className={`scroll-mt-[calc(var(--header-safe)+1.5rem)] ${i > 0 ? "mt-10 border-t border-line pt-10" : ""}`}
+                className={`scroll-mt-[calc(var(--header-safe)+1.5rem)] ${i > 0 ? "mt-12 border-t-2 border-line pt-12" : ""}`}
               >
                 <h2 id={`${slug(sec.title)}-h`} className="display text-[1.9rem] sm:text-[2.4rem]">
                   {sec.title}

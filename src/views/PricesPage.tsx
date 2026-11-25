@@ -65,7 +65,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                       const d = itemDuration(tr);
                       const p = price(tr);
                       return (
-                        <tr key={tr.id} className="border-b border-ink/10">
+                        <tr key={tr.id} className="price-row border-b border-line">
                           <th scope="row" className="py-5 pr-4 align-top font-normal [overflow-wrap:anywhere]">
                             <Link href={itemHref(locale, tr)} lang={locale} className="block font-serif text-[1.3rem] text-ink underline-offset-4 [hyphens:auto] hover:text-accent-deep hover:underline min-[400px]:text-2xl">
                               {tr.name[locale]}
@@ -81,7 +81,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
                           <td className="hidden whitespace-nowrap py-5 pr-4 text-right align-top text-sm text-muted sm:table-cell">{d ? `${d} ${t.minutes}` : ""}</td>
                           <td className="whitespace-nowrap py-5 text-right align-top">
                             {p ? (
-                              <span className="font-serif text-2xl text-ink">{p}</span>
+                              <span className="price-amount font-serif text-2xl text-ink">{p}</span>
                             ) : (
                               <span className="inline-block rounded-full bg-glow-soft px-3 py-1 text-xs uppercase tracking-[0.14em] text-ink-soft">{dict.service.priceOnRequest}</span>
                             )}

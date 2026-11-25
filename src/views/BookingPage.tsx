@@ -39,17 +39,17 @@ export async function BookingPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} tone="rose" photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
+      <PageHero locale={locale} tone="rose" mark={dict.nav.booking} compact photo="experience" {...t.hero}>
         <PreselectedNotice
           names={Object.fromEntries(publicItems({ locale }).map((x) => [x.id, x.name[locale]]))}
           label={t.preselected}
           cta={t.toForm}
           anchor={bookingAnchor}
         />
-        <ol className="grid gap-4 sm:grid-cols-3">
+        <ol className="grid gap-3 sm:grid-cols-3">
           {t.steps.map((s, i) => (
-            <li key={s.title} className="border-t border-ink/15 pt-3">
-              <span className="shrink-0 whitespace-nowrap font-serif text-xl italic tabular-nums text-accent-deep">{String(i + 1).padStart(2, "0")}</span>
+            <li key={s.title} className="lift rounded-[var(--radius-card)] border border-line bg-paper/80 p-4">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink font-serif text-sm tabular-nums text-paper">{i + 1}</span>
               <p className="mt-1 text-sm font-medium text-ink">{s.title}</p>
               <p className="mt-1 text-sm leading-snug text-muted">{s.body}</p>
             </li>

@@ -54,7 +54,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
       </PageHero>
 
       {/* Choose an area */}
-      <section aria-labelledby="zones-title" className="section-tight border-t border-line/70 bg-surface">
+      <section aria-labelledby="zones-title" className="section-tight border-t border-line bg-surface">
         <Container>
           <h2 id="zones-title" className="eyebrow">
             {dict.hub.title}

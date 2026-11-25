@@ -52,7 +52,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
 
   if (c.intro.title || c.intro.paragraphs.length) {
     blocks.push(
-      <section key="intro" className="section-tight border-t border-line/70">
+      <section key="intro" className="section-tight border-t border-line">
         <Container className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           {c.intro.title && (
             <h2 className="display text-[1.7rem] min-[400px]:text-[2.1rem] sm:text-[2.8rem]" data-reveal>
