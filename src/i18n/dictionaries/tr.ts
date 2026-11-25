@@ -139,11 +139,11 @@ export const tr: Dictionary = {
   ],
   home: {
     hero: {
-      eyebrow: "Glow by Dilek · Güzellik ve rahatlama",
-      title: "Güzellik, özen ve",
-      titleEm: "yalnızca sana ait bir an.",
+      eyebrow: "Glow by Dilek · Ağda, masaj ve yüz bakımı",
+      title: "Nazik ve özenli ağda,",
+      titleEm: "tamamen senin temponda.",
       subtitle:
-        "Kadınlara özel kişisel yüz bakımları, rahatlatıcı masajlar ve özenli ağda; senin isteklerine önem verilen sakin bir ortamda, randevuyla.",
+        "Kaştan bacağa ve Hollywood'a: sakin ve hijyenik ağda; yanında rahatlatıcı masajlar ve yüz bakımı. Yalnızca kadınlara, randevuyla.",
       facts: ["Yalnızca kadınlara", "Yalnızca randevuyla", "Diplomalı güzellik uzmanı"],
     },
     statement: {
@@ -155,7 +155,7 @@ export const tr: Dictionary = {
     treatments: {
       eyebrow: "Bakımlar",
       title: "Sana uygun bakımı keşfet",
-      intro: "Rahatlatıcı masajlardan buhar destekli yüz bakımına ve özenli ağdaya. Sana uygun olanı seç; her sayfa neler bekleyeceğini dürüstçe anlatır.",
+      intro: "Ağda, masaj, yüz ve vücut bakımı: bir kategori seç, fiyatları hemen gör. Her bakımın, neler bekleyeceğini dürüstçe anlatan kendi sayfası var.",
       count: "bakım",
       countOne: "bakım",
       more: "İncele",
@@ -411,9 +411,9 @@ export const tr: Dictionary = {
   },
   booking: {
     hero: {
-      eyebrow: "Randevu talep et",
-      title: "Senin anın,",
-      titleEm: "kişisel olarak planlanır.",
+      eyebrow: "Randevu al",
+      title: "Randevunu planla,",
+      titleEm: "üç adımda.",
       subtitle:
         "Bakımını ve sana uygun bir zamanı seç. Dilek talebini inceler ve randevuyu onaylamak için seninle kişisel olarak iletişime geçer.",
     },

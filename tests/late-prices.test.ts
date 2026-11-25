@@ -16,6 +16,13 @@ test("owner price list (24 Nov 2026) refers to existing treatments with sane val
   assert.equal(LATE_PRICES.find((p) => p.id === "eyebrows")?.cents, 1750);
 });
 
+test("every published massage has a price, so none shows 'on request'", () => {
+  for (const id of ["massage-relaxation", "massage-face", "massage-head", "massage-hand", "massage-foot"]) {
+    const p = LATE_PRICES.find((x) => x.id === id);
+    assert.ok(p && p.cents >= 2500 && p.minutes >= 20, `${id} priced`);
+  }
+});
+
 test("new waxing zones from the price list are published with price, duration and copy in three languages", async () => {
   const { itemCopy } = await import("@/content/copy");
   for (const id of ["cheeks-jaw", "neck", "upper-arms", "upper-legs", "belly", "chest", "decollete", "buttocks"]) {

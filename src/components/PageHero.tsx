@@ -44,6 +44,7 @@ export function PageHero({
   crumbs,
   tone = "pearl",
   mark,
+  compact = false,
 }: {
   locale: Locale;
   eyebrow: string;
@@ -62,8 +63,10 @@ export function PageHero({
   tone?: HeroTone;
   /** Large decorative watermark word (aria-hidden). */
   mark?: string;
+  /** Text-only hero (no photo), so the page's main task starts right below. */
+  compact?: boolean;
 }) {
-  const withPhoto = hasPhoto(photo);
+  const withPhoto = !compact && hasPhoto(photo);
   const dict = getDictionary(locale);
   const text = (
     <div>
@@ -95,7 +98,7 @@ export function PageHero({
 
   if (!withPhoto) {
     return (
-      <section data-tone={tone} className="hero-tone pt-header relative overflow-hidden border-b border-line/70 bg-paper pb-[var(--space-section-tight)]">
+      <section data-tone={tone} className="hero-tone pt-header relative overflow-hidden border-b border-line bg-paper pb-[var(--space-section-tight)]">
         {watermark}
         <Container className="relative">
           <div className="max-w-3xl">{text}</div>

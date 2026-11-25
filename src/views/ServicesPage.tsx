@@ -44,7 +44,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
         </ButtonLink>
       </PageHero>
 
-      <nav aria-label={dict.nav.categories} className="sticky top-16 lg:top-[4.75rem] z-20 border-y border-line/70 bg-paper/90 backdrop-blur">
+      <nav aria-label={dict.nav.categories} className="sticky top-16 lg:top-[4.75rem] z-20 border-y border-line bg-paper/90 backdrop-blur">
         <Container>
           <ul className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
             {sections.map(({ s, anchor, count }) => (

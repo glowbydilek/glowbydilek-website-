@@ -33,7 +33,7 @@ export const APPROVED_THEME: Theme = {
     paper: "#fffcfb",
     surface: "#fcf7f6",
     sand: "#f5e6e7",
-    line: "#e6d0d6",
+    line: "#d4b3be",
     ink: "#2b202b",
     inkSoft: "#4a3a48",
     muted: "#6b5867",
@@ -140,6 +140,8 @@ const VAR: Record<keyof Theme["colors"], string> = {
 export function themeCss(theme: Theme): string {
   const vars: string[] = [];
   for (const k of Object.keys(VAR) as (keyof Theme["colors"])[]) {
+    // The old, too-faint default line colour (before 25 Nov 2026) follows the new default.
+    if (k === "line" && theme.colors[k].toLowerCase() === "#e6d0d6") continue;
     if (HEX.test(theme.colors[k]) && theme.colors[k] !== APPROVED_THEME.colors[k]) vars.push(`${VAR[k]}:${theme.colors[k]}`);
   }
   const radius = { editorial: null, soft: ["1.25rem", "1.25rem"], none: ["0", "0"] }[theme.radius];

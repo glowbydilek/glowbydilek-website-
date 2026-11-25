@@ -140,11 +140,11 @@ export const nl = {
   ],
   home: {
     hero: {
-      eyebrow: "Glow by Dilek · Beauty & relaxation",
-      title: "Schoonheid, aandacht",
-      titleEm: "en een moment helemaal voor jou.",
+      eyebrow: "Glow by Dilek · Waxen, massage & gezicht",
+      title: "Zacht en zorgvuldig waxen,",
+      titleEm: "helemaal in jouw tempo.",
       subtitle:
-        "Persoonlijke gezichtsverzorging, ontspannende massages en zorgvuldige ontharing, in een rustige setting waar jouw wensen centraal staan. Uitsluitend voor vrouwen, op afspraak.",
+        "Van wenkbrauwen tot benen en Hollywood: rustig en hygiënisch waxen, met daarnaast ontspannende massages en gezichtsverzorging. Uitsluitend voor vrouwen, op afspraak.",
       facts: ["Uitsluitend voor vrouwen", "Uitsluitend op afspraak", "Gediplomeerd schoonheidsspecialiste"],
     },
     statement: {
@@ -156,7 +156,7 @@ export const nl = {
     treatments: {
       eyebrow: "Behandelingen",
       title: "Ontdek jouw behandeling",
-      intro: "Van ontspannende massages en een gezichtsbehandeling met stoom tot zorgvuldig waxen. Kies wat bij jou past; elke pagina vertelt eerlijk wat je kunt verwachten.",
+      intro: "Waxen, massage, gezicht en lichaam: kies een categorie en zie meteen de prijzen. Elke behandeling heeft een eigen pagina die eerlijk vertelt wat je kunt verwachten.",
       count: "behandelingen",
       countOne: "behandeling",
       more: "Bekijk",
@@ -417,9 +417,9 @@ export const nl = {
   },
   booking: {
     hero: {
-      eyebrow: "Afspraak aanvragen",
-      title: "Jouw moment,",
-      titleEm: "persoonlijk ingepland.",
+      eyebrow: "Afspraak maken",
+      title: "Plan je afspraak",
+      titleEm: "in drie stappen.",
       subtitle:
         "Kies je behandeling en een moment dat jou uitkomt. Dilek bekijkt je aanvraag en neemt persoonlijk contact op om de afspraak te bevestigen.",
     },

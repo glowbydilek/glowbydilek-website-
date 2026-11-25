@@ -50,7 +50,7 @@ export function ArticlePage({
         </ButtonLink>
       </PageHero>
 
-      <section className="section-tight border-t border-line/70">
+      <section className="section-tight border-t border-line">
         <Container>
           <article className="mx-auto max-w-3xl">
             {date && published && (

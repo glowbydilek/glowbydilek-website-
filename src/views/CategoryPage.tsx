@@ -56,7 +56,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
     intro: !c.intro.title && !c.involves.title ? null : (
       <>
         {/* Intro + what it involves */}
-        <section className="section-tight border-t border-line/70">
+        <section className="section-tight border-t border-line">
           <Container className="grid gap-10 md:grid-cols-2 lg:gap-16">
             <div data-reveal>
               <h2 className="display text-[1.7rem] min-[400px]:text-[2.1rem] sm:text-[2.8rem]">{c.intro.title}</h2>

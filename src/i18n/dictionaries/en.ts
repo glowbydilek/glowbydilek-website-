@@ -138,11 +138,11 @@ export const en: Dictionary = {
   ],
   home: {
     hero: {
-      eyebrow: "Glow by Dilek · Beauty & relaxation",
-      title: "Beauty, personal care",
-      titleEm: "and time just for you.",
+      eyebrow: "Glow by Dilek · Waxing, massage & facial",
+      title: "Gentle, careful waxing,",
+      titleEm: "entirely at your pace.",
       subtitle:
-        "Personal facial care, relaxing massages and considered hair removal, in a calm setting shaped around your preferences. For women only, by appointment.",
+        "From brows to legs and Hollywood: calm, hygienic waxing, alongside relaxing massages and facial care. For women only, by appointment.",
       facts: ["For women only", "By appointment only", "Qualified beauty therapist"],
     },
     statement: {
@@ -154,7 +154,7 @@ export const en: Dictionary = {
     treatments: {
       eyebrow: "Treatments",
       title: "Discover your treatment",
-      intro: "From relaxing massages and facial care with steam to careful waxing. Choose what suits you; every page tells you honestly what to expect.",
+      intro: "Waxing, massage, facial and body care: choose a category and see the prices straight away. Every treatment has its own page that tells you honestly what to expect.",
       count: "treatments",
       countOne: "treatment",
       more: "View",
@@ -414,9 +414,9 @@ export const en: Dictionary = {
   },
   booking: {
     hero: {
-      eyebrow: "Request appointment",
-      title: "Your moment,",
-      titleEm: "personally arranged.",
+      eyebrow: "Book an appointment",
+      title: "Plan your visit",
+      titleEm: "in three steps.",
       subtitle:
         "Choose your treatment and a time that suits you. Dilek reviews your request and contacts you personally to confirm the appointment.",
     },

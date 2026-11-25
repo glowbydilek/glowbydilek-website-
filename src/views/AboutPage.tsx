@@ -27,7 +27,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
   const sections: Record<string, ReactNode> = {
     education:
       profile && (showDiploma || profile.certificates.length || background) ? (
-        <section className="section-tight border-t border-line/70 bg-surface">
+        <section className="section-tight border-t border-line bg-surface">
           <Container className="grid items-start gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <div data-reveal>
               <p className="eyebrow">{t.education.eyebrow}</p>

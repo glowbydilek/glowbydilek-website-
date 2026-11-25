@@ -288,7 +288,7 @@ const massageSpec: (Pick<Item, "id" | "slug" | "name" | "description" | "photo">
 
 const massage: Item[] = massageSpec.map((m, i) => ({
   ...draft({ ...m, sectionId: "massage", sort: i }),
-  // Owner confirmed all five (November 2026); price and duration not yet: on request.
+  // Owner confirmed all five (November 2026); prices and durations come from LATE_PRICES.
   status: "published" as const,
 }));
 
@@ -450,4 +450,12 @@ export const LATE_PRICES: { id: string; cents: number; from?: boolean; minutes: 
   { id: "body-wrap", cents: 5000, minutes: 60 },
   // 30 minutes €37,50 or 60 minutes €75: shown as "from €37,50".
   { id: "massage-relaxation", cents: 3750, from: true, minutes: 30 },
+  // Owner (25 Nov 2026): price the remaining massages at the Amsterdam market
+  // level (Treatwell, Nov 2026), never below the cheapest salon there and just
+  // under the higher prices. Face €40–55, head €35–55, foot €35–55 per 30 min;
+  // hand massage only exists as a 10–15 min add-on (€19–20) elsewhere.
+  { id: "massage-face", cents: 4250, minutes: 30 },
+  { id: "massage-head", cents: 4000, minutes: 30 },
+  { id: "massage-foot", cents: 4000, minutes: 30 },
+  { id: "massage-hand", cents: 2750, minutes: 20 },
 ];

@@ -148,7 +148,7 @@ export function TreatmentDetailPage({
     details: (
       <>
         {/* Area + how the appointment goes */}
-        <section className="section-tight border-t border-line/70">
+        <section className="section-tight border-t border-line">
           <Container className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <div data-reveal>
               <h2 className="display text-[2rem] sm:text-[2.6rem]">
