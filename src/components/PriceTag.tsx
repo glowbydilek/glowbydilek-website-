@@ -20,7 +20,7 @@ export function PriceTag({ locale, item, size = "md", align = "left" }: { locale
       {onRequest ? (
         <span className="text-sm font-medium text-ink-soft">{label}</span>
       ) : (
-        <span className={`font-serif tabular-nums leading-none text-ink ${amountClass}`}>{label}</span>
+        <span className={`price-amount font-serif tabular-nums leading-none text-ink ${amountClass}`}>{label}</span>
       )}
       {minutes ? (
         <span className="whitespace-nowrap text-xs text-muted">

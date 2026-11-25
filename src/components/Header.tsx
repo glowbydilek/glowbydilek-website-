@@ -104,7 +104,7 @@ export function Header({
       ? catalogueRoots.some((r) => pathname === r || pathname.startsWith(`${r}/`))
       : pathname === target;
   const navLinkCls = (active: boolean) =>
-    `star-glint star-glint-text relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-2.5 text-[0.875rem] xl:px-3 xl:text-[0.95rem] transition-colors duration-300 ${
+    `nav-link star-glint star-glint-text relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-2.5 text-[0.875rem] xl:px-3 xl:text-[0.95rem] transition-colors duration-300 ${
       active ? "text-ink" : "text-ink-soft hover:text-ink"
     }`;
   const activeMark = (active: boolean) =>
@@ -113,7 +113,7 @@ export function Header({
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-50 border-b border-line/80 pt-[env(safe-area-inset-top)]"
+      className="sticky top-0 z-50 border-b border-line pt-[env(safe-area-inset-top)]"
     >
       {/* Frosted background on its own layer: a backdrop-filter on the header
           itself would trap the fixed mobile menu inside the header box. */}
@@ -296,7 +296,7 @@ export function Header({
         >
           <nav
             aria-label={dict.nav.main}
-            className="mx-auto flex min-h-full max-w-xl flex-col px-5 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4 sm:px-8"
+            className="mobile-nav mx-auto flex min-h-full max-w-xl flex-col px-5 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4 sm:px-8"
           >
             <ul>
               <li className="border-b border-line">
