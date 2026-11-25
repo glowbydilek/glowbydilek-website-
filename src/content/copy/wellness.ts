@@ -40,9 +40,9 @@ const takeItEasy: Record<Locale, string> = {
   tr: "Sonrasında gününe devam etmeden önce biraz zaman tanı ve bir miktar su iç.",
 };
 const priceQ: Record<Locale, { q: string; a: string }> = {
-  nl: { q: "Wat kost het en hoe lang duurt het?", a: "Het tarief en de duur staan op de pagina Tarieven. Staat er ‘op aanvraag’, dan hoor je ze persoonlijk bij je aanvraag." },
-  en: { q: "What does it cost and how long does it take?", a: "The price and duration are on the Prices page. Where it says ‘on request’, you hear them personally with your request." },
-  tr: { q: "Fiyatı nedir, ne kadar sürer?", a: "Fiyat ve süre Fiyatlar sayfasında yer alır. ‘Talep üzerine’ yazıyorsa, talebinle birlikte kişisel olarak öğrenirsin." },
+  nl: { q: "Wat kost het en hoe lang duurt het?", a: "Het tarief en de duur staan bovenaan deze pagina en op de pagina Tarieven, zodat je vooraf precies weet waar je aan toe bent." },
+  en: { q: "What does it cost and how long does it take?", a: "The price and duration are shown at the top of this page and on the Prices page, so you know exactly what to expect." },
+  tr: { q: "Fiyatı nedir, ne kadar sürer?", a: "Fiyat ve süre bu sayfanın üstünde ve Fiyatlar sayfasında yazar; böylece önceden tam olarak ne bekleyeceğini bilirsin." },
 };
 const skinNote: Record<Locale, string> = {
   nl: "Heb je een huidaandoening, gebruik je medicatie of twijfel je of een behandeling geschikt is? Overleg dan eerst met je huisarts of dermatoloog. Een schoonheidsbehandeling is geen medische behandeling.",
@@ -738,7 +738,12 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Kies je massage",
       listIntro: "Elke massage heeft een eigen pagina met uitleg, tarief en duur.",
       teaser: "Hele lichaam, gezicht, hoofd, handen of voeten.",
-      faqs: [{ q: "Welke massage past bij mij?", a: "Dat hangt af van waar je behoefte aan hebt. Twijfel je? Vermeld het in je aanvraag; Dilek denkt graag met je mee." }],
+      faqs: [
+        { q: "Welke massage past bij mij?", a: "Dat hangt af van waar je behoefte aan hebt. Twijfel je? Vermeld het in je aanvraag; Dilek denkt graag met je mee." },
+        { q: "Hoe bereid ik me voor op een massage?", a: "Kom bij voorkeur ontspannen en niet met een volle maag. Vertel vooraf of je ergens gevoelig bent, zwanger bent of medicatie gebruikt, zodat de massage daarop wordt afgestemd." },
+        { q: "Kan ik een massage combineren met waxen of een gezichtsbehandeling?", a: "Ja. Vermeld in je aanvraag welke behandelingen je wilt combineren; de afspraak wordt daarop afgestemd." },
+        { q: "Is de massage alleen voor vrouwen?", a: "Ja. Glow by Dilek werkt uitsluitend voor vrouwen, rustig en discreet, in Amsterdam-Noord." },
+      ],
     },
     en: {
       seoTitle: "Massage for women in Amsterdam",
@@ -748,7 +753,12 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Choose your massage",
       listIntro: "Each massage has its own page with details, price and duration.",
       teaser: "Full body, face, head, hands or feet.",
-      faqs: [{ q: "Which massage suits me?", a: "That depends on what you need. Unsure? Mention it in your request; Dilek is happy to help you choose." }],
+      faqs: [
+        { q: "Which massage suits me?", a: "That depends on what you need. Unsure? Mention it in your request; Dilek is happy to help you choose." },
+        { q: "How do I prepare for a massage?", a: "Preferably come relaxed and not on a full stomach. Mention beforehand if you are sensitive anywhere, pregnant or taking medication, so the massage is adjusted to that." },
+        { q: "Can I combine a massage with waxing or a facial?", a: "Yes. Mention in your request which treatments you would like to combine; the appointment is planned around that." },
+        { q: "Is the massage for women only?", a: "Yes. Glow by Dilek works for women only, calmly and discreetly, in Amsterdam-Noord." },
+      ],
     },
     tr: {
       seoTitle: "Kadınlara özel masajlar — tüm vücut, yüz, baş, el ve ayak",
@@ -758,7 +768,11 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Masajını seç",
       listIntro: "Her masajın açıklama, fiyat ve süreyle kendi sayfası var.",
       teaser: "Tüm vücut, yüz, baş, eller veya ayaklar.",
-      faqs: [{ q: "Hangi masaj bana uygun?", a: "Neye ihtiyaç duyduğuna bağlı. Kararsız mısın? Talebinde belirt; Dilek seçmene seve seve yardımcı olur." }],
+      faqs: [
+        { q: "Hangi masaj bana uygun?", a: "Neye ihtiyaç duyduğuna bağlı. Kararsız mısın? Talebinde belirt; Dilek seçmene seve seve yardımcı olur." },
+        { q: "Masaja nasıl hazırlanırım?", a: "Tercihen rahat ve tok olmadan gel. Hassas olduğun bir yer varsa, hamileysen veya ilaç kullanıyorsan önceden söyle; masaj buna göre ayarlanır." },
+        { q: "Masajı ağda veya yüz bakımıyla birleştirebilir miyim?", a: "Evet. Hangi bakımları birleştirmek istediğini talebinde belirt; randevu buna göre planlanır." },
+      ],
     },
   },
   facial: {
@@ -770,7 +784,12 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Gezichtsbehandelingen",
       listIntro: "Kies een behandeling voor alle details, of vraag direct een afspraak aan.",
       teaser: "Dieptereiniging met stoom, en wenkbrauwen & wimpers verven.",
-      faqs: [{ q: "Welke behandeling past bij mijn huid?", a: "Dat bespreek je vooraf. Twijfel je, vraag dan in je aanvraag om advies." }],
+      faqs: [
+        { q: "Welke behandeling past bij mijn huid?", a: "Dat bespreek je vooraf. Twijfel je, vraag dan in je aanvraag om advies." },
+        { q: "Mag ik make-up dragen naar de afspraak?", a: "Dat mag: aan het begin wordt je huid gereinigd. Kom je liever zonder make-up, dan is dat ook prima." },
+        { q: "Hoe vaak is een gezichtsbehandeling zinvol?", a: "Dat verschilt per huid. Dilek bespreekt met je welk ritme bij jouw huid en wensen past." },
+        { q: "Kan ik een gezichtsbehandeling combineren met wenkbrauwen waxen of verven?", a: "Ja. Vermeld het in je aanvraag; de afspraak wordt daarop afgestemd." },
+      ],
       note: "Er worden geen diagnoses gesteld en geen medische resultaten beloofd.",
     },
     en: {
@@ -781,7 +800,12 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Facial treatments",
       listIntro: "Choose a treatment for all the details, or request an appointment straight away.",
       teaser: "Deep cleansing with steam, and brow & lash tinting.",
-      faqs: [{ q: "Which treatment suits my skin?", a: "That is discussed beforehand. If in doubt, ask for advice in your request." }],
+      faqs: [
+        { q: "Which treatment suits my skin?", a: "That is discussed beforehand. If in doubt, ask for advice in your request." },
+        { q: "Can I wear make-up to the appointment?", a: "Yes: your skin is cleansed at the start. If you prefer to come without make-up, that is fine too." },
+        { q: "How often is a facial worthwhile?", a: "That differs per skin. Dilek discusses with you which rhythm suits your skin and wishes." },
+        { q: "Can I combine a facial with eyebrow waxing or tinting?", a: "Yes. Mention it in your request; the appointment is planned around that." },
+      ],
       note: "No diagnoses are made and no medical results are promised.",
     },
     tr: {
@@ -792,7 +816,11 @@ export const wellnessSections: Record<string, Record<Locale, SectionCopy>> = {
       listTitle: "Yüz bakımları",
       listIntro: "Tüm ayrıntılar için bir bakım seç ya da hemen randevu talep et.",
       teaser: "Buharlı derin temizlik ve kaş-kirpik boyama.",
-      faqs: [{ q: "Cildime hangi bakım uygun?", a: "Bu önceden konuşulur. Emin değilsen talebinde tavsiye iste." }],
+      faqs: [
+        { q: "Cildime hangi bakım uygun?", a: "Bu önceden konuşulur. Emin değilsen talebinde tavsiye iste." },
+        { q: "Randevuya makyajlı gelebilir miyim?", a: "Evet: başlangıçta cildin temizlenir. Makyajsız gelmeyi tercih edersen o da olur." },
+        { q: "Yüz bakımını kaş ağdası veya boyamayla birleştirebilir miyim?", a: "Evet. Talebinde belirt; randevu buna göre planlanır." },
+      ],
       note: "Teşhis konulmaz ve tıbbi sonuç vaat edilmez.",
     },
   },

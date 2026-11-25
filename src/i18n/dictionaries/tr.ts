@@ -341,7 +341,7 @@ export const tr: Dictionary = {
       title: "Açık fiyatlar,",
       titleEm: "net ve şeffaf.",
       subtitle:
-        "Tüm bakımlar fiyat ve süresiyle. Bir bakımda 'talep üzerine' yazıyorsa, fiyatı talebinle birlikte kişisel olarak öğrenirsin.",
+        "Tüm bakımlar fiyat ve süresiyle, net bir liste halinde. Birden fazla bölge birleştirirsen randevu buna göre planlanır.",
     },
     notice: {
       title: "Fiyatlar talep üzerine",

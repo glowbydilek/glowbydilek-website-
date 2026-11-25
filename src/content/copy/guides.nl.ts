@@ -305,7 +305,7 @@ export const faqPageNl: FaqPageCopy = {
         },
         {
           q: "Wat kost een full Brazilian (Hollywood) wax?",
-          a: "Het tarief van een full Brazilian (Hollywood) staat op de pagina Tarieven. Staat daar ‘op aanvraag’, dan hoor je het tarief persoonlijk bij je aanvraag.",
+          a: "Het tarief van een full Brazilian (Hollywood) staat bij de behandeling en op de pagina Tarieven.",
         },
         {
           q: "Wat kost een behandeling?",

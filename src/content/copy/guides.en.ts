@@ -305,7 +305,7 @@ export const faqPageEn: FaqPageCopy = {
         },
         {
           q: "How much does a full Brazilian (Hollywood) wax cost?",
-          a: "The price of a full Brazilian (Hollywood) is on the Prices page. If it says ‘upon request’ there, you’ll hear the price personally when you request your appointment.",
+          a: "The price of a full Brazilian (Hollywood) is shown with the treatment and on the Prices page.",
         },
         {
           q: "What does a treatment cost?",

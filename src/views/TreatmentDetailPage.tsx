@@ -389,6 +389,7 @@ export function TreatmentDetailPage({
             t.title,
             t.seoDescription,
             itemHref(locale, item),
+            item.pricing.mode !== "on_request" && item.pricing.cents ? { cents: item.pricing.cents, from: item.pricing.mode === "from", minutes: item.durationMinutes } : undefined,
           )}
         />
       </>
