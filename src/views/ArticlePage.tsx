@@ -44,7 +44,7 @@ export function ArticlePage({
 
   return (
     <>
-      <PageHero locale={locale} photo={photo} ratio={5 / 4} photoLabel={dict.common.moodImage} crumbs={crumbs} {...copy.hero}>
+      <PageHero locale={locale} tone="orchid" photo={photo} ratio={5 / 4} photoLabel={dict.common.moodImage} crumbs={crumbs} {...copy.hero}>
         <ButtonLink href={href(locale, "booking")} arrow>
           {dict.cta.request}
         </ButtonLink>

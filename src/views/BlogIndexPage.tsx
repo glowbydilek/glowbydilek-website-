@@ -19,6 +19,7 @@ export function BlogIndexPage({ locale }: { locale: Locale }) {
         locale={locale}
         photo="botanical"
         ratio={5 / 4}
+        tone="orchid"
         photoLabel={dict.common.moodImage}
         crumbs={[{ name: dict.nav.blog }]}
         eyebrow={dict.blog.eyebrow}

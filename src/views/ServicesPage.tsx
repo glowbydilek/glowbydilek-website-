@@ -38,7 +38,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} photo="treatments-hero" ratio={5 / 4} eyebrow={dict.nav.allTreatments} title={meta.title} subtitle={meta.description}>
+      <PageHero locale={locale} tone="pearl" photo="treatments-hero" ratio={5 / 4} eyebrow={dict.nav.allTreatments} title={meta.title} subtitle={meta.description}>
         <ButtonLink href={href(locale, "booking")} arrow>
           {dict.cta.request}
         </ButtonLink>

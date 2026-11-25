@@ -4,7 +4,7 @@ import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHero } from "@/components/PageHero";
+import { PageHero, sectionHeroStyle } from "@/components/PageHero";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { CheckList } from "@/components/ui/CheckList";
@@ -38,6 +38,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
           locale={locale}
           photo={group.photo}
           ratio={id === "face" ? 4 / 5 : 5 / 4}
+          {...sectionHeroStyle(group.sectionId, locale)}
           crumbs={[{ name: section.name[locale], href: sectionLink }, { name: c.label }]}
           {...c.hero}
         >
@@ -187,7 +188,7 @@ export function CategoryPage({ locale, id }: { locale: Locale; id: string }) {
                 const oc = groupCopy(locale, og.id, og.name[locale]);
                 return (
                   <li key={og.id} data-reveal>
-                    <Link href={groupHref(locale, og)} className="group grid grid-cols-[6rem_1fr] items-center gap-5 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-5 transition-shadow duration-500 hover:shadow-card sm:grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words">
+                    <Link href={groupHref(locale, og)} className="lift group grid grid-cols-[6rem_1fr] items-center gap-5 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-5 transition-shadow duration-500 hover:shadow-card sm:grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)] [&>dd]:break-words">
                       {hasPhoto(og.photo) && (
                         <div className="zoom-frame overflow-hidden rounded-2xl">
                           <Photo id={og.photo} locale={locale} ratio={1} sizes="128px" />

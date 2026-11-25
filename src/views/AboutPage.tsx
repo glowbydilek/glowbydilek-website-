@@ -66,7 +66,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
       ) : null,
     hero: (
       <>
-        <PageHero locale={locale} photo="interior" {...t.hero}>
+        <PageHero locale={locale} tone="orchid" photo="interior" {...t.hero}>
           <ButtonLink href={href(locale, "booking")} arrow>
             {dict.cta.request}
           </ButtonLink>
