@@ -60,6 +60,10 @@ export function AppointmentForm({
   const [values, setValues] = useState(empty);
   const [treatments, setTreatments] = useState<string[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange | "">("");
+  // Owner (25 Nov 2026): waxing can also be done at the client's own address, by appointment.
+  const [place, setPlace] = useState<"salon" | "home">("salon");
+  const waxingPicked = treatments.some((id) => sectionOf.get(id) === "waxing");
+  const atHome = waxingPicked && place === "home";
   const [privacy, setPrivacy] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<Record<string, ErrorCode>>({});
@@ -102,7 +106,8 @@ export function AppointmentForm({
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const payload = { ...values, treatments, timeRange, privacy, locale };
+    const notes = atHome ? `${PLACE[locale].tag}\n${values.notes}`.trim() : values.notes;
+    const payload = { ...values, notes, treatments, timeRange, privacy, locale };
     const check = validateAppointment(payload, ids, amsterdamToday());
     if (!check.ok) {
       setErrors(check.errors);
@@ -121,6 +126,7 @@ export function AppointmentForm({
       setTreatments([]);
       setActive(sections[0]?.id ?? "");
       setTimeRange("");
+      setPlace("salon");
       setPrivacy(false);
     }
   }
@@ -251,6 +257,22 @@ export function AppointmentForm({
         )}
       </fieldset>
 
+      {waxingPicked && (
+        <fieldset className="min-w-0">
+          <legend className="text-[0.72rem] font-medium uppercase tracking-[0.18em] text-ink">{PLACE[locale].legend}</legend>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(["salon", "home"] as const).map((v) => (
+              <label key={v} data-selected={place === v ? "true" : undefined} className={chip(place === v)}>
+                <input type="radio" name="appt-place" className="sr-only" checked={place === v} onChange={() => setPlace(v)} />
+                {place === v && <Icon name="check" className="h-3.5 w-3.5" />}
+                {PLACE[locale][v]}
+              </label>
+            ))}
+          </div>
+          {place === "home" && <p className="mt-2 text-sm text-muted">{PLACE[locale].homeHint}</p>}
+        </fieldset>
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2">
         <DatePicker
           id="appt-date"
@@ -356,3 +378,27 @@ export function AppointmentForm({
     </form>
   );
 }
+
+const PLACE: Record<"nl" | "en" | "tr", { legend: string; salon: string; home: string; homeHint: string; tag: string }> = {
+  nl: {
+    legend: "Waar wil je waxen?",
+    salon: "In de salon (Amsterdam-Noord)",
+    home: "Op mijn eigen adres",
+    homeHint: "Waxen kan op afspraak ook op je eigen adres, in Amsterdam en omgeving. Zet je adres bij de opmerkingen of Dilek vraagt het persoonlijk.",
+    tag: "[Waxen op mijn eigen adres]",
+  },
+  en: {
+    legend: "Where would you like your waxing?",
+    salon: "At the salon (Amsterdam-Noord)",
+    home: "At my own address",
+    homeHint: "Waxing can also be done at your own address by appointment, in Amsterdam and the surrounding area. Add your address in the notes or Dilek will ask personally.",
+    tag: "[Waxing at my own address]",
+  },
+  tr: {
+    legend: "Ağdayı nerede istersin?",
+    salon: "Salonda (Amsterdam-Noord)",
+    home: "Kendi adresimde",
+    homeHint: "Ağda randevuyla kendi adresinde de yapılabilir; Amsterdam ve çevresinde. Adresini notlara yaz ya da Dilek kişisel olarak sorar.",
+    tag: "[Ağda kendi adresimde]",
+  },
+};
