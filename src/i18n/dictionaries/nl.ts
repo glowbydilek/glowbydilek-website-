@@ -346,7 +346,7 @@ export const nl = {
       title: "Tarieven,",
       titleEm: "helder op een rij.",
       subtitle:
-        "Alle behandelingen met tarief en duur. Staat er bij een behandeling ‘op aanvraag’, dan hoor je het tarief persoonlijk bij je aanvraag.",
+        "Alle behandelingen met tarief en duur, helder op een rij. Combineer je meerdere zones, dan wordt de afspraak daarop afgestemd.",
     },
     notice: {
       title: "Tarieven op aanvraag",

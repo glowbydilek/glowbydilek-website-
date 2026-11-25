@@ -344,7 +344,7 @@ export const en: Dictionary = {
       title: "Prices,",
       titleEm: "clearly listed.",
       subtitle:
-        "Every treatment with its price and duration. Where a treatment says ‘on request’, you receive the price personally with your request.",
+        "Every treatment with its price and duration, clearly listed. Combining several zones? The appointment is planned around that.",
     },
     notice: {
       title: "Prices on request",
