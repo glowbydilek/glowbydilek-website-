@@ -37,7 +37,7 @@ export function SeoForm({ seoKey, locale, initial, defaults, path, media }: { se
       <input type="hidden" name="path" value={path} />
       <input type="hidden" name="data" value={JSON.stringify(v)} />
       <Field label="Focus-zoekwoord" hint="Waarop moet deze pagina gevonden worden? Bijvoorbeeld ‘wenkbrauwen waxen amsterdam’. Wordt niet op de site getoond.">
-        <Input value={v.focusKeyword ?? ""} placeholder={suggestion ? `Voorstel: ${suggestion}` : ""} maxLength={80} onChange={(e) => setV({ ...v, focusKeyword: e.target.value })} />
+        <Input value={v.focusKeyword ?? ""} placeholder={suggestion ? t(`Voorstel: ${suggestion}`) : ""} maxLength={80} onChange={(e) => setV({ ...v, focusKeyword: e.target.value })} />
       </Field>
       <Field label="SEO-titel" hint={`Leeg = standaard: “${defaults.title}”. Ideaal: tot 60 tekens (${title.length}).`}>
         <Input value={v.title ?? ""} maxLength={70} onChange={(e) => setV({ ...v, title: e.target.value })} />
@@ -104,7 +104,7 @@ function SeoAnalysis({ score, groups }: { score: CheckStatus; groups: { title: s
               {[...g.checks].sort((a, b) => order[a.status] - order[b.status]).map((c) => (
                 <li key={c.id} className="flex items-start gap-2">
                   <span className="mt-1.5"><SeoDot status={c.status} /></span>
-                  <span>{c.text}</span>
+                  <span>{t(c.text)}</span>
                 </li>
               ))}
             </ul>
