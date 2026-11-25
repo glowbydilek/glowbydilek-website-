@@ -101,7 +101,7 @@ export const en: Dictionary = {
   common: {
     byAppointment: "By appointment only",
     location: "Glow by Dilek is in Amsterdam-Noord and works by appointment only. Dilek shares the exact address personally after confirmation.",
-    homeVisit: "On request, Dilek can also come to you, at your own address; just mention it in your request.",
+    homeVisit: "Waxing can also be done at your own address by appointment, in Amsterdam and the surrounding area. Choose ‘At my own address’ in your request.",
     onRequest: "On request",
     goodToKnow: "Good to know",
     moodImage: "Mood image",

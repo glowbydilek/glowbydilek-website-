@@ -103,7 +103,7 @@ export const nl = {
   common: {
     byAppointment: "Uitsluitend op afspraak",
     location: "Glow by Dilek zit in Amsterdam-Noord en werkt uitsluitend op afspraak. Het exacte adres deelt Dilek persoonlijk na bevestiging.",
-    homeVisit: "Op verzoek komt Dilek ook bij jou langs, op je eigen adres; vermeld het gerust bij je aanvraag.",
+    homeVisit: "Waxen kan op afspraak ook op je eigen adres, in Amsterdam en omgeving. Kies bij je aanvraag ‘Op mijn eigen adres’.",
     onRequest: "Op aanvraag",
     goodToKnow: "Goed om te weten",
     moodImage: "Sfeerbeeld",

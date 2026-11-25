@@ -37,7 +37,7 @@ const noord: Record<Locale, ArticleCopy> = {
       title: "Schoonheidssalon voor vrouwen",
       titleEm: "in Amsterdam-Noord.",
       subtitle:
-        "Glow by Dilek zit in Amsterdam-Noord: waxen, gezichtsbehandelingen en massages, uitsluitend voor vrouwen en altijd op afspraak. Dilek ontvangt je persoonlijk en komt op verzoek ook bij jou langs.",
+        "Glow by Dilek zit in Amsterdam-Noord: waxen, gezichtsbehandelingen en massages, uitsluitend voor vrouwen en altijd op afspraak. Dilek ontvangt je persoonlijk; waxen kan op afspraak ook op je eigen adres.",
     },
     sections: [
       {
@@ -65,7 +65,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "Ook bij jou langs",
         paragraphs: [
-          "Liever een behandeling op je eigen adres? Op verzoek komt Dilek ook bij jou langs. Vermeld het gerust bij je aanvraag of stuur een bericht; Dilek bespreekt dan persoonlijk wat er mogelijk is.",
+          "Liever waxen op je eigen adres? Op afspraak komt Dilek ook naar je eigen adres, in Amsterdam en omgeving. Kies bij je aanvraag ‘Op mijn eigen adres’; Dilek stemt de afspraak persoonlijk met je af.",
         ],
       },
       {
@@ -101,7 +101,7 @@ const noord: Record<Locale, ArticleCopy> = {
       title: "Women-only beauty salon",
       titleEm: "in Amsterdam-Noord.",
       subtitle:
-        "Glow by Dilek is in Amsterdam-Noord: waxing, facials and massages, for women only and always by appointment. Dilek welcomes you personally and, on request, can also come to you.",
+        "Glow by Dilek is in Amsterdam-Noord: waxing, facials and massages, for women only and always by appointment. Dilek welcomes you personally; waxing can also be done at your own address by appointment.",
     },
     sections: [
       {
@@ -129,7 +129,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "Dilek can also come to you",
         paragraphs: [
-          "Prefer a treatment at your own address? On request, Dilek can also come to you. Just mention it in your request or send a message, and Dilek will discuss personally what is possible.",
+          "Prefer waxing at your own address? By appointment, Dilek can also come to your own address in Amsterdam and the surrounding area. Choose ‘At my own address’ in your request; Dilek arranges it with you personally.",
         ],
       },
       {
@@ -165,7 +165,7 @@ const noord: Record<Locale, ArticleCopy> = {
       title: "Kadınlara özel güzellik salonu",
       titleEm: "Amsterdam-Noord'da.",
       subtitle:
-        "Glow by Dilek Amsterdam-Noord'dadır: ağda, yüz bakımı ve masaj; yalnızca kadınlara ve her zaman randevuyla. Dilek seni kişisel olarak karşılar ve istersen sana da gelir.",
+        "Glow by Dilek Amsterdam-Noord'dadır: ağda, yüz bakımı ve masaj; yalnızca kadınlara ve her zaman randevuyla. Dilek seni kişisel olarak karşılar; ağda randevuyla evinde de yapılabilir.",
     },
     sections: [
       {
@@ -193,7 +193,7 @@ const noord: Record<Locale, ArticleCopy> = {
       {
         title: "Dilek sana da gelebilir",
         paragraphs: [
-          "Bakımı kendi adresinde mi tercih edersin? İstek üzerine Dilek sana da gelir. Bunu talebinde ya da bir mesajda belirtmen yeterli; Dilek neyin mümkün olduğunu seninle kişisel olarak konuşur.",
+          "Ağdayı kendi adresinde mi tercih edersin? Randevuyla Dilek Amsterdam ve çevresinde evine de gelir. Talebinde ‘Kendi adresimde’ seçeneğini işaretle; Dilek randevuyu seninle kişisel olarak ayarlar.",
         ],
       },
       {

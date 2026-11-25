@@ -114,7 +114,8 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
         return (
           <section key={g.id} id={g.id} aria-labelledby={`${g.id}-title`} className={`section scroll-mt-[var(--header-safe)] ${tint}`}>
             <Container className={`grid items-start gap-10 lg:gap-16 ${photo ? "md:grid-cols-[0.85fr_1.15fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`}>
-              <div className={photo && idx % 2 === 1 ? "md:order-2" : ""}>
+              {/* self-stretch: the sticky photo / heading needs a column as tall as the list, otherwise it cannot stick and leaves an empty area. */}
+              <div className={`self-stretch ${photo && idx % 2 === 1 ? "md:order-2" : ""}`}>
                 {photo && (
                   <div className="mb-8 overflow-hidden rounded-[var(--radius-media)] md:sticky md:top-[calc(var(--header-safe)+2rem)] md:mb-0" data-reveal="mask">
                     <Photo id={g.photo} locale={locale} sizes="(min-width: 768px) 40vw, 92vw" />
