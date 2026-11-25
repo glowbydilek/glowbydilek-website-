@@ -28,22 +28,22 @@ export const nl = {
       prices: {
         title: "Prijzen waxen, massage en gezicht in Amsterdam",
         description:
-          "Prijzen voor waxen, massage en gezichtsbehandelingen in Amsterdam, uitsluitend voor vrouwen: per behandeling het tarief, de duur of ‘op aanvraag’.",
+          "Prijzen voor waxen, massage en gezichtsbehandelingen in Amsterdam, uitsluitend voor vrouwen: per behandeling het tarief en de duur, helder op een rij.",
       },
       about: {
-        title: "Over Dilek",
+        title: "Over Dilek, voor vrouwen in Amsterdam-Noord",
         description:
           "Het verhaal en de werkwijze achter Glow by Dilek: persoonlijke schoonheidsbehandelingen en ontspanning, met rust, zorg en eerlijk advies.",
       },
       contact: {
-        title: "Contact",
+        title: "Contact en vragen, Amsterdam-Noord",
         description:
           "Een vraag over een behandeling of een afspraak? Stuur een bericht via het formulier of mail naar hello@glowbydilek.nl. Dilek antwoordt persoonlijk.",
       },
       booking: {
-        title: "Afspraak aanvragen in Amsterdam",
+        title: "Afspraak maken in Amsterdam-Noord",
         description:
-          "Vraag online je afspraak aan bij Glow by Dilek in Amsterdam. Kies je behandeling en voorkeursmoment; Dilek bekijkt je aanvraag en bevestigt de afspraak persoonlijk.",
+          "Maak online je afspraak bij Glow by Dilek in Amsterdam-Noord. Kies je behandeling en moment; Dilek bevestigt je afspraak persoonlijk. Alleen voor vrouwen.",
       },
       reviews: {
         title: "Beoordelingen van klanten",
