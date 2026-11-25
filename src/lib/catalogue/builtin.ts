@@ -370,7 +370,7 @@ const zoneSpec: { id: string; group: "face" | "body"; slug: Item["slug"]; photo:
   { id: "belly", group: "body", slug: { nl: "buik-waxen", en: "belly-waxing", tr: "karin-agdasi" }, photo: "wax-belly", sort: 152, cents: 2000, minutes: 15, related: ["back", "bikini-line", "chest"] },
   { id: "chest", group: "body", slug: { nl: "borst-waxen", en: "chest-waxing", tr: "gogus-agdasi" }, photo: "wax-chest", sort: 153, cents: 1500, minutes: 15, related: ["decollete", "belly", "underarms"] },
   { id: "decollete", group: "body", slug: { nl: "decollete-waxen", en: "decolletage-waxing", tr: "dekolte-agdasi" }, photo: "wax-decollete", sort: 154, cents: 2550, minutes: 15, related: ["chest", "neck", "underarms"] },
-  { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "wax-back", sort: 155, cents: 2000, minutes: 15, related: ["hollywood", "bikini-line", "upper-legs"] },
+  { id: "buttocks", group: "body", slug: { nl: "billen-waxen", en: "buttock-waxing", tr: "kalca-agdasi" }, photo: "linen", sort: 155, cents: 2000, minutes: 15, related: ["hollywood", "bikini-line", "upper-legs"] },
 ];
 
 const zones: Item[] = zoneSpec.map((z) => {
