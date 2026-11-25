@@ -45,6 +45,7 @@ export function GuidePage({ locale, page }: { locale: Locale; page: GuideKey }) 
         locale={locale}
         photo={photo.id}
         ratio={photo.ratio}
+        tone="sand"
         photoLabel={photo.mood ? dict.common.moodImage : undefined}
         crumbs={[{ name: dict.nav[page] }]}
         {...g.hero}

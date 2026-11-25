@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHero } from "@/components/PageHero";
+import { PageHero, sectionHeroStyle } from "@/components/PageHero";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { OfferBadge } from "@/components/OfferBadge";
@@ -83,6 +83,7 @@ export function TreatmentDetailPage({
           locale={locale}
           photo={item.photo}
           ratio={portrait ? 4 / 5 : 5 / 4}
+          {...sectionHeroStyle(item.sectionId, locale)}
           eyebrow={parent.label}
           title={t.title}
           subtitle={t.lead}

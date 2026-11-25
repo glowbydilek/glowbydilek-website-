@@ -4,7 +4,7 @@ import { ClosingCta } from "@/components/ClosingCta";
 import { Container } from "@/components/Container";
 import { Faq, faqJsonLd } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHero } from "@/components/PageHero";
+import { PageHero, sectionHeroStyle } from "@/components/PageHero";
 import { TreatmentCard } from "@/components/TreatmentCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -32,6 +32,7 @@ export function SectionPage({ locale, section }: { locale: Locale; section: Sect
       locale={locale}
       photo={section.photo}
       ratio={5 / 4}
+      {...sectionHeroStyle(section.id, locale)}
       eyebrow={c.hero.eyebrow}
       title={c.hero.title}
       titleEm={c.hero.titleEm || undefined}

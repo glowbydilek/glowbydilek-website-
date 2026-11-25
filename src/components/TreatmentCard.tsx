@@ -20,7 +20,7 @@ export function TreatmentCard({ locale, id, withPhoto = true }: { locale: Locale
   const copy = itemCopy(locale, id, item);
   const photo = withPhoto && hasPhoto(item.photo);
   return (
-    <article className="star-glint group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper transition-shadow duration-500 hover:shadow-card">
+    <article className="lift star-glint group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper transition-shadow duration-500 hover:shadow-card">
       {photo && (
         <div className="zoom-frame overflow-hidden">
           <Photo id={item.photo} locale={locale} ratio={3 / 2} sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 92vw" />

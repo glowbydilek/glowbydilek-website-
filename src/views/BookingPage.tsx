@@ -39,7 +39,7 @@ export async function BookingPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
+      <PageHero locale={locale} tone="rose" photo="experience" photoLabel={dict.common.moodImage} {...t.hero}>
         <PreselectedNotice
           names={Object.fromEntries(publicItems({ locale }).map((x) => [x.id, x.name[locale]]))}
           label={t.preselected}

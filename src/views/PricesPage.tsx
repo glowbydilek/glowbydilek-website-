@@ -30,7 +30,7 @@ export function PricesPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} photo="aftercare" {...t.hero}>
+      <PageHero locale={locale} tone="champagne" photo="aftercare" {...t.hero}>
         <ButtonLink href={href(locale, "contact")} arrow>
           {t.notice.cta}
         </ButtonLink>

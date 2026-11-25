@@ -42,7 +42,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <PageHero locale={locale} photo="treatments-hero" ratio={5 / 4} {...t.hero}>
+      <PageHero locale={locale} tone="rose" mark={locale === "tr" ? "Ağda" : "Wax"} photo="treatments-hero" ratio={5 / 4} {...t.hero}>
         <div className="flex flex-wrap items-center gap-3">
           <ButtonLink href={href(locale, "booking")} arrow>
             {dict.cta.request}
@@ -64,7 +64,7 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
               <li key={g.id}>
                 <Link
                   href={g.href}
-                  className="group grid h-full grid-cols-[5.5rem_1fr] items-center gap-4 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-4 transition-shadow duration-500 hover:shadow-card md:grid-cols-1 md:p-4"
+                  className="lift group grid h-full grid-cols-[5.5rem_1fr] items-center gap-4 rounded-[var(--radius-card)] border border-line bg-paper p-3 pr-4 transition-shadow duration-500 hover:shadow-card md:grid-cols-1 md:p-4"
                 >
                   {hasPhoto(g.photo) && (
                     <div className="zoom-frame overflow-hidden rounded-2xl">
