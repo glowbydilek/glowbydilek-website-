@@ -66,7 +66,7 @@ export const tr: Dictionary = {
     prices: "Fiyatlar",
     about: "Dilek hakkında",
     contact: "İletişim",
-    booking: "Randevu talep et",
+    booking: "Randevu al",
     privacy: "Gizlilik",
     process: "Randevu nasıl işler?",
     preparation: "Hazırlık",
@@ -235,7 +235,7 @@ export const tr: Dictionary = {
     general: [
       {
         q: "Nasıl randevu talep ederim?",
-        a: "'Randevu talep et' sayfasında bakımını, tercih ettiğin tarihi ve günün hangi saatlerini istediğini seç. Hemen bir alındı bilgisi alırsın. Randevu, ancak Dilek kişisel olarak onayladığında kesinleşir.",
+        a: "'Randevu al' sayfasında bakımını, tercih ettiğin tarihi ve günün hangi saatlerini istediğini seç. Hemen bir alındı bilgisi alırsın. Randevu, ancak Dilek kişisel olarak onayladığında kesinleşir.",
       },
       {
         q: "Bakımlar nerede yapılıyor?",

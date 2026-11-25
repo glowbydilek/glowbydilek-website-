@@ -67,7 +67,7 @@ export const nl = {
     prices: "Tarieven",
     about: "Over Dilek",
     contact: "Contact",
-    booking: "Afspraak aanvragen",
+    booking: "Afspraak maken",
     privacy: "Privacy",
     process: "Hoe werkt een afspraak?",
     preparation: "Voorbereiding",
@@ -236,7 +236,7 @@ export const nl = {
     general: [
       {
         q: "Hoe vraag ik een afspraak aan?",
-        a: "Via de pagina ‘Afspraak aanvragen’ kies je je behandeling, een voorkeursdatum en een tijdvak. Je ontvangt meteen een ontvangstbevestiging. De afspraak is pas definitief als Dilek hem persoonlijk heeft bevestigd.",
+        a: "Via de pagina ‘Afspraak maken’ kies je je behandeling, een voorkeursdatum en een tijdvak. Je ontvangt meteen een ontvangstbevestiging. De afspraak is pas definitief als Dilek hem persoonlijk heeft bevestigd.",
       },
       {
         q: "Waar vinden de behandelingen plaats?",

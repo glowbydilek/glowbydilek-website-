@@ -65,7 +65,7 @@ export const en: Dictionary = {
     prices: "Prices",
     about: "About Dilek",
     contact: "Contact",
-    booking: "Request appointment",
+    booking: "Book an appointment",
     privacy: "Privacy",
     process: "How an appointment works",
     preparation: "Preparation",
@@ -234,7 +234,7 @@ export const en: Dictionary = {
     general: [
       {
         q: "How do I request an appointment?",
-        a: "On the ‘Request appointment’ page, choose your treatment, a preferred date and a time of day. You'll receive a confirmation of receipt straight away. The appointment is only final once Dilek has confirmed it personally.",
+        a: "On the ‘Book an appointment’ page, choose your treatment, a preferred date and a time of day. You'll receive a confirmation of receipt straight away. The appointment is only final once Dilek has confirmed it personally.",
       },
       {
         q: "Where do treatments take place?",
