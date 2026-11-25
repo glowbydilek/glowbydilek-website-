@@ -98,9 +98,9 @@ export function TreatmentsPage({ locale }: { locale: Locale }) {
           </div>
           <dl className="grid grid-cols-3 border-y border-accent/50" data-reveal>
             {t.about.facts.map((f, i) => (
-              <div key={f.label} className={`flex flex-col items-center px-2 py-8 text-center ${i > 0 ? "border-l border-line" : ""}`}>
+              <div key={f.label} className={`flex min-w-0 flex-col items-center px-2 py-8 text-center ${i > 0 ? "border-l border-line" : ""}`}>
                 <dt className="order-2 mt-2 text-[0.66rem] uppercase tracking-[0.14em] text-muted">{f.label}</dt>
-                <dd className="order-1 whitespace-nowrap font-serif text-[1.4rem] text-ink min-[400px]:text-[1.7rem] sm:text-[2.6rem]">{f.value}</dd>
+                <dd className="order-1 whitespace-nowrap font-serif text-[1.3rem] leading-none text-ink min-[400px]:text-[1.6rem] sm:text-[2.2rem] md:text-[1.45rem] lg:text-[1.8rem] xl:text-[2.2rem]">{f.value}</dd>
               </div>
             ))}
           </dl>
