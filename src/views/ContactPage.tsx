@@ -32,12 +32,32 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
       <section id="bericht" className="section-tight scroll-mt-[var(--header-safe)] bg-surface">
         <Container className="grid items-start gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
+          <div className="space-y-5">
           <div className="rounded-[1.75rem] bg-paper p-6 shadow-card sm:p-9" data-reveal>
             <h2 className="display text-[2.2rem] sm:text-5xl">{t.formTitle}</h2>
             <p className="mt-3 text-muted">{t.formIntro}</p>
             <div className="mt-8">
               <ContactFormBlock locale={locale} dict={dict} />
             </div>
+          </div>
+          {/* Location, hours and the booking hint sit under the form, so neither column leaves a large empty area. */}
+          <div className="grid gap-5 sm:grid-cols-2">
+              <div className="rounded-[1.75rem] border border-ink/10 p-7" data-reveal>
+                <Icon name="pin" className="h-6 w-6 text-accent-deep" />
+                <h3 className="mt-4 font-serif text-2xl text-ink">{t.locationTitle}</h3>
+                <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.location}</p>
+                <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.homeVisit}</p>
+                <h3 className="mt-6 font-serif text-2xl text-ink">{t.hoursTitle}</h3>
+                <p className="mt-2 leading-relaxed text-ink-soft">{t.hoursBody}</p>
+              </div>
+              <div className="on-dark rounded-[1.75rem] bg-ink p-7 text-paper" data-reveal>
+                <Icon name="calendar" className="h-6 w-6 text-accent" />
+                <p className="mt-4 leading-relaxed text-paper/80">{t.appointmentHint}</p>
+                <ButtonLink href={href(locale, "booking")} variant="gold" className="mt-6 w-full" arrow>
+                  {dict.cta.request}
+                </ButtonLink>
+              </div>
+          </div>
           </div>
 
           <div className="space-y-5 lg:sticky lg:top-[calc(var(--header-safe)+1.5rem)]">
@@ -60,21 +80,6 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 <p className="mt-4 font-serif text-2xl text-ink">{dict.whatsapp.label}</p>
               </a>
             )}
-            <div className="rounded-[1.75rem] border border-ink/10 p-7" data-reveal>
-              <Icon name="pin" className="h-6 w-6 text-accent-deep" />
-              <h3 className="mt-4 font-serif text-2xl text-ink">{t.locationTitle}</h3>
-              <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.location}</p>
-              <p className="mt-2 leading-relaxed text-ink-soft">{dict.common.homeVisit}</p>
-              <h3 className="mt-6 font-serif text-2xl text-ink">{t.hoursTitle}</h3>
-              <p className="mt-2 leading-relaxed text-ink-soft">{t.hoursBody}</p>
-            </div>
-            <div className="on-dark rounded-[1.75rem] bg-ink p-7 text-paper" data-reveal>
-              <Icon name="calendar" className="h-6 w-6 text-accent" />
-              <p className="mt-4 leading-relaxed text-paper/80">{t.appointmentHint}</p>
-              <ButtonLink href={href(locale, "booking")} variant="gold" className="mt-6 w-full" arrow>
-                {dict.cta.request}
-              </ButtonLink>
-            </div>
           </div>
         </Container>
       </section>
