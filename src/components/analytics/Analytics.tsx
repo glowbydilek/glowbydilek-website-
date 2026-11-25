@@ -163,7 +163,13 @@ export function Analytics({
       const a = (e.target as HTMLElement | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!a) return;
       const url = new URL(a.href, window.location.href);
-      if (url.origin === window.location.origin && bookingPaths.includes(url.pathname) && isTrackablePath(pathname)) (window as W).glowTrack?.("cta_booking_click", { source: pathname.slice(0, 80) });
+      if (!isTrackablePath(pathname)) return;
+      const source = pathname.slice(0, 80);
+      // Contact clicks: the channel only, never the number or address itself.
+      if (url.protocol === "tel:") (window as W).glowTrack?.("phone_click", { source });
+      else if (url.protocol === "mailto:") (window as W).glowTrack?.("email_click", { source });
+      else if (/(^|\.)(wa\.me|whatsapp\.com)$/.test(url.hostname)) (window as W).glowTrack?.("whatsapp_click", { source });
+      else if (url.origin === window.location.origin && bookingPaths.includes(url.pathname)) (window as W).glowTrack?.("cta_booking_click", { source });
     };
     document.addEventListener("click", onClick, { capture: true });
     return () => document.removeEventListener("click", onClick, { capture: true });
