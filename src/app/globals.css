@@ -17,7 +17,7 @@
   --color-paper: #fffcfb; /* Pearl — page background */
   --color-surface: #fcf7f6; /* raised surfaces, fields */
   --color-sand: #f5e6e7; /* Soft rose — quiet sections */
-  --color-line: #e6d0d6; /* hairlines, dividers */
+  --color-line: #d4b3be; /* hairlines, dividers (stronger since 25 Nov 2026: owner found them too faint) */
   --color-ink: #2b202b; /* Deep plum — text, dark sections, primary buttons */
   --color-ink-soft: #4a3a48; /* body copy */
   --color-muted: #6b5867; /* secondary text */
@@ -825,7 +825,7 @@ html.glow-nav main {
 }
 .intake-break {
   height: 1.5rem;
-  border-bottom: 1px dashed #e6d0d6;
+  border-bottom: 1px dashed var(--color-line);
   margin-bottom: 1rem;
 }
 @media print {
@@ -1120,5 +1120,97 @@ footer p {
   50% {
     transform: scale(0.85) rotate(45deg);
     opacity: 0.7;
+  }
+}
+
+/* Navigation: an underline that draws in on hover and stays under the current page. */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.65rem;
+  right: 0.65rem;
+  bottom: 0.45rem;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.45s var(--ease-luxe);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link[aria-current="page"]::after,
+.nav-link[aria-expanded="true"]::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Mobile menu: the items slide in one after another. */
+  .mobile-nav > ul > li {
+    animation: menu-in 0.5s var(--ease-luxe) both;
+  }
+  .mobile-nav > ul > li:nth-child(2) { animation-delay: 40ms; }
+  .mobile-nav > ul > li:nth-child(3) { animation-delay: 80ms; }
+  .mobile-nav > ul > li:nth-child(4) { animation-delay: 120ms; }
+  .mobile-nav > ul > li:nth-child(5) { animation-delay: 160ms; }
+  .mobile-nav > ul > li:nth-child(6) { animation-delay: 200ms; }
+  .mobile-nav > ul > li:nth-child(n + 7) { animation-delay: 240ms; }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Home category cards: landscape on wide screens, taller on phones so the text never covers the whole photo. */
+@media (max-width: 767px) {
+  .discover-card .zoom-frame > * {
+    aspect-ratio: 4 / 5 !important;
+  }
+}
+
+/* Prices: a rosewood shimmer runs through the amount on hover; rows on the price list light up. */
+.price-row {
+  transition: background-color 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft);
+}
+@media (hover: hover) {
+  .price-row:hover {
+    background: linear-gradient(90deg, rgb(245 230 231 / 0.75), rgb(238 227 242 / 0.35) 70%, transparent);
+    box-shadow: inset 3px 0 0 var(--color-accent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .group:hover .price-amount,
+  .price-row:hover .price-amount,
+  [data-treatment-row]:hover .price-amount {
+    background: linear-gradient(100deg, var(--color-ink) 20%, var(--color-accent) 45%, var(--color-champagne) 55%, var(--color-ink) 80%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: price-shimmer 1.6s var(--ease-soft) both;
+  }
+}
+@keyframes price-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+/* Phones (no hover): the shimmer plays once when the card scrolls into view. */
+@media (prefers-reduced-motion: no-preference) and (hover: none) {
+  [data-reveal][data-visible] .price-amount {
+    background: linear-gradient(100deg, var(--color-ink) 20%, var(--color-accent) 45%, var(--color-champagne) 55%, var(--color-ink) 80%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: price-shimmer 1.8s var(--ease-soft) 0.35s both;
   }
 }
