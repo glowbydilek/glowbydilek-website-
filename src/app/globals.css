@@ -966,3 +966,159 @@ footer p {
   0%, 100% { opacity: 1; transform: scale(1) rotate(0); }
   45% { opacity: 0.55; transform: scale(0.75) rotate(20deg); }
 }
+
+/*
+ * Motion & identity layer (25 Nov 2026).
+ * Every page family has its own light (hero tone + watermark word); cards lift,
+ * buttons catch the light, heroes settle in, a thin progress line follows the
+ * scroll. All of it switches off with prefers-reduced-motion.
+ */
+.hero-tone[data-tone="rose"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(245 222 226 / 0.95), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(250 236 230 / 0.9), transparent 64%),
+    var(--color-paper);
+}
+.hero-tone[data-tone="sage"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(226 236 228 / 0.95), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(244 240 230 / 0.9), transparent 64%),
+    var(--color-paper);
+}
+.hero-tone[data-tone="orchid"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(238 227 242 / 0.95), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(245 232 238 / 0.9), transparent 64%),
+    var(--color-paper);
+}
+.hero-tone[data-tone="sand"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(244 232 218 / 0.95), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(245 230 231 / 0.85), transparent 64%),
+    var(--color-paper);
+}
+.hero-tone[data-tone="champagne"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(242 226 206 / 0.95), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(238 227 242 / 0.8), transparent 64%),
+    var(--color-paper);
+}
+.hero-tone[data-tone="pearl"] {
+  background:
+    radial-gradient(52rem 30rem at 96% -10%, rgb(240 234 240 / 0.9), transparent 62%),
+    radial-gradient(36rem 26rem at -8% 110%, rgb(245 236 232 / 0.85), transparent 64%),
+    var(--color-paper);
+}
+.hero-mark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.18em;
+  z-index: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(6.5rem, 24vw, 19rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: var(--color-accent);
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+}
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-champagne));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+.lift {
+  transition:
+    transform 0.55s var(--ease-luxe),
+    box-shadow 0.55s var(--ease-luxe);
+}
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::after,
+.btn-accent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.22) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.9s var(--ease-luxe);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-mark {
+    animation: mark-drift 16s ease-in-out infinite alternate;
+  }
+  .hero-kb img {
+    animation: hero-settle 2.2s var(--ease-luxe) both;
+  }
+  .eyebrow::before {
+    animation: glint-twinkle 4.5s ease-in-out infinite;
+  }
+  @media (hover: hover) {
+    .lift:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-card);
+    }
+    .btn-primary:hover::after,
+    .btn-accent:hover::after {
+      transform: translateX(120%);
+    }
+    [data-treatment-row]:hover {
+      padding-left: 0.5rem;
+    }
+  }
+  .lift:active,
+  .btn:active {
+    transform: scale(0.98);
+  }
+  [data-treatment-row] {
+    transition:
+      background-color 0.35s var(--ease-soft),
+      padding-left 0.45s var(--ease-luxe);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress {
+    display: none;
+  }
+}
+@keyframes mark-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-4%);
+  }
+}
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes glint-twinkle {
+  0%,
+  100% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.85) rotate(45deg);
+    opacity: 0.7;
+  }
+}
